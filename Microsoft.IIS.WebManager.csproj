@@ -1,0 +1,358 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
+    <TypeScriptModuleResolution>Node</TypeScriptModuleResolution>
+    <TypeScriptExperimentalDecorators>true</TypeScriptExperimentalDecorators>
+    <TypeScriptEmitDecoratorMetadata>true</TypeScriptEmitDecoratorMetadata>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>False</TypeScriptNoEmitOnError>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+    <OutputPath>..\bin\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
+    <TypeScriptModuleResolution>Node</TypeScriptModuleResolution>
+    <TypeScriptExperimentalDecorators>true</TypeScriptExperimentalDecorators>
+    <TypeScriptEmitDecoratorMetadata>true</TypeScriptEmitDecoratorMetadata>
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>False</TypeScriptNoEmitOnError>
+    <OutputPath>..\bin\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{D943757A-E0A9-486E-91F9-CC2CC8C2724C}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>..\bin</OutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptSourceMap>True</TypeScriptSourceMap>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+    <TypeScriptNoEmitOnError>False</TypeScriptNoEmitOnError>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
+    <TypeScriptOutFile />
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>False</TypeScriptNoEmitOnError>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>False</TypeScriptSourceMap>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>43181</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:43181/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="app\certificates\certificates-list.component.ts" />
+    <TypeScriptCompile Include="app\certificates\certificates.module.ts" />
+    <TypeScriptCompile Include="app\certificates\certificates.service.ts" />
+    <TypeScriptCompile Include="app\certificates\certificate.ts" />
+    <TypeScriptCompile Include="app\common\focus.ts" />
+    <TypeScriptCompile Include="app\common\file-selector.ts" />
+    <TypeScriptCompile Include="app\common\idisposable.ts" />
+    <TypeScriptCompile Include="app\common\location-hash.ts" />
+    <TypeScriptCompile Include="app\common\section.helper.ts" />
+    <TypeScriptCompile Include="app\common\selectable.ts" />
+    <TypeScriptCompile Include="app\common\filter.pipe.ts" />
+    <TypeScriptCompile Include="app\common\sort.pipe.ts" />
+    <TypeScriptCompile Include="app\common\vtabs.component.ts" />
+    <TypeScriptCompile Include="app\common\virtual-list.component.ts" />
+    <TypeScriptCompile Include="app\error\api-error.ts" />
+    <TypeScriptCompile Include="app\common\bmodel.ts" />
+    <TypeScriptCompile Include="app\common\enum.component.ts" />
+    <TypeScriptCompile Include="app\error\error.component.ts" />
+    <TypeScriptCompile Include="app\files\file-editor.ts" />
+    <TypeScriptCompile Include="app\files\file-explorer.ts" />
+    <TypeScriptCompile Include="app\files\file-list.ts" />
+    <TypeScriptCompile Include="app\files\file-nav.service.ts" />
+    <TypeScriptCompile Include="app\files\file-selector.component.ts" />
+    <TypeScriptCompile Include="app\files\files.component.ts" />
+    <TypeScriptCompile Include="app\files\file-list-item.ts" />
+    <TypeScriptCompile Include="app\files\files.module.ts" />
+    <TypeScriptCompile Include="app\files\inavigation.ts" />
+    <TypeScriptCompile Include="app\files\navigation-helper.ts" />
+    <TypeScriptCompile Include="app\files\navigator.ts" />
+    <TypeScriptCompile Include="app\files\new-file.component.ts" />
+    <TypeScriptCompile Include="app\files\progress.ts" />
+    <TypeScriptCompile Include="app\files\parallel-executor.ts" />
+    <TypeScriptCompile Include="app\files\code-editor.component.ts" />
+    <TypeScriptCompile Include="app\files\upload.component.ts" />
+    <TypeScriptCompile Include="app\main\options.service.ts" />
+    <TypeScriptCompile Include="app\main\window.service.ts" />
+    <TypeScriptCompile Include="app\notification\loading.component.ts" />
+    <TypeScriptCompile Include="app\common\palettes.ts" />
+    <TypeScriptCompile Include="app\common\metadata.ts" />
+    <TypeScriptCompile Include="app\common\override-mode.component.ts" />
+    <TypeScriptCompile Include="app\common\selector.ts" />
+    <TypeScriptCompile Include="app\common\primitives.ts" />
+    <TypeScriptCompile Include="app\common\string-list.component.ts" />
+    <TypeScriptCompile Include="app\common\status.ts" />
+    <TypeScriptCompile Include="app\common\checkbox.component.ts" />
+    <TypeScriptCompile Include="app\common\logger.ts" />
+    <TypeScriptCompile Include="app\common\switch.component.ts" />
+    <TypeScriptCompile Include="app\common\tabs.component.ts" />
+    <TypeScriptCompile Include="app\common\validators.ts" />
+    <TypeScriptCompile Include="app\connect\connect.service.ts" />
+    <TypeScriptCompile Include="app\connect\httpconnection.ts" />
+    <TypeScriptCompile Include="app\main\app.module.ts" />
+    <TypeScriptCompile Include="app\main\app.routes.ts" />
+    <TypeScriptCompile Include="app\notification\information.component.ts" />
+    <TypeScriptCompile Include="app\notification\notification-indicator.ts" />
+    <TypeScriptCompile Include="app\notification\loading.service.ts" />
+    <TypeScriptCompile Include="app\notification\notification.ts" />
+    <TypeScriptCompile Include="app\notification\warning.component.ts" />
+    <TypeScriptCompile Include="app\utils\array.ts" />
+    <TypeScriptCompile Include="app\utils\component.ts" />
+    <TypeScriptCompile Include="app\utils\module.ts" />
+    <TypeScriptCompile Include="app\utils\string.ts" />
+    <TypeScriptCompile Include="app\utils\url.ts" />
+    <TypeScriptCompile Include="app\main\get.component.ts" />
+    <TypeScriptCompile Include="app\versioning\new-version-notification.component.ts" />
+    <TypeScriptCompile Include="app\versioning\version.service.ts" />
+    <TypeScriptCompile Include="app\webserver\app-pools\app-pool-general.component.ts" />
+    <TypeScriptCompile Include="app\webserver\app-pools\app-pool-list.ts" />
+    <TypeScriptCompile Include="app\webserver\app-pools\module.ts" />
+    <TypeScriptCompile Include="app\webserver\app-pools\app-pool.routes.ts" />
+    <TypeScriptCompile Include="app\webserver\app-pools\app-pool.ts" />
+    <TypeScriptCompile Include="app\webserver\app-pools\app-pools.module.ts" />
+    <TypeScriptCompile Include="app\webserver\app-pools\new-app-pool.component.ts" />
+    <TypeScriptCompile Include="app\webserver\app-pools\identity.component.ts" />
+    <TypeScriptCompile Include="app\webserver\app-pools\cpu.component.ts" />
+    <TypeScriptCompile Include="app\webserver\app-pools\rapid-fail-protection.component.ts" />
+    <TypeScriptCompile Include="app\webserver\app-pools\recycling.component.ts" />
+    <TypeScriptCompile Include="app\webserver\authentication\anon-auth.component.ts" />
+    <TypeScriptCompile Include="app\webserver\authentication\authentication.component.ts" />
+    <TypeScriptCompile Include="app\webserver\authentication\authentication.module.ts" />
+    <TypeScriptCompile Include="app\webserver\authentication\authentication.service.ts" />
+    <TypeScriptCompile Include="app\webserver\authentication\authentication.ts" />
+    <TypeScriptCompile Include="app\webserver\authentication\basic-auth.component.ts" />
+    <TypeScriptCompile Include="app\webserver\authentication\digest-auth.component.ts" />
+    <TypeScriptCompile Include="app\webserver\authentication\win-auth.component.ts" />
+    <TypeScriptCompile Include="app\webserver\authorization\authorization.module.ts" />
+    <TypeScriptCompile Include="app\webserver\authorization\authorization.service.ts" />
+    <TypeScriptCompile Include="app\webserver\authorization\authorization.component.ts" />
+    <TypeScriptCompile Include="app\webserver\authorization\authorization.ts" />
+    <TypeScriptCompile Include="app\webserver\authorization\rule.component.ts" />
+    <TypeScriptCompile Include="app\webserver\compression\compression.component.ts" />
+    <TypeScriptCompile Include="app\webserver\compression\compression.module.ts" />
+    <TypeScriptCompile Include="app\webserver\compression\compression.service.ts" />
+    <TypeScriptCompile Include="app\webserver\compression\compression.ts" />
+    <TypeScriptCompile Include="app\webserver\default-documents\default-documents.module.ts" />
+    <TypeScriptCompile Include="app\webserver\default-documents\default-documents.ts" />
+    <TypeScriptCompile Include="app\webserver\default-documents\file-list.component.ts" />
+    <TypeScriptCompile Include="app\webserver\default-documents\default-documents.component.ts" />
+    <TypeScriptCompile Include="app\webserver\default-documents\default-documents.service.ts" />
+    <TypeScriptCompile Include="app\webserver\directory-browsing\directory-browsing.component.ts" />
+    <TypeScriptCompile Include="app\webserver\directory-browsing\directory-browsing.module.ts" />
+    <TypeScriptCompile Include="app\webserver\directory-browsing\directory-browsing.service.ts" />
+    <TypeScriptCompile Include="app\files\navigation.component.ts" />
+    <TypeScriptCompile Include="app\webserver\files\navigation-helper.ts" />
+    <TypeScriptCompile Include="app\webserver\files\new-webfile.component.ts" />
+    <TypeScriptCompile Include="app\files\toolbar.component.ts" />
+    <TypeScriptCompile Include="app\webserver\files\webfile-explorer.ts" />
+    <TypeScriptCompile Include="app\webserver\files\webfile-list.ts" />
+    <TypeScriptCompile Include="app\webserver\files\webfile-list-item.ts" />
+    <TypeScriptCompile Include="app\webserver\files\webfiles.component.ts" />
+    <TypeScriptCompile Include="app\files\file.ts" />
+    <TypeScriptCompile Include="app\files\files.service.ts" />
+    <TypeScriptCompile Include="app\webserver\files\webfile.ts" />
+    <TypeScriptCompile Include="app\webserver\files\webfiles.service.ts" />
+    <TypeScriptCompile Include="app\webserver\files\webfiles.module.ts" />
+    <TypeScriptCompile Include="app\webserver\http-response-headers\http-response-headers.module.ts" />
+    <TypeScriptCompile Include="app\webserver\ip-restrictions\ip-restrictions.module.ts" />
+    <TypeScriptCompile Include="app\webserver\logging\log-file.component.ts" />
+    <TypeScriptCompile Include="app\webserver\logging\log-files.component.ts" />
+    <TypeScriptCompile Include="app\webserver\logging\logging.module.ts" />
+    <TypeScriptCompile Include="app\webserver\mime-maps\mime-maps-list.component.ts" />
+    <TypeScriptCompile Include="app\webserver\mime-maps\mime-maps.component.ts" />
+    <TypeScriptCompile Include="app\webserver\mime-maps\mime-maps.module.ts" />
+    <TypeScriptCompile Include="app\webserver\modules\module.component.ts" />
+    <TypeScriptCompile Include="app\webserver\modules\module-list.component.ts" />
+    <TypeScriptCompile Include="app\webserver\modules\modules.component.ts" />
+    <TypeScriptCompile Include="app\webserver\modules\modules.module.ts" />
+    <TypeScriptCompile Include="app\webserver\modules\modules.service.ts" />
+    <TypeScriptCompile Include="app\webserver\modules\modules.ts" />
+    <TypeScriptCompile Include="app\webserver\modules\new-module.component.ts" />
+    <TypeScriptCompile Include="app\webserver\request-filtering\request-filtering.module.ts" />
+    <TypeScriptCompile Include="app\webserver\request-tracing\request-tracing.module.ts" />
+    <TypeScriptCompile Include="app\webserver\request-tracing\trace-file-list.component.ts" />
+    <TypeScriptCompile Include="app\webserver\request-tracing\trace-file.component.ts" />
+    <TypeScriptCompile Include="app\webserver\request-tracing\trace.component.ts" />
+    <TypeScriptCompile Include="app\webserver\request-tracing\request-tracing.component.ts" />
+    <TypeScriptCompile Include="app\webserver\request-tracing\request-tracing.service.ts" />
+    <TypeScriptCompile Include="app\webserver\request-tracing\request-tracing.ts" />
+    <TypeScriptCompile Include="app\webserver\request-tracing\provider-list.component.ts" />
+    <TypeScriptCompile Include="app\webserver\request-tracing\provider.component.ts" />
+    <TypeScriptCompile Include="app\webserver\request-tracing\rule.component.ts" />
+    <TypeScriptCompile Include="app\webserver\request-tracing\rule-list.component.ts" />
+    <TypeScriptCompile Include="app\webserver\http-response-headers\custom-headers.component.ts" />
+    <TypeScriptCompile Include="app\webserver\http-response-headers\http-response-headers.component.ts" />
+    <TypeScriptCompile Include="app\webserver\http-response-headers\http-response-headers.service.ts" />
+    <TypeScriptCompile Include="app\webserver\http-response-headers\http-response-headers.ts" />
+    <TypeScriptCompile Include="app\webserver\http-response-headers\redirect-headers.component.ts" />
+    <TypeScriptCompile Include="app\webserver\ip-restrictions\dynamic-restrictions.component.ts" />
+    <TypeScriptCompile Include="app\webserver\ip-restrictions\ip-addresses.component.ts" />
+    <TypeScriptCompile Include="app\webserver\ip-restrictions\ip-restrictions.service.ts" />
+    <TypeScriptCompile Include="app\webserver\ip-restrictions\ip-restrictions.component.ts" />
+    <TypeScriptCompile Include="app\webserver\ip-restrictions\ip-restrictions.ts" />
+    <TypeScriptCompile Include="app\webserver\ip-restrictions\restriction-rules.component.ts" />
+    <TypeScriptCompile Include="app\webserver\logging\format.component.ts" />
+    <TypeScriptCompile Include="app\webserver\logging\rollover.component.ts" />
+    <TypeScriptCompile Include="app\webserver\logging\logfields.component.ts" />
+    <TypeScriptCompile Include="app\webserver\logging\logging.component.ts" />
+    <TypeScriptCompile Include="app\webserver\logging\logging.service.ts" />
+    <TypeScriptCompile Include="app\webserver\logging\logging.ts" />
+    <TypeScriptCompile Include="app\webserver\request-filtering\file-extensions.component.ts" />
+    <TypeScriptCompile Include="app\webserver\request-filtering\request-filtering.ts" />
+    <TypeScriptCompile Include="app\webserver\request-filtering\rules.component.ts" />
+    <TypeScriptCompile Include="app\webserver\request-filtering\request-filtering.component.ts" />
+    <TypeScriptCompile Include="app\webserver\request-filtering\request-filtering.service.ts" />
+    <TypeScriptCompile Include="app\webserver\static-content\client-cache.component.ts" />
+    <TypeScriptCompile Include="app\webserver\static-content\static-content.component.ts" />
+    <TypeScriptCompile Include="app\webserver\static-content\static-content.module.ts" />
+    <TypeScriptCompile Include="app\webserver\static-content\static-content.service.ts" />
+    <TypeScriptCompile Include="app\webserver\static-content\static-content.ts" />
+    <TypeScriptCompile Include="app\webserver\vdirs\vdir-list.component.ts" />
+    <TypeScriptCompile Include="app\webserver\vdirs\vdir.ts" />
+    <TypeScriptCompile Include="app\webserver\vdirs\vdirs.module.ts" />
+    <TypeScriptCompile Include="app\webserver\webapps\new-webapp.component.ts" />
+    <TypeScriptCompile Include="app\webserver\webapps\webapp-list.ts" />
+    <TypeScriptCompile Include="app\webserver\webapps\webapps.module.ts" />
+    <TypeScriptCompile Include="app\webserver\webapps\webapp.routes.ts" />
+    <TypeScriptCompile Include="app\webserver\webserver.module.ts" />
+    <TypeScriptCompile Include="app\webserver\webserver.ts" />
+    <TypeScriptCompile Include="app\webserver\webapps\webapp.ts" />
+    <TypeScriptCompile Include="app\main\home.component.ts" />
+    <TypeScriptCompile Include="app\webserver\webserver-header.component.ts" />
+    <TypeScriptCompile Include="app\webserver\webserver-general.component.ts" />
+    <TypeScriptCompile Include="app\webserver\websites\binding-list.component.ts" />
+    <TypeScriptCompile Include="app\webserver\websites\navigator.component.ts" />
+    <TypeScriptCompile Include="app\webserver\websites\site.ts" />
+    <TypeScriptCompile Include="app\utils\diff.ts" />
+    <Content Include="analytics.js" />
+    <TypeScriptCompile Include="app\files\filesystem.d.ts" />
+    <Content Include="app\files\file-icons.css" />
+    <Content Include="main.css" />
+    <Content Include="settings.js" />
+    <Content Include="themes\themes.black.css" />
+    <Content Include="themes\themes.blue.css" />
+    <Content Include="themes\themes.purple.css" />
+    <Content Include="themes\themes.common.css" />
+    <Content Include="index.html" />
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="app\common\component-loader.ts" />
+    <TypeScriptCompile Include="app\common\httpclient.ts" />
+    <TypeScriptCompile Include="app\common\notfound.component.ts" />
+    <TypeScriptCompile Include="app\common\autosize.ts" />
+    <TypeScriptCompile Include="app\connect\api-connection.ts" />
+    <TypeScriptCompile Include="app\connect\connection.component.ts" />
+    <TypeScriptCompile Include="app\connect\connection-picker.component.ts" />
+    <TypeScriptCompile Include="app\connect\connection-store.ts" />
+    <TypeScriptCompile Include="app\notification\notification.service.ts" />
+    <TypeScriptCompile Include="app\notification\notification.component.ts" />
+    <TypeScriptCompile Include="app\main\app.component.ts" />
+    <TypeScriptCompile Include="app\header\header.component.ts" />
+    <TypeScriptCompile Include="app\main\main.ts" />
+    <TypeScriptCompile Include="app\webserver\app-pools\app-pool-list.component.ts" />
+    <TypeScriptCompile Include="app\webserver\app-pools\app-pools.service.ts" />
+    <TypeScriptCompile Include="app\webserver\app-pools\app-pool.component.ts" />
+    <TypeScriptCompile Include="app\webserver\app-pools\app-pool-header.component.ts" />
+    <TypeScriptCompile Include="app\webserver\app-pools\process.component.ts" />
+    <TypeScriptCompile Include="app\common\dynamic.component.ts" />
+    <TypeScriptCompile Include="app\webserver\vdirs\vdirs.service.ts" />
+    <TypeScriptCompile Include="app\webserver\webapps\webapp-general.component.ts" />
+    <TypeScriptCompile Include="app\webserver\webapps\webapp-header.component.ts" />
+    <TypeScriptCompile Include="app\webserver\webapps\webapp.component.ts" />
+    <TypeScriptCompile Include="app\webserver\webapps\webapp-list.component.ts" />
+    <TypeScriptCompile Include="app\webserver\webapps\webapps.service.ts" />
+    <TypeScriptCompile Include="app\webserver\webserver.component.ts" />
+    <TypeScriptCompile Include="app\webserver\webserver.service.ts" />
+    <TypeScriptCompile Include="app\webserver\websites\new-website.component.ts" />
+    <TypeScriptCompile Include="app\webserver\websites\limits.component.ts" />
+    <TypeScriptCompile Include="app\webserver\webserver.routes.ts" />
+    <TypeScriptCompile Include="app\webserver\websites\website-header.component.ts" />
+    <TypeScriptCompile Include="app\webserver\websites\website-general.component.ts" />
+    <TypeScriptCompile Include="app\webserver\websites\website-list.ts" />
+    <TypeScriptCompile Include="app\webserver\websites\website.component.ts" />
+    <TypeScriptCompile Include="app\webserver\websites\website-list.component.ts" />
+    <TypeScriptCompile Include="app\webserver\websites\module.ts" />
+    <TypeScriptCompile Include="app\webserver\websites\websites.module.ts" />
+    <TypeScriptCompile Include="app\webserver\websites\website.routes.ts" />
+    <TypeScriptCompile Include="app\webserver\websites\websites.service.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="modules.js" />
+    <Content Include="package.json" />
+  </ItemGroup>
+  <ItemGroup />
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>Microsoft.IIS.WebManager</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyName>Microsoft.IIS.WebManager</AssemblyName>
+  </PropertyGroup>
+</Project>

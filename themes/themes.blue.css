@@ -1,0 +1,224 @@
+﻿.red {
+    color: #a94442;
+}
+
+.manila {
+    color: #FFE68E
+}
+
+button.delete:not([disabled]):not(:hover):not(:active)::before {
+    color: #a94442;
+}
+
+button.cancel:not([disabled]):not(:hover):not(:active)::before {
+    color: #a94442;
+}
+
+button.ok:not([disabled]):not(:hover):not(:active)::before {
+    color: #0093fe;
+}
+
+button.save:not([disabled]):not(:hover):not(:active)::before,
+button.edit:not([disabled]):not(:hover):not(:active)::before {
+    color: #0093fe;
+}
+
+button.refresh:not([disabled]):not(:hover):not(:active)::before {
+    color: #0093fe;
+}
+
+.border-color,
+.form-control,
+.dataGroup {
+    border-color: #ccc;
+}
+
+.dataGroup,
+.grid-list .grid-item {
+    border-color: #d9d9d9;
+}
+
+.background-normal {
+    background-color: white;
+}
+
+.color-normal,
+.bttn,
+.form-control {
+    color: #444;
+    background-color: white;
+}
+
+.hover-color-active:hover,
+.color-active,
+a {
+    color: #0093fe;
+}
+
+a:hover,
+a:focus {
+    color: inherit;
+}
+
+
+.background-active,
+.hover-active:hover,
+button:active, 
+button.active, 
+button:hover,
+button:hover::before,
+.bttn:active,
+.bttn:hover  {
+    background-color: #0093fe;
+    color: white;
+}
+
+.background-selected,
+.background-selected.hover-editing:hover {
+    background-color: #e3f3ff;
+}
+
+
+.border-active,
+button,
+.bttn.bordered {
+    border-color: #0093fe;
+}
+
+
+
+.color-accent,
+h2 {
+    color: #AA9255;
+}
+
+.background-accent {
+    background-color: #AA9255;
+}
+
+.hover-accent:hover {
+    color: #AA9255;
+}
+
+.border-accent,
+.collapse-heading,
+hr {
+    border-color: #AA9255;
+}
+
+.hover-warning:hover {
+    background-color: #FFB700;
+}
+
+.background-warning {
+    background-color: #FFB700;
+}
+
+button.background-warning:active,
+button.background-warning.active {
+    background-color: #FFB700;
+    color: white;
+}
+
+.border-warning {
+    border-color: #FFB700;
+}
+
+.color-error {
+    color: #ff0000;
+}
+
+.color-antiactive,
+.bttn:hover i.fa,
+button:hover i.fa,
+button:active i.fa,
+button.active i.fa {
+    color: white;
+}
+
+border-antiactive {
+    border-color: white;
+}
+
+.background-editing {
+    background-color: azure;
+}
+
+.hover-editing:hover {
+    background-color: azure;
+}
+
+.background-list {
+    background-color: oldlace;
+}
+
+.background-list.odd {
+    /* #fffcf6 is similar to oldlace but a little bit lighter */
+    background-color: #fffcf6;
+}
+
+input.highlight {
+    background-color: lightgoldenrodyellow;
+}
+
+input:required:invalid:not(.ng-pristine),
+input.ng-invalid:not(.ng-pristine),
+input.ng-invalid:focus:not(.ng-pristine) {
+    border-left-color: red;
+}
+
+.inactive,
+button.inactive i.fa {
+    color: #777;
+}
+
+button.inactive,
+.border-active.inactive {
+    border-color: #777;
+}
+
+.placeholder {
+    color: #999;
+}
+
+/* Disabled */
+
+[disabled] button:not([enabled]),
+[disabled] .bttn:not([enabled]),
+button[disabled],
+.bttn[disabled],
+a[disabled] {
+    border-color: #ccc;
+    color: #ccc;
+    background: none;
+}
+
+[disabled] button:not([enabled]) i.fa,
+[disabled] .bttn:not([enabled])  i.fa,
+button[disabled] i.fa,
+.bttn[disabled]  i.fa {
+    color: #ccc;
+}
+
+[disabled] input:not([enabled]) {
+    background: #eee;
+}
+
+[disabled] .background-active {
+    background-color: #eee;
+    color: #444;
+}
+
+[disabled] .border-active,
+[disabled] .bttn {
+    border-color: #ccc;
+}
+
+
+.sidebar li:hover a {
+    border-color: #0093fe;
+}
+
+.sidebar > vtabs .items:before {
+    color: #0093fe;
+}

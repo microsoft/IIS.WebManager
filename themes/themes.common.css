@@ -1,0 +1,60 @@
+﻿html,body {
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.green {
+    color: #3c763d;
+}
+
+.orange {
+    color: rgb(255,185,0);
+}
+
+.blue {
+    color: #337ab7;
+}
+
+.status {
+    text-transform: capitalize;
+}
+
+.started.status,
+.started .status {
+    color: #4bce46;
+}
+
+.stopped,
+.stopped a {
+    color: #bbbbbb;
+}
+
+.expired,
+.expired a {
+    color: #ff0000;
+}
+
+.border-green {
+    border-color: #3c763d;
+}
+
+.border-red {
+    color: #a94442;
+}
+
+.units {
+    color: #777;
+}
+
+.background-active {
+	transition:             All 0.3s ease;
+	-webkit-transition:     All 0.3s ease;
+	-moz-transition:        All 0.3s ease;
+	-o-transition:          All 0.3s ease;
+}
+
+button,
+.bttn,
+input,
+select {
+    background-color: transparent;
+}

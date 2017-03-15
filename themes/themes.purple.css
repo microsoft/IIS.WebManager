@@ -1,0 +1,195 @@
+﻿.red {
+    color: #a94442;
+}
+
+.manila {
+    color: #FFE68E
+}
+
+.border-color,
+.form-control {
+    border-color: #ccc;
+}
+
+.dataGroup,
+.grid-list .grid-item {
+    border-color: #d9d9d9;
+}
+
+.background-normal {
+    background-color: white;
+}
+
+.color-normal,
+.bttn,
+.form-control {
+    color: #444;
+    background-color: white;
+}
+
+a:hover,
+a:focus {
+    color: inherit;
+}
+
+.hover-color-active:hover,
+.color-active,
+a {
+    color: #8b4298;
+}
+
+.background-active,
+.hover-active:hover,
+button:active, 
+button.active, 
+button:hover,
+.bttn:active,
+.bttn:hover  {
+    background-color: #8b4298;
+    color: white;
+}
+
+.background-selected,
+.background-selected.hover-editing:hover {
+    background-color: #e8d0fe;
+}
+
+.border-active,
+button,
+.bttn.bordered {
+    border-color: #8b4298;
+}
+
+.color-accent,
+h2 {
+    color: #90A01C;
+}
+
+.background-accent {
+    background-color: #90A01C;
+}
+
+.hover-accent:hover {
+    color: #90A01C;
+}
+
+.border-accent,
+.collapse-heading,
+hr {
+    border-color: #90A01C;
+}
+
+.hover-warning:hover {
+    background-color: #FFB700;
+}
+
+.background-warning {
+    background-color: #FFB700;
+}
+
+button.background-warning:active,
+button.background-warning.active {
+    background-color: #FFB700;
+    color: white;
+}
+
+.border-warning {
+    border-color: #FFB700;
+}
+
+.color-error {
+    color: #ff0000;
+}
+
+.color-antiactive,
+.bttn:hover i.fa,
+button:hover i.fa,
+button:active i.fa,
+button.active i.fa {
+    color: white;
+}
+
+border-antiactive {
+    border-color: white;
+}
+
+.background-editing {
+    background-color: #f8f0ff;
+}
+
+.hover-editing:hover {
+    background-color: #f8f0ff;
+}
+
+.background-list {
+    background-color: #e6fde6;
+}
+
+.background-list.odd {
+    background-color: #f6fff9;
+}
+
+input.highlight {
+    background-color: lightgoldenrodyellow;
+}
+
+input:required:invalid:not(.ng-pristine),
+input.ng-invalid:not(.ng-pristine),
+input.ng-invalid:focus:not(.ng-pristine) {
+    border-left-color: red;
+}
+
+.inactive,
+button.inactive i.fa {
+    color: #777;
+}
+
+button.inactive,
+.border-active.inactive {
+    border-color: #777;
+}
+
+.placeholder {
+    color: #999;
+}
+
+/* Disabled */
+
+[disabled] button,
+[disabled] .bttn,
+button[disabled],
+.bttn[disabled] {
+    border-color: #ccc;
+    color: #ccc;
+}
+
+[disabled] button i.fa,
+[disabled] .bttn  i.fa,
+button[disabled] i.fa,
+.bttn[disabled]  i.fa {
+    color: #ccc;
+}
+
+span[disabled],
+a[disabled] {
+    color: #ccc;
+}
+
+[disabled] input {
+    background: #eee;
+}
+
+[disabled] .background-active {
+    background-color: #eee;
+    color: #444;
+}
+
+
+[disabled] .collapse-heading {
+    pointer-events: all;
+}
+
+[disabled] .border-active,
+[disabled] .bttn {
+    border-color: #ccc;
+}

@@ -1,0 +1,252 @@
+﻿.fi i {
+    font-family: FontAwesome;
+    width: 25px;
+    display: inline-block;
+    font-style: normal;
+    font-size: 20px;
+}
+
+.fi i::before {
+    content: "\f016";
+}
+
+.fi i::after {
+    font-size: 11px;
+    position: absolute;
+    top: 50%;
+    left: 9px;
+    transform: translate(-50%, -50%);
+}
+
+.fi.file i::before {
+    color: inherit;
+    opacity: .8;
+    font-size: 18px;
+}
+
+.fi.file i::after {
+    opacity: .8;
+    margin-top: 2px;
+}
+
+.fi.directory i::before {
+    content: "\f07b";
+    color: #FFE68E;
+}
+
+
+/* Text */
+.fi.txt i::before,
+.fi.log i::before,
+.fi.config i::before,
+.fi.ini i::before,
+.fi.inf i::before,
+.fi.md i::before,
+.fi.reg i::before {
+    content: "\f0f6";
+}
+
+/* Image */
+.fi.bmp i::before,
+.fi.tif i::before,
+.fi.tiff i::before,
+.fi.gif i::before,
+.fi.ico i::before,
+.fi.jpg i::before,
+.fi.jpeg i::before,
+.fi.png i::before {
+    content: "\f1c5";
+}
+
+/* Video */
+.fi.avi i::before,
+.fi.asf i::before,
+.fi.mov i::before,
+.fi.mp4 i::before,
+.fi.mpg i::before,
+.fi.ogg i::before,
+.fi.ogv i::before,
+.fi.qt i::before,
+.fi.flv i::before,
+.fi.mkv i::before,
+.fi.webm i::before,
+.fi.vob i::before,
+.fi.wmv i::before {
+    content: "\f1c8";
+}
+
+/* Audio */
+.fi.aa i::before,
+.fi.aac i::before,
+.fi.aax i::before,
+.fi.au i::before,
+.fi.aiff i::before,
+.fi.mp3 i::before,
+.fi.m4p i::before,
+.fi.mmf i::before,
+.fi.wav i::before,
+.fi.wma i::before {
+    content: "\f1c7";
+}
+
+
+/* Code */
+.fi.htm i::before,
+.fi.html i::before,
+.fi.css i::before,
+.fi.xml i::before,
+.fi.xaml i::before,
+.fi.xslt i::before,
+.fi.xsl i::before,
+.fi.xss i::before,
+.fi.xsd i::before,
+.fi.json i::before,
+.fi.map i::before,
+.fi.less i::before,
+.fi.sass i::before,
+
+.fi.asm i::before,
+.fi.asp i::before,
+.fi.aspx i::before,
+.fi.ascx i::before,
+.fi.asax i::before,
+.fi.ashx i::before,
+.fi.asmx i::before,
+.fi.master i::before,
+.fi.browser i::before,
+.fi.vbs i::before,
+.fi.cshtml i::before,
+.fi.vbhtml i::before,
+.fi.svc i::before,
+.fi.sql i::before,
+.fi.c i::before,
+.fi.cpp i::before,
+.fi.cxx i::before,
+.fi.h i::before,
+.fi.hpp i::before,
+.fi.hxx i::before,
+.fi.java i::before,
+.fi.fs i::before,
+.fi.m i::before,
+.fi.swift i::before,
+
+.fi.perl i::before,
+.fi.pl i::before,
+.fi.ps1 i::before,
+.fi.bat i::before,
+.fi.cmd i::before,
+.fi.sh i::before,
+.fi.yml i::before,
+
+.fi.py i::before,
+.fi.rb i::before,
+.fi.php i::before,
+.fi.jsp i::before,
+.fi.js i::before,
+.fi.jsx i::before,
+.fi.ts i::before,
+.fi.targets i::before {
+    content: "\f1c9";
+}
+
+.fi.cs i::after {
+    font-family: 'Segoe UI';
+    content: "c#";
+    left: 8px;
+}
+
+.fi.vb i::after {
+    font-family: 'Segoe UI';
+    content: "vb";
+    left: 8px;
+}
+
+/* Data */
+.fi.db i::before,
+.fi.db2 i::before,
+.fi.db3 i::before,
+.fi.dbf i::before,
+.fi.mdb i::before,
+.fi.mdf i::before,
+.fi.sdf i::before,
+.fi.sqllite i::before,
+.fi.myd i::before,
+.fi.fdb i::before,
+.fi.ttt i::before,
+.fi.csv i::before {
+    content: "\f1c0";
+}
+
+/* Archive */
+.fi.a i::before,
+.fi.ar i::before,
+.fi.cab i::before,
+.fi.gz i::before,
+.fi.tar i::before,
+.fi.rar i::before,
+.fi.z i::before,
+.fi.zz i::before,
+.fi.zip i::before {
+    content: "\f1c6";
+}
+
+/* Executable */
+.fi.exe i::before,
+.fi.msi i::before {
+    content: "\f2d0";
+}
+
+.fi.dll i::after,
+.fi.pyd i::after,
+.fi.jar i::after,
+.fi.winmd i::after {
+    content: "\f085";
+    left: 7px;
+}
+
+/* Security */
+.fi.cert i::after,
+.fi.cer i::after,
+.fi.crt i::after,
+.fi.der i::after,
+.fi.pfx i:after,
+.fi.p7x i::after,
+.fi.p7b i::after,
+.fi.p7r i::after,
+.fi.p12 i::after,
+.fi.pem i::after,
+.fi.cat i::after {
+    left: 7px;
+    content: "\f023";
+}
+
+/* MS Office */
+.fi.pdf i::before {
+    content: "\f1c1";
+}
+
+.fi.doc i::before,
+.fi.docx i::before,
+.fi.rtf i::before {
+    content: "\f1c2";
+}
+
+.fi.xls i::before,
+.fi.xlsx i::before {
+    content: "\f1c3";
+}
+
+.fi.ppt i::before,
+.fi.pptx i::before {
+    content: "\f1c4";
+}
+
+/* Misc */
+.fi.vhd i::before {
+    content: "\f0a0";
+}
+.fi.lnk i::after {
+    font-size: 50%;
+    margin-top: 3px;
+    content: "\f064";
+}

@@ -1,0 +1,267 @@
+﻿import { Injectable, Inject, Optional } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+
+import { Subscription } from "rxjs/Subscription";
+import { Subject } from "rxjs/Subject";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { Observable } from "rxjs/Observable";
+import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/startwith';
+import 'rxjs/add/operator/pairwise';
+import 'rxjs/add/operator/first';
+
+import { HttpClient } from '../../common/httpclient';
+import { IDisposable } from '../../common/IDisposable';
+import { NotificationService } from '../../notification/notification.service';
+
+import { FilesService } from '../../files/files.service';
+import { ApiFile, ApiFileType, MimeTypes, ChangeType } from '../../files/file';
+import { WebFile, WebFileType } from './webfile';
+
+import { WebSite } from '../websites/site';
+import { LocationHash } from '../../common/location-hash';
+
+@Injectable()
+export class WebFilesService implements IDisposable {
+    private _website: WebSite;
+    private _hashWatcher: LocationHash;
+    private _current: BehaviorSubject<WebFile> = new BehaviorSubject<WebFile>(null);
+    private _files: BehaviorSubject<WebFile[]> = new BehaviorSubject<WebFile[]>([]);
+    private _subscriptions: Array<Subscription> = [];
+
+
+    constructor(private _http: HttpClient,
+                @Inject("FilesService") private _svc: FilesService,
+                private _notificationService: NotificationService,
+                location: Location,
+                route: ActivatedRoute) {
+
+        this._hashWatcher = new LocationHash(route, location);
+
+        //
+        // File system changes
+        this._subscriptions.push(_svc.change.subscribe(e => {
+            let dir = this._current.getValue();
+            if (!dir || (e.target.parent.id != dir.file_info.id)) {
+                return;
+            }
+
+            let files = this._files.getValue();
+
+            // Create
+            if (e.type == ChangeType.Created) {
+                this.getFile(dir.path + "/" + e.target.name).then(f => {
+                    files.unshift(f);
+                    this._files.next(files);
+                });
+                return;
+            }
+
+            // Delete
+            if (e.type == ChangeType.Deleted) {
+                let i = files.findIndex(f => f.file_info.id == e.target.id);
+                if (i >= 0) {
+                    files.splice(i, 1);
+                    this._files.next(files);
+                };
+                return;
+            }
+
+            // Update
+            if (e.type == ChangeType.Updated) {
+                let file = files.find(f => f.file_info.id == e.target.id);
+                if (file) {
+                    this.getFile(dir.path + "/" + e.target.name).then(f => Object.assign(file, f));
+                }
+                return;
+            }
+        }));
+    }
+
+    public dispose() {
+        this._subscriptions.forEach(s => s.unsubscribe());
+
+        if (this._hashWatcher != null) {
+            this._hashWatcher.dispose();
+            this._hashWatcher = null;
+        }
+    }
+
+    public init(site: WebSite) {
+        if (!(site && site.id)) {
+            throw Error("Invalid WebSite");
+        }
+
+        this._website = site;
+
+        //
+        // Hash Navigation
+        this._subscriptions.push(this._hashWatcher.hash.startWith(null).pairwise().subscribe((pair: [string, string]) => {
+            let previous = pair[0];
+            let hash = pair[1];
+
+            this.loadDir(hash || '/');
+        }));
+    }
+
+    public get current(): Observable<WebFile> {
+        return this._current.asObservable();
+    }
+
+    public get files(): Observable<WebFile[]> {
+        return this._files.asObservable();
+    }
+
+    public load(path: string) {
+        let cur = this._current.getValue();
+        if (this._hashWatcher.getHash || (cur && cur.path != path)) {
+            this._hashWatcher.setHash(path);
+        }
+        else {
+            this.loadDir(path || '/');
+        }
+    }
+
+    public create(file: WebFile) {
+        file.file_info.type = this.isDir(file) ? ApiFileType.Directory : ApiFileType.File;
+        file.file_info.name = file.name;
+
+        this._svc.create(file.file_info, file.parent.file_info);
+    }
+
+    public delete(files: Array<WebFile>) {
+        return this._svc.delete(files.map(f => f.file_info));
+    }
+
+    public rename(file: WebFile, name: string) {
+        if (name) {
+            this._notificationService.clearWarnings();
+
+            let oldName = file.name;
+            file.name = name;
+
+            this._svc.update(file.file_info, { name: name }).catch(e=> {
+                file.name = oldName;
+                throw e;
+            });
+        }
+    }
+
+    public upload(files: Array<File>, destination: WebFile) {
+        this._svc.upload(destination.file_info, files);
+    }
+
+    public copy(sources: Array<WebFile>, to: WebFile, name?: string) {
+        this._svc.copy(sources.map(s => (s.file_info || <any>s)), to.file_info, name);
+    }
+
+    public move(sources: Array<WebFile>, to: WebFile, name?: string) {
+        this._svc.move(sources.map(s => (s.file_info || <any>s)), to.file_info, name);
+    }
+
+    public drag(e: DragEvent, files: Array<ApiFile>) {
+        this._svc.drag(e, files);
+    }
+
+    public drop(e: DragEvent, destination: WebFile | string) {
+        let apiFiles = this._svc.getDraggedFiles(e);
+        let items = e.dataTransfer.items;
+        let files = e.dataTransfer.files;
+        let copy = (e.dataTransfer.effectAllowed == "all") || ((e.dataTransfer.effectAllowed.toLowerCase() == "copymove") && e.ctrlKey);
+
+        let promise = (destination instanceof WebFile) ? Promise.resolve(destination) : this.getFile(destination);
+
+        promise.then(dir => {
+            //
+            // Copy/Move File(s)
+            if (apiFiles.length > 0) {
+                copy ? this._svc.copy(apiFiles, dir.file_info) : this._svc.move(apiFiles, dir.file_info);
+                return;
+            }
+
+            //
+            // Upload items
+            if (items && items.length > 0) {
+                this._svc.uploadItems(<any>items, dir.file_info);
+                return;
+            }
+
+            //
+            // Upload local File(s)
+            if (files && files.length > 0) {
+                this.upload(<any>files, dir);
+                return;
+            }
+        });
+    }
+
+    public getDraggedFiles(e: DragEvent): Array<ApiFile> {
+        return this._svc.getDraggedFiles(e);
+    }
+
+    public clipboardPaste(e: ClipboardEvent, destination: WebFile) {
+        this._svc.clipboardPaste(e, destination.file_info);
+    }
+
+    public clipboardCopy(e: ClipboardEvent, files: Array<WebFile>) {
+        this._svc.clipboardCopy(e, files.map(f => f.file_info));
+    }
+
+    private loadDir(path: string): Promise<WebFile> {
+        if (!this._website) {
+            Promise.reject("WebSite is not specified");
+        }
+
+        this._notificationService.clearWarnings();
+
+        // Get dir
+        return this.getFile(path)
+            .then(dir => {
+                this._current.next(WebFile.fromObj(dir));
+
+                if (this.isDir(dir)) {
+                    this.loadFiles();
+                }
+
+                return this._current.getValue();
+            })
+            .catch(e => {
+                this._current.next(null);
+
+                // Clear files
+                this._files.getValue().splice(0);
+                this._files.next(this._files.getValue());
+
+                this._svc.handleError(e, path);
+                throw e;
+            });
+    }
+
+    private loadFiles() {
+        let dir = this._current.getValue();
+        let files = this._files.getValue();
+
+        this._http.get("/webserver/files?parent.id=" + dir.id + "&fields=name,type,path,file_info.*")
+            .then(res => {
+                res = (<Array<WebFile>>(res.files)).map(f => WebFile.fromObj(f));
+
+                files.splice(0); // Clear
+
+                res.forEach((f: WebFile) => files.push(f));
+
+                this._files.next(files);
+            });
+    }
+
+    private getFile(path: string): Promise<WebFile> {
+        path = path.replace("//", "/");
+
+        return this._http.get("/webserver/files?website.id=" + this._website.id + "&path=" + encodeURIComponent(path) + "&fields=name,type,path,file_info.*", null, false)
+                         .then(f => WebFile.fromObj(f));
+    }
+
+    private isDir(file: WebFile) {
+        return file.type == WebFileType.Directory || file.type == WebFileType.Vdir || file.type == WebFileType.Application;
+    }
+}

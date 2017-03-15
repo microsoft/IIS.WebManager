@@ -1,0 +1,793 @@
+﻿html,body {
+    height: 100%;
+    overflow-x:hidden;
+}
+
+body {
+    position: relative;
+}
+
+ul {
+    padding-left: 0;
+}
+
+li {    
+    list-style: none;
+    list-style-position:inside;
+}
+
+h2 {
+    font-size: 20px;
+}
+
+a,
+a:hover,
+a:focus{
+    text-decoration: none;
+}
+
+.path {
+    max-width: 800px;
+    width: 100%;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+fieldset {
+    padding-top: 5px;
+    padding-bottom: 15px;
+}
+
+
+fieldset > label {
+    margin-bottom: 10px;
+    display: block;
+}
+
+fieldset .checkbox {
+    margin: 0;
+}
+
+hr {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    border-top-style: dotted;
+    border-top-width: 2px;
+}
+
+
+span.form-control {
+    border: none;
+    box-shadow: none;
+    padding-left: 0;
+    background: none;
+}
+
+.right {
+    float: right;
+}
+
+.clear {
+    clear: both;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.capitalize {
+    text-transform:capitalize;
+}
+
+.side-border {
+    border-left-style: solid;
+    border-left-width: 3px;
+    padding-left: 8px;
+    padding: 6px 12px;
+}
+
+.form-control {
+    border-radius: 0px;
+}
+
+.form-control[hidden] {
+    display: none;
+}
+
+input[type='number'] {
+    width: 120px;
+    max-width: 100%;
+}
+
+input:required:invalid:not(.ng-pristine),
+input.ng-invalid:not(.ng-pristine) {
+    border-left-width: 6px;
+    border-left-style: solid;
+}
+
+.bttn {
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: none;
+    white-space: nowrap;
+    padding: 4px 6px;
+    font-size: 110%;
+}
+
+.bttn.bordered {
+    border-style: solid;
+    border-width: 1px;
+}
+
+button {
+    border-style: solid;
+    border-width: 1px;
+    padding: 4px 6px;
+    cursor: pointer;
+    font-size: 110%;
+}
+
+button:focus {
+    outline: none;
+}
+
+.bttn i.fa,
+button i.fa {
+    font-size: 120%;
+    padding: 3px;
+}
+
+.bttn i,
+button i {
+    border: none;
+}
+
+button i + span {
+    margin-left: 5px;
+    margin-top: -8px;
+}
+
+button span {
+    margin-top: -8px;
+}
+
+button:active, 
+.bttn:active,
+button.active {
+    outline: none;
+}
+
+button::before,
+button::after {
+    font-family: FontAwesome;
+    font-size: 120%;
+    line-height: 22px;
+    vertical-align: middle;
+}
+
+button:not(:empty)::before {
+    width: 22px;
+    text-align:left;
+    display: inline-block;
+}
+
+button:not(:empty)::after {
+    width: 22px;
+    text-align:right;
+    display: inline-block;
+}
+
+.inactive {
+    pointer-events: none;
+}
+
+.no-border {
+    border: none;
+    background: none;
+}
+
+.block {
+    display: block;
+}
+
+.inline-block {
+    display: inline-block !important;
+}
+
+.hide {
+    visibility: hidden;
+}
+
+fieldset.inline-block {
+    vertical-align: middle;
+    margin-right: 40px;
+}
+
+.select-key {
+    cursor: pointer;
+    border-bottom-style: dotted;
+    border-bottom-width: 1px;
+}
+
+.name {
+    max-width: 380px;
+    width: 100%;
+}
+
+.units {
+    font-weight: normal;
+    font-size: small;
+}
+
+.placeholder {
+    font-weight: normal;
+}
+
+.supporting {
+    font-size: 11px;
+}
+
+.support {
+    font-size: 85%;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.fill {
+    width: auto;
+    overflow: hidden;
+}
+        
+button.select {
+    height: 34px;
+}
+
+.shadow {
+    -moz-box-shadow: 3px 3px 5px rgba(0,0,0,0.25);
+    -webkit-box-shadow: 3px 3px 5px rgba(0,0,0,0.25);
+    box-shadow: 3px 3px 5px rgba(0,0,0,0.25);
+}
+
+/*Data grids
+***************************************************************/
+
+.dataWrapper {
+    display: table;
+    border-collapse:collapse;
+    width:100%;
+}
+
+.dataGroupHeader {
+    display: table-header-group;
+    font-weight: 600;
+}
+
+.dataGroupHeader .dataGroup {
+    border-bottom-style: solid;
+    border-bottom-width: 3px;
+}
+
+.dataGroupHeader .dataItem {
+    padding: 22px 0 22px 12px;
+}
+
+.dataGroup {
+    display: table-row;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    width:100%;
+}
+
+.dataItem {
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 12px;
+    overflow:hidden;
+}
+
+.dataItem.primary {
+    background-size: 20px 20px;
+    overflow:hidden;
+    font-size: 16px;
+}
+
+.dataItemLabel, .clickThrough {
+    display: none;
+}
+
+.actionGroup .actionItem {
+    float: left;
+    margin: 0 5px 0 12px;
+    padding: 12px 0 20px 0;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.flags checkbox2 {
+    display: block;
+    margin-top: 4px;
+}
+
+.flags .checkbox {
+    margin-top: 4px;
+}
+
+.flags .checkbox:first-of-type {
+    margin-top: 0;
+}
+
+/*
+    Data Grid
+*/
+
+.create {
+    margin-bottom: 20px;
+}
+
+.grid-list-header {
+    border-bottom-style: solid;
+    border-bottom-width: 3px;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.grid-list-header label {
+    padding-bottom: 22px;
+    margin-bottom: 0;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.grid-list-header .orderby:after {
+    font-family: FontAwesome;   
+    padding-left: 10px;
+    content: "\f0de"
+}
+
+.grid-list-header .orderby.desc:after {
+    content: "\f0dd"
+}
+
+.actions {
+    z-index: 1;
+    top: 0;
+    float: right;
+    display: inline-flex;
+}
+
+.actions button {
+    border: none;
+    display: inline-flex;
+}
+
+.grid-list .grid-item {
+    position: relative;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.grid-list .grid-item fieldset {
+    overflow: hidden;
+}
+
+.grid-list .grid-item [class*="col-"] {
+    display: block;
+}
+
+.grid-item span, 
+.grid-item small,
+.grid-item a {
+    overflow: hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis;
+}
+
+.grid-item small,
+.grid-item a {
+    display: block;
+}
+
+.grid-list .grid-item .valign {
+    padding-top: 8px;
+}
+
+.grid-list .grid-item .valign button {
+    margin-top: -5px;
+    padding-top: 5px;
+}
+
+.grid-list .grid-item select,
+.grid-list .grid-item input,
+.grid-list .grid-item .editing, 
+.grid-list .grid-item.background-editing fieldset > span,
+.grid-list .grid-item.background-editing .no-editing {
+    display: none;
+}
+
+.grid-list .grid-item.background-editing select,
+.grid-list .grid-item.background-editing input,
+.grid-list .grid-item.background-editing .editing {
+    display: inline-block;
+}
+
+.grid-list .grid-item.background-editing input.block {
+    display: block;
+}
+
+.grid-list .grid-item.background-editing .always {
+    display: inherit;
+}
+
+.grid-list .grid-item.background-editing .actions button.editing {
+    display: inline-flex;
+}
+
+/* Adder */
+
+.adder input {
+    border-right:none;
+    border-radius: 0px;
+}
+
+/* Override bootstrap class to display button text */
+.adder .input-group-btn {
+    font-size: inherit;
+}
+
+.adder .input-group-btn button {
+    height: 34px;
+    font-size: inherit;
+}
+
+.adder > ul {
+    width: 100%;
+}
+
+.adder > ul > li {
+    padding: 10px 0 10px 10px;
+    margin-top: 1px;
+    border: 1px solid transparent;
+    position: relative;  
+}
+
+.adder .actions {
+    vertical-align: middle;
+    position:absolute;
+    right: 0px;
+    top: 0px;
+}
+
+/* Disabled */
+
+[disabled], 
+[disabled] input,
+[disabled] button,
+[disabled] select {
+    pointer-events: none;
+}
+
+[disabled] .collapse-heading {
+    pointer-events: all;
+}
+
+[enabled]:not(.inactive),
+input[enabled]:not(.inactive),
+button[enabled]:not(.inactive),
+select[enabled]:not(.inactive) {
+    pointer-events: all;
+}
+
+.center {
+    position:fixed;
+    width: 600px;
+    max-width: 100%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* 
+    Feature Header 
+*/
+.feature-header {
+    padding-top: 20px;
+    padding-bottom: 10px;
+    display: block;
+    width:100%;
+
+    overflow: hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis;
+}
+
+.feature-header .subject {
+    display: inline-block
+}
+
+.feature-header span {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;     
+}
+
+.feature-header h1 {
+    padding: 3px;
+    font-size: 25px;
+}
+
+.feature-header .heading {
+    font-size: 14px;
+    margin-left: 45px;
+    text-transform:uppercase;
+    font-weight: bold;
+    margin-bottom: -3px;
+}
+
+.feature-title {
+    display: inline;
+}
+
+.feature-title a, .feature-title a:hover {
+    color: inherit;
+}
+
+.feature-title:before {
+    font-family: FontAwesome;
+    padding-right: 10px;
+    display:inline-block;
+    font-size: 60%;
+    line-height: 32px;
+    opacity: .7;
+}
+
+
+/* 
+    Collapse
+*/
+.collapse {
+    margin-bottom: 40px;
+}
+
+.collapse-heading {
+    cursor: pointer;
+    border-bottom-style: dotted;
+    border-bottom-width: 1px;
+    margin-bottom: 10px;
+}
+
+.collapse-heading h2:before,
+.collapse-heading .head:before {
+    font-family: FontAwesome;
+    content: "\f078";
+    width: 20px;
+    text-align: left;
+    display:inline-block;
+    font-size: small;
+}
+
+.collapse-heading.collapsed h2:before,
+.collapse-heading.collapsed .head:before {
+    font-family: FontAwesome;
+    content: "\f054";
+    width: 20px;
+    text-align: left;
+    display:inline-block;
+    font-size: small;
+}
+
+.loader {
+    position:fixed;
+    top:0;
+    left:0;
+    width: 0px;
+    height: 0px;
+    overflow: hidden;
+    display: table;
+    text-align:center;
+    z-index: -1030; 
+}
+ 
+.loader .content {
+    display:table-cell;
+    vertical-align:middle;
+    visibility: hidden; 
+    opacity: 0;
+    transition: visibility 0s, opacity .5s linear;
+}
+ 
+.loader.active {
+    height: 100%;
+    width: 100%;
+}
+ 
+.loader.active .content {
+    visibility: visible;
+    opacity: .5;
+}
+
+.loading:after {
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: bottom;
+    -webkit-animation: ellipsis steps(4,end) 1200ms infinite;      
+    animation: ellipsis steps(4,end) 1200ms infinite;
+    content: "\2026"; /* ascii code for the ellipsis character */
+    width: 0px;
+}
+ 
+@keyframes ellipsis {
+    to {
+        width: 1.25em;    
+    }
+}
+ 
+@-webkit-keyframes ellipsis {
+    to {
+        width: 1.25em;    
+    }
+}
+
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+[tabindex="-1"] {
+    outline: none;
+}
+
+.filter {
+    padding: 0;
+}
+
+.filter::before {
+    font-family: FontAwesome;
+    content: "\f0b0";
+    position: absolute;
+    line-height: 32px;
+    padding-right: 5px;
+    right:0;
+}
+
+button.delete:before {
+    content: "\f014";
+}
+
+button.cancel:before {
+    content: "\f00d";
+}
+
+button.ok:before {
+    content: "\f00c";
+}
+
+button.edit:before {
+    content: "\f040";
+}
+
+button.refresh:before {
+    content: "\f021";
+}
+
+button.download:before {
+    content: "\f019";
+}
+
+button.select:after {
+    content: "\f141";
+}
+
+button.save:before {
+    content: "\f0c7";
+}
+
+
+/*
+    SideBar
+*/
+.sidebar {
+    margin-top: 15px;
+}
+
+.sidebar .items {
+    width: 200px;
+    padding: 0;
+    margin: 0;
+    margin-right: 10px;
+    position: fixed;
+    padding-bottom: 5px;
+    display: inline-block;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.sidebar .items li {
+    min-width: 150px;
+    line-height: 250%;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Segoe UI';
+    padding: 0;
+    font-weight: 500;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sidebar .items li > i,
+.sidebar .items li::before {
+    font-family: FontAwesome;
+    width: 20px;
+    display: inline-block;
+    font-weight: normal;
+    opacity: .7;
+}
+
+.sidebar .items li.active span,
+.sidebar .items li:hover span,
+.sidebar .items li:hover a {
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+}
+
+.sidebar .items li a {
+    color: inherit;
+}
+
+.sidebar .content {
+    left: 0;
+}
+
+.sidebar-nav-content,
+.sidebar.nav .content {
+    left: 230px;
+    right: 0;
+    position: absolute;
+    padding-right: 15px;
+}
+
+.sidebar-nav-content {
+    width: 100%;
+    top: 0;
+}
+
+.sidebar:not(.nav) .items {
+    visibility: hidden;
+}
+
+.sidebar > vtabs:last-child .items {
+    bottom: 0;
+}
+
+.sidebar > vtabs:last-child .items:before {
+    content: "FEATURES";
+    text-transform: capitalize;
+    font-size: 70%;
+    font-weight: bold;
+    display: inline-block;
+    width:100%;
+    border-bottom:1px dotted;
+    margin-bottom: 5px;
+    padding-bottom: 2px;
+}
