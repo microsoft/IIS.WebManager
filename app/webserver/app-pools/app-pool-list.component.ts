@@ -1,4 +1,3 @@
-/// <reference path="../../../node_modules/@angular/core/src/core.d.ts" />
 import {Component, OnInit, OnDestroy, Input, Output, EventEmitter, Inject} from '@angular/core';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';

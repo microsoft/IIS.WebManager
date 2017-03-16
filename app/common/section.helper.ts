@@ -1,4 +1,4 @@
-﻿import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
+import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs/Observable'

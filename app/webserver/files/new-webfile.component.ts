@@ -1,4 +1,4 @@
-﻿import {Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef} from '@angular/core';
 
 import {Logger} from '../../common/logger';
 import {NotificationService} from '../../notification/notification.service';

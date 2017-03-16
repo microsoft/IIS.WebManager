@@ -1,4 +1,4 @@
-﻿import {WebSite} from '../websites/site';
+import {WebSite} from '../websites/site';
 
 export class WebApp {
     id: string;

@@ -1,4 +1,4 @@
-﻿export class ArrayUtil {
+export class ArrayUtil {
     public static findIndex(arr: Array<any>, pred: (e) => boolean) {
         for (let i = 0; i < arr.length; i++) {
             if (pred(arr[i])) {

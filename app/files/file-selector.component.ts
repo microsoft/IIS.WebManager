@@ -1,4 +1,4 @@
-﻿import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 
 import { Selector } from '../common/selector';
 

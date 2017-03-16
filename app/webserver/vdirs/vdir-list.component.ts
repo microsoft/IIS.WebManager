@@ -1,4 +1,3 @@
-﻿/// <reference path="../../../node_modules/@angular/core/src/core.d.ts" />
 
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChange, ViewChildren, QueryList } from '@angular/core';
 import { RouterLink } from '@angular/router';

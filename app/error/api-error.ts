@@ -1,4 +1,4 @@
-﻿export class ApiError {
+export class ApiError {
     public title: string;
     public status: number;
     public detail: string;

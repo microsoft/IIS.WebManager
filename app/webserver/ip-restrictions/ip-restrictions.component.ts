@@ -1,4 +1,4 @@
-﻿import {Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import {IpRestrictionsService} from './ip-restrictions.service';
 import {Logger} from '../../common/logger';

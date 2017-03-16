@@ -1,4 +1,3 @@
-﻿/// <reference path="../../node_modules/@angular/core/src/core.d.ts" />
 
 import {NgModule, Component, OnInit, OnChanges, Input, Output, EventEmitter, SimpleChange, QueryList, ViewChildren} from '@angular/core';
 import {CommonModule} from '@angular/common';

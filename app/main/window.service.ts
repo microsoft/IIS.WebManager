@@ -1,4 +1,3 @@
-﻿/// <reference path="../../node_modules/@angular/core/src/core.d.ts" />
 
 import {Injectable, ElementRef, Renderer} from '@angular/core';
 

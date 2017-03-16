@@ -1,4 +1,4 @@
-﻿import { Injectable, Inject } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
 import { FileNavService } from './file-nav.service';

@@ -1,4 +1,4 @@
-﻿interface Metadata {
+interface Metadata {
     modificationTime: Date;
     size: number;
 }

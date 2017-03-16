@@ -1,4 +1,4 @@
-﻿import {DateTime} from "../common/primitives"
+import {DateTime} from "../common/primitives"
 
 export class Certificate {
     id: string;

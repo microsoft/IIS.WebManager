@@ -1,4 +1,4 @@
-﻿import { Component, Input, Inject, ViewChild } from '@angular/core';
+import { Component, Input, Inject, ViewChild } from '@angular/core';
 
 import { Selector } from '../../common/selector';
 import { Humanizer } from '../../common/primitives';

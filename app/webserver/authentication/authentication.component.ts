@@ -1,4 +1,4 @@
-﻿import {Component, OnInit, DoCheck} from '@angular/core';
+import {Component, OnInit, DoCheck} from '@angular/core';
 
 import {AuthenticationService} from './authentication.service';
 import {Logger} from '../../common/logger';

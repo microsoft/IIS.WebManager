@@ -1,4 +1,4 @@
-﻿import {Component, OnInit, Output, Input} from '@angular/core';
+import {Component, OnInit, Output, Input} from '@angular/core';
 import {RouterLink, Router} from '@angular/router';
 import {MODEL_DIRECTIVES} from '../../common/bmodel';
 import {NotificationService} from '../../notification/notification.service';

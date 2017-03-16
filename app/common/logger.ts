@@ -1,4 +1,4 @@
-﻿export class Logger {
+export class Logger {
 
     public information(message) {
         console.log(message);

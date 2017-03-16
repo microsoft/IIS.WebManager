@@ -1,5 +1,3 @@
-﻿/// <reference path="../../node_modules/@angular/core/src/core.d.ts" />
-/// <reference path="../../node_modules/@angular/http/src/http.d.ts" />
 
 import {Http, Headers, Response, Request, RequestOptions, RequestOptionsArgs, RequestMethod} from '@angular/http';
 import {ApiConnection} from './api-connection';

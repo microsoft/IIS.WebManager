@@ -1,4 +1,3 @@
-/// <reference path="../../../node_modules/@angular/core/src/core.d.ts" />
 
 import {Component, Input, Inject} from '@angular/core';
 import {RouterLink, Router} from '@angular/router';

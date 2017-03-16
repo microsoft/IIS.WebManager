@@ -1,4 +1,4 @@
-﻿import {Component, OnInit, SimpleChange, Input, Output, EventEmitter, ViewChildren, QueryList, ElementRef} from '@angular/core';
+import {Component, OnInit, SimpleChange, Input, Output, EventEmitter, ViewChildren, QueryList, ElementRef} from '@angular/core';
 
 import {ComponentUtil} from '../../utils/component';
 

@@ -1,4 +1,4 @@
-﻿export class ApiConnection {
+export class ApiConnection {
     public static get DefaultPort(): string { return "55539"; }
     public static get Protocol(): string { return "https"; }
 

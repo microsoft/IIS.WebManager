@@ -1,4 +1,4 @@
-﻿import { Component, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NotificationComponent } from './notification.component';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../notification/notification';

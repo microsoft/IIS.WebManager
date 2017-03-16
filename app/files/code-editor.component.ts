@@ -1,4 +1,3 @@
-﻿/// <reference path="../../node_modules/monaco-editor/monaco.d.ts" />
 
 import { NgModule, Component, ViewChild, Output, Input, EventEmitter, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';

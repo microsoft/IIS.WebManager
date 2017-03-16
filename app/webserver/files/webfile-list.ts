@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
 
 import 'rxjs/add/operator/buffer';
 import 'rxjs/add/operator/take';

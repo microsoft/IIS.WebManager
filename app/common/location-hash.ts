@@ -1,4 +1,4 @@
-﻿import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { IDisposable } from '../common/IDisposable';

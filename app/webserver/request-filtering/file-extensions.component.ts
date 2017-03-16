@@ -1,4 +1,4 @@
-﻿import {Component, Input, Output, OnInit, EventEmitter, QueryList, ViewChildren, OnChanges, SimpleChange, ElementRef} from '@angular/core';
+import {Component, Input, Output, OnInit, EventEmitter, QueryList, ViewChildren, OnChanges, SimpleChange, ElementRef} from '@angular/core';
 
 import {FileExtension} from './request-filtering';
 import {DiffUtil} from '../../utils/diff';

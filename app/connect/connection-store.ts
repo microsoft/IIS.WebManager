@@ -1,4 +1,4 @@
-﻿import {ApiConnection} from './api-connection';
+import {ApiConnection} from './api-connection';
 import {HttpClient} from '../common/httpclient';
 
 import {Observable} from "rxjs/Observable";

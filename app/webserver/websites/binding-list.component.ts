@@ -1,4 +1,3 @@
-﻿/// <reference path="../../../node_modules/@angular/core/src/core.d.ts" />
 
 import {Component, Input, Output, EventEmitter, ElementRef, ViewChild, ViewChildren, QueryList, OnInit, OnChanges, SimpleChange} from '@angular/core';
 import {NgModel} from '@angular/forms';

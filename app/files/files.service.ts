@@ -1,4 +1,3 @@
-﻿/// <reference path="filesystem.d.ts" />
 
 import { Injectable } from '@angular/core';
 import { RequestMethod, RequestOptionsArgs, Headers, Response } from '@angular/http';

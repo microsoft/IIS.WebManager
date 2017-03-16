@@ -1,4 +1,3 @@
-/// <reference path="../../node_modules/@angular/core/src/core.d.ts" />
 declare var GLOBAL_MODULES: any;
 
 import {Component, Inject} from '@angular/core';

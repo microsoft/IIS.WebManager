@@ -1,4 +1,4 @@
-﻿export type Status = "unknown" | "stopping" | "stopped" | "starting" | "started";
+export type Status = "unknown" | "stopping" | "stopped" | "starting" | "started";
 export const Status = {
     Unknown: "unknown" as Status,
     Stopping: "stopping" as Status,

@@ -1,4 +1,4 @@
-﻿export class Metadata {
+export class Metadata {
     is_local: boolean;
     is_locked: boolean;
     override_mode: OverrideMode;

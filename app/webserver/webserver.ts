@@ -1,4 +1,4 @@
-﻿import {Status} from '../common/status';
+import {Status} from '../common/status';
 
 export class WebServer {
     id: string;

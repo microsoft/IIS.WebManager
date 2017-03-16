@@ -1,4 +1,4 @@
-﻿import {NgModule, Directive, Input, Output, EventEmitter, ElementRef, Optional, Self, Inject, forwardRef, Renderer, OnDestroy} from '@angular/core';
+import {NgModule, Directive, Input, Output, EventEmitter, ElementRef, Optional, Self, Inject, forwardRef, Renderer, OnDestroy} from '@angular/core';
 import {NgModel, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, DefaultValueAccessor} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';

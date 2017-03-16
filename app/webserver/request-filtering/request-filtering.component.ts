@@ -1,4 +1,4 @@
-﻿import {Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import {RequestFilteringSettings, RequestFilteringChildType} from './request-filtering';
 import {RequestFilteringService} from './request-filtering.service';

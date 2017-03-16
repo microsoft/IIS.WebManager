@@ -1,5 +1,3 @@
-/// <reference path="../../../node_modules/@angular/core/src/core.d.ts" />
-/// <reference path="../../../node_modules/@angular/http/src/http.d.ts" />
 
 import {Injectable, Inject, Optional} from '@angular/core';
 import {Response} from '@angular/http';

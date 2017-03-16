@@ -1,4 +1,4 @@
-﻿import {Component, OnInit, OnDestroy, SimpleChange, Input, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, OnDestroy, SimpleChange, Input, Output, EventEmitter} from '@angular/core';
 
 import {DiffUtil} from '../../utils/diff';
 import {OrderBy} from '../../common/sort.pipe';

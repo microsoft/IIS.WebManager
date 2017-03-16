@@ -1,4 +1,4 @@
-﻿import { Component, OnDestroy, Input, Inject, ViewChild } from '@angular/core';
+import { Component, OnDestroy, Input, Inject, ViewChild } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 

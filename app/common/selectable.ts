@@ -1,4 +1,4 @@
-﻿import { NgModule, Directive, Injectable, ElementRef, Input, ContentChildren, QueryList, OnInit, Renderer, Optional, OnDestroy, OnChanges, SimpleChange, ChangeDetectorRef } from '@angular/core';
+import { NgModule, Directive, Injectable, ElementRef, Input, ContentChildren, QueryList, OnInit, Renderer, Optional, OnDestroy, OnChanges, SimpleChange, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 

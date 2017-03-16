@@ -1,4 +1,3 @@
-/// <reference path="../../node_modules/@angular/core/src/core.d.ts" />
 
 import {Component, Input} from '@angular/core';
 import {WebServer} from './webserver';

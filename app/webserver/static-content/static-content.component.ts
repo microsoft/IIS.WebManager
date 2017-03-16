@@ -1,4 +1,4 @@
-﻿import {Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import {StaticContentService} from './static-content.service';
 import {Logger} from '../../common/logger';

@@ -1,4 +1,4 @@
-﻿import {NgModule, Component, OnInit, OnDestroy, OnChanges, AfterContentInit, Output, Input, EventEmitter, ViewChild, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef, SimpleChange, ContentChildren, QueryList, Directive} from '@angular/core';
+import {NgModule, Component, OnInit, OnDestroy, OnChanges, AfterContentInit, Output, Input, EventEmitter, ViewChild, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef, SimpleChange, ContentChildren, QueryList, Directive} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 

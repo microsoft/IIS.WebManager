@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, OnDestroy, Output, Input, EventEmitter, Inject, Injectable, ViewChild, ElementRef, ContentChildren, QueryList } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, Input, EventEmitter, Inject, Injectable, ViewChild, ElementRef, ContentChildren, QueryList } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 

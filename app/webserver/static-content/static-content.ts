@@ -1,4 +1,4 @@
-﻿import {Metadata} from '../../common/metadata';
+import {Metadata} from '../../common/metadata';
 
 export class StaticContent {
     id: string;

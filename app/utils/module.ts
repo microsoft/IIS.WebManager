@@ -1,4 +1,4 @@
-﻿declare var GLOBAL_MODULES: any;
+declare var GLOBAL_MODULES: any;
 
 import { UrlUtil } from './url';
 

@@ -1,4 +1,4 @@
-﻿export class Progress {
+export class Progress {
     public completed: number;
     public outOf: number;
 }

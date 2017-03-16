@@ -1,4 +1,4 @@
-﻿export class DiffUtil {
+export class DiffUtil {
     public static diff(original, modified) {
 
         if (original == null || modified == null) {

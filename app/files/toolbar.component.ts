@@ -1,4 +1,4 @@
-﻿import { NgModule, Component, Output, Input, EventEmitter } from '@angular/core';
+import { NgModule, Component, Output, Input, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 

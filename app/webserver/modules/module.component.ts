@@ -1,4 +1,4 @@
-﻿import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 
 import {LocalModule, GlobalModule} from './modules';
 

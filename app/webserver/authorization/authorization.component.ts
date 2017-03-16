@@ -1,4 +1,4 @@
-﻿import {Component, QueryList, ViewChildren, OnInit} from '@angular/core';
+import {Component, QueryList, ViewChildren, OnInit} from '@angular/core';
 
 import {AuthorizationService} from './authorization.service';
 import {Logger} from '../../common/logger';

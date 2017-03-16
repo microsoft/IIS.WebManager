@@ -1,4 +1,4 @@
-﻿import { Metadata } from '../../common/metadata';
+import { Metadata } from '../../common/metadata';
 import { ApiFile } from '../../files/file'
 
 export class RequestTracing {

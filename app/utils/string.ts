@@ -1,4 +1,4 @@
-﻿export class StringUtil {
+export class StringUtil {
     public static trimRight(from: string, targets: Array<string>): string {
         let found = true;
         while (found) {

@@ -1,4 +1,3 @@
-/// <reference path="../../node_modules/@angular/core/src/core.d.ts" />
 
 import {NgModule, OnInit, ElementRef, HostListener, Directive} from '@angular/core';
 import {CommonModule} from '@angular/common';

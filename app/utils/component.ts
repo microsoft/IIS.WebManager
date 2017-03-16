@@ -1,4 +1,4 @@
-﻿declare var $: any;
+declare var $: any;
 
 import {ElementRef, ComponentRef} from '@angular/core';
 

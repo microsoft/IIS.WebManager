@@ -1,4 +1,3 @@
-﻿/// <reference path="../../../node_modules/@angular/core/src/core.d.ts" />
 
 import {Component, Input, Output, EventEmitter, ElementRef, OnInit} from '@angular/core';
 

@@ -1,4 +1,4 @@
-﻿import {Component, Input, Output, OnInit, EventEmitter, ViewChildren, ViewChild, QueryList, OnChanges, SimpleChange, ElementRef} from '@angular/core';
+import {Component, Input, Output, OnInit, EventEmitter, ViewChildren, ViewChild, QueryList, OnChanges, SimpleChange, ElementRef} from '@angular/core';
 
 import {FilteringRule} from './request-filtering';
 

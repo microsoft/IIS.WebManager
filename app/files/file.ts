@@ -1,4 +1,4 @@
-﻿export type ApiFileType = "file" | "directory";
+export type ApiFileType = "file" | "directory";
 export const ApiFileType = {
     File: "file" as ApiFileType,
     Directory: "directory" as ApiFileType

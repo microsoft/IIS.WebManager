@@ -1,4 +1,4 @@
-﻿import {Status} from '../../common/status';
+import {Status} from '../../common/status';
 import {Certificate} from '../../certificates/certificate'
 
 

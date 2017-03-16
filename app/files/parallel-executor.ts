@@ -1,4 +1,4 @@
-﻿import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/take';
 import {Subject} from "rxjs/Subject";
 
 class Executable {

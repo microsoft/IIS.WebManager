@@ -1,4 +1,4 @@
-﻿import { NgModule, Component, AfterViewInit, Input, Inject, Optional, ViewChild, ViewChildren, ContentChildren, QueryList, OnInit, ElementRef, Renderer, OnDestroy } from '@angular/core';
+import { NgModule, Component, AfterViewInit, Input, Inject, Optional, ViewChild, ViewChildren, ContentChildren, QueryList, OnInit, ElementRef, Renderer, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';

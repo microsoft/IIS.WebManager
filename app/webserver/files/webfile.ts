@@ -1,4 +1,4 @@
-﻿import { WebSite } from '../websites/site'
+import { WebSite } from '../websites/site'
 import { ApiFileType, ApiFile } from '../../files/file';
 
 export type WebFileType = "file" | "directory" | "vdir";

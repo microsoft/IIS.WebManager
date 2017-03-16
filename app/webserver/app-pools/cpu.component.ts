@@ -1,4 +1,3 @@
-/// <reference path="../../../node_modules/@angular/core/src/core.d.ts" />
 
 import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {Cpu, ProcessorAction} from './app-pool';

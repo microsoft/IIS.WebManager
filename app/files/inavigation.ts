@@ -1,4 +1,4 @@
-﻿import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs/Observable";
 import { Drop } from './navigation.component';
 
 export interface INavigation {

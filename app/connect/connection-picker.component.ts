@@ -1,4 +1,4 @@
-﻿import {Component, OnDestroy, ElementRef} from '@angular/core';
+import {Component, OnDestroy, ElementRef} from '@angular/core';
 import {RouterLink, Router} from '@angular/router';
 import {Subscription}   from 'rxjs/Subscription';
 

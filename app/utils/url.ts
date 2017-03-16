@@ -1,4 +1,4 @@
-﻿export class UrlUtil {
+export class UrlUtil {
 
     private static _anchor: HTMLAnchorElement;
 

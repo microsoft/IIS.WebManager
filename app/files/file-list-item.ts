@@ -1,4 +1,4 @@
-﻿import { Component, Input, Output, Inject, ViewChild, EventEmitter } from '@angular/core';
+import { Component, Input, Output, Inject, ViewChild, EventEmitter } from '@angular/core';
 
 import { Selector } from '../common/selector';
 import { NotificationService } from '../notification/notification.service';

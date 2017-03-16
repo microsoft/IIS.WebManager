@@ -1,4 +1,4 @@
-﻿import {Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import {DirectoryBrowsingService} from './directory-browsing.service';
 import {Logger} from '../../common/logger';

@@ -1,4 +1,4 @@
-﻿export class Int16 {
+export class Int16 {
     public static get Max(): number { return 32767; }
     public static get Min(): number { return -32768; }
 }

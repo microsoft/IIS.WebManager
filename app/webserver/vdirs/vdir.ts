@@ -1,4 +1,4 @@
-﻿import {WebApp} from '../webapps/webapp';
+import {WebApp} from '../webapps/webapp';
 import {WebSite} from '../websites/site';
 
 export type LogonMethod = "interactive" | "batch" | "network" | "network_cleartext";

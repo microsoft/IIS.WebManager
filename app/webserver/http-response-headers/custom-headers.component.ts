@@ -1,4 +1,3 @@
-﻿/// <reference path="../../../node_modules/@angular/core/src/core.d.ts" />
 
 import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import {HttpResponseHeaders, CustomHeader} from './http-response-headers';
