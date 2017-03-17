@@ -20,13 +20,12 @@
     "rxjs": "5.0.0-beta.12",
     "systemjs": "0.19.27",
     "zone.js": "0.6.26",
-    "gulp": "3.9.1",
-    "gulp-uglify": "1.5.3",
     "angulartics2": "1.1.12",
-
     "monaco-editor": "0.8.1"
   },
   "devDependencies": {
-    "@types/core-js": "0.9.35"
+    "@types/core-js": "0.9.35",
+    "gulp": "3.9.1",
+    "gulp-uglify": "1.5.3"
   }
 }
