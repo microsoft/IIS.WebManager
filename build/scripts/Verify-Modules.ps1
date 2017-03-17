@@ -7,7 +7,7 @@ $Dependencies = $ShrinkWrap.dependencies
 $Modules = $Dependencies | Get-Member | where {$_.MemberType -eq "NoteProperty"} | %{$_.name}
 
 function VerifyModule($module, $path, $obj) {
-    "Verifying $Name"
+    "Verifying $module"
 
     $subDependencies = $obj."$module".dependencies
     if ($subDependencies -ne $null) {
@@ -27,7 +27,6 @@ function VerifyModule($module, $path, $obj) {
 Push-Location $ScriptDir
 try {
     foreach ($Module in $Modules) {
-        "verify $Module"
         VerifyModule $Module "$($NodeModules.FullName)/$Module" $Dependencies
     }
 }

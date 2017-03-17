@@ -1,5 +1,5 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Target Name="VerifyChecksum" BeforeTargets="PreComputeCompileTypeScript">
-    <Exec Command="powershell.exe $(MSBuildProjectDirectory)\build\scripts\Verify-Checksum.ps1" />
+    <Exec Command="powershell.exe Set-ExecutionPolicy Unrestricted -Scope Process; $(MSBuildProjectDirectory)\build\scripts\Verify-Modules.ps1" />
   </Target>
 </Project>  

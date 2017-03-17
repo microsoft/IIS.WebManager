@@ -21,6 +21,7 @@
     <TypeScriptSourceRoot />
     <OutputPath>..\bin\</OutputPath>
   </PropertyGroup>
+  <Import Condition="'$(Configuration)' == 'Release'" Project="build\targets\VerifyModules.targets"/>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
