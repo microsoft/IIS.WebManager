@@ -1,0 +1,5 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="VerifyChecksum" BeforeTargets="PreComputeCompileTypeScript">
+    <Exec Command="powershell.exe $(MSBuildProjectDirectory)\build\scripts\Verify-Checksum.ps1" />
+  </Target>
+</Project>  

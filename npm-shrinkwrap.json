@@ -1,0 +1,1312 @@
+﻿{
+    "dependencies":  {
+                         "@angular/common":  {
+                                                 "version":  "2.0.2",
+                                                 "from":  "@angular/common@2.0.2",
+                                                 "resolved":  "https://registry.npmjs.org/@angular/common/-/common-2.0.2.tgz",
+                                                 "Hash":  "001849AE0EEDBE68608E88C8F0BDF3CF89CC65725F6CB24C9E4BBE7804E84BC2"
+                                             },
+                         "@angular/compiler":  {
+                                                   "version":  "2.0.2",
+                                                   "from":  "@angular/compiler@2.0.2",
+                                                   "resolved":  "https://registry.npmjs.org/@angular/compiler/-/compiler-2.0.2.tgz",
+                                                   "Hash":  "4352BCA0DB7F062FD3D31A51EA7C7DC69EF6CEFBFD0F9FABD652AEFCFFE0211A"
+                                               },
+                         "@angular/core":  {
+                                               "version":  "2.0.2",
+                                               "from":  "@angular/core@2.0.2",
+                                               "resolved":  "https://registry.npmjs.org/@angular/core/-/core-2.0.2.tgz",
+                                               "Hash":  "F7A27931E54710246D302D5BE72F224DC870A627CFD6E2372AA69EDD083EC05E"
+                                           },
+                         "@angular/forms":  {
+                                                "version":  "2.0.2",
+                                                "from":  "@angular/forms@2.0.2",
+                                                "resolved":  "https://registry.npmjs.org/@angular/forms/-/forms-2.0.2.tgz",
+                                                "Hash":  "90D7CE45F84D93263DCE6CC0319B16ABC4C74AF9D994109CB86E7D77410B45DC"
+                                            },
+                         "@angular/http":  {
+                                               "version":  "2.0.2",
+                                               "from":  "@angular/http@2.0.2",
+                                               "resolved":  "https://registry.npmjs.org/@angular/http/-/http-2.0.2.tgz",
+                                               "Hash":  "815E04F75820D538EAB4BC5BD6CBBB91FCDA91F29263B82577B394549DD22D9F"
+                                           },
+                         "@angular/platform-browser":  {
+                                                           "version":  "2.0.2",
+                                                           "from":  "@angular/platform-browser@2.0.2",
+                                                           "resolved":  "https://registry.npmjs.org/@angular/platform-browser/-/platform-browser-2.0.2.tgz",
+                                                           "Hash":  "3FB62A644D33A7CBF09E3EE2C9FFB8ED2456FB47E574D58478C25AAEE6066B45"
+                                                       },
+                         "@angular/platform-browser-dynamic":  {
+                                                                   "version":  "2.0.2",
+                                                                   "from":  "@angular/platform-browser-dynamic@2.0.2",
+                                                                   "resolved":  "https://registry.npmjs.org/@angular/platform-browser-dynamic/-/platform-browser-dynamic-2.0.2.tgz",
+                                                                   "Hash":  "544576707C6A597BA894AA0D486A79B08D762ABE9845C98A9DFED5F4FCB463E2"
+                                                               },
+                         "@angular/router":  {
+                                                 "version":  "3.0.2",
+                                                 "from":  "@angular/router@3.0.2",
+                                                 "resolved":  "https://registry.npmjs.org/@angular/router/-/router-3.0.2.tgz",
+                                                 "Hash":  "BF1D5EE4B093D55F1B90E481448AEA7A6C8821C5EBE131A303561FB51B985FA6"
+                                             },
+                         "@angular/upgrade":  {
+                                                  "version":  "2.0.2",
+                                                  "from":  "@angular/upgrade@2.0.2",
+                                                  "resolved":  "https://registry.npmjs.org/@angular/upgrade/-/upgrade-2.0.2.tgz",
+                                                  "Hash":  "BD2ED69D47B8329E676DA80B19CAA2FCC1C273757CEDF4713095762D25892AC4"
+                                              },
+                         "align-text":  {
+                                            "version":  "0.1.4",
+                                            "from":  "align-text@\u003e=0.1.3 \u003c0.2.0",
+                                            "resolved":  "https://registry.npmjs.org/align-text/-/align-text-0.1.4.tgz",
+                                            "Hash":  "0ABC596DC7AC7DE25845FE2A59D90E9B24352CA772AE5E35DCFFDC3CFE887D5D"
+                                        },
+                         "angulartics2":  {
+                                              "version":  "1.1.12",
+                                              "from":  "angulartics2@1.1.12",
+                                              "resolved":  "https://registry.npmjs.org/angulartics2/-/angulartics2-1.1.12.tgz",
+                                              "Hash":  "DAE0AD69A2B2C8DC4DA7D67ABC817942BEA552D3990EB80ADF36D9A4378AAC95"
+                                          },
+                         "ansi-regex":  {
+                                            "version":  "2.1.1",
+                                            "from":  "ansi-regex@\u003e=2.0.0 \u003c3.0.0",
+                                            "resolved":  "https://registry.npmjs.org/ansi-regex/-/ansi-regex-2.1.1.tgz",
+                                            "Hash":  "04C3E7F82540011066019A4826909520247073C6161CF2AF2CEC0552DC5EB988"
+                                        },
+                         "ansi-styles":  {
+                                             "version":  "2.2.1",
+                                             "from":  "ansi-styles@\u003e=2.2.1 \u003c3.0.0",
+                                             "resolved":  "https://registry.npmjs.org/ansi-styles/-/ansi-styles-2.2.1.tgz",
+                                             "Hash":  "42D3F1F05DC9FCB97CDFBD612F9033A72E7383CE54D003D8901B801F1733882C"
+                                         },
+                         "archy":  {
+                                       "version":  "1.0.0",
+                                       "from":  "archy@\u003e=1.0.0 \u003c2.0.0",
+                                       "resolved":  "https://registry.npmjs.org/archy/-/archy-1.0.0.tgz",
+                                       "Hash":  "1F9794A90F38C04D6E0459DBEA24A067866C6A63BA3FDD35D237E934B5E30C0D"
+                                   },
+                         "arr-diff":  {
+                                          "version":  "2.0.0",
+                                          "from":  "arr-diff@\u003e=2.0.0 \u003c3.0.0",
+                                          "resolved":  "https://registry.npmjs.org/arr-diff/-/arr-diff-2.0.0.tgz",
+                                          "Hash":  "172DE1D9A6533645478C52E08D4FCB39FED1F78752859C14B5F8CB4EB7DD5BAB"
+                                      },
+                         "arr-flatten":  {
+                                             "version":  "1.0.1",
+                                             "from":  "arr-flatten@\u003e=1.0.1 \u003c2.0.0",
+                                             "resolved":  "https://registry.npmjs.org/arr-flatten/-/arr-flatten-1.0.1.tgz",
+                                             "Hash":  "B2135F1AEB517A68847763FAAC353DA2AED3CDF0DCE882EF79C677837BB6B5B4"
+                                         },
+                         "array-differ":  {
+                                              "version":  "1.0.0",
+                                              "from":  "array-differ@\u003e=1.0.0 \u003c2.0.0",
+                                              "resolved":  "https://registry.npmjs.org/array-differ/-/array-differ-1.0.0.tgz",
+                                              "Hash":  "2FB6196BAE854B5749304F528905E65BBDA9D8C74095565048C1AB8A2C6E13EA"
+                                          },
+                         "array-uniq":  {
+                                            "version":  "1.0.3",
+                                            "from":  "array-uniq@\u003e=1.0.2 \u003c2.0.0",
+                                            "resolved":  "https://registry.npmjs.org/array-uniq/-/array-uniq-1.0.3.tgz",
+                                            "Hash":  "0DC3053EFE3EC43F48C3C450D48C27AC90700232564678AB4D01F0E875B4CEA2"
+                                        },
+                         "array-unique":  {
+                                              "version":  "0.2.1",
+                                              "from":  "array-unique@\u003e=0.2.1 \u003c0.3.0",
+                                              "resolved":  "https://registry.npmjs.org/array-unique/-/array-unique-0.2.1.tgz",
+                                              "Hash":  "307452FAD3D06775B64AA8AA0905C6197E098A7A3FF0E4A2799888291D9C0C91"
+                                          },
+                         "async":  {
+                                       "version":  "0.2.10",
+                                       "from":  "async@\u003e=0.2.6 \u003c0.3.0",
+                                       "resolved":  "https://registry.npmjs.org/async/-/async-0.2.10.tgz",
+                                       "Hash":  "9FFDE6D1EDB5F500234234D28E2A79641994C1F3EA3F48A1AABA8ED21B334FD8"
+                                   },
+                         "balanced-match":  {
+                                                "version":  "0.4.2",
+                                                "from":  "balanced-match@\u003e=0.4.1 \u003c0.5.0",
+                                                "resolved":  "https://registry.npmjs.org/balanced-match/-/balanced-match-0.4.2.tgz",
+                                                "Hash":  "5B3BCA3757E9E45FAAD8D3B980673F1CD5ABEEBC76033DD24B2A2B1EADB1AAA5"
+                                            },
+                         "beeper":  {
+                                        "version":  "1.1.1",
+                                        "from":  "beeper@\u003e=1.0.0 \u003c2.0.0",
+                                        "resolved":  "https://registry.npmjs.org/beeper/-/beeper-1.1.1.tgz",
+                                        "Hash":  "6D54D9A3799ED585771BA244B92EDB09A0AC1531D3543BFCCA3179ADE8CE3CA3"
+                                    },
+                         "bootstrap":  {
+                                           "version":  "3.3.7",
+                                           "from":  "bootstrap@3.3.7",
+                                           "resolved":  "https://registry.npmjs.org/bootstrap/-/bootstrap-3.3.7.tgz",
+                                           "Hash":  "6A5E17A69ADA3DFF645735129A614A5B2DEA23C519E5DD24ECB3A429BDE896EF"
+                                       },
+                         "brace-expansion":  {
+                                                 "version":  "1.1.6",
+                                                 "from":  "brace-expansion@\u003e=1.0.0 \u003c2.0.0",
+                                                 "resolved":  "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.6.tgz",
+                                                 "Hash":  "13477D3B5EF16D314F0CD691D13D806127528954743B518F0671BF952468B2B2"
+                                             },
+                         "braces":  {
+                                        "version":  "1.8.5",
+                                        "from":  "braces@\u003e=1.8.2 \u003c2.0.0",
+                                        "resolved":  "https://registry.npmjs.org/braces/-/braces-1.8.5.tgz",
+                                        "Hash":  "D95812DD39FA1E98D621254639C44C20738D9A4281827707EE49C2520181B435"
+                                    },
+                         "buffer-shims":  {
+                                              "version":  "1.0.0",
+                                              "from":  "buffer-shims@\u003e=1.0.0 \u003c2.0.0",
+                                              "resolved":  "https://registry.npmjs.org/buffer-shims/-/buffer-shims-1.0.0.tgz",
+                                              "Hash":  "E924BB35782BA03B7C0717C2ED4A4A120E2E26F1B3B8E6530452597F8E595443"
+                                          },
+                         "camelcase":  {
+                                           "version":  "1.2.1",
+                                           "from":  "camelcase@\u003e=1.0.2 \u003c2.0.0",
+                                           "resolved":  "https://registry.npmjs.org/camelcase/-/camelcase-1.2.1.tgz",
+                                           "Hash":  "656CDB10BFD71DEFD0F0CCD7060268E23386FDEF413A614462B7C053A3998EC5"
+                                       },
+                         "center-align":  {
+                                              "version":  "0.1.3",
+                                              "from":  "center-align@\u003e=0.1.1 \u003c0.2.0",
+                                              "resolved":  "https://registry.npmjs.org/center-align/-/center-align-0.1.3.tgz",
+                                              "Hash":  "80E30CBE738D3E6FF463E947B051014D3A16BA1DC030ED558D73725F21E0B777"
+                                          },
+                         "chalk":  {
+                                       "version":  "1.1.3",
+                                       "from":  "chalk@\u003e=1.0.0 \u003c2.0.0",
+                                       "resolved":  "https://registry.npmjs.org/chalk/-/chalk-1.1.3.tgz",
+                                       "Hash":  "1305FE52150CB0015B5547D5F3093B8CE8921D57387686E52C1407A99812D08D"
+                                   },
+                         "cliui":  {
+                                       "version":  "2.1.0",
+                                       "from":  "cliui@\u003e=2.1.0 \u003c3.0.0",
+                                       "resolved":  "https://registry.npmjs.org/cliui/-/cliui-2.1.0.tgz",
+                                       "Hash":  "A23A16F8357B56436168D301E06102D76E3459013A09C14F1FF090F4001E0FFD"
+                                   },
+                         "clone":  {
+                                       "version":  "1.0.2",
+                                       "from":  "clone@\u003e=1.0.0 \u003c2.0.0",
+                                       "resolved":  "https://registry.npmjs.org/clone/-/clone-1.0.2.tgz",
+                                       "Hash":  "90601B9560E083344D7D6492AAA893FF0E21E1E6BA6C3197B4BC0BD74B579E33"
+                                   },
+                         "clone-stats":  {
+                                             "version":  "0.0.1",
+                                             "from":  "clone-stats@\u003e=0.0.1 \u003c0.0.2",
+                                             "resolved":  "https://registry.npmjs.org/clone-stats/-/clone-stats-0.0.1.tgz",
+                                             "Hash":  "BF6C8CA6F7758E3834931EA1111B0ED96EE2EBD381AAA269B460B0C14A0033ED"
+                                         },
+                         "concat-map":  {
+                                            "version":  "0.0.1",
+                                            "from":  "concat-map@0.0.1",
+                                            "resolved":  "https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz",
+                                            "Hash":  "B84005941F16AD42A58034F7B751C177A211AED6A2F87831BD43E78CE3C52742"
+                                        },
+                         "core-js":  {
+                                         "version":  "2.4.1",
+                                         "from":  "core-js@2.4.1",
+                                         "resolved":  "https://registry.npmjs.org/core-js/-/core-js-2.4.1.tgz",
+                                         "Hash":  "863EC8EE01EC67C0FD49B32413C1519261765E61BA02B45EAF592456D02825FA"
+                                     },
+                         "core-util-is":  {
+                                              "version":  "1.0.2",
+                                              "from":  "core-util-is@\u003e=1.0.0 \u003c1.1.0",
+                                              "resolved":  "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.2.tgz",
+                                              "Hash":  "74D5DEDFF4CAEAE83C0CCF0F022F6029F7829F34CD0C09C32BEDD98A0AFBF9DC"
+                                          },
+                         "dateformat":  {
+                                            "version":  "2.0.0",
+                                            "from":  "dateformat@\u003e=2.0.0 \u003c3.0.0",
+                                            "resolved":  "https://registry.npmjs.org/dateformat/-/dateformat-2.0.0.tgz",
+                                            "Hash":  "7DBC69F638CC62F0B2ABBE1E233C94A4FDF17E71A63CAABDC0BA73D898B6501E"
+                                        },
+                         "deap":  {
+                                      "version":  "1.0.0",
+                                      "from":  "deap@\u003e=1.0.0 \u003c2.0.0",
+                                      "resolved":  "https://registry.npmjs.org/deap/-/deap-1.0.0.tgz",
+                                      "Hash":  "3DAD241032412CF1E18948774527C5CD4907960698098D16A00AC19BCF869EB3"
+                                  },
+                         "decamelize":  {
+                                            "version":  "1.2.0",
+                                            "from":  "decamelize@\u003e=1.0.0 \u003c2.0.0",
+                                            "resolved":  "https://registry.npmjs.org/decamelize/-/decamelize-1.2.0.tgz",
+                                            "Hash":  "4F8FF911BC424E584A4E142A08219D62F08D75F85CF8D9BE19AE59B2521C6090"
+                                        },
+                         "defaults":  {
+                                          "version":  "1.0.3",
+                                          "from":  "defaults@\u003e=1.0.0 \u003c2.0.0",
+                                          "resolved":  "https://registry.npmjs.org/defaults/-/defaults-1.0.3.tgz",
+                                          "Hash":  "5FE6615E72310821C62A1FB5C08A5BDC923184BDBABF7B5AD13FAE6E6B8E5EB0"
+                                      },
+                         "deprecated":  {
+                                            "version":  "0.0.1",
+                                            "from":  "deprecated@\u003e=0.0.1 \u003c0.0.2",
+                                            "resolved":  "https://registry.npmjs.org/deprecated/-/deprecated-0.0.1.tgz",
+                                            "Hash":  "AF1B6CBC0F8333085D3DF1BBA64733E3095944962C3CD763D1CD8753DAF8FB88"
+                                        },
+                         "detect-file":  {
+                                             "version":  "0.1.0",
+                                             "from":  "detect-file@\u003e=0.1.0 \u003c0.2.0",
+                                             "resolved":  "https://registry.npmjs.org/detect-file/-/detect-file-0.1.0.tgz",
+                                             "Hash":  "5F1EAA384E66BC469A92A13D3A923D057960B23A454253DD26E660731B4E2FAF"
+                                         },
+                         "duplexer2":  {
+                                           "version":  "0.0.2",
+                                           "from":  "duplexer2@0.0.2",
+                                           "resolved":  "https://registry.npmjs.org/duplexer2/-/duplexer2-0.0.2.tgz",
+                                           "Hash":  "C427BCDB5AF5BB0370464209FA15B3C79F881FE329D9B3BEC0F2AC260063F9B8"
+                                       },
+                         "end-of-stream":  {
+                                               "version":  "0.1.5",
+                                               "from":  "end-of-stream@\u003e=0.1.5 \u003c0.2.0",
+                                               "resolved":  "https://registry.npmjs.org/end-of-stream/-/end-of-stream-0.1.5.tgz",
+                                               "Hash":  "E62647BE948F8A590611D71840B302CA4A3CC1E6892BBC3BFD416C4591DC885E"
+                                           },
+                         "es6-promise":  {
+                                             "version":  "4.0.5",
+                                             "from":  "es6-promise@4.0.5",
+                                             "resolved":  "https://registry.npmjs.org/es6-promise/-/es6-promise-4.0.5.tgz",
+                                             "Hash":  "CE0F6E26B1C254551656083DA5A7E457F56A8EA1609567B66C6F09F992B84498"
+                                         },
+                         "es6-shim":  {
+                                          "version":  "0.35.3",
+                                          "from":  "es6-shim@0.35.3",
+                                          "resolved":  "https://registry.npmjs.org/es6-shim/-/es6-shim-0.35.3.tgz",
+                                          "Hash":  "8D2F9D084108C8E35A10701A07974849D12BD3E3D50210C13ED8B1277FF90433"
+                                      },
+                         "escape-string-regexp":  {
+                                                      "version":  "1.0.5",
+                                                      "from":  "escape-string-regexp@\u003e=1.0.2 \u003c2.0.0",
+                                                      "resolved":  "https://registry.npmjs.org/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz",
+                                                      "Hash":  "A7FFC3386107E2DEC320C30603D3B027B17147F16036FE9894327A9D7C83C349"
+                                                  },
+                         "expand-brackets":  {
+                                                 "version":  "0.1.5",
+                                                 "from":  "expand-brackets@\u003e=0.1.4 \u003c0.2.0",
+                                                 "resolved":  "https://registry.npmjs.org/expand-brackets/-/expand-brackets-0.1.5.tgz",
+                                                 "Hash":  "6DE9E4642F09F90A4FF2136BFFEE9B2B9D599A7A86CE723F2459784925F9DB16"
+                                             },
+                         "expand-range":  {
+                                              "version":  "1.8.2",
+                                              "from":  "expand-range@\u003e=1.8.1 \u003c2.0.0",
+                                              "resolved":  "https://registry.npmjs.org/expand-range/-/expand-range-1.8.2.tgz",
+                                              "Hash":  "37655C0BF04270B18685D0F49100318A5DB1F48A7AA715035C3D17D76FA1F82F"
+                                          },
+                         "expand-tilde":  {
+                                              "version":  "1.2.2",
+                                              "from":  "expand-tilde@\u003e=1.2.2 \u003c2.0.0",
+                                              "resolved":  "https://registry.npmjs.org/expand-tilde/-/expand-tilde-1.2.2.tgz",
+                                              "Hash":  "C937AEE9A24EB41A704DB3BE1E4A72CEF14E6BFDA84C3EF3A5772263A6C31593"
+                                          },
+                         "extend":  {
+                                        "version":  "3.0.0",
+                                        "from":  "extend@\u003e=3.0.0 \u003c4.0.0",
+                                        "resolved":  "https://registry.npmjs.org/extend/-/extend-3.0.0.tgz",
+                                        "Hash":  "88073F40AAA7B2C79DFB0F5FF492CA991E4F34CC5EF55C96AA9F527C5B7371D1"
+                                    },
+                         "extglob":  {
+                                         "version":  "0.3.2",
+                                         "from":  "extglob@\u003e=0.3.1 \u003c0.4.0",
+                                         "resolved":  "https://registry.npmjs.org/extglob/-/extglob-0.3.2.tgz",
+                                         "Hash":  "4BC257D300F9276C0BB6ECFC305736320F792CA006807F047584ED2AF61E2590"
+                                     },
+                         "fancy-log":  {
+                                           "version":  "1.3.0",
+                                           "from":  "fancy-log@\u003e=1.1.0 \u003c2.0.0",
+                                           "resolved":  "https://registry.npmjs.org/fancy-log/-/fancy-log-1.3.0.tgz",
+                                           "Hash":  "64024376071DF32969CC3B9B2F2D770DBCCDCD6F7E62F89B0E589C7E305ACBEC"
+                                       },
+                         "filename-regex":  {
+                                                "version":  "2.0.0",
+                                                "from":  "filename-regex@\u003e=2.0.0 \u003c3.0.0",
+                                                "resolved":  "https://registry.npmjs.org/filename-regex/-/filename-regex-2.0.0.tgz",
+                                                "Hash":  "D9BDC9D663C2522EAA471C937AD00F69844E007854AC0B1C60CB0085204B419D"
+                                            },
+                         "fill-range":  {
+                                            "version":  "2.2.3",
+                                            "from":  "fill-range@\u003e=2.1.0 \u003c3.0.0",
+                                            "resolved":  "https://registry.npmjs.org/fill-range/-/fill-range-2.2.3.tgz",
+                                            "Hash":  "0EA1CA68E957EDB082EF49EEC0034BBA498785DEC674A8997ED1DC3757D88505"
+                                        },
+                         "find-index":  {
+                                            "version":  "0.1.1",
+                                            "from":  "find-index@\u003e=0.1.1 \u003c0.2.0",
+                                            "resolved":  "https://registry.npmjs.org/find-index/-/find-index-0.1.1.tgz",
+                                            "Hash":  "6DFF6F52EBB8A2B446F2CE4BE22840FF2B4A0470512396A9076297094DE15CD1"
+                                        },
+                         "findup-sync":  {
+                                             "version":  "0.4.3",
+                                             "from":  "findup-sync@\u003e=0.4.2 \u003c0.5.0",
+                                             "resolved":  "https://registry.npmjs.org/findup-sync/-/findup-sync-0.4.3.tgz",
+                                             "Hash":  "A64E29E6EDB83C3DAE145A44D0AFCBCF512F4B6618E13DCE620D8D7FC824E6E1"
+                                         },
+                         "fined":  {
+                                       "version":  "1.0.2",
+                                       "from":  "fined@\u003e=1.0.1 \u003c2.0.0",
+                                       "resolved":  "https://registry.npmjs.org/fined/-/fined-1.0.2.tgz",
+                                       "Hash":  "3533459587AF2106BABAFA22F3D10B15C3D6868F6C028EB65211605CAC41D37D"
+                                   },
+                         "first-chunk-stream":  {
+                                                    "version":  "1.0.0",
+                                                    "from":  "first-chunk-stream@\u003e=1.0.0 \u003c2.0.0",
+                                                    "resolved":  "https://registry.npmjs.org/first-chunk-stream/-/first-chunk-stream-1.0.0.tgz",
+                                                    "Hash":  "AE9565F8E4F58381E227E5A800E8DFB3E0DA2DDCD1181C8A0D25B3D499495334"
+                                                },
+                         "flagged-respawn":  {
+                                                 "version":  "0.3.2",
+                                                 "from":  "flagged-respawn@\u003e=0.3.2 \u003c0.4.0",
+                                                 "resolved":  "https://registry.npmjs.org/flagged-respawn/-/flagged-respawn-0.3.2.tgz",
+                                                 "Hash":  "87E9692674E33DF1AA3FBADD1211D60CFA24EC43A892980EB23B4298098E19D4"
+                                             },
+                         "font-awesome":  {
+                                              "version":  "4.7.0",
+                                              "from":  "font-awesome@4.7.0",
+                                              "resolved":  "https://registry.npmjs.org/font-awesome/-/font-awesome-4.7.0.tgz",
+                                              "Hash":  "BDA77D728D08B1524BAD43C364C46843966F0CCD952D0E7B64A699695C0A3422"
+                                          },
+                         "for-in":  {
+                                        "version":  "1.0.2",
+                                        "from":  "for-in@\u003e=1.0.1 \u003c2.0.0",
+                                        "resolved":  "https://registry.npmjs.org/for-in/-/for-in-1.0.2.tgz",
+                                        "Hash":  "7482C3E99209C6658BE317F5A36BB73F6B3EAEA5877F14A1477D12A8F276B92A"
+                                    },
+                         "for-own":  {
+                                         "version":  "0.1.5",
+                                         "from":  "for-own@\u003e=0.1.4 \u003c0.2.0",
+                                         "resolved":  "https://registry.npmjs.org/for-own/-/for-own-0.1.5.tgz",
+                                         "Hash":  "7EB6F24C7C90ADB38F935986132F6BF260533DE5FA2C9F33D2B9D880B019F558"
+                                     },
+                         "fs-exists-sync":  {
+                                                "version":  "0.1.0",
+                                                "from":  "fs-exists-sync@\u003e=0.1.0 \u003c0.2.0",
+                                                "resolved":  "https://registry.npmjs.org/fs-exists-sync/-/fs-exists-sync-0.1.0.tgz",
+                                                "Hash":  "434DB6B5E8DCDE522FCB8070DDADE937EEAA892E7C0DCF979409B3BDCD23ADA3"
+                                            },
+                         "gaze":  {
+                                      "version":  "0.5.2",
+                                      "from":  "gaze@\u003e=0.5.1 \u003c0.6.0",
+                                      "resolved":  "https://registry.npmjs.org/gaze/-/gaze-0.5.2.tgz",
+                                      "Hash":  "ADDFC76C242F2F2AF13837DB72AEE803C1EDAD7E95F67FB08D5638FFD90BFDE2"
+                                  },
+                         "glob":  {
+                                      "version":  "4.5.3",
+                                      "from":  "glob@\u003e=4.3.1 \u003c5.0.0",
+                                      "resolved":  "https://registry.npmjs.org/glob/-/glob-4.5.3.tgz",
+                                      "Hash":  "F095433413DFEC59C636C8772EB5AAC2198096BB6D28DEB8C1B66E2A3E0D326E"
+                                  },
+                         "glob-base":  {
+                                           "version":  "0.3.0",
+                                           "from":  "glob-base@\u003e=0.3.0 \u003c0.4.0",
+                                           "resolved":  "https://registry.npmjs.org/glob-base/-/glob-base-0.3.0.tgz",
+                                           "Hash":  "33D5F7D61A9CA419F8D24E98303DFB4D738B00EE179BBDE70B1AD01B80569357"
+                                       },
+                         "glob-parent":  {
+                                             "version":  "2.0.0",
+                                             "from":  "glob-parent@\u003e=2.0.0 \u003c3.0.0",
+                                             "resolved":  "https://registry.npmjs.org/glob-parent/-/glob-parent-2.0.0.tgz",
+                                             "Hash":  "4B883E2536677B369405E8EEEFF373168B82080A276B2F85B5AF6BAD07AFE5E3"
+                                         },
+                         "glob-stream":  {
+                                             "version":  "3.1.18",
+                                             "from":  "glob-stream@\u003e=3.1.5 \u003c4.0.0",
+                                             "resolved":  "https://registry.npmjs.org/glob-stream/-/glob-stream-3.1.18.tgz",
+                                             "dependencies":  {
+                                                                  "readable-stream":  {
+                                                                                          "version":  "1.0.34",
+                                                                                          "from":  "readable-stream@\u003e=1.0.33-1 \u003c1.1.0-0",
+                                                                                          "resolved":  "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.34.tgz",
+                                                                                          "Hash":  "DC3869E5385EBF89BEF91E1470F36F5AAC64D604A777B82BAA793A8E70182EA5"
+                                                                                      },
+                                                                  "through2":  {
+                                                                                   "version":  "0.6.5",
+                                                                                   "from":  "through2@\u003e=0.6.1 \u003c0.7.0",
+                                                                                   "resolved":  "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz",
+                                                                                   "Hash":  "2AB5FB5E51ADCB3AD883637E6794DD73A556D71D5D7EA49301B5664FC3308F08"
+                                                                               }
+                                                              },
+                                             "Hash":  "D77307D5F63E2708A8381F6642EBF4962A3510F6D982AD89A4865BB7FB6C2D8D"
+                                         },
+                         "glob-watcher":  {
+                                              "version":  "0.0.6",
+                                              "from":  "glob-watcher@\u003e=0.0.6 \u003c0.0.7",
+                                              "resolved":  "https://registry.npmjs.org/glob-watcher/-/glob-watcher-0.0.6.tgz",
+                                              "Hash":  "466F4A2EAAA9AD795897302D0BC980F157B8CE77A21223886F4906444FFF1F9D"
+                                          },
+                         "glob2base":  {
+                                           "version":  "0.0.12",
+                                           "from":  "glob2base@\u003e=0.0.12 \u003c0.0.13",
+                                           "resolved":  "https://registry.npmjs.org/glob2base/-/glob2base-0.0.12.tgz",
+                                           "Hash":  "E065FB320FFDAEA3579B719D77E9C8C815CCA9955A9CCBAAE22DA63DA7A3B764"
+                                       },
+                         "global-modules":  {
+                                                "version":  "0.2.3",
+                                                "from":  "global-modules@\u003e=0.2.3 \u003c0.3.0",
+                                                "resolved":  "https://registry.npmjs.org/global-modules/-/global-modules-0.2.3.tgz",
+                                                "Hash":  "79A7B9F67ACB1D9EE4A155582640E15FE999DA6225374D89A423F90E540BF54A"
+                                            },
+                         "global-prefix":  {
+                                               "version":  "0.1.5",
+                                               "from":  "global-prefix@\u003e=0.1.4 \u003c0.2.0",
+                                               "resolved":  "https://registry.npmjs.org/global-prefix/-/global-prefix-0.1.5.tgz",
+                                               "Hash":  "C72198303644C0DBC1E9343987ED82301E64C849599D62DCF9300F19BD74D5D3"
+                                           },
+                         "globule":  {
+                                         "version":  "0.1.0",
+                                         "from":  "globule@\u003e=0.1.0 \u003c0.2.0",
+                                         "resolved":  "https://registry.npmjs.org/globule/-/globule-0.1.0.tgz",
+                                         "dependencies":  {
+                                                              "glob":  {
+                                                                           "version":  "3.1.21",
+                                                                           "from":  "glob@\u003e=3.1.21 \u003c3.2.0",
+                                                                           "resolved":  "https://registry.npmjs.org/glob/-/glob-3.1.21.tgz",
+                                                                           "Hash":  "23205BD6830D738B2DEC3AD36C5AFD62D169C447802BEB6F47775D81E690E4EC"
+                                                                       },
+                                                              "graceful-fs":  {
+                                                                                  "version":  "1.2.3",
+                                                                                  "from":  "graceful-fs@\u003e=1.2.0 \u003c1.3.0",
+                                                                                  "resolved":  "https://registry.npmjs.org/graceful-fs/-/graceful-fs-1.2.3.tgz",
+                                                                                  "Hash":  "00710CBCAA7AB9D17DEDA541876C49C0E298C416D197020E48F7BEBCE166246D"
+                                                                              },
+                                                              "inherits":  {
+                                                                               "version":  "1.0.2",
+                                                                               "from":  "inherits@\u003e=1.0.0 \u003c2.0.0",
+                                                                               "resolved":  "https://registry.npmjs.org/inherits/-/inherits-1.0.2.tgz",
+                                                                               "Hash":  "B33D53B0C959656285F6BF84ABA0137095C44FCD97BA47269F413E07FF75E481"
+                                                                           },
+                                                              "minimatch":  {
+                                                                                "version":  "0.2.14",
+                                                                                "from":  "minimatch@\u003e=0.2.11 \u003c0.3.0",
+                                                                                "resolved":  "https://registry.npmjs.org/minimatch/-/minimatch-0.2.14.tgz",
+                                                                                "Hash":  "D56A5C874D984978A4B050D33F783B1C1BF9619CDF1ED0F0CFD3FB8849B70CF1"
+                                                                            }
+                                                          },
+                                         "Hash":  "857E28F79113C753DFF79DBE79083C85F4960939B4C725368A14AA19C9AE9A0A"
+                                     },
+                         "glogg":  {
+                                       "version":  "1.0.0",
+                                       "from":  "glogg@\u003e=1.0.0 \u003c2.0.0",
+                                       "resolved":  "https://registry.npmjs.org/glogg/-/glogg-1.0.0.tgz",
+                                       "Hash":  "AC456003B8C12E35767A41224BC396EC0AA74466F159B1AA983E05C368A023ED"
+                                   },
+                         "graceful-fs":  {
+                                             "version":  "3.0.11",
+                                             "from":  "graceful-fs@\u003e=3.0.0 \u003c4.0.0",
+                                             "resolved":  "https://registry.npmjs.org/graceful-fs/-/graceful-fs-3.0.11.tgz",
+                                             "Hash":  "103567FA4DA4D8A0CE03A39FB3F5864B9F158C59BDD201944F29910444C41BBB"
+                                         },
+                         "gulp":  {
+                                      "version":  "3.9.1",
+                                      "from":  "gulp@3.9.1",
+                                      "resolved":  "https://registry.npmjs.org/gulp/-/gulp-3.9.1.tgz",
+                                      "Hash":  "845307DF1377676F9C1853693BA29B68269274AAB80B0977F677C9F178592AC0"
+                                  },
+                         "gulp-uglify":  {
+                                             "version":  "1.5.3",
+                                             "from":  "gulp-uglify@1.5.3",
+                                             "resolved":  "https://registry.npmjs.org/gulp-uglify/-/gulp-uglify-1.5.3.tgz",
+                                             "Hash":  "B765D7B194F413CB98064F20469A24C9FFFC69801DB7A0C134F2984E0FBCD936"
+                                         },
+                         "gulp-util":  {
+                                           "version":  "3.0.8",
+                                           "from":  "gulp-util@\u003e=3.0.0 \u003c4.0.0",
+                                           "resolved":  "https://registry.npmjs.org/gulp-util/-/gulp-util-3.0.8.tgz",
+                                           "Hash":  "609D0E4A3C5034480BA973F35374B758DB23C8F70B3E556032EC4F60075F0E70"
+                                       },
+                         "gulplog":  {
+                                         "version":  "1.0.0",
+                                         "from":  "gulplog@\u003e=1.0.0 \u003c2.0.0",
+                                         "resolved":  "https://registry.npmjs.org/gulplog/-/gulplog-1.0.0.tgz",
+                                         "Hash":  "B68842AEEDF53312FFE60B54896092220D5B23108A4CD0D8D02BDCBBD452CF6E"
+                                     },
+                         "has-ansi":  {
+                                          "version":  "2.0.0",
+                                          "from":  "has-ansi@\u003e=2.0.0 \u003c3.0.0",
+                                          "resolved":  "https://registry.npmjs.org/has-ansi/-/has-ansi-2.0.0.tgz",
+                                          "Hash":  "19594CF53CD6514890849242309FCCFA4E217B204874AB734F55A591809E0A85"
+                                      },
+                         "has-gulplog":  {
+                                             "version":  "0.1.0",
+                                             "from":  "has-gulplog@\u003e=0.1.0 \u003c0.2.0",
+                                             "resolved":  "https://registry.npmjs.org/has-gulplog/-/has-gulplog-0.1.0.tgz",
+                                             "Hash":  "DF82E5B02172EE2CD7B4903D2115B3517DEB6EF2BE9F78D3CDD441F2CD7ED88A"
+                                         },
+                         "homedir-polyfill":  {
+                                                  "version":  "1.0.1",
+                                                  "from":  "homedir-polyfill@\u003e=1.0.0 \u003c2.0.0",
+                                                  "resolved":  "https://registry.npmjs.org/homedir-polyfill/-/homedir-polyfill-1.0.1.tgz",
+                                                  "Hash":  "6C7110A688BB135D79F5CF62C13969BFCB3502FD871089C148EA753B1C8E8199"
+                                              },
+                         "inflight":  {
+                                          "version":  "1.0.6",
+                                          "from":  "inflight@\u003e=1.0.4 \u003c2.0.0",
+                                          "resolved":  "https://registry.npmjs.org/inflight/-/inflight-1.0.6.tgz",
+                                          "Hash":  "E603483F2C11EF18FBBF9BA350712181F65D36AA3F8D6635CEAC33752E378B5F"
+                                      },
+                         "inherits":  {
+                                          "version":  "2.0.3",
+                                          "from":  "inherits@\u003e=2.0.1 \u003c2.1.0",
+                                          "resolved":  "https://registry.npmjs.org/inherits/-/inherits-2.0.3.tgz",
+                                          "Hash":  "D46B9F6BEBBC8D83C41BAEDB119505A8D4A4C6FF56094B4E89502356A7A1AA8E"
+                                      },
+                         "ini":  {
+                                     "version":  "1.3.4",
+                                     "from":  "ini@\u003e=1.3.4 \u003c2.0.0",
+                                     "resolved":  "https://registry.npmjs.org/ini/-/ini-1.3.4.tgz",
+                                     "Hash":  "7B77DD1DAC9A2B880385D996CEDE6651F3BF596B4A60F9EAC12D866F98775EF4"
+                                 },
+                         "interpret":  {
+                                           "version":  "1.0.1",
+                                           "from":  "interpret@\u003e=1.0.0 \u003c2.0.0",
+                                           "resolved":  "https://registry.npmjs.org/interpret/-/interpret-1.0.1.tgz",
+                                           "Hash":  "4409BD7AB55BE3E3D75F1124411665D91B4780870ECC5AD515B477923615AD2A"
+                                       },
+                         "is-absolute":  {
+                                             "version":  "0.2.6",
+                                             "from":  "is-absolute@\u003e=0.2.3 \u003c0.3.0",
+                                             "resolved":  "https://registry.npmjs.org/is-absolute/-/is-absolute-0.2.6.tgz",
+                                             "Hash":  "7E7B52C5D82660224124252D043854D9949F540240453BB160B763556196122B"
+                                         },
+                         "is-buffer":  {
+                                           "version":  "1.1.5",
+                                           "from":  "is-buffer@\u003e=1.0.2 \u003c2.0.0",
+                                           "resolved":  "https://registry.npmjs.org/is-buffer/-/is-buffer-1.1.5.tgz",
+                                           "Hash":  "2F62AC880F4EC168E563F89A02DB659886048DE31FB2B4DFC1F072F93640B490"
+                                       },
+                         "is-dotfile":  {
+                                            "version":  "1.0.2",
+                                            "from":  "is-dotfile@\u003e=1.0.0 \u003c2.0.0",
+                                            "resolved":  "https://registry.npmjs.org/is-dotfile/-/is-dotfile-1.0.2.tgz",
+                                            "Hash":  "2AEBC6C563365D471D9EAF7CDCECD36D97A7B0EB9A4B1E4A20FB6B0AA6B47B04"
+                                        },
+                         "is-equal-shallow":  {
+                                                  "version":  "0.1.3",
+                                                  "from":  "is-equal-shallow@\u003e=0.1.3 \u003c0.2.0",
+                                                  "resolved":  "https://registry.npmjs.org/is-equal-shallow/-/is-equal-shallow-0.1.3.tgz",
+                                                  "Hash":  "8463127FB23A20B99573557ADC60314088EFF7946D8D542FD36526FF4C7F4D39"
+                                              },
+                         "is-extendable":  {
+                                               "version":  "0.1.1",
+                                               "from":  "is-extendable@\u003e=0.1.1 \u003c0.2.0",
+                                               "resolved":  "https://registry.npmjs.org/is-extendable/-/is-extendable-0.1.1.tgz",
+                                               "Hash":  "34DFCEDFC291911D982FBE4A05C8E4D50BA19EA7A515B9F41A46B9E5D440884A"
+                                           },
+                         "is-extglob":  {
+                                            "version":  "1.0.0",
+                                            "from":  "is-extglob@\u003e=1.0.0 \u003c2.0.0",
+                                            "resolved":  "https://registry.npmjs.org/is-extglob/-/is-extglob-1.0.0.tgz",
+                                            "Hash":  "33D88C20FFBEB13E9C9B4C2B36E719EADA9D431597CA229A361513124BF3E181"
+                                        },
+                         "is-glob":  {
+                                         "version":  "2.0.1",
+                                         "from":  "is-glob@\u003e=2.0.1 \u003c3.0.0",
+                                         "resolved":  "https://registry.npmjs.org/is-glob/-/is-glob-2.0.1.tgz",
+                                         "Hash":  "15B669220EDC193F4A2662FBF4D8EA89FD0779A8E78FD8D6F1ADB5B9028174F9"
+                                     },
+                         "is-number":  {
+                                           "version":  "2.1.0",
+                                           "from":  "is-number@\u003e=2.1.0 \u003c3.0.0",
+                                           "resolved":  "https://registry.npmjs.org/is-number/-/is-number-2.1.0.tgz",
+                                           "Hash":  "2FBFDA991A3F4448FAD4CB8D1DCBF30C7629941F0955F621B2EE9FE96D42F031"
+                                       },
+                         "is-posix-bracket":  {
+                                                  "version":  "0.1.1",
+                                                  "from":  "is-posix-bracket@\u003e=0.1.0 \u003c0.2.0",
+                                                  "resolved":  "https://registry.npmjs.org/is-posix-bracket/-/is-posix-bracket-0.1.1.tgz",
+                                                  "Hash":  "C2594A1502DEB9667A1BB6E23860BB865B15033E256E35C0EB7A3184349404EC"
+                                              },
+                         "is-primitive":  {
+                                              "version":  "2.0.0",
+                                              "from":  "is-primitive@\u003e=2.0.0 \u003c3.0.0",
+                                              "resolved":  "https://registry.npmjs.org/is-primitive/-/is-primitive-2.0.0.tgz",
+                                              "Hash":  "8CC008AB8836371589BF1AC1CF79D4AAF1A347C7E5A793B9251AB4ADCC4CCA6B"
+                                          },
+                         "is-relative":  {
+                                             "version":  "0.2.1",
+                                             "from":  "is-relative@\u003e=0.2.1 \u003c0.3.0",
+                                             "resolved":  "https://registry.npmjs.org/is-relative/-/is-relative-0.2.1.tgz",
+                                             "Hash":  "0F72F822CA065AD58D78E82A2399BD617490B8D03D442F1A500E1E236737EDC5"
+                                         },
+                         "is-unc-path":  {
+                                             "version":  "0.1.2",
+                                             "from":  "is-unc-path@\u003e=0.1.1 \u003c0.2.0",
+                                             "resolved":  "https://registry.npmjs.org/is-unc-path/-/is-unc-path-0.1.2.tgz",
+                                             "Hash":  "79B9DF00734A5F0701D1386EAA4E885368E95D93C27C888358C5D6DCCBE2C688"
+                                         },
+                         "is-utf8":  {
+                                         "version":  "0.2.1",
+                                         "from":  "is-utf8@\u003e=0.2.0 \u003c0.3.0",
+                                         "resolved":  "https://registry.npmjs.org/is-utf8/-/is-utf8-0.2.1.tgz",
+                                         "Hash":  "E6B4FE243C0AE147D8D7EED55FA51665D73DC43B8E9395E383B2F66EFECA9812"
+                                     },
+                         "is-windows":  {
+                                            "version":  "0.2.0",
+                                            "from":  "is-windows@\u003e=0.2.0 \u003c0.3.0",
+                                            "resolved":  "https://registry.npmjs.org/is-windows/-/is-windows-0.2.0.tgz",
+                                            "Hash":  "7F4AA9A928E249127ADFCAFAB12CDA2C8D8D70E1B3849175C8CE46DF712469E8"
+                                        },
+                         "isarray":  {
+                                         "version":  "0.0.1",
+                                         "from":  "isarray@0.0.1",
+                                         "resolved":  "https://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz",
+                                         "Hash":  "CCC384EB1E9AE3C7C146AE1790A0EF2618CF7379E744A95EDB31C52246CA0609"
+                                     },
+                         "isexe":  {
+                                       "version":  "1.1.2",
+                                       "from":  "isexe@\u003e=1.1.1 \u003c2.0.0",
+                                       "resolved":  "https://registry.npmjs.org/isexe/-/isexe-1.1.2.tgz",
+                                       "Hash":  "75BCB90440E35DF472A3C0863EBB7997B48D5AA118F658801C3CD0E132B03FC1"
+                                   },
+                         "isobject":  {
+                                          "version":  "2.1.0",
+                                          "from":  "isobject@\u003e=2.0.0 \u003c3.0.0",
+                                          "resolved":  "https://registry.npmjs.org/isobject/-/isobject-2.1.0.tgz",
+                                          "dependencies":  {
+                                                               "isarray":  {
+                                                                               "version":  "1.0.0",
+                                                                               "from":  "isarray@1.0.0",
+                                                                               "resolved":  "https://registry.npmjs.org/isarray/-/isarray-1.0.0.tgz",
+                                                                               "Hash":  "2AC7111C4E63B413691EC4FE785F881BCA41F23E37EDFE1118B2265C78432F34"
+                                                                           }
+                                                           },
+                                          "Hash":  "3E668D8FBE4EBC3249377C735ADF5859F6E3854050EFCDB26C3933ED492BEBC0"
+                                      },
+                         "jquery":  {
+                                        "version":  "2.2.4",
+                                        "from":  "jquery@2.2.4",
+                                        "resolved":  "https://registry.npmjs.org/jquery/-/jquery-2.2.4.tgz",
+                                        "Hash":  "B94D4202FE640FAABEB4623275670A5188A7F113BE60DBB5D341F7C443A3EB5E"
+                                    },
+                         "kind-of":  {
+                                         "version":  "3.1.0",
+                                         "from":  "kind-of@\u003e=3.0.2 \u003c4.0.0",
+                                         "resolved":  "https://registry.npmjs.org/kind-of/-/kind-of-3.1.0.tgz",
+                                         "Hash":  "876418E474AA0A02247DF6CC4D760199FCCEF0BF050429D6157B27C83FCE23CC"
+                                     },
+                         "lazy-cache":  {
+                                            "version":  "1.0.4",
+                                            "from":  "lazy-cache@\u003e=1.0.3 \u003c2.0.0",
+                                            "resolved":  "https://registry.npmjs.org/lazy-cache/-/lazy-cache-1.0.4.tgz",
+                                            "Hash":  "8E4A4B9287272052F97D102F46D559D2DA584A4BB5F51D585A2BF107DF205338"
+                                        },
+                         "liftoff":  {
+                                         "version":  "2.3.0",
+                                         "from":  "liftoff@\u003e=2.1.0 \u003c3.0.0",
+                                         "resolved":  "https://registry.npmjs.org/liftoff/-/liftoff-2.3.0.tgz",
+                                         "Hash":  "D162731D33BDD0365B6D7B08C0642A3B41DC5AB6EFB02624816A7D8D0CF74BE3"
+                                     },
+                         "lodash":  {
+                                        "version":  "1.0.2",
+                                        "from":  "lodash@\u003e=1.0.1 \u003c1.1.0",
+                                        "resolved":  "https://registry.npmjs.org/lodash/-/lodash-1.0.2.tgz",
+                                        "Hash":  "D9EBDA926BA8653946796F86E3E13AE63C9CA54FB1455136E84D3C2BCF8C5AE1"
+                                    },
+                         "lodash._basecopy":  {
+                                                  "version":  "3.0.1",
+                                                  "from":  "lodash._basecopy@\u003e=3.0.0 \u003c4.0.0",
+                                                  "resolved":  "https://registry.npmjs.org/lodash._basecopy/-/lodash._basecopy-3.0.1.tgz",
+                                                  "Hash":  "EB53F289A03462894B6F8166B4EE72A8615E348262450E3CFC0E24F88A108F78"
+                                              },
+                         "lodash._basetostring":  {
+                                                      "version":  "3.0.1",
+                                                      "from":  "lodash._basetostring@\u003e=3.0.0 \u003c4.0.0",
+                                                      "resolved":  "https://registry.npmjs.org/lodash._basetostring/-/lodash._basetostring-3.0.1.tgz",
+                                                      "Hash":  "5CDD011E26042BBE8FA63A650AFB2825C5DC0E9E21D08A8743B29886038098BC"
+                                                  },
+                         "lodash._basevalues":  {
+                                                    "version":  "3.0.0",
+                                                    "from":  "lodash._basevalues@\u003e=3.0.0 \u003c4.0.0",
+                                                    "resolved":  "https://registry.npmjs.org/lodash._basevalues/-/lodash._basevalues-3.0.0.tgz",
+                                                    "Hash":  "6237CC8B6DD0EEA1904B9B4ADE82001DBF34E0EFEB4066BA6E0C1F69D81A32E0"
+                                                },
+                         "lodash._getnative":  {
+                                                   "version":  "3.9.1",
+                                                   "from":  "lodash._getnative@\u003e=3.0.0 \u003c4.0.0",
+                                                   "resolved":  "https://registry.npmjs.org/lodash._getnative/-/lodash._getnative-3.9.1.tgz",
+                                                   "Hash":  "7F434752F1938E442459FE39651EDDFB15D84048C16BBFDB3A743080EB718845"
+                                               },
+                         "lodash._isiterateecall":  {
+                                                        "version":  "3.0.9",
+                                                        "from":  "lodash._isiterateecall@\u003e=3.0.0 \u003c4.0.0",
+                                                        "resolved":  "https://registry.npmjs.org/lodash._isiterateecall/-/lodash._isiterateecall-3.0.9.tgz",
+                                                        "Hash":  "D64099C8397D1C824B9F8ED3381AE3F33A618E11626904F980508E0CA81F5DDC"
+                                                    },
+                         "lodash._reescape":  {
+                                                  "version":  "3.0.0",
+                                                  "from":  "lodash._reescape@\u003e=3.0.0 \u003c4.0.0",
+                                                  "resolved":  "https://registry.npmjs.org/lodash._reescape/-/lodash._reescape-3.0.0.tgz",
+                                                  "Hash":  "CEB5DE52F9F9DCF87FF7B0A795AAFC7A9001D04FAEF9F07BBE7EEA4C769C3C1F"
+                                              },
+                         "lodash._reevaluate":  {
+                                                    "version":  "3.0.0",
+                                                    "from":  "lodash._reevaluate@\u003e=3.0.0 \u003c4.0.0",
+                                                    "resolved":  "https://registry.npmjs.org/lodash._reevaluate/-/lodash._reevaluate-3.0.0.tgz",
+                                                    "Hash":  "905A59494FEC1AE92C56F4F9E7CB243E733194B26C20A56640B591E7709E81F2"
+                                                },
+                         "lodash._reinterpolate":  {
+                                                       "version":  "3.0.0",
+                                                       "from":  "lodash._reinterpolate@\u003e=3.0.0 \u003c4.0.0",
+                                                       "resolved":  "https://registry.npmjs.org/lodash._reinterpolate/-/lodash._reinterpolate-3.0.0.tgz",
+                                                       "Hash":  "5FEBF9B365BB39C342E23EC822FB32596B5CE53E634519A9AEF3198EA4D9943A"
+                                                   },
+                         "lodash._root":  {
+                                              "version":  "3.0.1",
+                                              "from":  "lodash._root@\u003e=3.0.0 \u003c4.0.0",
+                                              "resolved":  "https://registry.npmjs.org/lodash._root/-/lodash._root-3.0.1.tgz",
+                                              "Hash":  "BC443B7E5B9A69977BFA918003DE420F80E60A5A0D78F70623D0762BEAACD9A9"
+                                          },
+                         "lodash.assignwith":  {
+                                                   "version":  "4.2.0",
+                                                   "from":  "lodash.assignwith@\u003e=4.0.7 \u003c5.0.0",
+                                                   "resolved":  "https://registry.npmjs.org/lodash.assignwith/-/lodash.assignwith-4.2.0.tgz",
+                                                   "Hash":  "FBEEAD82DBDB2D5915AFA4192F8FB2CD2FB0E9446BB96D2EAFEC8622C7787DFC"
+                                               },
+                         "lodash.escape":  {
+                                               "version":  "3.2.0",
+                                               "from":  "lodash.escape@\u003e=3.0.0 \u003c4.0.0",
+                                               "resolved":  "https://registry.npmjs.org/lodash.escape/-/lodash.escape-3.2.0.tgz",
+                                               "Hash":  "60B0B9667AACC070924344EABB6B80FDFEA070A3359195BA217B4F06CA934B45"
+                                           },
+                         "lodash.isarguments":  {
+                                                    "version":  "3.1.0",
+                                                    "from":  "lodash.isarguments@\u003e=3.0.0 \u003c4.0.0",
+                                                    "resolved":  "https://registry.npmjs.org/lodash.isarguments/-/lodash.isarguments-3.1.0.tgz",
+                                                    "Hash":  "1F5F8EF63C7CAB8D488C05D01866AFE29845BCAC6164065B64B8FC418EB3A2AA"
+                                                },
+                         "lodash.isarray":  {
+                                                "version":  "3.0.4",
+                                                "from":  "lodash.isarray@\u003e=3.0.0 \u003c4.0.0",
+                                                "resolved":  "https://registry.npmjs.org/lodash.isarray/-/lodash.isarray-3.0.4.tgz",
+                                                "Hash":  "440B6AF00110C48759475A612E564BE9FEF526C7848FB9F4D2422340E72C7218"
+                                            },
+                         "lodash.isempty":  {
+                                                "version":  "4.4.0",
+                                                "from":  "lodash.isempty@\u003e=4.2.1 \u003c5.0.0",
+                                                "resolved":  "https://registry.npmjs.org/lodash.isempty/-/lodash.isempty-4.4.0.tgz",
+                                                "Hash":  "7BFD0947D5A5C35C0D1B289CFF0E92A7E4CD00C37E68D9515B7CA8D787A41221"
+                                            },
+                         "lodash.isplainobject":  {
+                                                      "version":  "4.0.6",
+                                                      "from":  "lodash.isplainobject@\u003e=4.0.4 \u003c5.0.0",
+                                                      "resolved":  "https://registry.npmjs.org/lodash.isplainobject/-/lodash.isplainobject-4.0.6.tgz",
+                                                      "Hash":  "EF46C2DDCDECDCCADA13B10F96E6F7EEEBCD9C56F3A4193B073F8035CFC598F8"
+                                                  },
+                         "lodash.isstring":  {
+                                                 "version":  "4.0.1",
+                                                 "from":  "lodash.isstring@\u003e=4.0.1 \u003c5.0.0",
+                                                 "resolved":  "https://registry.npmjs.org/lodash.isstring/-/lodash.isstring-4.0.1.tgz",
+                                                 "Hash":  "2CF088764DA0DD3CAD3E9E08D39447BF1517947670B3A02B8507F332D7E82B4F"
+                                             },
+                         "lodash.keys":  {
+                                             "version":  "3.1.2",
+                                             "from":  "lodash.keys@\u003e=3.0.0 \u003c4.0.0",
+                                             "resolved":  "https://registry.npmjs.org/lodash.keys/-/lodash.keys-3.1.2.tgz",
+                                             "Hash":  "E9A143F1448B80DD0CA5CDD302B695B2CC287F98D0A8F3AE2AFB9AE92CB1C2ED"
+                                         },
+                         "lodash.mapvalues":  {
+                                                  "version":  "4.6.0",
+                                                  "from":  "lodash.mapvalues@\u003e=4.4.0 \u003c5.0.0",
+                                                  "resolved":  "https://registry.npmjs.org/lodash.mapvalues/-/lodash.mapvalues-4.6.0.tgz",
+                                                  "Hash":  "32B27CBBE74BCB3B0DFFD4456975024524E2BA9B2CE605C061E9726D999CA33F"
+                                              },
+                         "lodash.pick":  {
+                                             "version":  "4.4.0",
+                                             "from":  "lodash.pick@\u003e=4.2.1 \u003c5.0.0",
+                                             "resolved":  "https://registry.npmjs.org/lodash.pick/-/lodash.pick-4.4.0.tgz",
+                                             "Hash":  "9AF62381625D18D12394E7798B03EFB89433D4F286615E119525616E73C09A5C"
+                                         },
+                         "lodash.restparam":  {
+                                                  "version":  "3.6.1",
+                                                  "from":  "lodash.restparam@\u003e=3.0.0 \u003c4.0.0",
+                                                  "resolved":  "https://registry.npmjs.org/lodash.restparam/-/lodash.restparam-3.6.1.tgz",
+                                                  "Hash":  "EDAC68F4A3A1FB2093427A04E3977CA595A0DD91E824EBB33B12D61A874C5D84"
+                                              },
+                         "lodash.template":  {
+                                                 "version":  "3.6.2",
+                                                 "from":  "lodash.template@\u003e=3.0.0 \u003c4.0.0",
+                                                 "resolved":  "https://registry.npmjs.org/lodash.template/-/lodash.template-3.6.2.tgz",
+                                                 "Hash":  "69D12945AF37F3FB6D147D7350240C7E8C0F4CDE1B4175B5CFB638722B01ADF3"
+                                             },
+                         "lodash.templatesettings":  {
+                                                         "version":  "3.1.1",
+                                                         "from":  "lodash.templatesettings@\u003e=3.0.0 \u003c4.0.0",
+                                                         "resolved":  "https://registry.npmjs.org/lodash.templatesettings/-/lodash.templatesettings-3.1.1.tgz",
+                                                         "Hash":  "357685522F46318C0A2FE44014976DCD4386D2C5D19AD1AE478EFB68D61BAD5D"
+                                                     },
+                         "longest":  {
+                                         "version":  "1.0.1",
+                                         "from":  "longest@\u003e=1.0.1 \u003c2.0.0",
+                                         "resolved":  "https://registry.npmjs.org/longest/-/longest-1.0.1.tgz",
+                                         "Hash":  "5DE80E17F91A92EC6712058272D00FDB9A03FC086FAF156C99578C1D873D0A43"
+                                     },
+                         "lru-cache":  {
+                                           "version":  "2.7.3",
+                                           "from":  "lru-cache@\u003e=2.0.0 \u003c3.0.0",
+                                           "resolved":  "https://registry.npmjs.org/lru-cache/-/lru-cache-2.7.3.tgz",
+                                           "Hash":  "424C6E54368CB6A99AF66F5F6F94C425D40979D3C58812B0EEBAF1118D4C3EF3"
+                                       },
+                         "map-cache":  {
+                                           "version":  "0.2.2",
+                                           "from":  "map-cache@\u003e=0.2.0 \u003c0.3.0",
+                                           "resolved":  "https://registry.npmjs.org/map-cache/-/map-cache-0.2.2.tgz",
+                                           "Hash":  "B56B664F04FDF2CDBB560C77217BF6D9E68CF94E34467648BF8F5D2B5BDB4187"
+                                       },
+                         "micromatch":  {
+                                            "version":  "2.3.11",
+                                            "from":  "micromatch@\u003e=2.3.7 \u003c3.0.0",
+                                            "resolved":  "https://registry.npmjs.org/micromatch/-/micromatch-2.3.11.tgz",
+                                            "Hash":  "A067055238F5599B586ED022CEDEC9271626604F05A3BA8D5DC79715282B312B"
+                                        },
+                         "minimatch":  {
+                                           "version":  "2.0.10",
+                                           "from":  "minimatch@\u003e=2.0.1 \u003c3.0.0",
+                                           "resolved":  "https://registry.npmjs.org/minimatch/-/minimatch-2.0.10.tgz",
+                                           "Hash":  "E9B3D05EB483F7FEA22C2EF9A9D5BE76CE3812B895DEB9E5E071B3FF21ACAC33"
+                                       },
+                         "minimist":  {
+                                          "version":  "1.2.0",
+                                          "from":  "minimist@\u003e=1.1.0 \u003c2.0.0",
+                                          "resolved":  "https://registry.npmjs.org/minimist/-/minimist-1.2.0.tgz",
+                                          "Hash":  "66438D23BA0C7B281119CF432BDA75EA7901AFC56CACFF8CC5792ECA0CA4AC8D"
+                                      },
+                         "mkdirp":  {
+                                        "version":  "0.5.1",
+                                        "from":  "mkdirp@\u003e=0.5.0 \u003c0.6.0",
+                                        "resolved":  "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.1.tgz",
+                                        "dependencies":  {
+                                                             "minimist":  {
+                                                                              "version":  "0.0.8",
+                                                                              "from":  "minimist@0.0.8",
+                                                                              "resolved":  "https://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz",
+                                                                              "Hash":  "96953638A103BB3D24ABF8C806F4F20804A40DA21DA0484E7400F0724A6CCD4E"
+                                                                          }
+                                                         },
+                                        "Hash":  "C8991B214DD77D605E3853FFE64A82ABC2E71ABBC665E9F0FC2ECD13AC2B4161"
+                                    },
+                         "monaco-editor":  {
+                                               "version":  "0.8.1",
+                                               "from":  "monaco-editor@0.8.1",
+                                               "resolved":  "https://registry.npmjs.org/monaco-editor/-/monaco-editor-0.8.1.tgz",
+                                               "Hash":  "E56AA9112FFF4317D51FF6DFACBC08DACC35EC41B458E585AC2E2B595585536C"
+                                           },
+                         "multipipe":  {
+                                           "version":  "0.1.2",
+                                           "from":  "multipipe@\u003e=0.1.2 \u003c0.2.0",
+                                           "resolved":  "https://registry.npmjs.org/multipipe/-/multipipe-0.1.2.tgz",
+                                           "Hash":  "0D33F263509516E81C2DEE3EB0F98D8C976C096B3E01727D4017428AF2E2861E"
+                                       },
+                         "natives":  {
+                                         "version":  "1.1.0",
+                                         "from":  "natives@\u003e=1.1.0 \u003c2.0.0",
+                                         "resolved":  "https://registry.npmjs.org/natives/-/natives-1.1.0.tgz",
+                                         "Hash":  "E8D8E896D76D6C5F36CE9D92320CDB95233C4E96F217AD9926C10E5383C29F9A"
+                                     },
+                         "normalize-path":  {
+                                                "version":  "2.0.1",
+                                                "from":  "normalize-path@\u003e=2.0.1 \u003c3.0.0",
+                                                "resolved":  "https://registry.npmjs.org/normalize-path/-/normalize-path-2.0.1.tgz",
+                                                "Hash":  "2B20E0113D8F386BA2BC3FEDE44148AD9160B48E0C2A52DE1DCACB07B56DCF1B"
+                                            },
+                         "object-assign":  {
+                                               "version":  "3.0.0",
+                                               "from":  "object-assign@\u003e=3.0.0 \u003c4.0.0",
+                                               "resolved":  "https://registry.npmjs.org/object-assign/-/object-assign-3.0.0.tgz",
+                                               "Hash":  "E811EBB4CEBCF635E0478D87E6FD631CD522679D5CEBF4359791B57AFE879269"
+                                           },
+                         "object.omit":  {
+                                             "version":  "2.0.1",
+                                             "from":  "object.omit@\u003e=2.0.0 \u003c3.0.0",
+                                             "resolved":  "https://registry.npmjs.org/object.omit/-/object.omit-2.0.1.tgz",
+                                             "Hash":  "8828ABE9BAD188A28A856F04B4AEC124B907D0D823100FEFDDD78EE91305EB33"
+                                         },
+                         "once":  {
+                                      "version":  "1.3.3",
+                                      "from":  "once@\u003e=1.3.0 \u003c1.4.0",
+                                      "resolved":  "https://registry.npmjs.org/once/-/once-1.3.3.tgz",
+                                      "Hash":  "68D0DC497013680A17E3027F216C0ABAE75BAFA8E9E28009B6BD491112A4DD08"
+                                  },
+                         "orchestrator":  {
+                                              "version":  "0.3.8",
+                                              "from":  "orchestrator@\u003e=0.3.0 \u003c0.4.0",
+                                              "resolved":  "https://registry.npmjs.org/orchestrator/-/orchestrator-0.3.8.tgz",
+                                              "Hash":  "9A0382E365A907448F191DA32D6F83676F315C9C8C4A24E248FF2E69EC3ECE3A"
+                                          },
+                         "ordered-read-streams":  {
+                                                      "version":  "0.1.0",
+                                                      "from":  "ordered-read-streams@\u003e=0.1.0 \u003c0.2.0",
+                                                      "resolved":  "https://registry.npmjs.org/ordered-read-streams/-/ordered-read-streams-0.1.0.tgz",
+                                                      "Hash":  "1928411B090AA8F8BE103F18FE2F2D635EBCD43049C51B1455E3B52759B37649"
+                                                  },
+                         "os-homedir":  {
+                                            "version":  "1.0.2",
+                                            "from":  "os-homedir@\u003e=1.0.1 \u003c2.0.0",
+                                            "resolved":  "https://registry.npmjs.org/os-homedir/-/os-homedir-1.0.2.tgz",
+                                            "Hash":  "92C16D080C182A4560536C106C58E003492A91D4D5669AC0B3C4DC34829FC7F4"
+                                        },
+                         "parse-filepath":  {
+                                                "version":  "1.0.1",
+                                                "from":  "parse-filepath@\u003e=1.0.1 \u003c2.0.0",
+                                                "resolved":  "https://registry.npmjs.org/parse-filepath/-/parse-filepath-1.0.1.tgz",
+                                                "Hash":  "ACC0FD3C4DBD3B718C94F8833DFD83B016295949C9B5F369E74E076F47AA23B4"
+                                            },
+                         "parse-glob":  {
+                                            "version":  "3.0.4",
+                                            "from":  "parse-glob@\u003e=3.0.4 \u003c4.0.0",
+                                            "resolved":  "https://registry.npmjs.org/parse-glob/-/parse-glob-3.0.4.tgz",
+                                            "Hash":  "F88CD2D42E54BF456F12089C353FEEBEB652DF4565EC5085DD6FFB6EFC70DF77"
+                                        },
+                         "parse-passwd":  {
+                                              "version":  "1.0.0",
+                                              "from":  "parse-passwd@\u003e=1.0.0 \u003c2.0.0",
+                                              "resolved":  "https://registry.npmjs.org/parse-passwd/-/parse-passwd-1.0.0.tgz",
+                                              "Hash":  "7AAC4F85079FB601FED711F6AEB0E9531DE7D81360B1266F678CBAE7A55C223F"
+                                          },
+                         "path-parse":  {
+                                            "version":  "1.0.5",
+                                            "from":  "path-parse@\u003e=1.0.5 \u003c2.0.0",
+                                            "resolved":  "https://registry.npmjs.org/path-parse/-/path-parse-1.0.5.tgz",
+                                            "Hash":  "899580C5845B1D34D2B64884DFEC4276EFB358BB7DEE88DE7EB5B6E67BD44446"
+                                        },
+                         "path-root":  {
+                                           "version":  "0.1.1",
+                                           "from":  "path-root@\u003e=0.1.1 \u003c0.2.0",
+                                           "resolved":  "https://registry.npmjs.org/path-root/-/path-root-0.1.1.tgz",
+                                           "Hash":  "BF38A0F157A1E67BE3975F124E9268BF0261907747341FC423E661A4B2A78C03"
+                                       },
+                         "path-root-regex":  {
+                                                 "version":  "0.1.2",
+                                                 "from":  "path-root-regex@\u003e=0.1.0 \u003c0.2.0",
+                                                 "resolved":  "https://registry.npmjs.org/path-root-regex/-/path-root-regex-0.1.2.tgz",
+                                                 "Hash":  "2432C99438FB413749641A788018FA6481F1DD950AF8F79435E96A3F30641DE4"
+                                             },
+                         "preserve":  {
+                                          "version":  "0.2.0",
+                                          "from":  "preserve@\u003e=0.2.0 \u003c0.3.0",
+                                          "resolved":  "https://registry.npmjs.org/preserve/-/preserve-0.2.0.tgz",
+                                          "Hash":  "767DC035FC73F33F68286C11FE052E1AB572FEF618651549217FD92A01920CCB"
+                                      },
+                         "pretty-hrtime":  {
+                                               "version":  "1.0.3",
+                                               "from":  "pretty-hrtime@\u003e=1.0.0 \u003c2.0.0",
+                                               "resolved":  "https://registry.npmjs.org/pretty-hrtime/-/pretty-hrtime-1.0.3.tgz",
+                                               "Hash":  "560267AD015575839E9AD116D0A6C45FF4C18BEE98C800F6F9D365189BE59227"
+                                           },
+                         "process-nextick-args":  {
+                                                      "version":  "1.0.7",
+                                                      "from":  "process-nextick-args@\u003e=1.0.6 \u003c1.1.0",
+                                                      "resolved":  "https://registry.npmjs.org/process-nextick-args/-/process-nextick-args-1.0.7.tgz",
+                                                      "Hash":  "0532870C1CEE520C64DE62A8391F5E1519720B0F05CA07658F01EE2CE820CF9B"
+                                                  },
+                         "randomatic":  {
+                                            "version":  "1.1.6",
+                                            "from":  "randomatic@\u003e=1.1.3 \u003c2.0.0",
+                                            "resolved":  "https://registry.npmjs.org/randomatic/-/randomatic-1.1.6.tgz",
+                                            "Hash":  "A95586ED0E1307DF1AE951B200E99CCB50CDA52F1F8A8D744A568541DCDEC67E"
+                                        },
+                         "readable-stream":  {
+                                                 "version":  "1.1.14",
+                                                 "from":  "readable-stream@\u003e=1.1.9 \u003c1.2.0",
+                                                 "resolved":  "https://registry.npmjs.org/readable-stream/-/readable-stream-1.1.14.tgz",
+                                                 "Hash":  "31B3BE018AC927CBBC84BF4084FCAF09A7A4BDB9EBD8EF367558882D6214033F"
+                                             },
+                         "rechoir":  {
+                                         "version":  "0.6.2",
+                                         "from":  "rechoir@\u003e=0.6.2 \u003c0.7.0",
+                                         "resolved":  "https://registry.npmjs.org/rechoir/-/rechoir-0.6.2.tgz",
+                                         "Hash":  "51F2E1E5A3458A3F91FC90E6E5C9C4B298755635FD7D6639DA09AEDE92B2EDF0"
+                                     },
+                         "reflect-metadata":  {
+                                                  "version":  "0.1.10",
+                                                  "from":  "reflect-metadata@0.1.10",
+                                                  "resolved":  "https://registry.npmjs.org/reflect-metadata/-/reflect-metadata-0.1.10.tgz",
+                                                  "Hash":  "C7B1AA496B28E7BA438382ADF047F3FEA8D933C9665FB34AD81305934D268FA8"
+                                              },
+                         "regex-cache":  {
+                                             "version":  "0.4.3",
+                                             "from":  "regex-cache@\u003e=0.4.2 \u003c0.5.0",
+                                             "resolved":  "https://registry.npmjs.org/regex-cache/-/regex-cache-0.4.3.tgz",
+                                             "Hash":  "17A5C3AE56A115AAC27CD8EA064F529258F479DD89C533B7FE647585C8D3AE48"
+                                         },
+                         "repeat-element":  {
+                                                "version":  "1.1.2",
+                                                "from":  "repeat-element@\u003e=1.1.2 \u003c2.0.0",
+                                                "resolved":  "https://registry.npmjs.org/repeat-element/-/repeat-element-1.1.2.tgz",
+                                                "Hash":  "078562B69C8EA1027FBBAA751B9CAB2CC71AEAA4A82BB5F1965EFAE1CBB29E07"
+                                            },
+                         "repeat-string":  {
+                                               "version":  "1.6.1",
+                                               "from":  "repeat-string@\u003e=1.5.2 \u003c2.0.0",
+                                               "resolved":  "https://registry.npmjs.org/repeat-string/-/repeat-string-1.6.1.tgz",
+                                               "Hash":  "D45EDDC65EFF09D15D0068F895100EBB6015B2C3D03E708C981A6A7F5F83245A"
+                                           },
+                         "replace-ext":  {
+                                             "version":  "0.0.1",
+                                             "from":  "replace-ext@0.0.1",
+                                             "resolved":  "https://registry.npmjs.org/replace-ext/-/replace-ext-0.0.1.tgz",
+                                             "Hash":  "0848602B716FF992472EF9FD5FF6B798F6AFE75D431891DE8F57C27EF981CB3C"
+                                         },
+                         "resolve":  {
+                                         "version":  "1.3.2",
+                                         "from":  "resolve@\u003e=1.1.7 \u003c2.0.0",
+                                         "resolved":  "https://registry.npmjs.org/resolve/-/resolve-1.3.2.tgz",
+                                         "Hash":  "4A1C513275B65FD97A563986C439C74D425B318F98EF32C1DD81672E87E13393"
+                                     },
+                         "resolve-dir":  {
+                                             "version":  "0.1.1",
+                                             "from":  "resolve-dir@\u003e=0.1.0 \u003c0.2.0",
+                                             "resolved":  "https://registry.npmjs.org/resolve-dir/-/resolve-dir-0.1.1.tgz",
+                                             "Hash":  "BC78D5EA6E9A9F2E4599F7683787AE27A5571F7C0D064D7C8E98595E80A1854A"
+                                         },
+                         "right-align":  {
+                                             "version":  "0.1.3",
+                                             "from":  "right-align@\u003e=0.1.1 \u003c0.2.0",
+                                             "resolved":  "https://registry.npmjs.org/right-align/-/right-align-0.1.3.tgz",
+                                             "Hash":  "0EDCE4D9B24185FAF3F2FA6C72DB77CBC8093B15117ADBF517397B37EB87B2D0"
+                                         },
+                         "rxjs":  {
+                                      "version":  "5.0.0-beta.12",
+                                      "from":  "rxjs@5.0.0-beta.12",
+                                      "resolved":  "https://registry.npmjs.org/rxjs/-/rxjs-5.0.0-beta.12.tgz",
+                                      "Hash":  "2F41C63BCD69A03BFEAC3D269C1109AD3BC554E5E97D53239ABD000A3A92157E"
+                                  },
+                         "semver":  {
+                                        "version":  "4.3.6",
+                                        "from":  "semver@\u003e=4.1.0 \u003c5.0.0",
+                                        "resolved":  "https://registry.npmjs.org/semver/-/semver-4.3.6.tgz",
+                                        "Hash":  "14EF14F4213507A4BA28F01194092574836AE8CF3E060133AEA0B427FCD380B3"
+                                    },
+                         "sequencify":  {
+                                            "version":  "0.0.7",
+                                            "from":  "sequencify@\u003e=0.0.7 \u003c0.1.0",
+                                            "resolved":  "https://registry.npmjs.org/sequencify/-/sequencify-0.0.7.tgz",
+                                            "Hash":  "A910C781E65EDDF39133254E203783EB5BCF1E092DCE9477C51A1446B622CC49"
+                                        },
+                         "sigmund":  {
+                                         "version":  "1.0.1",
+                                         "from":  "sigmund@\u003e=1.0.0 \u003c1.1.0",
+                                         "resolved":  "https://registry.npmjs.org/sigmund/-/sigmund-1.0.1.tgz",
+                                         "Hash":  "6307FB4C7905F4754FFEC8DA42399F7AD316C5825D4F2CA0DCC6FA807BCD517B"
+                                     },
+                         "source-map":  {
+                                            "version":  "0.5.6",
+                                            "from":  "source-map@\u003e=0.5.1 \u003c0.6.0",
+                                            "resolved":  "https://registry.npmjs.org/source-map/-/source-map-0.5.6.tgz",
+                                            "Hash":  "21328D631A28011DFA6F35E447CD64795DEBEB0014A5E9E450882751D2E34A03"
+                                        },
+                         "sparkles":  {
+                                          "version":  "1.0.0",
+                                          "from":  "sparkles@\u003e=1.0.0 \u003c2.0.0",
+                                          "resolved":  "https://registry.npmjs.org/sparkles/-/sparkles-1.0.0.tgz",
+                                          "Hash":  "E3780BC3C117C95A6AE5AD689C88898462F35BA1AD0D2551F01B9BB26E0BE077"
+                                      },
+                         "stream-consume":  {
+                                                "version":  "0.1.0",
+                                                "from":  "stream-consume@\u003e=0.1.0 \u003c0.2.0",
+                                                "resolved":  "https://registry.npmjs.org/stream-consume/-/stream-consume-0.1.0.tgz",
+                                                "Hash":  "0C0382BFC5443D05B5AE542F1428A661112F7578342D0B94A7F389E6FF33F9EA"
+                                            },
+                         "string_decoder":  {
+                                                "version":  "0.10.31",
+                                                "from":  "string_decoder@\u003e=0.10.0 \u003c0.11.0",
+                                                "resolved":  "https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.31.tgz",
+                                                "Hash":  "BBDEC521E845F35FC7AD21FB8FDF3BFF2432444B59ED16388D2750307B11B779"
+                                            },
+                         "strip-ansi":  {
+                                            "version":  "3.0.1",
+                                            "from":  "strip-ansi@\u003e=3.0.0 \u003c4.0.0",
+                                            "resolved":  "https://registry.npmjs.org/strip-ansi/-/strip-ansi-3.0.1.tgz",
+                                            "Hash":  "71156E6944DB2729C369B08B7EC60C4BDB7114BFFBF25C669312A912C5FB1F51"
+                                        },
+                         "strip-bom":  {
+                                           "version":  "1.0.0",
+                                           "from":  "strip-bom@\u003e=1.0.0 \u003c2.0.0",
+                                           "resolved":  "https://registry.npmjs.org/strip-bom/-/strip-bom-1.0.0.tgz",
+                                           "Hash":  "721BF62349D5EFEA86060FC4909EC7251FD2F60CE522EC9FD26FF1031E2F032C"
+                                       },
+                         "supports-color":  {
+                                                "version":  "2.0.0",
+                                                "from":  "supports-color@\u003e=2.0.0 \u003c3.0.0",
+                                                "resolved":  "https://registry.npmjs.org/supports-color/-/supports-color-2.0.0.tgz",
+                                                "Hash":  "0373F7831C0E9F5BB9FF2C62AEE05F528CFF7DCAA3E8AF16B8578F8862A52B90"
+                                            },
+                         "symbol-observable":  {
+                                                   "version":  "1.0.4",
+                                                   "from":  "symbol-observable@\u003e=1.0.1 \u003c2.0.0",
+                                                   "resolved":  "https://registry.npmjs.org/symbol-observable/-/symbol-observable-1.0.4.tgz",
+                                                   "Hash":  "D2C4E95F4B3005CB9331502C71C7D411CDEE49DB0BBB01562C276D563D7E7D75"
+                                               },
+                         "systemjs":  {
+                                          "version":  "0.19.27",
+                                          "from":  "systemjs@0.19.27",
+                                          "resolved":  "https://registry.npmjs.org/systemjs/-/systemjs-0.19.27.tgz",
+                                          "Hash":  "CD9944ED798CEAA1EFDB683AC0505B42A343A54C5515A6AF9FC6BE2E10338C5B"
+                                      },
+                         "through2":  {
+                                          "version":  "2.0.3",
+                                          "from":  "through2@\u003e=2.0.0 \u003c3.0.0",
+                                          "resolved":  "https://registry.npmjs.org/through2/-/through2-2.0.3.tgz",
+                                          "dependencies":  {
+                                                               "isarray":  {
+                                                                               "version":  "1.0.0",
+                                                                               "from":  "isarray@\u003e=1.0.0 \u003c1.1.0",
+                                                                               "resolved":  "https://registry.npmjs.org/isarray/-/isarray-1.0.0.tgz",
+                                                                               "Hash":  "2AC7111C4E63B413691EC4FE785F881BCA41F23E37EDFE1118B2265C78432F34"
+                                                                           },
+                                                               "readable-stream":  {
+                                                                                       "version":  "2.2.6",
+                                                                                       "from":  "readable-stream@\u003e=2.1.5 \u003c3.0.0",
+                                                                                       "resolved":  "https://registry.npmjs.org/readable-stream/-/readable-stream-2.2.6.tgz",
+                                                                                       "Hash":  "A34993C5BEFABEEE727BC1AB8C50FF1E1E0D4DF0052F05ED34E39A183CE458ED"
+                                                                                   }
+                                                           },
+                                          "Hash":  "C926FD56D9225483762474D9A35F7738E331EA46479FBA8DBACFFD062D6CDB54"
+                                      },
+                         "tildify":  {
+                                         "version":  "1.2.0",
+                                         "from":  "tildify@\u003e=1.0.0 \u003c2.0.0",
+                                         "resolved":  "https://registry.npmjs.org/tildify/-/tildify-1.2.0.tgz",
+                                         "Hash":  "5272A526531B33B66B7573DAA304392F65D44BE42B5C1D08A3F9962AB9FA4FB0"
+                                     },
+                         "time-stamp":  {
+                                            "version":  "1.0.1",
+                                            "from":  "time-stamp@\u003e=1.0.0 \u003c2.0.0",
+                                            "resolved":  "https://registry.npmjs.org/time-stamp/-/time-stamp-1.0.1.tgz",
+                                            "Hash":  "141789C6451B370989F25D40FC6C7B65B810EFBDC75CC6FE95114C34F2578C43"
+                                        },
+                         "uglify-js":  {
+                                           "version":  "2.6.2",
+                                           "from":  "uglify-js@2.6.2",
+                                           "resolved":  "https://registry.npmjs.org/uglify-js/-/uglify-js-2.6.2.tgz",
+                                           "Hash":  "E5D64774B93DE8EB77E982370D3828F0DBB2D306ACB5840556D6D9A4CABA64C5"
+                                       },
+                         "uglify-save-license":  {
+                                                     "version":  "0.4.1",
+                                                     "from":  "uglify-save-license@\u003e=0.4.1 \u003c0.5.0",
+                                                     "resolved":  "https://registry.npmjs.org/uglify-save-license/-/uglify-save-license-0.4.1.tgz",
+                                                     "Hash":  "97A8453751F152C726583E7BBC29D8828D7144779EEC69AB286414FE33FC060D"
+                                                 },
+                         "uglify-to-browserify":  {
+                                                      "version":  "1.0.2",
+                                                      "from":  "uglify-to-browserify@\u003e=1.0.0 \u003c1.1.0",
+                                                      "resolved":  "https://registry.npmjs.org/uglify-to-browserify/-/uglify-to-browserify-1.0.2.tgz",
+                                                      "Hash":  "AB9E74A4CCF44973085198E560C03A6BB65A0D60B68840D5D74551FF17BB8A42"
+                                                  },
+                         "unc-path-regex":  {
+                                                "version":  "0.1.2",
+                                                "from":  "unc-path-regex@\u003e=0.1.0 \u003c0.2.0",
+                                                "resolved":  "https://registry.npmjs.org/unc-path-regex/-/unc-path-regex-0.1.2.tgz",
+                                                "Hash":  "01DEB0D23B1B7A82E88885B985EEA2DE36D51F8C761ACF0EA84A92ECA491B71D"
+                                            },
+                         "unique-stream":  {
+                                               "version":  "1.0.0",
+                                               "from":  "unique-stream@\u003e=1.0.0 \u003c2.0.0",
+                                               "resolved":  "https://registry.npmjs.org/unique-stream/-/unique-stream-1.0.0.tgz",
+                                               "Hash":  "5577B72083FFF006D70FDDEB56360D83D3A1F3FD21ADB3E4EA9F8E37FC071E07"
+                                           },
+                         "user-home":  {
+                                           "version":  "1.1.1",
+                                           "from":  "user-home@\u003e=1.1.1 \u003c2.0.0",
+                                           "resolved":  "https://registry.npmjs.org/user-home/-/user-home-1.1.1.tgz",
+                                           "Hash":  "E4E644BED6B8E3935CAC5BBC2EE284532FB7A106A2DB8937ABD401905D31B4A1"
+                                       },
+                         "util-deprecate":  {
+                                                "version":  "1.0.2",
+                                                "from":  "util-deprecate@\u003e=1.0.1 \u003c1.1.0",
+                                                "resolved":  "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz",
+                                                "Hash":  "1BD153F2536AD1332FC640F0F62FE087E6DB0BFD5E315E55C89EBA51A9031139"
+                                            },
+                         "v8flags":  {
+                                         "version":  "2.0.11",
+                                         "from":  "v8flags@\u003e=2.0.2 \u003c3.0.0",
+                                         "resolved":  "https://registry.npmjs.org/v8flags/-/v8flags-2.0.11.tgz",
+                                         "Hash":  "B560147C553A371D4557EA7727D0FB4FEEFB065C9F84E22EF29BB28F31349B56"
+                                     },
+                         "vinyl":  {
+                                       "version":  "0.5.3",
+                                       "from":  "vinyl@\u003e=0.5.0 \u003c0.6.0",
+                                       "resolved":  "https://registry.npmjs.org/vinyl/-/vinyl-0.5.3.tgz",
+                                       "Hash":  "43AA1951EDFC1DA05365F0410A264BC9727411CF4CBE851E84887FBB3AB412D8"
+                                   },
+                         "vinyl-fs":  {
+                                          "version":  "0.3.14",
+                                          "from":  "vinyl-fs@\u003e=0.3.0 \u003c0.4.0",
+                                          "resolved":  "https://registry.npmjs.org/vinyl-fs/-/vinyl-fs-0.3.14.tgz",
+                                          "dependencies":  {
+                                                               "clone":  {
+                                                                             "version":  "0.2.0",
+                                                                             "from":  "clone@\u003e=0.2.0 \u003c0.3.0",
+                                                                             "resolved":  "https://registry.npmjs.org/clone/-/clone-0.2.0.tgz",
+                                                                             "Hash":  "3B8F02FBB1EA2E688F24B975EA7F1DC5FFE0CF75D3E7D66CCF6824798D8B3C3C"
+                                                                         },
+                                                               "readable-stream":  {
+                                                                                       "version":  "1.0.34",
+                                                                                       "from":  "readable-stream@\u003e=1.0.33-1 \u003c1.1.0-0",
+                                                                                       "resolved":  "https://registry.npmjs.org/readable-stream/-/readable-stream-1.0.34.tgz",
+                                                                                       "Hash":  "DC3869E5385EBF89BEF91E1470F36F5AAC64D604A777B82BAA793A8E70182EA5"
+                                                                                   },
+                                                               "through2":  {
+                                                                                "version":  "0.6.5",
+                                                                                "from":  "through2@\u003e=0.6.1 \u003c0.7.0",
+                                                                                "resolved":  "https://registry.npmjs.org/through2/-/through2-0.6.5.tgz",
+                                                                                "Hash":  "2AB5FB5E51ADCB3AD883637E6794DD73A556D71D5D7EA49301B5664FC3308F08"
+                                                                            },
+                                                               "vinyl":  {
+                                                                             "version":  "0.4.6",
+                                                                             "from":  "vinyl@\u003e=0.4.0 \u003c0.5.0",
+                                                                             "resolved":  "https://registry.npmjs.org/vinyl/-/vinyl-0.4.6.tgz",
+                                                                             "Hash":  "55A7E02AFF0060D4C4DA976C2C5D17D4EF41147EEB080E842E0D1210FBAC7C6C"
+                                                                         }
+                                                           },
+                                          "Hash":  "1F3FE3697A3098A3C968584779E055E067A6A27881B00377CAC8237AE22A4EE0"
+                                      },
+                         "vinyl-sourcemaps-apply":  {
+                                                        "version":  "0.2.1",
+                                                        "from":  "vinyl-sourcemaps-apply@\u003e=0.2.0 \u003c0.3.0",
+                                                        "resolved":  "https://registry.npmjs.org/vinyl-sourcemaps-apply/-/vinyl-sourcemaps-apply-0.2.1.tgz",
+                                                        "Hash":  "D79FD9FBDE0C063D9222F9D5D06250A03EB515DB645C175BDBFAAD98806204C0"
+                                                    },
+                         "when":  {
+                                      "version":  "3.7.8",
+                                      "from":  "when@\u003e=3.7.5 \u003c4.0.0",
+                                      "resolved":  "https://registry.npmjs.org/when/-/when-3.7.8.tgz",
+                                      "Hash":  "E071B1118428E1EFE8FE3794CC990B1C07409F4D917D9E65FC521F01E0B5C39F"
+                                  },
+                         "which":  {
+                                       "version":  "1.2.12",
+                                       "from":  "which@\u003e=1.2.12 \u003c2.0.0",
+                                       "resolved":  "https://registry.npmjs.org/which/-/which-1.2.12.tgz",
+                                       "Hash":  "E182BC5BB21063B39C6B442CBAE5283ADF7FDB24766A504B5A998C40304B618C"
+                                   },
+                         "window-size":  {
+                                             "version":  "0.1.0",
+                                             "from":  "window-size@0.1.0",
+                                             "resolved":  "https://registry.npmjs.org/window-size/-/window-size-0.1.0.tgz",
+                                             "Hash":  "3F868ED789D2D350B0F53E698CC53EA4E9C248DEE8FAB7899888A5D5A42B6D9D"
+                                         },
+                         "wordwrap":  {
+                                          "version":  "0.0.2",
+                                          "from":  "wordwrap@0.0.2",
+                                          "resolved":  "https://registry.npmjs.org/wordwrap/-/wordwrap-0.0.2.tgz",
+                                          "Hash":  "8F6E508C03DA716B7CEA64B98034DEABC1FB015BF3B7F5611D8187B17C796804"
+                                      },
+                         "wrappy":  {
+                                        "version":  "1.0.2",
+                                        "from":  "wrappy@\u003e=1.0.0 \u003c2.0.0",
+                                        "resolved":  "https://registry.npmjs.org/wrappy/-/wrappy-1.0.2.tgz",
+                                        "Hash":  "5FA0AE80A547C7A173A44E6F92BE84C9E569E78D49F9CA3D3A5C987C2A2B19C4"
+                                    },
+                         "xtend":  {
+                                       "version":  "4.0.1",
+                                       "from":  "xtend@\u003e=4.0.1 \u003c4.1.0",
+                                       "resolved":  "https://registry.npmjs.org/xtend/-/xtend-4.0.1.tgz",
+                                       "Hash":  "9C829BB0F7900479320C4F2ECEBD33380C39184AC2E589FD8DE81B13664B497A"
+                                   },
+                         "yargs":  {
+                                       "version":  "3.10.0",
+                                       "from":  "yargs@\u003e=3.10.0 \u003c3.11.0",
+                                       "resolved":  "https://registry.npmjs.org/yargs/-/yargs-3.10.0.tgz",
+                                       "Hash":  "C972F8E7DAF80B461F2117611D62FCE72E67A27C5C6D199F386A23C8C3BB13D8"
+                                   },
+                         "zone.js":  {
+                                         "version":  "0.6.26",
+                                         "from":  "zone.js@0.6.26",
+                                         "resolved":  "https://registry.npmjs.org/zone.js/-/zone.js-0.6.26.tgz",
+                                         "Hash":  "5D7C19658F7346DB63AF0A768468E32FA688EB25CE881DED6987F4C2DAA3311F"
+                                     }
+                     }
+}
