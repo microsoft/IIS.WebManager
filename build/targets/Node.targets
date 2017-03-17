@@ -5,4 +5,7 @@
   <Target Name="NpmInstall" BeforeTargets="PreComputeCompileTypeScript" Condition="!Exists(@(NodeModulesDir))">
     <Exec Command="npm install" />
   </Target>
-</Project>  
+  <Target Name="NpmInstall" AfterTargets="CompileTypeScript" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="npm prune --production" />
+  </Target>
+</Project>
