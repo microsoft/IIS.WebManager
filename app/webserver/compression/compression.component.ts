@@ -1,17 +1,27 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import {DiffUtil} from '../../utils/diff';
+import { Subscription } from 'rxjs/Subscription';
 
-import {ResponseCompression} from './compression'
-import {CompressionService} from './compression.service';
+import { DiffUtil } from '../../utils/diff';
+import { Status } from '../../common/status';
+import { ResponseCompression } from './compression'
+import { CompressionService } from './compression.service';
 
 
 @Component({
     template: `
-        <loading *ngIf="!(model || _error)"></loading>
+        <loading *ngIf="_service.status == 'unknown' && !_service.error"></loading>
         <error [error]="_error"></error>
+        <switch class="install" *ngIf="_service.webserverScope && _service.status != 'unknown'" #s
+                [model]="_service.status == 'started' || _service.status == 'starting'" 
+                [disabled]="_service.status == 'starting' || _service.status == 'stopping'"
+                (modelChange)="_service.install($event)">
+                    <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
+                    <span *ngIf="isPending()" class="loading"></span>
+        </switch>
+        <span *ngIf="_service.status == 'stopped' && !_service.webserverScope">Response Compression is off. Turn it on <a [routerLink]="['/webserver/response-compression']">here</a></span>
+        <override-mode class="pull-right" *ngIf="model" [scope]="model.scope" (revert)="onRevert()" [metadata]="model.metadata" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="model">
-            <override-mode class="pull-right" (revert)="onRevert()" [metadata]="model.metadata" (modelChanged)="onModelChanged()"></override-mode>
             <fieldset>
                 <label>Dynamic Compression</label>
                 <switch class="block" [disabled]="_locked" [(model)]="model.do_dynamic_compression" (modelChanged)="onModelChanged()">{{model.do_dynamic_compression ? "On" : "Off"}}</switch>
@@ -43,50 +53,52 @@ import {CompressionService} from './compression.service';
                 </div>
             </div>
         </div>
-    `
+    `,
+    styles: [`
+        .install {
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+    `]
 })
-export class CompressionComponent implements OnInit {
-    id: string;
-    model: ResponseCompression;
+export class CompressionComponent implements OnInit, OnDestroy {
+    public id: string;
 
-    private _error: any;
+    private model: ResponseCompression;
     private _original: ResponseCompression;
     private _locked: boolean;
+    private _subscriptions: Array<Subscription> = [];
 
     constructor(private _service: CompressionService) {
     }
 
-    ngOnInit() {
-        this.initialize();
+    public ngOnInit() {
+        this._service.initialize(this.id);
+        this._subscriptions.push(this._service.compression.subscribe(compression => {
+            this.setFeature(compression);
+        }));
     }
 
-    onModelChanged() {
+    public ngOnDestroy() {
+        this._subscriptions.forEach(sub => sub.unsubscribe());
+    }
+
+    private onModelChanged() {
         if (!this.isValid()) {
             return;
         }
 
-        if (this.model) {
-
-            var changes = DiffUtil.diff(this._original, this.model);
-
-            if (Object.keys(changes).length > 0) {
-                
-                this._service.update(this.model, changes)
-                    .then(model => {
-                        this.set(model)
-                    });
-            }
+        let changes = DiffUtil.diff(this._original, this.model);
+        if (Object.keys(changes).length > 0) {
+            this._service.update(changes);
         }
     }
 
-    onRevert() {
-        this._service.revert(this.model.id)
-            .then(_ => {
-                this.initialize();
-            });
+    private onRevert() {
+        this._service.revert();
     }
 
-    onSpaceLimit(value: boolean) {
+    private onSpaceLimit(value: boolean) {
         if (!value) {
             this.model.max_disk_space_usage = this._original.max_disk_space_usage;
             this.model.min_file_size = this._original.min_file_size;
@@ -96,26 +108,22 @@ export class CompressionComponent implements OnInit {
         this.onModelChanged();
     }
 
-    private initialize() {
-        this._service.get(this.id)
-            .then(s => {
-                this.model = s;
-                this._original = JSON.parse(JSON.stringify(s));
-            })
-            .catch(e => {
-                this._error = e;
-            });
-    }
+    private setFeature(feature: ResponseCompression) {
+        if (feature) {
+            this._locked = feature.metadata.is_locked ? true : null;
+        }
 
-    private set(model) {
-        this.model = model;
-        this._original = JSON.parse(JSON.stringify(model));
-
-        this._locked = this.model.metadata.is_locked;
+        this.model = feature;
+        this._original = JSON.parse(JSON.stringify(feature));
     }
 
     private isValid(): boolean {
         return (!this.model.do_disk_space_limitting || ((this.model.max_disk_space_usage > 1) && (this.model.min_file_size > 1))) &&
-               (!!this.model.scope || !!this.model.directory);
+            (!!this.model.scope || !!this.model.directory);
+    }
+
+    private isPending(): boolean {
+        return this._service.status == Status.Starting
+            || this._service.status == Status.Stopping;
     }
 }

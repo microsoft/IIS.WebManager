@@ -1,28 +1,107 @@
-import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
+import { Injectable } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/toPromise';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import {HttpClient} from '../../common/httpclient';
-import {ResponseCompression} from './compression'
+import { DiffUtil } from '../../utils/diff';
+import { Status } from '../../common/status';
+import { ApiError, ApiErrorType } from '../../error/api-error';
+import { HttpClient } from '../../common/httpclient';
+import { ResponseCompression } from './compression';
 
 
 @Injectable()
 export class CompressionService {
-    constructor(private _http: HttpClient) {
+    public error: ApiError;
+
+    private static URL = "/webserver/http-response-compression/";
+    private _status: Status = Status.Unknown;
+    private _webserverScope: boolean;
+    private _compression: BehaviorSubject<ResponseCompression> = new BehaviorSubject<ResponseCompression>(null);
+
+    constructor(private _http: HttpClient, route: ActivatedRoute) {
+        this._webserverScope = route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver';
     }
 
-    get(id: string): Promise<ResponseCompression> {
-        return this._http.get("/webserver/http-response-compression/" + id);
+    public get status(): Status {
+        return this._status;
     }
 
-    update(compression: ResponseCompression, data: any): Promise<ResponseCompression> {
-        return this._http.patch("/webserver/http-response-compression/" + compression.id, JSON.stringify(data));
+    public get webserverScope(): boolean {
+        return this._webserverScope;
     }
 
-    revert(id: string): Promise<any> {
-        return this._http.delete("/webserver/http-response-compression/" + id);
+    public get compression(): Observable<ResponseCompression> {
+        return this._compression.asObservable();
+    }
+
+    public initialize(id: string) {
+        return this._http.get(CompressionService.URL + id)
+            .then(compression => {
+                this._status = Status.Started;
+                this._compression.next(compression);
+            })
+            .catch(e => {
+                this.error = e;
+
+                if (e.type && e.type == ApiErrorType.FeatureNotInstalled) {
+                    this._status = Status.Stopped;
+                }
+
+                throw e;
+            })
+    }
+
+    update(data: any) {
+        let id = this._compression.getValue().id;
+        return this._http.patch(CompressionService.URL + id, JSON.stringify(data))
+            .then(feature => {
+                let comp = this._compression.getValue();
+                DiffUtil.set(comp, feature);
+                this._compression.next(comp);
+            });
+    }
+
+    revert(): Promise<any> {
+        let id = this._compression.getValue().id;
+        return this._http.delete(CompressionService.URL + id)
+            .then(() => this.initialize(id));
+    }
+
+    public install(val: boolean) {
+        if (val) {
+            return this._install();
+        }
+        else {
+            return this._uninstall();
+        }
+    }
+
+    private _install(): Promise<any> {
+        this._status = Status.Starting;
+        return this._http.post(CompressionService.URL, "")
+            .then(doc => {
+                this._status = Status.Started;
+                this._compression.next(doc);
+            })
+            .catch(e => {
+                this.error = e;
+                throw e;
+            });
+    }
+
+    private _uninstall(): Promise<any> {
+        this._status = Status.Stopping;
+        let id = this._compression.getValue().id;
+        this._compression.next(null);
+        return this._http.delete(CompressionService.URL + id)
+            .then(() => {
+                this._status = Status.Stopped;
+            })
+            .catch(e => {
+                this.error = e;
+                throw e;
+            });
     }
 }

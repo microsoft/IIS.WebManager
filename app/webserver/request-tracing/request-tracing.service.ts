@@ -1,4 +1,5 @@
 import { Injectable, Inject, Optional } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Response } from '@angular/http';
 
 import 'rxjs/add/operator/map';
@@ -11,6 +12,7 @@ import { IDisposable } from '../../common/idisposable';
 import { ApiFile, ApiFileType, ChangeType } from '../../files/file';
 import { FilesService } from '../../files/files.service';
 
+import { Status } from '../../common/status';
 import { HttpClient } from '../../common/httpclient';
 import { RequestTracing, Provider, RequestTracingRule, TraceLog } from './request-tracing';
 
@@ -18,17 +20,23 @@ import { RequestTracing, Provider, RequestTracingRule, TraceLog } from './reques
 
 @Injectable()
 export class RequestTracingService implements IDisposable {
-    private _requestTracing: RequestTracing;
+    private _requestTracing: BehaviorSubject<RequestTracing> = new BehaviorSubject<RequestTracing>(null);
     private _providers: Array<Provider>;
     private _rules: Array<RequestTracingRule>;
     private _subscriptions: Array<Subscription> = [];
     private _traces: BehaviorSubject<Array<TraceLog>> = new BehaviorSubject<Array<TraceLog>>([]);
     private _traceError: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+    private _webserverScope: boolean;
 
     public error: any;
+    public _status: Status = Status.Unknown;
+    public requestTracing: Observable<RequestTracing> = this._requestTracing.asObservable();
 
     constructor(private _http: HttpClient,
+                route: ActivatedRoute,
                 @Optional() @Inject('FilesService') private _filesService: FilesService) {
+
+        this._webserverScope = route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver';
 
         this._subscriptions.push(this._filesService.change.subscribe(evt => {
             if (evt.type == ChangeType.Deleted) {
@@ -37,21 +45,81 @@ export class RequestTracingService implements IDisposable {
         }));
     }
 
+    public get status(): Status {
+        return this._status;
+    }
+
+    public get webserverScope(): boolean {
+        return this._webserverScope;
+    }
+
     public dispose(): void {
         for (let sub of this._subscriptions) {
             sub.unsubscribe();
         }
     }
 
-    get(id: string): Promise<RequestTracing> {
-        if (this._requestTracing) {
-            return Promise.resolve(this._requestTracing);
+    public install(val: boolean) {
+        if (val) {
+            return this._install();
+        }
+        else {
+            return this._uninstall();
+        }
+    }
+
+    public revert(feature: RequestTracing): Promise<any> {
+        if (!feature.scope) {
+            return Promise.reject("Invalid scope");
+        }
+
+        return this._http.delete(feature._links.self.href.replace("/api", ""));
+    }
+
+    public init(id: string) {
+        this.reset();
+        this.get(id);
+    }
+
+    public update(data: RequestTracing): Promise<RequestTracing> {
+        return this._http.patch(this._requestTracing.getValue()._links.self.href.replace("/api", ""), JSON.stringify(data))
+            .then(obj => {
+                let req = this._requestTracing.getValue();
+                for (var k in obj) req[k] = obj[k]; // Copy
+
+                this._requestTracing.next(req);
+                return req;
+            });
+    }
+
+    private get(id: string): Promise<RequestTracing> {
+        if (this._requestTracing.getValue()) {
+            return Promise.resolve(this._requestTracing.getValue());
         }
 
         return this._http.get("/webserver/http-request-tracing/" + id)
             .then(obj => {
-                this._requestTracing = obj;
-                return this._requestTracing
+                this._status = Status.Started;
+                this._requestTracing.next(obj);
+                return obj;
+            })
+            .catch(e => {
+                this.error = e;
+
+                if (e.type && e.type == 'FeatureNotInstalled') {
+                    this._status = Status.Stopped;
+                }
+
+                throw e;
+            });
+    }
+
+    private _install(): Promise<any> {
+        this._status = Status.Starting;
+        return this._http.post("/webserver/http-request-tracing/", "")
+            .then(req => {
+                this._status = Status.Started;
+                this._requestTracing.next(req);
             })
             .catch(e => {
                 this.error = e;
@@ -59,12 +127,17 @@ export class RequestTracingService implements IDisposable {
             });
     }
 
-    update(data: RequestTracing): Promise<RequestTracing> {
-        return this._http.patch(this._requestTracing._links.self.href.replace("/api", ""), JSON.stringify(data))
-            .then(obj => {
-                for (var k in obj) this._requestTracing[k] = obj[k]; // Copy
-
-                return this._requestTracing;
+    private _uninstall(): Promise<any> {
+        this._status = Status.Stopping;
+        let id = this._requestTracing.getValue().id;
+        this._requestTracing.next(null);
+        return this._http.delete("/webserver/http-request-tracing/" + id)
+            .then(() => {
+                this._status = Status.Stopped;
+            })
+            .catch(e => {
+                this.error = e;
+                throw e;
             });
     }
 
@@ -76,7 +149,7 @@ export class RequestTracingService implements IDisposable {
             return Promise.resolve(this._providers);
         }
 
-        return this._http.get(this._requestTracing._links.providers.href.replace("/api", "") + "&fields=*")
+        return this._http.get(this._requestTracing.getValue()._links.providers.href.replace("/api", "") + "&fields=*")
             .then(obj => {
                 this._providers = obj.providers.map(p => this.providerFromJson(p));
                 return this._providers;
@@ -94,9 +167,9 @@ export class RequestTracingService implements IDisposable {
     }
 
     createProvider(provider: Provider): Promise<Provider> {
-        provider.request_tracing = <RequestTracing>{ id: this._requestTracing.id };
+        provider.request_tracing = <RequestTracing>{ id: this._requestTracing.getValue().id };
 
-        return this._http.post(this._requestTracing._links.providers.href.replace("/api", ""), JSON.stringify(provider))
+        return this._http.post(this._requestTracing.getValue()._links.providers.href.replace("/api", ""), JSON.stringify(provider))
             .then(p => {
                 p = this.providerFromJson(p);
                 for (var k in p) provider[k] = p[k]; // Copy
@@ -127,7 +200,7 @@ export class RequestTracingService implements IDisposable {
             return Promise.resolve(this._rules);
         }
 
-        return this._http.get(this._requestTracing._links.rules.href.replace("/api", "") + "&fields=*")
+        return this._http.get(this._requestTracing.getValue()._links.rules.href.replace("/api", "") + "&fields=*")
             .then(arr => {
                 this._rules = arr.rules.map(r => this.ruleFromJson(r));
                 return this._rules;
@@ -145,9 +218,9 @@ export class RequestTracingService implements IDisposable {
     }
 
     createRule(data: RequestTracingRule) {
-        data.request_tracing = <RequestTracing>{ id: this._requestTracing.id };
+        data.request_tracing = <RequestTracing>{ id: this._requestTracing.getValue().id };
 
-        return this._http.post(this._requestTracing._links.rules.href.replace("/api", ""), JSON.stringify(data))
+        return this._http.post(this._requestTracing.getValue()._links.rules.href.replace("/api", ""), JSON.stringify(data))
             .then(obj => {
                 this._rules.push(this.ruleFromJson(obj));
                 return obj;
@@ -178,7 +251,7 @@ export class RequestTracingService implements IDisposable {
     }
 
     public loadTraces() {
-        this._http.get(this._requestTracing._links.traces.href.replace('/api', ''), null, false)
+        this._http.get(this._requestTracing.getValue()._links.traces.href.replace('/api', ''), null, false)
             .then(res => {
                 let traces = this._traces.getValue();
                 traces.splice(0, traces.length);
@@ -196,7 +269,7 @@ export class RequestTracingService implements IDisposable {
     }
 
     private providerFromJson(obj: Provider): Provider {
-        obj.request_tracing = this._requestTracing;
+        obj.request_tracing = this._requestTracing.getValue();
 
         // Remove '{}' from the guid
         if (obj.guid && obj.guid[0] == '{') {
@@ -207,7 +280,7 @@ export class RequestTracingService implements IDisposable {
     }
 
     private ruleFromJson(obj: RequestTracingRule): RequestTracingRule {
-        obj.request_tracing = this._requestTracing;
+        obj.request_tracing = this._requestTracing.getValue();
 
         if (this._providers) {
             for (var t of obj.traces) {
@@ -226,5 +299,14 @@ export class RequestTracingService implements IDisposable {
         }
 
         return obj;
+    }
+
+    private reset() {
+        this.error = null;
+        this._providers = null;
+        this._rules = null;
+        this._traceError.next(null);
+        this._traces.next([]);
+        this._requestTracing.next(null);
     }
 }

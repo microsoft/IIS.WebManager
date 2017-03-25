@@ -1,18 +1,19 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
-import {Module as BModel} from '../../common/bmodel';
-import {Module as Switch} from '../../common/switch.component';
-import {Module as Loading} from '../../notification/loading.component';
-import {Module as OverrideMode} from '../../common/override-mode.component';
-import {Module as ErrorComponent} from '../../error/error.component';
+import { Module as BModel } from '../../common/bmodel';
+import { Module as Switch } from '../../common/switch.component';
+import { Module as Loading } from '../../notification/loading.component';
+import { Module as OverrideMode } from '../../common/override-mode.component';
+import { Module as ErrorComponent } from '../../error/error.component';
+import { Module as Tabs } from '../../common/tabs.component';
 
-import {HttpResponseHeadersService} from './http-response-headers.service';
+import { HttpResponseHeadersService } from './http-response-headers.service';
 
-import {CustomHeadersComponent} from './custom-headers.component';
-import {HttpResponseHeadersComponent} from './http-response-headers.component';
-import {RedirectHeadersComponent} from './redirect-headers.component';
+import { CustomHeadersComponent } from './custom-headers.component';
+import { HttpResponseHeadersComponent } from './http-response-headers.component';
+import { RedirectHeadersComponent } from './redirect-headers.component';
 
 @NgModule({
     imports: [
@@ -22,7 +23,8 @@ import {RedirectHeadersComponent} from './redirect-headers.component';
         Switch,
         Loading,
         OverrideMode,
-        ErrorComponent
+        ErrorComponent,
+        Tabs
     ],
     declarations: [
         CustomHeadersComponent,

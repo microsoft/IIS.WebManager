@@ -17,26 +17,24 @@ import {HttpResponseHeaders, CustomHeader, RedirectHeader} from './http-response
                 <label>Keep Alive</label>
                 <switch class="block" [disabled]="_locked" [(model)]="httpResponseHeaders.allow_keep_alive" (modelChanged)="onModelChanged()">{{httpResponseHeaders.allow_keep_alive ? "On" : "Off"}}</switch>
             </fieldset>
-            <section>
-                <div class="collapse-heading" data-toggle="collapse" data-target="#custom-headers">
-                    <h2>Custom Headers</h2>
-                </div>
-                <div id="custom-headers" class="collapse in">
+            <tabs>
+                <tab [name]="'Custom Headers'">
                     <custom-headers [model]="httpResponseHeaders" [headers]="customHeaders" [originalHeaders]="originalCustomHeaders"
                                     (add)="addHeader($event, true)" (delete)="deleteHeader($event)" (save)="saveHeaderChanges($event, true)" [locked]="_locked"></custom-headers> 
-                </div>
-            </section>
-            <section>
-                <div class="collapse-heading collapsed" data-toggle="collapse" data-target="#redirect-headers">
-                    <h2>Headers on Redirect</h2>
-                </div>
-                <div id="redirect-headers" class="collapse">
+                </tab>
+                <tab [name]="'Redirect Headers'">
                     <redirect-headers [model]="httpResponseHeaders" [headers]="redirectHeaders" [originalHeaders]="originalRedirectHeaders"
                                     (add)="addHeader($event, false)" (delete)="deleteHeader($event)" (save)="saveHeaderChanges($event, false)" [locked]="_locked"></redirect-headers> 
-                </div>
-            </section>
+                </tab>
+            </tabs>
         </div>
-    `
+    `,
+    styles: [`
+        tabs {
+            display: block;
+            margin-top: 10px;
+        }
+    `]
 })
 export class HttpResponseHeadersComponent implements OnInit {
 

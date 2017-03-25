@@ -1,6 +1,7 @@
 import { NgModule, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { Module as AutoSize } from '../../common/autosize';
 import { Module as BModel } from '../../common/bmodel';
@@ -35,6 +36,7 @@ import { TraceFileComponent } from './trace-file.component';
     imports: [
         CommonModule,
         FormsModule,
+        RouterModule,
         AutoSize,
         BModel,
         CheckBox,

@@ -1,25 +1,28 @@
-import {Component, Input, Output, OnInit, EventEmitter, QueryList, ViewChildren, OnChanges, SimpleChange, ElementRef} from '@angular/core';
+import { Component, Input, Output, OnInit, OnDestroy, EventEmitter, QueryList, ViewChildren, OnChanges, SimpleChange, ElementRef } from '@angular/core';
 
-import {FileExtension} from './request-filtering';
-import {DiffUtil} from '../../utils/diff';
-import {ComponentUtil} from '../../utils/component';
+import { Subscription } from 'rxjs/Subscription';
+
+import { DiffUtil } from '../../utils/diff';
+import { FileExtension } from './request-filtering';
+import { ComponentUtil } from '../../utils/component';
+import { RequestFilteringService } from './request-filtering.service';
 
 @Component({
     selector: 'file-extension',
     template: `
-        <div *ngIf="fileExtension" class="grid-item row" [class.background-editing]="_editing">
+        <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing">
 
             <div class="actions">
                 <button class="no-border no-editing" [class.inactive]="!_editable" title="Edit" (click)="onEdit()">
                     <i class="fa fa-pencil color-active"></i>
                 </button>
-                <button class="no-border editing" [disabled]="!isValidFileExtension(fileExtension) || locked" title="Ok" (click)="finishChanges()">
+                <button class="no-border editing" [disabled]="!isValid() || locked" title="Ok" (click)="onSave()">
                     <i class="fa fa-check color-active"></i>
                 </button>
-                <button class="no-border editing" title="Cancel" (click)="discardChanges()">
+                <button class="no-border editing" title="Cancel" (click)="onDiscard()">
                     <i class="fa fa-times red"></i>
                 </button>
-                <button class="no-border" *ngIf="fileExtension.id" [disabled]="locked" title="Delete" [class.inactive]="!_editable" (click)="onDelete()">
+                <button class="no-border" *ngIf="model.id" [disabled]="locked" title="Delete" [class.inactive]="!_editable" (click)="onDelete()">
                     <i class="fa fa-trash-o red"></i>
                 </button>
             </div>
@@ -27,10 +30,10 @@ import {ComponentUtil} from '../../utils/component';
             <fieldset class="col-xs-8 col-sm-4">
                 <label class="visible-xs">Extension</label>
                 <label class="hidden-xs" [hidden]="!_editing">Extension</label>
-                <i class="fa fa-circle green hidden-xs" *ngIf="fileExtension.allow && !_editing"></i>
-                <i class="fa fa-ban red hidden-xs" *ngIf="!fileExtension.allow && !_editing"></i>
-                <input class="form-control" type="text" [disabled]="locked" [(ngModel)]="fileExtension.extension" throttle required />
-                <span>{{fileExtension.extension}}</span>
+                <i class="fa fa-circle green hidden-xs" *ngIf="model.allow && !_editing"></i>
+                <i class="fa fa-ban red hidden-xs" *ngIf="!model.allow && !_editing"></i>
+                <input class="form-control" type="text" [disabled]="locked" [(ngModel)]="model.extension" throttle required />
+                <span>{{model.extension}}</span>
                 <div *ngIf="!_editing">
                     <br class="visible-xs" />
                 </div>
@@ -39,8 +42,8 @@ import {ComponentUtil} from '../../utils/component';
             <fieldset class="col-xs-12 col-sm-4">
                 <label class="visible-xs">Allowed</label>
                 <label class="hidden-xs" [hidden]="!_editing">Allowed</label>
-                <span>{{fileExtension.allow ? "Allow" : "Deny"}}</span>
-                <switch class="block" *ngIf="_editing" [disabled]="locked" [(model)]="fileExtension.allow">{{fileExtension.allow ? "Allow" : "Deny"}}</switch>
+                <span>{{model.allow ? "Allow" : "Deny"}}</span>
+                <switch class="block" *ngIf="_editing" [disabled]="locked" [(model)]="model.allow">{{model.allow ? "Allow" : "Deny"}}</switch>
             </fieldset>
 
         </div>
@@ -59,197 +62,175 @@ import {ComponentUtil} from '../../utils/component';
     `]
 })
 export class FileExtensionComponent implements OnInit, OnChanges {
-    @Input() fileExtension: FileExtension;
+    @Input() model: FileExtension;
     @Input() locked: boolean;
 
-    @Output() edit: EventEmitter<any> = new EventEmitter();
-    @Output() delete: EventEmitter<any> = new EventEmitter();
-    @Output() modelChanged: EventEmitter<any> = new EventEmitter();
-    @Output() discard: EventEmitter<any> = new EventEmitter();
-    
-    private _original;
-    private _editing;
-    private _editable = true;
+    @Output() enter: EventEmitter<any> = new EventEmitter();
+    @Output() leave: EventEmitter<any> = new EventEmitter();
 
-    constructor(private _eRef: ElementRef) {
+    private _original: FileExtension;
+    private _editing: boolean;
+    private _editable: boolean = true;
+
+    constructor(private _eRef: ElementRef, private _service: RequestFilteringService) {
     }
 
-    ngOnInit() {
-        this._original = JSON.parse(JSON.stringify(this.fileExtension));
+    public ngOnInit() {
+        this._original = JSON.parse(JSON.stringify(this.model));
 
-        if (this.fileExtension) {
-
-            if (!this.fileExtension.extension) {
+        if (this.model) {
+            if (!this.model.extension) {
                 this._editing = true;
                 this.scheduleScroll();
             }
         }
     }
 
-    ngOnChanges(changes: { [key: string]: SimpleChange; }): any {
-
-        if (changes["fileExtension"]) {
-            this._original = JSON.parse(JSON.stringify(changes["fileExtension"].currentValue));
+    public ngOnChanges(changes: { [key: string]: SimpleChange; }): any {
+        if (changes["model"]) {
+            this.setModel(changes["model"].currentValue);
         }
     }
 
-    onEdit() {
-        this.edit.emit(null);
+    public setEditable(val: boolean) {
+        this._editable = val;
+    }
+
+    private onEdit() {
+        this.enter.emit(null);
         this._editing = true;
         this.scheduleScroll();
     }
 
-    onDelete() {
-        this.delete.emit(null);
+    private onDelete() {
+        if (confirm("Are you sure you want to delete this extension?\nExtension: " + this.model.extension)) {
+            this._service.deleteFileExtension(this.model);
+        }
     }
 
-    finishChanges() {
-
-        if (!this.isValidFileExtension(this.fileExtension)) {
+    private onSave() {
+        if (!this.isValid()) {
             return;
         }
 
-        this._original = JSON.parse(JSON.stringify(this.fileExtension));
-        this.modelChanged.emit(null);
         this._editing = false;
+        if (this.model.id) {
+            let changes = DiffUtil.diff(this._original, this.model);
+            if (Object.keys(changes).length > 0) {
+                this._service.updateFileExtension(this.model, changes)
+                    .then(() => this.setModel(this.model));
+            }
+        }
+        else {
+            this._service.addFileExtension(this.model);
+        }
+        this.leave.emit(null);
     }
 
-    discardChanges() {
+    private onDiscard() {
         if (this._editing) {
 
             let keys = Object.keys(this._original);
             for (var key of keys) {
-                this.fileExtension[key] = JSON.parse(JSON.stringify(this._original[key]));
+                this.model[key] = JSON.parse(JSON.stringify(this._original[key] || null));
             }
 
             this._editing = false;
-            this.discard.emit(null);
+            this.leave.emit(null);
         }
     }
 
-    setEditable(val: boolean) {
-        this._editable = val;
+    private isValid(): boolean {
+        return !!this.model.extension;
     }
 
-    isValidFileExtension(fileExtension: FileExtension): boolean {
-        return !!fileExtension.extension;
-    }
-
-    scheduleScroll() {
+    private scheduleScroll() {
         setTimeout(() => {
             ComponentUtil.scrollTo(this._eRef);
         });
+    }
+
+    private setModel(model: FileExtension) {
+        this.model = model;
+        this._original = JSON.parse(JSON.stringify(this.model));
     }
 }
 
 @Component({
     selector: 'file-extensions',
     template: `
-        <div *ngIf="fileExtensions">
-            <button class="create" (click)="onAdd()" [disabled]="locked" [class.inactive]="_inFileExtension"><i class="fa fa-plus color-active"></i><span>Add</span></button>
+        <div *ngIf="extensions">
+            <button class="create" (click)="onAdd()" [disabled]="locked" [class.inactive]="_editing"><i class="fa fa-plus color-active"></i><span>Add</span></button>
 
-            <div class="container-fluid" [hidden]="!fileExtensions || fileExtensions.length < 1">
+            <div class="container-fluid" [hidden]="!extensions || extensions.length < 1">
                 <div class="row hidden-xs border-active grid-list-header">
                     <label class="col-xs-12 col-sm-4">Extension</label>
                     <label class="col-xs-12 col-sm-4">Action</label>
                 </div>
             </div>
 
-            <div class="grid-list container-fluid">
-                <file-extension *ngFor="let fe of fileExtensions; let i = index;" [fileExtension]="fe" [locked]="locked" (modelChanged)="onSave(i)" (edit)="onEdit(i)" (discard)="onDiscard(i)" (delete)="onDelete(i)"></file-extension>
-            </div>
+            <ul class="grid-list container-fluid">
+                <li *ngIf="_newExtension">
+                    <file-extension [model]="_newExtension" [locked]="locked" (leave)="onLeaveNew()"></file-extension>
+                </li>
+                <li *ngFor="let fe of extensions; let i = index;">
+                    <file-extension [model]="fe" [locked]="locked" (enter)="onEnter()" (leave)="onLeave()"></file-extension>
+                </li>
+            </ul>
         </div> 
     `
 })
-export class FileExtensionsComponent {
-    @Input() fileExtensions: Array<FileExtension>;
+export class FileExtensionsComponent implements OnInit, OnDestroy {
+    @Input() extensions: Array<FileExtension> = [];
     @Input() locked: boolean;
 
-    @Output() delete: EventEmitter<any> = new EventEmitter();
-    @Output() save: EventEmitter<any> = new EventEmitter();
-    @Output() add: EventEmitter<any> = new EventEmitter();
-    @Output() discard: EventEmitter<any> = new EventEmitter();
+    @ViewChildren(FileExtensionComponent) extensionComponents: QueryList<FileExtensionComponent>;
 
-    @ViewChildren(FileExtensionComponent)
-    fileExtensionComponents: QueryList<FileExtensionComponent>;
+    private _editing: boolean;
+    private _newExtension: FileExtension;
+    private _subscriptions: Array<Subscription> = [];
 
-    private _inFileExtension: boolean;
-
-    onSave(index: number) {
-        let fileExtension = this.fileExtensions[index];
-
-        if (fileExtension.id) {
-            this.save.emit(index);
-        }
-        else {
-            this.add.emit(index);
-        }
-
-        this.leaveFileExtension();
+    constructor(private _service: RequestFilteringService) {
     }
 
-    onAdd() {
-        for (var fileExtension of this.fileExtensions) {
-            if (!fileExtension.id) {
-                
-                return;
-            }
-        }
-
-        let newFileExtension = new FileExtension();
-        newFileExtension.extension = '';
-        newFileExtension.allow = false;
-        this.fileExtensions.unshift(newFileExtension);
-
-        this.enterFileExtension(-1);
+    public ngOnInit() {
+        this._subscriptions.push(this._service.fileExtensions.subscribe(extensions => this.extensions = extensions));
     }
 
-    onEdit(index: number) {
-        this.enterFileExtension(index);
+    public ngOnDestroy() {
+        this._subscriptions.forEach(sub => sub.unsubscribe());
     }
 
-    onDiscard(index: number) {
-        this.discard.emit(index);
-        this.leaveFileExtension();
-
-        if (!this.fileExtensions[index].id) {
-            this.fileExtensions.splice(index, 1);
+    private onAdd() {
+        if (this._newExtension) {
+            return;
         }
+
+        this.setEditable(false);
+
+        this._newExtension = new FileExtension();
+        this._newExtension.extension = '';
+        this._newExtension.allow = false;
     }
 
-    onDelete(index: number) {
-        this.delete.emit(index);
+    private setEditable(val: boolean) {
+        this._editing = !val;
+        let extensions = this.extensionComponents.toArray();
+        extensions.forEach((extension, i) => {
+            extension.setEditable(val);
+        });
     }
 
-    private enterFileExtension(index: number) {
-        let arr = this.fileExtensionComponents.toArray();
-        let uninitialized = -1;
-
-        for (var i = 0; i < arr.length; i++) {
-            if (i !== index) {
-                if (arr[i].fileExtension.id) {
-                    arr[i].discardChanges();
-                    arr[i].setEditable(false);
-                }
-                else {
-                    uninitialized = i;
-                }
-            }
-        }
-
-        if (uninitialized > -1) {
-            this.fileExtensions.splice(uninitialized, 1);
-        }
-
-        this._inFileExtension = true;
+    private onEnter() {
+        this.setEditable(false);
     }
 
-    private leaveFileExtension() {
-        let arr = this.fileExtensionComponents.toArray();
-        for (var fileExtension of arr) {
-            fileExtension.setEditable(true);
-        }
+    private onLeave() {
+        this.setEditable(true);
+    }
 
-        this._inFileExtension = false;
+    private onLeaveNew() {
+        this._newExtension = null;
+        this.setEditable(true);
     }
 }

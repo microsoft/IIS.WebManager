@@ -1,6 +1,7 @@
 import { NgModule, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { Module as BModel } from '../../common/bmodel';
 import { Module as CheckBox } from '../../common/checkbox.component';
@@ -29,6 +30,7 @@ import { LogFilesComponent } from './log-files.component';
     imports: [
         CommonModule,
         FormsModule,
+        RouterModule,
         BModel,
         CheckBox,
         Switch,

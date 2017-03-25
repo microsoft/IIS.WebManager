@@ -1,20 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { LoggingService } from './logging.service';
-import { NotificationService } from '../../notification/notification.service';
-import { DiffUtil } from '../../utils/diff';
+import { Subscription } from 'rxjs/Subscription';
 
 import { ApiFile } from '../../files/file';
-import { Logging, LogFileFormat } from './logging'
-import { LogFieldsComponent, CustomFieldsComponent } from './logfields.component'
+import { DiffUtil } from '../../utils/diff';
+import { Status } from '../../common/status';
+import { Logging, LogFileFormat } from './logging';
+import { LoggingService } from './logging.service';
 
 @Component({
     template: `
-        <loading *ngIf="!(logging || _error)"></loading>
-        <error [error]="_error"></error>
+        <loading *ngIf="_service.status == 'unknown' && !_service.error"></loading>
+        <error [error]="_service.error"></error>
+        <switch class="install" *ngIf="_service.webserverScope && _service.status != 'unknown'" #s
+                [model]="_service.status == 'started' || _service.status == 'starting'" 
+                [disabled]="_service.status == 'starting' || _service.status == 'stopping'"
+                (modelChange)="_service.install($event)">
+                    <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
+                    <span *ngIf="isPending()" class="loading"></span>
+        </switch>
+        <span *ngIf="_service.status == 'stopped' && !_service.webserverScope">Logging is off. Turn it on <a [routerLink]="['/webserver/logging']">here</a></span>
+        <override-mode class="pull-right" *ngIf="logging" [scope]="logging.scope" [metadata]="logging.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="logging">
-            <override-mode class="pull-right" [metadata]="logging.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
             <fieldset>
+                <label>Collect Logs</label>
                 <switch class="block" [(model)]="logging.enabled" (modelChanged)="onModelChanged()">{{logging.enabled ? "On" : "Off"}}</switch>
             </fieldset>
             <div [hidden]="!logging.enabled">
@@ -51,7 +60,7 @@ import { LogFieldsComponent, CustomFieldsComponent } from './logfields.component
                         <customfields *ngIf="logging.custom_log_fields" [(model)]="logging.custom_log_fields" (modelChange)="onModelChanged()"></customfields>
                     </div>
                 </section>
-                <section *ngIf="this.logging.scope">
+                <section *ngIf="this.logging.scope && logging.log_per_site">
                     <div class="collapse-heading" data-toggle="collapse" data-target="#file-list">
                         <h2>Logs</h2>
                     </div>
@@ -66,21 +75,31 @@ import { LogFieldsComponent, CustomFieldsComponent } from './logfields.component
         fieldset {
             padding-left: 0;
         }
+
+        .install {
+            display: inline-block;
+            margin-bottom: 15px;
+        }
     `]
 })
-export class LoggingComponent implements OnInit {
+export class LoggingComponent implements OnInit, OnDestroy {
     id: string;
     logging: Logging;
 
     private _original: Logging;
     private _error: any;
+    private _subscriptions: Array<Subscription> = [];
 
-    constructor(private _service: LoggingService,
-                private _notificationService: NotificationService) {
+    constructor(private _service: LoggingService) {
     }
 
     ngOnInit() {
-        this.initialize();
+        this._subscriptions.push(this._service.logging.subscribe(logging => this.setFeature(logging)));
+        this._service.initialize(this.id);
+    }
+
+    public ngOnDestroy() {
+        this._subscriptions.forEach(sub => sub.unsubscribe());
     }
 
     onModelChanged() {
@@ -96,31 +115,11 @@ export class LoggingComponent implements OnInit {
 
         //
         // Update
-        this._service.update(this.logging.id, changes)
-            .then(logging => {
-                this.setFeature(logging)
-                this._notificationService.clearWarnings();
-            });
+        this._service.update(changes);
     }
 
     onRevert() {
-        this._service.revert(this.logging.id)
-            .then(_ => {
-                this.initialize();
-            })
-            .catch(e => {
-                this._error = e;
-            });
-    }
-
-    initialize() {
-        this._service.get(this.id)
-            .then(s => {
-                this.setFeature(s);
-            })
-            .catch(e => {
-                this._error = e;
-            });
+        this._service.revert();
     }
 
     private setFeature(logging: Logging) {
@@ -131,5 +130,10 @@ export class LoggingComponent implements OnInit {
     private onSelectPath(target: Array<ApiFile>) {
         this.logging.directory = target[0].physical_path;
         this.onModelChanged();
+    }
+
+    private isPending(): boolean {
+        return this._service.status == Status.Starting
+            || this._service.status == Status.Stopping;
     }
 }

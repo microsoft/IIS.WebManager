@@ -1,80 +1,159 @@
-import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
+import { Injectable } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/toPromise';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-
-import {HttpClient} from '../../common/httpclient';
-import {IpRestrictions, RestrictionRule} from './ip-restrictions';
-
-
+import { DiffUtil } from '../../utils/diff';
+import { Status } from '../../common/status';
+import { HttpClient } from '../../common/httpclient';
+import { ApiError, ApiErrorType } from '../../error/api-error';
+import { IpRestrictions, RestrictionRule } from './ip-restrictions';
 
 @Injectable()
 export class IpRestrictionsService {
+    public error: ApiError;
 
-    private static IP_RESTRICTIONS_URL = "/webserver/ip-restrictions/";
+    private static URL = "/webserver/ip-restrictions/";
+    private _webserverScope: boolean;
+    private _status: Status = Status.Unknown;
+    private _ipRestrictions: BehaviorSubject<IpRestrictions> = new BehaviorSubject<IpRestrictions>(null);
+    private _rules: BehaviorSubject<Array<RestrictionRule>> = new BehaviorSubject<Array<RestrictionRule>>([]);
 
-    constructor(private _http: HttpClient) {
+    constructor(private _http: HttpClient, route: ActivatedRoute) {
+        this._webserverScope = route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver';
     }
 
-    get(id: string): Promise<any> {
-        return this.getFeature(id).then(feature => {
-            return this.getRules(feature).then(rules => {
-                return {
-                    feature: feature,
-                    rules: rules
-                };
+    public get status(): Status {
+        return this._status;
+    }
+
+    public get webserverScope(): boolean {
+        return this._webserverScope;
+    }
+
+    public get ipRestrictions(): Observable<IpRestrictions> {
+        return this._ipRestrictions.asObservable();
+    }
+
+    public get rules(): Observable<Array<RestrictionRule>> {
+        return this._rules.asObservable();
+    }
+
+    public initialize(id: string) {
+        this.load(id).then(() => this.loadRules());
+    }
+
+    //
+    // Feature
+
+    public updateFeature(data: IpRestrictions) {
+        let id = this._ipRestrictions.getValue().id;
+
+        return this._http.patch(IpRestrictionsService.URL + id, JSON.stringify(data))
+            .then(feature => {
+                let restrictions = this._ipRestrictions.getValue();
+                DiffUtil.set(restrictions, feature);
+                this._ipRestrictions.next(restrictions);
             });
-        });
-
     }
 
-    patchRule(rule: RestrictionRule, data: RestrictionRule) {
+    public revert() {
+        let id = this._ipRestrictions.getValue().id;
+        return this._http.delete(IpRestrictionsService.URL + id)
+            .then(() => this.initialize(id));
+    }
+
+    public install(val: boolean) {
+        if (val) {
+            return this._install();
+        }
+        else {
+            return this._uninstall();
+        }
+    }
+
+    private load(id: string): Promise<any> {
+        return this._http.get(IpRestrictionsService.URL + id)
+            .then(feature => {
+                this._status = Status.Started;
+                this._ipRestrictions.next(feature);
+                return feature;
+            })
+            .catch(e => {
+                this.error = e;
+
+                if (e.type && e.type == ApiErrorType.FeatureNotInstalled) {
+                    this._status = Status.Stopped;
+                }
+
+                throw e;
+            });
+    }
+
+    private _install(): Promise<any> {
+        this._status = Status.Starting;
+        return this._http.post(IpRestrictionsService.URL, "")
+            .then(doc => {
+                this._status = Status.Started;
+                this._ipRestrictions.next(doc);
+            })
+            .catch(e => {
+                this.error = e;
+                throw e;
+            });
+    }
+
+    private _uninstall(): Promise<any> {
+        this._status = Status.Stopping;
+        let id = this._ipRestrictions.getValue().id;
+        this._ipRestrictions.next(null);
+        return this._http.delete(IpRestrictionsService.URL + id)
+            .then(() => {
+                this._status = Status.Stopped;
+            })
+            .catch(e => {
+                this.error = e;
+                throw e;
+            });
+    }
+
+    //
+    // Rules
+
+    public addRule(rule: RestrictionRule) {
+        rule.ip_restriction = this._ipRestrictions.getValue();
+
+        return this._http.post(this._ipRestrictions.getValue()._links.entries.href.replace("/api", ""), JSON.stringify(rule))
+            .then(rule => {
+                this._rules.getValue().unshift(rule);
+                this._rules.next(this._rules.getValue());
+            });
+    }
+
+    public updateRule(rule: RestrictionRule, data: RestrictionRule) {
         return this._http.patch(rule._links.self.href.replace("/api", ""), JSON.stringify(data))
-            .then(rule => {
+            .then(r => {
+                DiffUtil.set(rule, r);
                 return rule;
             });
     }
 
-    patchFeature(feature: IpRestrictions, data: IpRestrictions) {
-        return this._http.patch(feature._links.self.href.replace("/api", ""), JSON.stringify(data))
-            .then(feature => {
-                return feature;
+    public deleteRule(rule: RestrictionRule): Promise<any> {
+        return this._http.delete(rule._links.self.href.replace("/api", ""))
+            .then(() => {
+                let rules = this._rules.getValue().filter(r => r !== rule);
+                this._rules.next(rules);
             });
     }
 
-    addRule(feature: IpRestrictions, rule: RestrictionRule) {
-        return this._http.post(feature._links.entries.href.replace("/api", ""), JSON.stringify(rule))
-            .then(rule => {
-                return rule;
-            });
-    }
-
-    deleteRule(rule: RestrictionRule): Promise<any> {
-        return this._http.delete(rule._links.self.href.replace("/api", ""));
-    }
-
-    revert(id: string) {
-        return this._http.delete(IpRestrictionsService.IP_RESTRICTIONS_URL + id);
-    }
-
-    private getFeature(id: string): Promise<IpRestrictions> {
-        return this._http.get(IpRestrictionsService.IP_RESTRICTIONS_URL + id)
-            .then(feature => {
-                return feature;
-            });
-    }
-
-    private getRules(feature: IpRestrictions): Promise<Array<RestrictionRule>> {
-        return this._http.get(feature._links.entries.href.replace("/api", "") + "&fields=*")
+    private loadRules() {
+        return this._http.get(this._ipRestrictions.getValue()._links.entries.href.replace("/api", "") + "&fields=*")
             .then(rulesArr => {
-                return rulesArr.entries;
+                this._rules.next(rulesArr.entries);
             });
     }
 
-    private onError(error: Response) {
-        console.error(error);
-    }
-
+    //
+    //
 }

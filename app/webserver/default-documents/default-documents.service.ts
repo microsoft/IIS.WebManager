@@ -1,62 +1,101 @@
+import { Injectable } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
-import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
+import { Observable } from "rxjs/Observable";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
-import {DiffUtil} from '../../utils/diff';
-
-import {DefaultDocuments, File} from './default-documents';
-
-// 
-// Don't import rxjs/Rx. Loading is too slow!
-// Import only needed operators
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/toPromise';
-import {Observable} from "rxjs/Observable";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-
-import {HttpClient} from '../../common/httpclient';
-
+import { Status } from '../../common/status';
+import { HttpClient } from '../../common/httpclient';
+import { DiffUtil } from '../../utils/diff';
+import { ApiError, ApiErrorType } from '../../error/api-error';
+import { DefaultDocument, File } from './default-documents';
 
 @Injectable()
 export class DefaultDocumentsService {
-    private _defaultDoc: DefaultDocuments;
+    private _defaultDoc: BehaviorSubject<DefaultDocument> = new BehaviorSubject<DefaultDocument>(null);
     private _files: BehaviorSubject<File[]> = new BehaviorSubject<File[]>(null);
+    private _webserverScope: boolean;
 
-    constructor(private _http: HttpClient) {
+    public error: any;
+    public _status: Status = Status.Unknown;
+    public defaultDocument: Observable<DefaultDocument> = this._defaultDoc.asObservable();
+
+    constructor(private _http: HttpClient, route: ActivatedRoute) {
+        this._webserverScope = route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver';
+    }
+
+    public get status(): Status {
+        return this._status;
+    }
+
+    public get webserverScope(): boolean {
+        return this._webserverScope;
     }
 
 
-    get(id: string): Promise<DefaultDocuments> {
-        if (this._defaultDoc && this._defaultDoc.id === id) {
-            return Promise.resolve(this._defaultDoc);
-        }
-
+    public init(id: string): Promise<DefaultDocument> {
+        this.reset();
         return this.load(id);
     }
 
-    update(data: DefaultDocuments): Promise<DefaultDocuments> {
-        return this._http.patch(this._defaultDoc._links.self.href.replace("/api", ""), JSON.stringify(data))
+    public update(data: DefaultDocument): Promise<DefaultDocument> {
+        return this._http.patch(this._defaultDoc.getValue()._links.self.href.replace("/api", ""), JSON.stringify(data))
             .then(obj => {
-                return DiffUtil.set(this._defaultDoc, obj);
+                return DiffUtil.set(this._defaultDoc.getValue(), obj);
             });
     }
 
-    revert(): Promise<DefaultDocuments> {
-        return this._http.delete(this._defaultDoc._links.self.href.replace("/api", ""))
+    public revert(): Promise<DefaultDocument> {
+        return this._http.delete(this._defaultDoc.getValue()._links.self.href.replace("/api", ""))
             .then(_ => {
-                let id = this._defaultDoc.id;
-                this._defaultDoc.id = undefined;
+                let id = this._defaultDoc.getValue().id;
+                this._defaultDoc.getValue().id = undefined;
 
-                return this.get(id).then(_ => {
+                return this.load(id).then(_ => {
                     //
                     // Update files
                     if (this._files.getValue()) {
                         this.getFiles();
                     }
 
-                    return this._defaultDoc;
+                    return this._defaultDoc.getValue();
                 })
+            });
+    }
+
+    public install(val: boolean) {
+        if (val) {
+            return this._install();
+        }
+        else {
+            return this._uninstall();
+        }
+    }
+
+    private _install(): Promise<any> {
+        this._status = Status.Starting;
+        return this._http.post("/webserver/default-documents/", "")
+            .then(doc => {
+                this._status = Status.Started;
+                this._defaultDoc.next(doc);
+            })
+            .catch(e => {
+                this.error = e;
+                throw e;
+            });
+    }
+
+    private _uninstall(): Promise<any> {
+        this._status = Status.Stopping;
+        let id = this._defaultDoc.getValue().id;
+        this._defaultDoc.next(null);
+        return this._http.delete("/webserver/default-documents/" + id)
+            .then(() => {
+                this._status = Status.Stopped;
+            })
+            .catch(e => {
+                this.error = e;
+                throw e;
             });
     }
 
@@ -73,9 +112,9 @@ export class DefaultDocumentsService {
     }
 
     addFile(file: File): Promise<File> {
-        file.default_document = <DefaultDocuments>{ id: this._defaultDoc.id };
+        file.default_document = <DefaultDocument>{ id: this._defaultDoc.getValue().id };
 
-        return this._http.post(this._defaultDoc._links.files.href.replace("/api", ""), JSON.stringify(file))
+        return this._http.post(this._defaultDoc.getValue()._links.files.href.replace("/api", ""), JSON.stringify(file))
             .then(f => {
                 DiffUtil.set(file, this.fileFromJson(f));
 
@@ -84,7 +123,7 @@ export class DefaultDocumentsService {
                 files.splice(0, 0, file);
                 this._files.next(files);
 
-                this._defaultDoc.metadata.is_local = true;
+                this._defaultDoc.getValue().metadata.is_local = true;
                 return file;
             });
     }
@@ -92,7 +131,7 @@ export class DefaultDocumentsService {
     updateFile(file: File, data: File) {
         return this._http.patch(file._links.self.href.replace("/api", ""), JSON.stringify(data))
             .then(f => {
-                this._defaultDoc.metadata.is_local = true;
+                this._defaultDoc.getValue().metadata.is_local = true;
                 return DiffUtil.set(file, this.fileFromJson(f));
             });
     }
@@ -109,37 +148,47 @@ export class DefaultDocumentsService {
 
                 file.id = file._links = undefined;
 
-                this._defaultDoc.metadata.is_local = true;
+                this._defaultDoc.getValue().metadata.is_local = true;
 
                 this._files.next(files);
             });
     }
 
     private fileFromJson(obj: File): File {
-        obj.default_document = this._defaultDoc;
+        obj.default_document = this._defaultDoc.getValue();
         return obj;
     }
 
-    private load(id: string): Promise<DefaultDocuments> {
+    private load(id: string): Promise<DefaultDocument> {
         return this._http.get("/webserver/default-documents/" + id)
             .then(obj => {
-                if (!this._defaultDoc) {
-                    this._defaultDoc = obj;
-                }
-                else {
-                    DiffUtil.set(this._defaultDoc, obj);
+                this._status = Status.Started;
+                this._defaultDoc.next(obj);
+                return obj;
+            })
+            .catch(e => {
+                this.error = e;
+
+                if (e.type && e.type == ApiErrorType.FeatureNotInstalled) {
+                    this._status = Status.Stopped;
                 }
 
-                return this._defaultDoc;
+                throw e;
             });
     }
 
     private getFiles(): Promise<File[]> {
-        return this._http.get(this._defaultDoc._links.files.href.replace("/api", ""))
+        return this._http.get(this._defaultDoc.getValue()._links.files.href.replace("/api", ""))
             .then(obj => {
                 this._files.next(obj.files.map(f => this.fileFromJson(f)));
 
                 return this._files.getValue();
             });
+    }
+
+    private reset() {
+        this.error = null;
+        this._defaultDoc.next(null);
+        this._files.next(null);
     }
 }

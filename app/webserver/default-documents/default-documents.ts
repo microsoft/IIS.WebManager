@@ -7,7 +7,7 @@ export class File {
     _links: any;
 }
 
-export class DefaultDocuments {
+export class DefaultDocument {
     id: string;
     scope: string;
     metadata: Metadata;

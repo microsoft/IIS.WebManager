@@ -1,57 +1,109 @@
+import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 
-import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
-import {BasicAuthentication} from './authentication'
+import { DiffUtil } from '../../utils/diff';
+import { Status } from '../../common/status';
+import { BasicAuthentication } from './authentication'
+import { AuthenticationService } from './authentication.service';
 
 @Component({
     selector: 'basic-auth',
     template: `
-        <error [error]="error"></error>
-        <div *ngIf="model">
-            <override-mode class="pull-right" [metadata]="model.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
-            <fieldset>
-                <switch class="block" [disabled]="_locked" [(model)]="model.enabled" (modelChanged)="onModelChanged()">{{model.enabled ? "On" : "Off"}}</switch>
-            </fieldset>
-            <div class="clear" *ngIf="model.enabled">
-                <fieldset>
-                    <label>Default Logon Domain</label>
-                    <input class="form-control path" type="text" [disabled]="_locked" [(ngModel)]="model.default_logon_domain" throttle (modelChanged)="onModelChanged()" />
-                </fieldset>
-                <fieldset>
-                    <label>Realm</label>
-                    <input class="form-control path" type="text" [disabled]="_locked" [(ngModel)]="model.realm" throttle (modelChanged)="onModelChanged()" />
-                </fieldset>
+        <section *ngIf="_service.basicStatus != 'unknown' || _service.basicError">
+            <div class="collapse-heading" data-toggle="collapse" data-target="#basicAuthentication">
+                <h2>Basic Authentication</h2>
             </div>
-        </div>
+            <div id="basicAuthentication" class="collapse in">
+                <error [error]="_service.basicError"></error>
+                <switch class="install" *ngIf="_service.webserverScope && _service.basicStatus != 'unknown'" #s
+                        [model]="_service.basicStatus == 'started' || _service.basicStatus == 'starting'" 
+                        [disabled]="_service.basicStatus == 'starting' || _service.basicStatus == 'stopping'"
+                        (modelChange)="_service.installBasic($event)">
+                            <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
+                            <span *ngIf="isPending()" class="loading"></span>
+                </switch>
+                <span *ngIf="_service.basicStatus == 'stopped' && !_service.webserverScope">Basic Authentication is off. Turn it on <a [routerLink]="['/webserver/authentication']">here</a></span>
+                <override-mode class="pull-right" *ngIf="_model" [scope]="_model.scope" [metadata]="_model.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
+                <div *ngIf="_model">
+                    <fieldset>
+                        <label *ngIf="!_model.scope">Default Behavior</label>
+                        <switch class="block" [disabled]="_locked" [(model)]="_model.enabled" (modelChanged)="onModelChanged()">{{_model.enabled ? "On" : "Off"}}</switch>
+                    </fieldset>
+                    <div class="clear" *ngIf="_model.enabled">
+                        <fieldset>
+                            <label>Default Logon Domain</label>
+                            <input class="form-control path" type="text" [disabled]="_locked" [(ngModel)]="_model.default_logon_domain" throttle (modelChanged)="onModelChanged()" />
+                        </fieldset>
+                        <fieldset>
+                            <label>Realm</label>
+                            <input class="form-control path" type="text" [disabled]="_locked" [(ngModel)]="_model.realm" throttle (modelChanged)="onModelChanged()" />
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </section>
     `,
     styles: [`
-        h2:first-of-type {
-            margin-top: 0;
-        }
         .clear {
             clear: both;
         }
+
+        .install {
+            display: inline-block;
+            margin-bottom: 15px;
+        }
     `]
 })
-export class BasicAuthenticationComponent implements OnInit {
-    @Input() model: BasicAuthentication;
-    @Input() error: any;
-    @Output() modelChange: any = new EventEmitter();
-    @Output() revert: any = new EventEmitter();
-
+export class BasicAuthenticationComponent implements OnDestroy {
+    private _model: BasicAuthentication;
     private _locked: boolean;
+    private _original: BasicAuthentication;
+    private _subscriptions: Array<Subscription> = [];
 
-    ngOnInit() {
-        if (this.model) {
-            this._locked = this.model.metadata.is_locked ? true : null;
+    constructor(private _service: AuthenticationService) {
+        this._subscriptions.push(this._service.basicAuth.subscribe(auth => {
+            this.setFeature(auth);
+        }));
+    }
+
+    public ngOnDestroy() {
+        this._subscriptions.forEach(sub => sub.unsubscribe());
+    }
+
+    private onModelChanged() {
+        if (this._model.metadata.is_locked) {
+            this.resetModel();
+        }
+
+        var changes = DiffUtil.diff(this._original, this._model);
+
+        if (Object.keys(changes).length > 0) {
+            this._service.update(this._model, changes);
         }
     }
 
-    onModelChanged() {
-        this.modelChange.emit(this.model);
+    private onRevert() {
+        this._service.revert(this._model);
     }
 
-    onRevert() {
-        this.revert.emit(null);
+    private setFeature(feature: BasicAuthentication) {
+        if (feature) {
+            this._locked = feature.metadata.is_locked ? true : null;
+        }
+
+        this._model = feature;
+        this._original = JSON.parse(JSON.stringify(feature));
+    }
+
+    private resetModel() {
+        for (var k in this._original) {
+            this._model[k] = JSON.parse(JSON.stringify(this._original[k] || null));
+        }
+    }
+
+    private isPending(): boolean {
+        return this._service.basicStatus == Status.Starting
+            || this._service.basicStatus == Status.Stopping;
     }
 }

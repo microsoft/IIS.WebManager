@@ -1,19 +1,28 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import {IpRestrictionsService} from './ip-restrictions.service';
-import {Logger} from '../../common/logger';
-import {NotificationService} from '../../notification/notification.service';
+import { Subscription } from 'rxjs/Subscription';
 
-import {DiffUtil} from '../../utils/diff';
-import {IpRestrictions, RestrictionRule} from './ip-restrictions';
+import { DiffUtil } from '../../utils/diff';
+import { Status } from '../../common/status';
+import { IpRestrictionsService } from './ip-restrictions.service';
+import { IpRestrictions, RestrictionRule } from './ip-restrictions';
 
 @Component({
     template: `
-        <loading *ngIf="!(ipRestrictions || _error)"></loading>
-        <error [error]="_error"></error>
+        <loading *ngIf="_service.status == 'unknown' && !_service.error"></loading>
+        <error [error]="_service.error"></error>
+        <switch class="install" *ngIf="_service.webserverScope && _service.status != 'unknown'" #s
+                [model]="_service.status == 'started' || _service.status == 'starting'" 
+                [disabled]="_service.status == 'starting' || _service.status == 'stopping'"
+                (modelChange)="_service.install($event)">
+                    <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
+                    <span *ngIf="isPending()" class="loading"></span>
+        </switch>
+        <span *ngIf="_service.status == 'stopped' && !_service.webserverScope">IP Restrictions are off. Turn them on <a [routerLink]="['/webserver/ip-restrictions']">here</a></span>
+        <override-mode class="pull-right" *ngIf="ipRestrictions" [scope]="ipRestrictions.scope" [metadata]="ipRestrictions.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="ipRestrictions" [attr.disabled]="_locked || null">
-            <override-mode class="pull-right" [metadata]="ipRestrictions.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
             <fieldset>
+                <label *ngIf="!ipRestrictions.scope">Default Behavior</label>
                 <switch class="block" [(model)]="enabled" (modelChanged)="onEnabledChanged()">{{enabled ? "On" : "Off"}}</switch>
             </fieldset>
             <div [hidden]="!enabled">
@@ -26,28 +35,17 @@ import {IpRestrictions, RestrictionRule} from './ip-restrictions';
                         <option value="NotFound">HTTP 404 Not Found</option>
                     </select>
                 </fieldset>
-                <section>
-                    <div class="collapse-heading" data-toggle="collapse" data-target="#restrictionRules">
-                        <h2>IP Addresses</h2>
-                    </div>
-                    <div id="restrictionRules" class="collapse in">
-                        <ip-addresses [model]="ipRestrictions" 
-                                      [rules]="restrictionRules" 
-                                      [originalRules]="originalRules"
-                                      (modelChange)="onModelChanged()"
-                                      (addRule)="addRule($event)"
-                                      (deleteRule)="deleteRule($event)"
-                                      (changeRule)="saveRuleChanges($event)"></ip-addresses>
-                    </div>
-                </section>
-                <section>
-                    <div class="collapse-heading collapsed" data-toggle="collapse" data-target="#dynamicRestrictionSettings">
-                        <h2>Dynamic Restrictions</h2>
-                    </div>
-                    <div id="dynamicRestrictionSettings" class="collapse">
-                        <dynamic-restrictions [model]="ipRestrictions" (modelChange)="onModelChanged()"></dynamic-restrictions>
-                    </div>
-                </section>
+                <tabs>
+                    <tab [name]="'General'">
+                            <ip-addresses [model]="ipRestrictions" (modelChanged)="onModelChanged()"></ip-addresses>
+                    </tab>
+                    <tab [name]="'Dynamic Restrictions'">
+                            <dynamic-restrictions [model]="ipRestrictions" (modelChange)="onModelChanged()"></dynamic-restrictions>
+                    </tab>
+                    <tab [name]="'Rules'">
+                            <restriction-rules [ipRestrictions]="ipRestrictions" (modelChange)="onModelChanged()"></restriction-rules>
+                    </tab>
+                </tabs>
             </div>            
         </div>
     `,
@@ -55,139 +53,78 @@ import {IpRestrictions, RestrictionRule} from './ip-restrictions';
         select.path{
             max-width: 400px;
             width: 100%;
-        }        
+        }
 
+        .install {
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        tabs {
+            margin-top: 10px;
+            display: block;
+        }
     `]
 })
-export class IpRestrictionsComponent implements OnInit {
-
+export class IpRestrictionsComponent implements OnInit, OnDestroy {
     id: string;
     ipRestrictions: IpRestrictions;
-    restrictionRules: Array<RestrictionRule>;
-    originalRules: Array<RestrictionRule>;
     enabled: boolean;
-    
+
     private _original: IpRestrictions;
     private _error: any;
     private _locked: boolean;
+    private _subscriptions: Array<Subscription> = [];
 
-    constructor(private _service: IpRestrictionsService,
-        private _logger: Logger,
-        private _notificationService: NotificationService) {
+    constructor(private _service: IpRestrictionsService) {
     }
 
     ngOnInit() {
-        this.initialize();
+        this._subscriptions.push(this._service.ipRestrictions.subscribe(feature => this.setFeature(feature)));
+        this._service.initialize(this.id);
+    }
+
+    public ngOnDestroy() {
+        this._subscriptions.forEach(sub => sub.unsubscribe());
     }
 
     onEnabledChanged() {
         if (!this.enabled) {
-            if (this.restrictionRules && this.restrictionRules.length > 0) {
-                if (!confirm("CAUTION: All restriction rules will be permanently deleted when IP restriction is turned off.")) {
-                    this.enabled = true; // Restore 
-                    return;
-                }
-                while (this.restrictionRules.length > 0) {
-                    this.restrictionRules.pop();
-                }
-            }
             this.ipRestrictions.enabled = false;
-            this.onModelChanged();
+            if (!confirm("CAUTION: All rules will be deleted when IP Restrictions is turned off.")) {
+                setTimeout(() => this.enabled = true, 1); // Restore
+                this.ipRestrictions.enabled = true;
+            }
+            else {
+                this.onModelChanged();
+            }
         }
     }
 
     onModelChanged() {
-
-        if (this.ipRestrictions) {
-
-            var changes = DiffUtil.diff(this._original, this.ipRestrictions);
-
-            if (Object.keys(changes).length > 0) {
-
-                this._service.patchFeature(this.ipRestrictions, changes)
-                    .then(feature => {
-                        this._notificationService.clearWarnings();
-                        this.setFeature(feature);
-                    });
-            }
-            else {
-                this._notificationService.clearWarnings();
-            }
+        let changes = DiffUtil.diff(this._original, this.ipRestrictions);
+        if (Object.keys(changes).length > 0) {
+            this._service.updateFeature(changes);
         }
     }
 
     onRevert() {
-        this._service.revert(this.ipRestrictions.id)
-            .then(_ => {
-                this.initialize();
-            })
-            .catch(e => {
-                this._error = e;
-            });
-    }
-
-    saveRuleChanges(index) {
-
-        if (this.restrictionRules && this.restrictionRules[index] && this.restrictionRules[index].id) {
-
-            var restrictionChanges = DiffUtil.diff(this.originalRules[index], this.restrictionRules[index]);
-
-            if (Object.keys(restrictionChanges).length > 0) {
-
-                this._service.patchRule(this.restrictionRules[index], restrictionChanges)
-                    .then(rule => {
-                        this.setRule(index, rule);
-                    });
-
-            }
-            else {
-                this._notificationService.clearWarnings();
-            }
-        }
-    }
-
-
-    deleteRule(rule: RestrictionRule) {
-        this._service.deleteRule(rule);
-    }
-
-    addRule(index) {
-        this._service.addRule(this.ipRestrictions, this.restrictionRules[index])
-            .then(restriction => {
-                this.setRule(index, restriction);
-            })
-            .catch(e => {
-                this.initialize();
-            });
-    }
-
-    private initialize() {
-        this._service.get(this.id)
-            .then(s => {
-                this.setFeature(s.feature);
-                this.restrictionRules = s.rules;
-                this.originalRules = JSON.parse(JSON.stringify(s.rules));
-                this.enabled = s.feature.enabled;
-            })
-            .catch(e => {
-                this._error = e;
-            });
+        this._service.revert();
     }
 
     private setFeature(feature) {
-        this.ipRestrictions = feature;
-        this._original = JSON.parse(JSON.stringify(feature));
+        if (feature) {
+            this._locked = feature.metadata.is_locked ? true : null;
 
-        if (this.ipRestrictions.enabled == null) {
-            this.ipRestrictions.enabled = false;
+            if (feature.enabled == null) {
+                feature.enabled = false;
+            }
+
+            this.enabled = feature.enabled;
         }
 
-        this._locked = this.ipRestrictions.metadata.is_locked ? true : null;
-    }
-
-    private setRule(index, rule) {
-        this.restrictionRules[index] = rule;
-        this.originalRules[index] = JSON.parse(JSON.stringify(rule));
+        this.ipRestrictions = feature;
+        this._original = JSON.parse(JSON.stringify(feature));
     }
 
     private resetFeature() {
@@ -203,4 +140,8 @@ export class IpRestrictionsComponent implements OnInit {
         this.onModelChanged();
     }
 
+    private isPending(): boolean {
+        return this._service.status == Status.Starting
+            || this._service.status == Status.Stopping;
+    }
 }

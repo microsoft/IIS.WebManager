@@ -1,6 +1,6 @@
-import {Metadata} from '../../common/metadata';
-import {ApiError} from '../../error/api-error';
-import {WebSite} from '../websites/site';
+import { Metadata } from '../../common/metadata';
+import { ApiError } from '../../error/api-error';
+import { WebSite } from '../websites/site';
 
 export class RequestFiltering {
     id: string;
@@ -65,7 +65,7 @@ export class RequestFilteringSettings {
 
     rules: Array<FilteringRule>;
     rulesError: ApiError;
-    
+
     urls: Array<any>;
     urlsError: ApiError;
 }

@@ -1,40 +1,103 @@
-import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
+import { Injectable } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/toPromise';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import {HttpClient} from '../../common/httpclient';
+import { DiffUtil } from '../../utils/diff';
+import { Status } from '../../common/status';
+import { ApiError, ApiErrorType } from '../../error/api-error';
+import { HttpClient } from '../../common/httpclient';
 
 @Injectable()
 export class DirectoryBrowsingService {
-    private static URL: string = "/webserver/directory-browsing/"
+    public error: ApiError;
 
-    constructor(private _http: HttpClient) {
+    private _webserverScope: boolean;
+    private _status: Status = Status.Unknown;
+    private static URL: string = "/webserver/directory-browsing/"
+    private _directoryBrowsing: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+
+    constructor(private _http: HttpClient, route: ActivatedRoute) {
+        this._webserverScope = route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver';
     }
 
-    get(id: string): Promise<any> {
+    public get status(): Status {
+        return this._status;
+    }
 
+    public get webserverScope(): boolean {
+        return this._webserverScope;
+    }
+
+    public get directoryBrowsing(): Observable<any> {
+        return this._directoryBrowsing.asObservable();
+    }
+
+    public init(id: string) {
         return this._http.get(DirectoryBrowsingService.URL + id)
             .then(feature => {
-                return feature;
+                this._status = Status.Started;
+                this._directoryBrowsing.next(feature);
+            })
+            .catch(e => {
+                this.error = e;
+
+                if (e.type && e.type == ApiErrorType.FeatureNotInstalled) {
+                    this._status = Status.Stopped;
+                }
             });
     }
 
-    update(id: string, data: any) {
+    public update(data: any) {
+        let id = this._directoryBrowsing.getValue().id;
         return this._http.patch(DirectoryBrowsingService.URL + id, JSON.stringify(data))
             .then(feature => {
-                return feature;
+                let d = this._directoryBrowsing.getValue();
+                DiffUtil.set(d, feature);
+                this._directoryBrowsing.next(d);
             });
     }
 
-    revert(id: string) {
-        return this._http.delete(DirectoryBrowsingService.URL + id);
+    public revert() {
+        let id = this._directoryBrowsing.getValue().id;
+        return this._http.delete(DirectoryBrowsingService.URL)
+            .then(() => this.init(id));
     }
 
-    private onError(error: Response) {
-        console.error(error);
+    public install(val: boolean) {
+        if (val) {
+            return this._install();
+        }
+        else {
+            return this._uninstall();
+        }
     }
 
+    private _install(): Promise<any> {
+        this._status = Status.Starting;
+        return this._http.post(DirectoryBrowsingService.URL, "")
+            .then(doc => {
+                this._status = Status.Started;
+                this._directoryBrowsing.next(doc);
+            })
+            .catch(e => {
+                this.error = e;
+                throw e;
+            });
+    }
+
+    private _uninstall(): Promise<any> {
+        this._status = Status.Stopping;
+        let id = this._directoryBrowsing.getValue().id;
+        this._directoryBrowsing.next(null);
+        return this._http.delete(DirectoryBrowsingService.URL + id)
+            .then(() => {
+                this._status = Status.Stopped;
+            })
+            .catch(e => {
+                this.error = e;
+                throw e;
+            });
+    }
 }

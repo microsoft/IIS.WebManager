@@ -38,7 +38,7 @@ import {AuthRule, AccessType} from './authorization'
                     <button class="no-border" title="Edit" [class.inactive]="!_editable" *ngIf="!_editing" (click)="onEdit()">
                         <i class="fa fa-pencil color-active"></i>
                     </button>
-                    <button class="no-border" *ngIf="rule.id" title="Delete" [disabled]="locked" [class.inactive]="!_editable" (click)="onDelete()">
+                    <button class="no-border" *ngIf="rule.id" title="Delete" [disabled]="locked || _editing" [class.inactive]="!_editable" (click)="onDelete()">
                         <i class="fa fa-trash-o red"></i>
                     </button>
                 </div>                

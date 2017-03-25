@@ -1,18 +1,27 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import {DirectoryBrowsingService} from './directory-browsing.service';
-import {Logger} from '../../common/logger';
-import {NotificationService} from '../../notification/notification.service';
+import { Subscription } from 'rxjs/Subscription';
 
-import {DiffUtil} from '../../utils/diff';
+import { DiffUtil } from '../../utils/diff';
+import { Status } from '../../common/status';
+import { DirectoryBrowsingService } from './directory-browsing.service';
 
 @Component({
     template: `
-        <loading *ngIf="!(feature || _error)"></loading>
-        <error [error]="_error"></error>
+        <loading *ngIf="_service.status == 'unknown' && !_service.error"></loading>
+        <error [error]="_service.error"></error>
+        <switch class="install" *ngIf="_service.webserverScope && _service.status != 'unknown'" #s
+                [model]="_service.status == 'started' || _service.status == 'starting'" 
+                [disabled]="_service.status == 'starting' || _service.status == 'stopping'"
+                (modelChange)="_service.install($event)">
+                    <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
+                    <span *ngIf="isPending()" class="loading"></span>
+        </switch>
+        <span *ngIf="_service.status == 'stopped' && !_service.webserverScope">Directory Browsing is off. Turn it on <a [routerLink]="['/webserver/directory-browsing']">here</a></span>
+        <override-mode class="pull-right" *ngIf="feature" [scope]="feature.scope" [metadata]="feature.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="feature">
-            <override-mode class="pull-right" [metadata]="feature.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
             <fieldset>
+                <label *ngIf="!feature.scope">Default Behavior</label>
                 <switch class="block" [disabled]="_locked" [(model)]="feature.enabled" (modelChanged)="onModelChanged()">{{feature.enabled ? "On" : "Off"}}</switch>
             </fieldset>
             <div [hidden]="!feature.enabled">
@@ -45,67 +54,58 @@ import {DiffUtil} from '../../utils/diff';
             padding-left: 0px;
             position:relative;
         }
+
+        .install {
+            display: inline-block;
+            margin-bottom: 15px;
+        }
     `]
 })
-export class DirectoryBrowsingComponent implements OnInit {
+export class DirectoryBrowsingComponent implements OnInit, OnDestroy {
     id: string;
     feature: any;
-    
+
     private _locked: boolean;
     private _original: any;
     private _error: any;
+    private _subscriptions: Array<Subscription> = [];
 
-    constructor(private _service: DirectoryBrowsingService,
-                private _logger: Logger,
-                private _notificationService: NotificationService)
-    {
+    constructor(private _service: DirectoryBrowsingService) {
     }
 
-    ngOnInit() {
-        this.initialize();
+    public ngOnInit() {
+        this._subscriptions.push(this._service.directoryBrowsing.subscribe(feature => {
+            this.setFeature(feature);
+        }));
+        this._service.init(this.id);
     }
 
-    onModelChanged() {
-        
-        if (this.feature) {
-            
-            var changes = DiffUtil.diff(this._original, this.feature);
+    public ngOnDestroy() {
+        this._subscriptions.forEach(sub => sub.unsubscribe());
+    }
 
-            if (Object.keys(changes).length > 0) {
-
-                this._service.update(this.feature.id, changes)
-                    .then(feature => {
-                        this.setFeature(feature);
-                    });
-            }
+    private onModelChanged() {
+        var changes = DiffUtil.diff(this._original, this.feature);
+        if (Object.keys(changes).length > 0) {
+            this._service.update(changes);
         }
     }
 
-    onRevert() {
-        this._service.revert(this.feature.id)
-            .then(_ => {
-                this.initialize();
-            })
-            .catch(e => {
-                this._error = e;
-            });
-    }
-
-    private initialize() {
-        this._service.get(this.id)
-            .then(feature => {
-                this.setFeature(feature);
-            })
-            .catch(e => {
-                this._error = e;
-            });
+    private onRevert() {
+        this._service.revert();
     }
 
     private setFeature(feature) {
+        if (feature) {
+            this._locked = feature.metadata.is_locked ? true : null;
+        }
+
         this.feature = feature;
         this._original = JSON.parse(JSON.stringify(feature));
-
-        this._locked = this.feature.metadata.is_locked ? true : null;
     }
 
+    private isPending(): boolean {
+        return this._service.status == Status.Starting
+            || this._service.status == Status.Stopping;
+    }
 }

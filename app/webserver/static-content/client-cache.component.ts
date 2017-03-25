@@ -1,5 +1,4 @@
-
-import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 
 import {ClientCache} from './static-content'
 
@@ -24,22 +23,46 @@ import {ClientCache} from './static-content'
             <input class="form-control" type="number" [disabled]="locked" [(ngModel)]="model.max_age" (modelChanged)="onModelChanged()" throttle />
         </fieldset>
         <fieldset [hidden]="model.control_mode !== 'use_expires'">
-            <label>HTTP Expiration</label>
+            <label>Expiration Date</label>
             <input class="form-control path" type="text" [disabled]="locked" [(ngModel)]="model.http_expires" (modelChanged)="onModelChanged()" throttle />
         </fieldset>
-        <fieldset>
+        <fieldset class="inline-block pull-left">
             <label>Custom</label>
-            <input class="form-control path" type="text" [disabled]="locked" [(ngModel)]="model.control_custom" (modelChanged)="onModelChanged()" throttle />
+            <switch [(model)]="_useCustom" (modelChanged)="onCustom()">{{_useCustom ? "On" : "Off"}}</switch>
         </fieldset>
-    `
+        <fieldset *ngIf="_useCustom" class="fill">
+            <label>&nbsp;</label>
+            <input class="form-control name" type="text" [disabled]="locked" [(ngModel)]="model.control_custom" (modelChanged)="onModelChanged()" throttle />
+        </fieldset>
+    `,
+    styles: [`
+        .name {
+            min-width: 200px;
+        }
+    `]
 })
-export class ClientCacheComponent {
+export class ClientCacheComponent implements OnInit {
     @Input() model: ClientCache;
     @Input() locked: boolean;
 
     @Output() modelChange: any = new EventEmitter();
 
+    private _useCustom: boolean;
+    private _cacheCustom: string;
+
+    public ngOnInit() {
+        this._useCustom = !!this.model.control_custom;
+    }
+
     onModelChanged() {
         this.modelChange.emit(this.model);
+    }
+
+    private onCustom() {
+        if (!this._useCustom) {
+            this._cacheCustom = this.model.control_custom;
+            this.model.control_custom = "";
+            this.onModelChanged();
+        }
     }
 }

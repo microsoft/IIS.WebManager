@@ -14,7 +14,7 @@ import {DiffUtil} from '../../utils/diff';
         <loading *ngIf="!(authorization || _error)"></loading>
         <error [error]="_error"></error>
         <div *ngIf="authorization">
-            <override-mode class="pull-right" (revert)="onRevert()" [metadata]="authorization.metadata" (modelChanged)="onModelChanged()"></override-mode>                
+            <override-mode class="pull-right" [scope]="authorization.scope" (revert)="onRevert()" [metadata]="authorization.metadata" (modelChanged)="onModelChanged()"></override-mode>                
             <button class="create" (click)="createRule()" [disabled]="_locked" [class.inactive]="_editing != -1"><i class="fa fa-plus blue"></i><span>Add</span></button>
             <div class="container-fluid">
                 <div class="row hidden-xs hidden-sm border-active grid-list-header" [hidden]="rules.length == 0">

@@ -1,28 +1,37 @@
 import { Injectable, Inject } from '@angular/core';
-import { Response } from '@angular/http';
+import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+import { Logging } from './logging';
+import { Status } from '../../common/status';
+import { HttpClient } from '../../common/httpclient';
+import { ApiFile, ChangeType } from '../../files/file';
 import { IDisposable } from '../../common/idisposable';
 import { FilesService } from '../../files/files.service';
+import { ApiError, ApiErrorType } from '../../error/api-error';
 import { WebSitesService } from '../websites/websites.service';
-import { ApiFile, ChangeType } from '../../files/file';
-import { HttpClient } from '../../common/httpclient';
-import { Logging } from './logging'
-
 
 @Injectable()
 export class LoggingService implements IDisposable {
-    private _settings: Logging;
+    public error: ApiError;
+
+    private static URL = "/webserver/logging/";
+    private _webserverScope: boolean;
+    private _status: Status = Status.Unknown;
     private _subscriptions: Array<Subscription> = [];
-    private _logs: BehaviorSubject<Array<ApiFile>> = new BehaviorSubject<Array<ApiFile>>([]);
     private _logsError: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+    private _logging: BehaviorSubject<Logging> = new BehaviorSubject<Logging>(null);
+    private _logs: BehaviorSubject<Array<ApiFile>> = new BehaviorSubject<Array<ApiFile>>([]);
 
     constructor(private _http: HttpClient,
-              @Inject('FilesService') private _filesService: FilesService,
-              @Inject('WebSitesService') private _webSitesService: WebSitesService) {
+                route: ActivatedRoute,
+                @Inject('FilesService') private _filesService: FilesService,
+                @Inject('WebSitesService') private _webSitesService: WebSitesService) {
+
+        this._webserverScope = route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver';
 
         this._subscriptions.push(this._filesService.change.subscribe(evt => {
             if (evt.type == ChangeType.Deleted) {
@@ -31,37 +40,94 @@ export class LoggingService implements IDisposable {
         }));
     }
 
+    public get status(): Status {
+        return this._status;
+    }
+
+    public get webserverScope(): boolean {
+        return this._webserverScope;
+    }
+
+    public get logging(): Observable<Logging> {
+        return this._logging.asObservable();
+    }
+
     public dispose() {
-        for (let sub of this._subscriptions) {
-            sub.unsubscribe();
-        }
+        this._subscriptions.forEach(sub => sub.unsubscribe());
     }
 
-    get(id: string): Promise<Logging> {
-        if (this._settings && this._settings.id == id) {
-            return Promise.resolve(this._settings);
-        }
-
-        return this._http.get("/webserver/logging/" + id)
-            .then(settings => {
-                this._settings = settings;
-                return settings;
-            });
+    public initialize(id: string) {
+        this.load(id);
     }
 
-    update(id: string, data: any): Promise<Logging> {
-        return this._http.patch("/webserver/logging/" + id, JSON.stringify(data))
+    public update(data: any): Promise<Logging> {
+        let id = this._logging.getValue().id;
+        return this._http.patch(LoggingService.URL + id, JSON.stringify(data))
             .then(obj => {
-                for (var k in obj) this._settings[k] = obj[k]; // Copy
-
-                return this._settings;
+                let logging = this._logging.getValue();
+                for (var k in obj) logging[k] = obj[k]; // Copy
+                this._logging.next(logging);
+                return logging;
             });
     }
 
-    revert(id: string) {
-        return this._http.delete("/webserver/logging/" + id)
+    public revert() {
+        let id = this._logging.getValue().id;
+        return this._http.delete(LoggingService.URL + id)
             .then(() => {
-                this._settings = null;
+                this.load(id);
+            });
+    }
+
+    public install(val: boolean) {
+        if (val) {
+            return this._install();
+        }
+        else {
+            return this._uninstall();
+        }
+    }
+
+    private _install(): Promise<any> {
+        this._status = Status.Starting;
+        return this._http.post(LoggingService.URL, "")
+            .then(doc => {
+                this._status = Status.Started;
+                this._logging.next(doc);
+            })
+            .catch(e => {
+                this.error = e;
+                throw e;
+            });
+    }
+
+    private _uninstall(): Promise<any> {
+        this._status = Status.Stopping;
+        let id = this._logging.getValue().id;
+        this._logging.next(null);
+        return this._http.delete(LoggingService.URL + id)
+            .then(() => {
+                this._status = Status.Stopped;
+            })
+            .catch(e => {
+                this.error = e;
+                throw e;
+            });
+    }
+
+    private load(id: string): Promise<Logging> {
+        return this._http.get(LoggingService.URL + id)
+            .then(settings => {
+                this._status = Status.Started;
+                this._logging.next(settings)
+                return settings;
+            })
+            .catch(e => {
+                this.error = e;
+
+                if (e.type && e.type == ApiErrorType.FeatureNotInstalled) {
+                    this._status = Status.Stopped;
+                }
             });
     }
 
@@ -77,15 +143,16 @@ export class LoggingService implements IDisposable {
     }
 
     public loadLogs() {
-        if (!this._settings.directory || !this._settings.website) {
+        let settings = this._logging.getValue();
+        if (!settings.directory || !settings.website) {
             return;
         }
 
-        this._webSitesService.get(this._settings.website.id)
+        this._webSitesService.get(settings.website.id)
             .then(site => {
-                this._settings.website = site;
+                settings.website = site;
 
-                return this._filesService.getByPhysicalPath(this._settings.directory + "/W3SVC" + this._settings.website.key)
+                return this._filesService.getByPhysicalPath(settings.directory + "/W3SVC" + settings.website.key)
                     .then(logDir => {
                         return this._filesService.getChildren(logDir)
                             .then(logFiles => {

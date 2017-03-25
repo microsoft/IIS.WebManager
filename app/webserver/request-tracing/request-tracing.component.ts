@@ -1,25 +1,39 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
+import { Subscription } from 'rxjs/Subscription';
 import { NotificationService } from '../../notification/notification.service';
 import { DiffUtil } from '../../utils/diff';
 
 import { ApiFile } from '../../files/file';
+import { Status } from '../../common/status';
 import { RequestTracingService } from './request-tracing.service';
 import { RequestTracing, RequestTracingRule, Trace, EventSeverity, Verbosity } from './request-tracing';
 
 
 @Component({
     template: `
-        <loading *ngIf="!(requestTracing || _service.error)"></loading>
+        <loading *ngIf="_service.status == 'unknown' && !_service.error"></loading>
         <error [error]="_service.error"></error>
+        <switch class="install" *ngIf="_service.webserverScope && _service.status != 'unknown'" #s
+                [model]="_service.status == 'started' || _service.status == 'starting'" 
+                [disabled]="_service.status == 'starting' || _service.status == 'stopping'"
+                (modelChange)="_service.install($event)">
+                    <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
+                    <span *ngIf="isPending()" class="loading"></span>
+        </switch>
+        <span *ngIf="_service.status == 'stopped' && !_service.webserverScope">Request Tracing is off. Turn it on <a [routerLink]="['/webserver/request-tracing']">here</a></span>
+        <override-mode class="pull-right"
+            *ngIf="requestTracing"
+            [scope]="requestTracing.scope"
+            [metadata]="requestTracing.metadata"
+            (revert)="onRevert()"
+            (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="requestTracing" [attr.disabled]="requestTracing.metadata.is_locked ? true : null">
             <section>
-                <override-mode class="pull-right" [metadata]="requestTracing.metadata" (modelChanged)="onModelChanged()"></override-mode>
-                <div *ngIf="scopeType() != 'webserver'">
-                    <fieldset [disabled]="scopeType() != 'website' || null">
-                        <switch class="block" [(model)]="requestTracing.enabled" (modelChanged)="onModelChanged()">{{requestTracing.enabled ? "On" : "Off"}}</switch>
-                    </fieldset>
-                </div>
+                <fieldset *ngIf="scopeType() != 'webserver'" [disabled]="scopeType() != 'website' || null">
+                    <switch class="block" [(model)]="requestTracing.enabled" (modelChanged)="onModelChanged()">{{requestTracing.enabled ? "On" : "Off"}}</switch>
+                </fieldset>
             </section>
 
             <tabs *ngIf="requestTracing.enabled">
@@ -55,24 +69,35 @@ import { RequestTracing, RequestTracingRule, Trace, EventSeverity, Verbosity } f
             clear: both;
         }
 
+        .install {
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
         section {
             margin-bottom: 15px;
         }
     `]
 })
-export class RequestTracingComponent implements OnInit {
+export class RequestTracingComponent implements OnInit, OnDestroy {
     id: string;
-    private requestTracing: RequestTracing;
+    private _redirect: boolean;
     private _original: RequestTracing;
+    private requestTracing: RequestTracing;
+    private _subscriptions: Array<Subscription> = [];
 
     constructor(private _service: RequestTracingService) {
     }
 
-    ngOnInit() {
-        this._service.get(this.id)
-            .then(obj => {
-                this.setFeature(obj);
-            });
+    public ngOnInit() {
+        this.reset();
+        this._subscriptions.push(this._service.requestTracing.subscribe(req => {
+            this.setFeature(req);
+        }));
+    }
+
+    public ngOnDestroy() {
+        this._subscriptions.forEach(sub => sub.unsubscribe());
     }
 
     onModelChanged() {
@@ -145,5 +170,22 @@ export class RequestTracingComponent implements OnInit {
     private onSelectPath(target: Array<ApiFile>) {
         this.requestTracing.directory = target[0].physical_path;
         this.onModelChanged();
+    }
+
+    private onRevert() {
+        this._service.revert(this.requestTracing)
+            .then(() => {
+                this.reset();
+            });
+    }
+
+    private isPending(): boolean {
+        return this._service.status == Status.Starting
+            || this._service.status == Status.Stopping;
+    }
+
+    private reset() {
+        this.setFeature(null);
+        this._service.init(this.id);
     }
 }

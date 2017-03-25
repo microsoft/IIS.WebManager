@@ -25,7 +25,7 @@ import {HttpResponseHeaders, RedirectHeader} from './http-response-headers';
                         <button class="no-border" title="Edit" [class.inactive]="_editing != -1" *ngIf="_editing != i" (click)="edit(i)">
                             <i class="fa fa-pencil color-active"></i>
                         </button>
-                        <button class="no-border" *ngIf="header.id" [disabled]="locked" title="Delete"  [class.inactive]="_editing !== -1 && _editing !== i" (click)="onDelete(i)">
+                        <button class="no-border" *ngIf="header.id" [disabled]="locked || _editing == i" title="Delete"  [class.inactive]="_editing !== -1 && _editing !== i" (click)="onDelete(i)">
                             <i class="fa fa-trash-o red"></i>
                         </button>
                     </div>
