@@ -64,7 +64,7 @@ export class FeatureNotInstalledComponent {
             <div *ngIf="error.type === 'SectionLocked'">
                 <section-locked></section-locked>
             </div>
-            <div *ngIf="error.type === 'FeatureNotInstalled'">
+            <div *ngIf="notInstalled && error.type === 'FeatureNotInstalled'">
                 <feature-not-installed [name]="error.name"></feature-not-installed>
             </div>
         </div>
@@ -72,6 +72,7 @@ export class FeatureNotInstalledComponent {
 })
 export class ErrorComponent {
     @Input() error: ApiError;
+    @Input() notInstalled: boolean = false;
 }
 
 @NgModule({

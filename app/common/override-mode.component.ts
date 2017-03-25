@@ -4,38 +4,35 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {Module as Switch} from './switch.component';
 
-import {ComponentUtil} from '../utils/component';
-
 @Component({
     selector: 'override-mode',
     styles: [`
-#root {
-    position: relative;
-}
+        #root {
+            position: relative;
+        }
 
-#menu {
-    position: absolute;
-    top: 32px;
-    left: -100px;
-    padding: 5px;
-    border-style: solid;
-    border-width: 1px;
-    z-index: 11;
-    right: 0;
-}
+        #menu {
+            position: absolute;
+            top: 32px;
+            left: -100px;
+            padding: 5px;
+            border-style: solid;
+            border-width: 1px;
+            z-index: 11;
+            right: 0;
+        }
 
-span {
-    text-transform: capitalize;
-}
+        span {
+            text-transform: capitalize;
+        }
 
-#menu button {
-    font-size: 100%;
-}
+        #menu button {
+            font-size: 100%;
+        }
 
-fieldset:last-of-type {
-    padding-bottom: 0;
-}
-
+        fieldset:last-of-type {
+            padding-bottom: 0;
+        }
     `],
     template: `
         <div id="root">
@@ -60,7 +57,7 @@ fieldset:last-of-type {
                         </switch>
                     </fieldset>
                     <fieldset>
-                        <button class="no-border" [disabled]="!metadata.is_local" title="Undo local settings" (click)="onRevert()">
+                        <button *ngIf="scope" class="no-border" [disabled]="!metadata.is_local" title="Undo local settings" (click)="onRevert()">
                             <i class="fa fa-undo red"></i> Reset to inherited
                         </button>
                     </fieldset>
@@ -76,29 +73,31 @@ fieldset:last-of-type {
         </div>
     `,
     host: {
-        '(document:click)': 'dClick($event)',
+        '(document:click)': 'docClick($event)',
+        '(click)': 'insideClick($event)',
         '(mouseenter)': 'enter()',
         '(mouseleave)': 'leave()'
     }
 })
 export class OverrideModeComponent {
+    @Input()
+    public metadata;
+    @Input()
+    public scope: string;
+    
+    @Output()
+    public modelChanged: any = new EventEmitter();
+    @Output()
+    public revert: any = new EventEmitter();
+
     private _focused: boolean = false;
     private _entered: boolean = false;
     private _doubleClick: boolean = false;
-
-    @Input()
-    metadata;
-    
-    @Output()
-    modelChanged: any = new EventEmitter();
-    @Output()
-    revert: any = new EventEmitter();
 
     constructor(private _eRef: ElementRef) {
     }
 
     updateData(evt) {
-
         this.metadata.override_mode = evt;
         this.metadata.override_mode_effective = evt;
 
@@ -128,16 +127,18 @@ export class OverrideModeComponent {
         this.revert.emit(null);
     }
 
-    dClick(evt) {
+    docClick(evt) {
         if (!this._focused) {
             return;
         }
 
-        var inside = ComponentUtil.isClickInsideComponent(evt, this._eRef);
-
-        if (!inside) {
+        if (!evt || !evt._overrideMode) {
             this.reset();
         }
+    }
+
+    insideClick(evt) {
+        evt._overrideMode = true;
     }
 
     blur() {

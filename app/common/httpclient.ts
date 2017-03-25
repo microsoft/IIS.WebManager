@@ -80,9 +80,9 @@ export class HttpClient {
             .then(res => res.status !== 204 ? res.json() : null);
     }
 
-    public delete(url: string, options?: RequestOptionsArgs): Promise<any> {
+    public delete(url: string, options?: RequestOptionsArgs, warn: boolean = true): Promise<any> {
         let ops: RequestOptionsArgs = this.getOptions(RequestMethod.Delete, url, options);
-        return this.request(url, ops);
+        return this.request(url, ops, warn);
     }
 
     public options(url: string): Promise<any> {
@@ -234,7 +234,15 @@ export class HttpClient {
         }
         if (httpError.status == 500) {
             // TODO: Invalid token
-            if (apiError) {
+            if (apiError.detail == "Dism Error") {
+                msg = "An error occured enabling " + apiError.feature;
+                if (apiError.exit_code == 'B7') {
+                    msg += "\nThe specified image is currently being serviced by another DISM operation"
+                }
+                msg += "\nError code: " + apiError.exit_code;
+            }
+
+            else {
                 msg = apiError.detail || "";
             }
         }
