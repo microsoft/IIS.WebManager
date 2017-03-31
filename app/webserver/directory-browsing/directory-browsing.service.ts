@@ -6,8 +6,8 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
-import { ApiError, ApiErrorType } from '../../error/api-error';
 import { HttpClient } from '../../common/httpclient';
+import { ApiError, ApiErrorType } from '../../error/api-error';
 
 @Injectable()
 export class DirectoryBrowsingService {
@@ -65,16 +65,7 @@ export class DirectoryBrowsingService {
             .then(() => this.init(id));
     }
 
-    public install(val: boolean) {
-        if (val) {
-            return this._install();
-        }
-        else {
-            return this._uninstall();
-        }
-    }
-
-    private _install(): Promise<any> {
+    public install(): Promise<any> {
         this._status = Status.Starting;
         return this._http.post(DirectoryBrowsingService.URL, "")
             .then(doc => {
@@ -87,7 +78,7 @@ export class DirectoryBrowsingService {
             });
     }
 
-    private _uninstall(): Promise<any> {
+    public uninstall(): Promise<any> {
         this._status = Status.Stopping;
         let id = this._directoryBrowsing.getValue().id;
         this._directoryBrowsing.next(null);

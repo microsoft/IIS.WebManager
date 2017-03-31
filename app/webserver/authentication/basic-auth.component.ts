@@ -6,6 +6,7 @@ import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
 import { BasicAuthentication } from './authentication'
 import { AuthenticationService } from './authentication.service';
+import { NotificationService } from '../../notification/notification.service';
 
 @Component({
     selector: 'basic-auth',
@@ -17,9 +18,10 @@ import { AuthenticationService } from './authentication.service';
             <div id="basicAuthentication" class="collapse in">
                 <error [error]="_service.basicError"></error>
                 <switch class="install" *ngIf="_service.webserverScope && _service.basicStatus != 'unknown'" #s
+                        [auto]="false"
                         [model]="_service.basicStatus == 'started' || _service.basicStatus == 'starting'" 
                         [disabled]="_service.basicStatus == 'starting' || _service.basicStatus == 'stopping'"
-                        (modelChange)="_service.installBasic($event)">
+                        (modelChanged)="install(!s.model)">
                             <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                             <span *ngIf="isPending()" class="loading"></span>
                 </switch>
@@ -61,7 +63,8 @@ export class BasicAuthenticationComponent implements OnDestroy {
     private _original: BasicAuthentication;
     private _subscriptions: Array<Subscription> = [];
 
-    constructor(private _service: AuthenticationService) {
+    constructor(private _service: AuthenticationService,
+                private _notificationService: NotificationService) {
         this._subscriptions.push(this._service.basicAuth.subscribe(auth => {
             this.setFeature(auth);
         }));
@@ -105,5 +108,19 @@ export class BasicAuthenticationComponent implements OnDestroy {
     private isPending(): boolean {
         return this._service.basicStatus == Status.Starting
             || this._service.basicStatus == Status.Stopping;
+    }
+
+    private install(val) {
+        if (val) {
+            this._service.installBasic(true);
+        }
+        else {
+            this._notificationService.confirm("Turn Off Basic Authentication", 'This will turn off "Basic Authentication" for the entire web server.')
+                .then(confirmed => {
+                    if (confirmed) {
+                        this._service.installBasic(false);
+                    }
+                });
+        }
     }
 }

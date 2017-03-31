@@ -12,7 +12,7 @@ import {DiffUtil} from '../../utils/diff';
 @Component({
     template: `
         <loading *ngIf="!(authorization || _error)"></loading>
-        <error [error]="_error"></error>
+        <error [error]="_error" [notInstalled]="true"></error>
         <div *ngIf="authorization">
             <override-mode class="pull-right" [scope]="authorization.scope" (revert)="onRevert()" [metadata]="authorization.metadata" (modelChanged)="onModelChanged()"></override-mode>                
             <button class="create" (click)="createRule()" [disabled]="_locked" [class.inactive]="_editing != -1"><i class="fa fa-plus blue"></i><span>Add</span></button>

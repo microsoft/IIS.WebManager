@@ -4,11 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
+import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
 import { HttpClient } from '../../common/httpclient';
-import { DiffUtil } from '../../utils/diff';
-import { ApiError, ApiErrorType } from '../../error/api-error';
 import { DefaultDocument, File } from './default-documents';
+import { ApiError, ApiErrorType } from '../../error/api-error';
 
 @Injectable()
 export class DefaultDocumentsService {
@@ -63,16 +63,7 @@ export class DefaultDocumentsService {
             });
     }
 
-    public install(val: boolean) {
-        if (val) {
-            return this._install();
-        }
-        else {
-            return this._uninstall();
-        }
-    }
-
-    private _install(): Promise<any> {
+    public install(): Promise<any> {
         this._status = Status.Starting;
         return this._http.post("/webserver/default-documents/", "")
             .then(doc => {
@@ -85,7 +76,7 @@ export class DefaultDocumentsService {
             });
     }
 
-    private _uninstall(): Promise<any> {
+    public uninstall(): Promise<any> {
         this._status = Status.Stopping;
         let id = this._defaultDoc.getValue().id;
         this._defaultDoc.next(null);

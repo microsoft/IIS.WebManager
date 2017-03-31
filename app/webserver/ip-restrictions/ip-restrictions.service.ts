@@ -64,13 +64,31 @@ export class IpRestrictionsService {
             .then(() => this.initialize(id));
     }
 
-    public install(val: boolean) {
-        if (val) {
-            return this._install();
-        }
-        else {
-            return this._uninstall();
-        }
+    public install(): Promise<any> {
+        this._status = Status.Starting;
+        return this._http.post(IpRestrictionsService.URL, "")
+            .then(doc => {
+                this._status = Status.Started;
+                this._ipRestrictions.next(doc);
+            })
+            .catch(e => {
+                this.error = e;
+                throw e;
+            });
+    }
+
+    public uninstall(): Promise<any> {
+        this._status = Status.Stopping;
+        let id = this._ipRestrictions.getValue().id;
+        this._ipRestrictions.next(null);
+        return this._http.delete(IpRestrictionsService.URL + id)
+            .then(() => {
+                this._status = Status.Stopped;
+            })
+            .catch(e => {
+                this.error = e;
+                throw e;
+            });
     }
 
     private load(id: string): Promise<any> {
@@ -87,33 +105,6 @@ export class IpRestrictionsService {
                     this._status = Status.Stopped;
                 }
 
-                throw e;
-            });
-    }
-
-    private _install(): Promise<any> {
-        this._status = Status.Starting;
-        return this._http.post(IpRestrictionsService.URL, "")
-            .then(doc => {
-                this._status = Status.Started;
-                this._ipRestrictions.next(doc);
-            })
-            .catch(e => {
-                this.error = e;
-                throw e;
-            });
-    }
-
-    private _uninstall(): Promise<any> {
-        this._status = Status.Stopping;
-        let id = this._ipRestrictions.getValue().id;
-        this._ipRestrictions.next(null);
-        return this._http.delete(IpRestrictionsService.URL + id)
-            .then(() => {
-                this._status = Status.Stopped;
-            })
-            .catch(e => {
-                this.error = e;
                 throw e;
             });
     }

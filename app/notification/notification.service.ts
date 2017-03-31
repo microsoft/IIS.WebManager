@@ -1,18 +1,20 @@
+import { Injectable } from '@angular/core';
+import { ApiConnection } from '../connect/api-connection';
 
-import {Injectable} from '@angular/core';
-import {ApiConnection} from '../connect/api-connection';
+import { DynamicComponentArgs } from '../common/dynamic.component';
 
-import {DynamicComponentArgs} from '../common/dynamic.component';
+import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
-
-import {ApiError, ApiErrorType} from '../error/api-error';
-import {Notification, NotificationType} from './notification';
+import { ApiError, ApiErrorType } from '../error/api-error';
+import { Notification, NotificationType } from './notification';
+import { ModalArgs } from './modal';
 
 @Injectable()
 export class NotificationService {
 
+    private _modal: Subject<ModalArgs> = new Subject<ModalArgs>();
     private _notifications: BehaviorSubject<Array<Notification>> = new BehaviorSubject<Array<Notification>>([]);
     private _activate: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
@@ -22,6 +24,10 @@ export class NotificationService {
 
     public getNotifications(): Array<Notification> {
         return this._data;
+    }
+
+    public get modal(): Observable<ModalArgs> {
+        return this._modal.asObservable();
     }
 
     public get activate(): Observable<boolean> {
@@ -44,6 +50,19 @@ export class NotificationService {
 
         this._data.push(notification);
         this._notifications.next(this._data);
+    }
+
+    public confirm(title: string, message: string): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            let args = new ModalArgs();
+            args.title = title;
+            args.message = message;
+
+            args.onConfirm = () => { resolve(true) };
+            args.onCancel = () => { resolve(false) };
+
+            this._modal.next(args);
+        });
     }
 
     public notify(notification: Notification) {

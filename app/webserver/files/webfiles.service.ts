@@ -24,6 +24,7 @@ import { LocationHash } from '../../common/location-hash';
 
 @Injectable()
 export class WebFilesService implements IDisposable {
+    private _fileInfoFields: string = "file_info.name,file_info.alias,file_info.type,file_info.physical_path,file_info.size,created,file_info.last_modified,file_info.mime_type,file_info.e_tag";
     private _website: WebSite;
     private _hashWatcher: LocationHash;
     private _current: BehaviorSubject<WebFile> = new BehaviorSubject<WebFile>(null);
@@ -242,7 +243,7 @@ export class WebFilesService implements IDisposable {
         let dir = this._current.getValue();
         let files = this._files.getValue();
 
-        this._http.get("/webserver/files?parent.id=" + dir.id + "&fields=name,type,path,file_info.*")
+        this._http.get("/webserver/files?parent.id=" + dir.id + "&fields=name,type,path," + this._fileInfoFields)
             .then(res => {
                 res = (<Array<WebFile>>(res.files)).map(f => WebFile.fromObj(f));
 
@@ -257,7 +258,7 @@ export class WebFilesService implements IDisposable {
     private getFile(path: string): Promise<WebFile> {
         path = path.replace("//", "/");
 
-        return this._http.get("/webserver/files?website.id=" + this._website.id + "&path=" + encodeURIComponent(path) + "&fields=name,type,path,file_info.*", null, false)
+        return this._http.get("/webserver/files?website.id=" + this._website.id + "&path=" + encodeURIComponent(path) + "&fields=name,type,path," + this._fileInfoFields, null, false)
                          .then(f => WebFile.fromObj(f));
     }
 

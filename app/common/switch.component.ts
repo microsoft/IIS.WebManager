@@ -1,8 +1,6 @@
-
-import {NgModule, Component, Input, Output, EventEmitter} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-
+import { NgModule, Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'switch',
@@ -124,7 +122,7 @@ import {FormsModule} from '@angular/forms';
     template: `
         <div class="switch-container" [attr.disabled]="disabled ? true : null">
             <label class="switch">
-                <input class="switch-input" type="checkbox"  [ngModel]="toBool()" (ngModelChange)="updateData($event)"/>
+                <input #checkbox class="switch-input" type="checkbox"  [ngModel]="toBool()" (ngModelChange)="updateData($event)"/>
                 <span class="switch-content border-color background-normal" ><div class="switch-fill background-active"></div></span>
                 <span class="switch-handle border-active background-normal"></span>
             </label>
@@ -134,21 +132,31 @@ import {FormsModule} from '@angular/forms';
     exportAs: 'switchVal'
 })
 export class SwitchComponent {
-    @Input()
-    on: any;
-    @Input()
-    off: any;
-    @Input()
-    disabled: boolean;
+    @Input() on: any;
+    @Input() off: any;
+    @Input() disabled: boolean;
+    @Input() auto: boolean = true;
 
-    @Input('model')
-    model: any;
-    @Output('modelChange')
-    modelChange: any = new EventEmitter();
-    @Output()
-    modelChanged: any = new EventEmitter();
+    @Input('model') model: any;
+    @Output('modelChange') modelChange: any = new EventEmitter();
+    @Output() modelChanged: any = new EventEmitter();
 
-    updateData(event) {
+    @ViewChild('checkbox') private _checkbox: ElementRef;
+
+    public ngOnChanges() {
+        if (!this.auto) {
+            this._checkbox.nativeElement.checked = this.model;
+        }
+    }
+
+    private updateData(event) {
+        if (!this.auto) {
+            this.model = !event;
+            this._checkbox.nativeElement.checked = this.model;
+            this.modelChanged.emit();
+            return;
+        }
+
         this.model = event;
 
         var emitValue = event
@@ -167,7 +175,7 @@ export class SwitchComponent {
         if (this.model === undefined || this.model === null) {
             return false;
         }
-        
+
         if (this.model === this.on) {
             return true;
         }
@@ -177,10 +185,6 @@ export class SwitchComponent {
         }
 
         return !!this.model;
-    }
-
-    labelClick() {
-        this.updateData(!this.toBool());
     }
 }
 

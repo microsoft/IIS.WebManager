@@ -6,7 +6,7 @@ import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
 import { DefaultDocument, File } from './default-documents';
 import { DefaultDocumentsService } from './default-documents.service';
-
+import { NotificationService } from '../../notification/notification.service';
 
 @Component({
     template: `
@@ -18,9 +18,10 @@ import { DefaultDocumentsService } from './default-documents.service';
             (revert)="onRevert()" 
             (modelChanged)="onModelChanged()"></override-mode>
         <switch class="install" *ngIf="_service.webserverScope && _service.status != 'unknown'" #s
+                [auto]="false"
                 [model]="_service.status == 'started' || _service.status == 'starting'" 
                 [disabled]="_service.status == 'starting' || _service.status == 'stopping'"
-                (modelChange)="_service.install($event)">
+                (modelChanged)="install(!s.model)">
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
@@ -51,7 +52,8 @@ export class DefaultDocumentsComponent implements OnInit, OnDestroy {
     private _original: DefaultDocument;
     private _subscriptions: Array<Subscription> = [];
 
-    constructor(private _service: DefaultDocumentsService){
+    constructor(private _service: DefaultDocumentsService,
+                private _notificationService: NotificationService) {
     }
 
     ngOnInit() {
@@ -95,5 +97,19 @@ export class DefaultDocumentsComponent implements OnInit, OnDestroy {
     private reset() {
         this.setFeature(null);
         this._service.init(this.id);
+    }
+
+    private install(val: boolean) {
+        if (val) {
+            return this._service.install();
+        }
+        else {
+            this._notificationService.confirm("Turn Off Default Documents", 'This will turn off "Default Documents" for the entire web server.')
+                .then(confirmed => {
+                    if (confirmed) {
+                        this._service.uninstall();
+                    }
+                });
+        }
     }
 }

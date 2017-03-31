@@ -16,7 +16,7 @@ import { AuthenticationService } from './authentication.service';
             </div>
             <div id="windowsAuthentication" class="collapse in">
                 <error [error]="_service.windowsError"></error>
-                <switch class="install" *ngIf="_service.webserverScope && _service.windowsStatus != 'unknown'" #s
+                <switch class="install" *ngIf="_service.webserverScope && _service.windowsStatus == 'stopped' || _service.windowsStatus == 'starting'" #s
                         [model]="_service.windowsStatus == 'started' || _service.windowsStatus == 'starting'" 
                         [disabled]="_service.windowsStatus == 'starting' || _service.windowsStatus == 'stopping'"
                         (modelChange)="_service.installWindows($event)">
@@ -27,7 +27,6 @@ import { AuthenticationService } from './authentication.service';
                 <override-mode class="pull-right" *ngIf="_model" [scope]="_model.scope" [metadata]="_model.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
                 <div *ngIf="_model">
                     <fieldset>
-                        <label *ngIf="!_model.scope">Default Behavior</label>
                         <switch class="block" [disabled]="_locked" [(model)]="_model.enabled" (modelChanged)="onModelChanged()">{{_model.enabled ? "On" : "Off"}}</switch>
                     </fieldset>
                     <div class="clear" *ngIf="_model.enabled">

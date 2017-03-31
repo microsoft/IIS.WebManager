@@ -2,12 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Subscription } from 'rxjs/Subscription';
-import { NotificationService } from '../../notification/notification.service';
-import { DiffUtil } from '../../utils/diff';
 
 import { ApiFile } from '../../files/file';
+import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
 import { RequestTracingService } from './request-tracing.service';
+import { NotificationService } from '../../notification/notification.service';
 import { RequestTracing, RequestTracingRule, Trace, EventSeverity, Verbosity } from './request-tracing';
 
 
@@ -16,9 +16,10 @@ import { RequestTracing, RequestTracingRule, Trace, EventSeverity, Verbosity } f
         <loading *ngIf="_service.status == 'unknown' && !_service.error"></loading>
         <error [error]="_service.error"></error>
         <switch class="install" *ngIf="_service.webserverScope && _service.status != 'unknown'" #s
+                [auto]="false"
                 [model]="_service.status == 'started' || _service.status == 'starting'" 
                 [disabled]="_service.status == 'starting' || _service.status == 'stopping'"
-                (modelChange)="_service.install($event)">
+                (modelChanged)="install(!s.model)">
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
@@ -86,7 +87,8 @@ export class RequestTracingComponent implements OnInit, OnDestroy {
     private requestTracing: RequestTracing;
     private _subscriptions: Array<Subscription> = [];
 
-    constructor(private _service: RequestTracingService) {
+    constructor(private _service: RequestTracingService,
+                private _notificationService: NotificationService) {
     }
 
     public ngOnInit() {
@@ -187,5 +189,19 @@ export class RequestTracingComponent implements OnInit, OnDestroy {
     private reset() {
         this.setFeature(null);
         this._service.init(this.id);
+    }
+
+    private install(val: boolean) {
+        if (val) {
+            return this._service.install();
+        }
+        else {
+            this._notificationService.confirm("Turn Off Request Tracing", 'This will turn off "Request Tracing" for the entire web server.')
+                .then(result => {
+                    if (result) {
+                        this._service.uninstall();
+                    }
+                });
+        }
     }
 }

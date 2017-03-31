@@ -74,13 +74,31 @@ export class RequestFilteringService {
             });
     }
 
-    public install(val: boolean) {
-        if (val) {
-            return this._install();
-        }
-        else {
-            return this._uninstall();
-        }
+    public install(): Promise<any> {
+        this._status = Status.Starting;
+        return this._http.post(RequestFilteringService.URL, "")
+            .then(doc => {
+                this._status = Status.Started;
+                this._requestFiltering.next(doc);
+            })
+            .catch(e => {
+                this.error = e;
+                throw e;
+            });
+    }
+
+    public uninstall(): Promise<any> {
+        this._status = Status.Stopping;
+        let id = this._requestFiltering.getValue().id;
+        this._requestFiltering.next(null);
+        return this._http.delete(RequestFilteringService.URL + id)
+            .then(() => {
+                this._status = Status.Stopped;
+            })
+            .catch(e => {
+                this.error = e;
+                throw e;
+            });
     }
 
     //
@@ -172,33 +190,6 @@ export class RequestFilteringService {
                 if (e.type && e.type == ApiErrorType.FeatureNotInstalled) {
                     this._status = Status.Stopped;
                 }
-            });
-    }
-
-    private _install(): Promise<any> {
-        this._status = Status.Starting;
-        return this._http.post(RequestFilteringService.URL, "")
-            .then(doc => {
-                this._status = Status.Started;
-                this._requestFiltering.next(doc);
-            })
-            .catch(e => {
-                this.error = e;
-                throw e;
-            });
-    }
-
-    private _uninstall(): Promise<any> {
-        this._status = Status.Stopping;
-        let id = this._requestFiltering.getValue().id;
-        this._requestFiltering.next(null);
-        return this._http.delete(RequestFilteringService.URL + id)
-            .then(() => {
-                this._status = Status.Stopped;
-            })
-            .catch(e => {
-                this.error = e;
-                throw e;
             });
     }
 }

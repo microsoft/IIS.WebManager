@@ -6,15 +6,17 @@ import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
 import { IpRestrictionsService } from './ip-restrictions.service';
 import { IpRestrictions, RestrictionRule } from './ip-restrictions';
+import { NotificationService } from '../../notification/notification.service';
 
 @Component({
     template: `
         <loading *ngIf="_service.status == 'unknown' && !_service.error"></loading>
         <error [error]="_service.error"></error>
         <switch class="install" *ngIf="_service.webserverScope && _service.status != 'unknown'" #s
+                [auto]="false"
                 [model]="_service.status == 'started' || _service.status == 'starting'" 
                 [disabled]="_service.status == 'starting' || _service.status == 'stopping'"
-                (modelChange)="_service.install($event)">
+                (modelChanged)="install(!s.model)">
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
@@ -76,7 +78,8 @@ export class IpRestrictionsComponent implements OnInit, OnDestroy {
     private _locked: boolean;
     private _subscriptions: Array<Subscription> = [];
 
-    constructor(private _service: IpRestrictionsService) {
+    constructor(private _service: IpRestrictionsService,
+                private _notificationService: NotificationService) {
     }
 
     ngOnInit() {
@@ -143,5 +146,19 @@ export class IpRestrictionsComponent implements OnInit, OnDestroy {
     private isPending(): boolean {
         return this._service.status == Status.Starting
             || this._service.status == Status.Stopping;
+    }
+
+    private install(val: boolean) {
+        if (val) {
+            return this._service.install();
+        }
+        else {
+            this._notificationService.confirm("Turn Off IP Restrictions", 'This will turn off "IP Restrictions" for the entire web server.')
+                .then(confirmed => {
+                    if (confirmed) {
+                        this._service.uninstall();
+                    }
+                });
+        }
     }
 }

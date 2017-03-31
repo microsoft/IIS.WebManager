@@ -1,4 +1,3 @@
-
 import { Component, Input, Output, EventEmitter, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { NgModel } from '@angular/forms';
 
@@ -72,9 +71,7 @@ import { AppPoolsService } from '../app-pools/app-pools.service';
                 <limits [model]="site.limits" (modelChanged)="onModelChanged()"></limits>
             </div>
         </section>
-    `,
-    styles: [`
-    `]
+    `
 })
 export class WebSiteGeneralComponent {
     @Input() site: WebSite;

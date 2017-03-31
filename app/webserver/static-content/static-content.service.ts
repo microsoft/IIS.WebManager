@@ -63,15 +63,6 @@ export class StaticContentService {
             .then(() => this.initialize(id));
     }
 
-    public install(val: boolean) {
-        if (val) {
-            return this._install();
-        }
-        else {
-            return this._uninstall();
-        }
-    }
-
     private load(id: string): Promise<StaticContent> {
         return this._http.get(StaticContentService.URL + id)
             .then(feature => {
@@ -90,7 +81,7 @@ export class StaticContentService {
             });
     }
 
-    private _install(): Promise<any> {
+    public install(): Promise<any> {
         this._status = Status.Starting;
         return this._http.post(StaticContentService.URL, "")
             .then(doc => {
@@ -103,7 +94,7 @@ export class StaticContentService {
             });
     }
 
-    private _uninstall(): Promise<any> {
+    public uninstall(): Promise<any> {
         this._status = Status.Stopping;
         let id = this._staticContent.getValue().id;
         this._staticContent.next(null);

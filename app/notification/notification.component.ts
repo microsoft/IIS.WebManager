@@ -88,7 +88,6 @@ export class NotificationComponent implements OnDestroy {
                 this._service.hide();
             }
         }));
-
     }
 
     public toggle() {

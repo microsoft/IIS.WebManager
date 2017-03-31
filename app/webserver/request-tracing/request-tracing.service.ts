@@ -59,15 +59,6 @@ export class RequestTracingService implements IDisposable {
         }
     }
 
-    public install(val: boolean) {
-        if (val) {
-            return this._install();
-        }
-        else {
-            return this._uninstall();
-        }
-    }
-
     public revert(feature: RequestTracing): Promise<any> {
         if (!feature.scope) {
             return Promise.reject("Invalid scope");
@@ -114,7 +105,7 @@ export class RequestTracingService implements IDisposable {
             });
     }
 
-    private _install(): Promise<any> {
+    public install(): Promise<any> {
         this._status = Status.Starting;
         return this._http.post("/webserver/http-request-tracing/", "")
             .then(req => {
@@ -127,7 +118,7 @@ export class RequestTracingService implements IDisposable {
             });
     }
 
-    private _uninstall(): Promise<any> {
+    public uninstall(): Promise<any> {
         this._status = Status.Stopping;
         let id = this._requestTracing.getValue().id;
         this._requestTracing.next(null);

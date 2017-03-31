@@ -6,6 +6,7 @@ import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
 import { DigestAuthentication } from './authentication'
 import { AuthenticationService } from './authentication.service';
+import { NotificationService } from '../../notification/notification.service';
 
 @Component({
     selector: 'digest-auth',
@@ -17,9 +18,10 @@ import { AuthenticationService } from './authentication.service';
             <div id="digestAuthentication" class="collapse in">
                 <error [error]="_service.digestError"></error>
                 <switch class="install" *ngIf="_service.webserverScope && _service.digestStatus != 'unknown'" #s
+                        [auto]="false"
                         [model]="_service.digestStatus == 'started' || _service.digestStatus == 'starting'" 
                         [disabled]="_service.digestStatus == 'starting' || _service.digestStatus == 'stopping'"
-                        (modelChange)="_service.installDigest($event)">
+                        (modelChanged)="install(!s.model)">
                             <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                             <span *ngIf="isPending()" class="loading"></span>
                 </switch>
@@ -55,7 +57,8 @@ export class DigestAuthenticationComponent implements OnDestroy {
     private _original: DigestAuthentication;
     private _subscriptions: Array<Subscription> = [];
 
-    constructor(private _service: AuthenticationService) {
+    constructor(private _service: AuthenticationService,
+                private _notificationService: NotificationService) {
         this._subscriptions.push(this._service.digestAuth.subscribe(auth => {
             this.setFeature(auth);
         }));
@@ -99,5 +102,19 @@ export class DigestAuthenticationComponent implements OnDestroy {
     private isPending(): boolean {
         return this._service.digestStatus == Status.Starting
             || this._service.digestStatus == Status.Stopping;
+    }
+
+    private install(val) {
+        if (val) {
+            this._service.installDigest(true);
+        }
+        else {
+            this._notificationService.confirm("Turn Off Digest Authentication", 'This will turn off "Digest Authentication" for the entire web server.')
+                .then(confirmed => {
+                    if (confirmed) {
+                        this._service.installDigest(false);
+                    }
+                });
+        }
     }
 }

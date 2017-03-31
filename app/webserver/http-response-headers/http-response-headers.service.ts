@@ -1,14 +1,7 @@
-import {Injectable} from '@angular/core';
-import {Response} from '@angular/http';
+import { Injectable } from '@angular/core';
 
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/toPromise';
-
-
-import {HttpClient} from '../../common/httpclient';
-import {HttpResponseHeaders, CustomHeader, RedirectHeader} from './http-response-headers';
-
-
+import { HttpClient } from '../../common/httpclient';
+import { HttpResponseHeaders, CustomHeader, RedirectHeader } from './http-response-headers';
 
 @Injectable()
 export class HttpResponseHeadersService {
@@ -97,9 +90,4 @@ export class HttpResponseHeadersService {
                 return headers.redirect_headers;
             });
     }
-
-    private onError(error: Response) {
-        console.error(error);
-    }
-
 }

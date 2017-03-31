@@ -117,7 +117,7 @@ export class AuthenticationService {
             return this.installAuth(basic);
         }
         else {
-            return this.uninstallAuth(basic);
+            this.uninstallAuth(basic);
         }
     }
 
@@ -127,7 +127,7 @@ export class AuthenticationService {
             return this.installAuth(digest);
         }
         else {
-            return this.uninstallAuth(digest);
+            this.uninstallAuth(digest);
         }
     }
 
@@ -135,9 +135,6 @@ export class AuthenticationService {
         const windows = "windows";
         if (val) {
             return this.installAuth(windows);
-        }
-        else {
-            return this.uninstallAuth(windows);
         }
     }
 

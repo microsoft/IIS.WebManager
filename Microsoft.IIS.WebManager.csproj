@@ -140,6 +140,8 @@
     <TypeScriptCompile Include="app\files\upload.component.ts" />
     <TypeScriptCompile Include="app\main\options.service.ts" />
     <TypeScriptCompile Include="app\main\window.service.ts" />
+    <TypeScriptCompile Include="app\notification\modal.component.ts" />
+    <TypeScriptCompile Include="app\notification\modal.ts" />
     <TypeScriptCompile Include="app\notification\loading.component.ts" />
     <TypeScriptCompile Include="app\common\palettes.ts" />
     <TypeScriptCompile Include="app\common\metadata.ts" />
@@ -347,7 +349,6 @@
     <Content Include="modules.js" />
     <Content Include="package.json" />
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
   </PropertyGroup>

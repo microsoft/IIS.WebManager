@@ -16,6 +16,7 @@ import { OptionsService } from '../main/options.service';
             <connection-picker class="nav-item"></connection-picker>
 
             <notifications></notifications>
+            <modal class="color-normal"></modal>
             
             <div class="right">
                 <notification-indicator class="v-center"></notification-indicator>

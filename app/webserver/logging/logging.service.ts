@@ -79,16 +79,7 @@ export class LoggingService implements IDisposable {
             });
     }
 
-    public install(val: boolean) {
-        if (val) {
-            return this._install();
-        }
-        else {
-            return this._uninstall();
-        }
-    }
-
-    private _install(): Promise<any> {
+    public install(): Promise<any> {
         this._status = Status.Starting;
         return this._http.post(LoggingService.URL, "")
             .then(doc => {
@@ -101,7 +92,7 @@ export class LoggingService implements IDisposable {
             });
     }
 
-    private _uninstall(): Promise<any> {
+    public uninstall(): Promise<any> {
         this._status = Status.Stopping;
         let id = this._logging.getValue().id;
         this._logging.next(null);
