@@ -154,7 +154,7 @@ export class VirtualListComponent implements OnDestroy, OnChanges, AfterContentI
             return 0;
         }
 
-        let top = (ComponentUtil.offset(this._container).top - this._navHeight);
+        let top = (ComponentUtil.offset(this._container.nativeElement).top - this._navHeight);
         return top > 0 ? 0 : -top;
     }
 

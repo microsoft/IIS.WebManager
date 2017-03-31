@@ -1,5 +1,3 @@
-declare var $: any;
-
 import {ElementRef, ComponentRef} from '@angular/core';
 
 export class ComponentUtil {
@@ -16,51 +14,50 @@ export class ComponentUtil {
         return false;
     }
 
-    public static offset(eRef: ElementRef) {
-        return $(eRef.nativeElement).offset();
-    }
-
     public static scrollTo(eRef: ElementRef) {
-        if (!$.fn.goTo) {
-            $.fn.goTo = ComponentUtil.goTo;
-        }
-
-        $(eRef.nativeElement).goTo();
+        ComponentUtil.goTo(eRef.nativeElement);
     }
 
-    // Jquery extension
-    private static goTo() {
+    public static offset(element: HTMLElement) {
+        let rect = element.getBoundingClientRect();
+
+        return {
+            top: rect.top + document.body.scrollTop,
+            left: rect.left + document.body.scrollLeft
+        };
+    }
+
+    private static goTo(element: HTMLElement) {
         var HEADER_HEIGHT = 55;
+        let mainContainer = document.getElementById('mainContainer');
 
         var scrollTo = 0;
         var elementHeight = 0;
-        var mainContainerHeight = $("#mainContainer").height();
+        var mainContainerHeight = mainContainer.offsetHeight;
 
         // Prevent shadow dom from not returning proper height
-        if (!$(this).outerHeight() && $(this).children().first()) {
-            elementHeight = $(this).children().first().outerHeight();
+        if (!element.offsetHeight && element.children.length > 0) {
+            elementHeight = (<HTMLElement>(element.children[0])).offsetHeight;
         }
         else {
-            elementHeight = $(this).outerHeight();
+            elementHeight = element.offsetHeight;
         }
 
 
         // Don't scroll if whole element is already in view
-        if ($(this).offset().top >= HEADER_HEIGHT && $(this).offset().top + elementHeight < mainContainerHeight) {
+        let thisOffset = ComponentUtil.offset(element);
+        if (thisOffset.top >= HEADER_HEIGHT && thisOffset.top + elementHeight < mainContainerHeight) {
             return;
         }
 
-        if (elementHeight < mainContainerHeight && $(this).offset().top >= HEADER_HEIGHT) {
+        if (elementHeight < mainContainerHeight && thisOffset.top >= HEADER_HEIGHT) {
             var diff = mainContainerHeight - elementHeight;
-            scrollTo = $(this).offset().top - diff;
+            scrollTo = thisOffset.top - diff;
         }
         else {
-            scrollTo = $(this).offset().top;
+            scrollTo = thisOffset.top;
         }
 
-        $('#mainContainer').animate({
-            scrollTop: scrollTo + $('#mainContainer').scrollTop() - HEADER_HEIGHT + 'px'
-        }, 'fast');
-        return this; // for chaining...
+        mainContainer.scrollTop = scrollTo + mainContainer.scrollTop - HEADER_HEIGHT; //ay
     }
 }

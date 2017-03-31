@@ -7,6 +7,22 @@ Param (
     [object]$Folder
 )
 
+function HashDependency($module, $path, $obj) {
+    Write-Verbose "Module: $module"
+    Write-Verbose "Folder $path"
+    $subDependencies = $obj."$module".dependencies
+    if ($subDependencies -ne $null) {
+        $subModules = $subDependencies | Get-Member -MemberType NoteProperty | %{$_.Name}
+        foreach ($subModule in $subModules) {
+            HashDependency $subModule $("$path/node_modules/$subModule") $subDependencies
+        }
+    }
+    
+    Write-Verbose "Data:"
+    Write-Verbose $obj."$module"
+    $obj."$module" | Add-Member -Name "Hash" -Value $(.\build\scripts\Get-FolderHash.ps1 $path -exclude "package.json") -MemberType NoteProperty
+}
+
 $Folder = Get-Item $Folder
 
 if (-not([System.IO.Directory]::Exists($Folder.FullName))) {
@@ -39,20 +55,4 @@ try {
 }
 finally {
     Pop-Location 
-}
-
-function HashDependency($module, $path, $obj) {
-    Write-Verbose "Module: $module"
-    Write-Verbose "Folder $path"
-    $subDependencies = $obj."$module".dependencies
-    if ($subDependencies -ne $null) {
-        $subModules = $subDependencies | Get-Member -MemberType NoteProperty | %{$_.Name}
-        foreach ($subModule in $subModules) {
-            HashDependency $subModule $("$path/node_modules/$subModule") $subDependencies
-        }
-    }
-    
-    Write-Verbose "Data:"
-    Write-Verbose $obj."$module"
-    $obj."$module" | Add-Member -Name "Hash" -Value $(.\build\scripts\Get-FolderHash.ps1 $path -exclude "package.json") -MemberType NoteProperty
 }
