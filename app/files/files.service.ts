@@ -23,6 +23,7 @@ declare var unescape: any;
 @Injectable()
 export class FilesService implements IDisposable {
     private _uploadSignal: number = -1;
+    private _fields = "name,id,alias,type,physical_path,size,created,last_modified,mime_type,e_tag,parent";
     private _subscriptions: Array<Subscription> = [];
     private _uploadComponentName: string = "UploadComponent";
     private _creator: ParallelExecutor = new ParallelExecutor(10);
@@ -71,7 +72,7 @@ export class FilesService implements IDisposable {
     }
 
     public getChildren(dir: ApiFile): Promise<Array<ApiFile>> {
-        return this._http.get("/files?parent.id=" + dir.id + "&fields=*", null, false)
+        return this._http.get("/files?parent.id=" + dir.id + "&fields=" + this._fields, null, false)
             .then(res => {
                 return (<Array<any>>res.files).map(f => ApiFile.fromObj(f));
             })
@@ -82,7 +83,7 @@ export class FilesService implements IDisposable {
     }
 
     public getRoots(): Promise<Array<ApiFile>> {
-        return this._http.get("/files?fields=*")
+        return this._http.get("/files?fields=" + this._fields)
             .then(res => {
                 return (<Array<any>>res.files).map(f => ApiFile.fromObj(f));
             })
