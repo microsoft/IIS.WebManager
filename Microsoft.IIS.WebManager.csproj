@@ -292,6 +292,7 @@
     <TypeScriptCompile Include="app\webserver\websites\navigator.component.ts" />
     <TypeScriptCompile Include="app\webserver\websites\site.ts" />
     <TypeScriptCompile Include="app\utils\diff.ts" />
+    <Content Include="main.js" />
     <Content Include="analytics.js" />
     <TypeScriptCompile Include="app\files\filesystem.d.ts" />
     <Content Include="app\files\file-icons.css" />

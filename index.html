@@ -4,6 +4,7 @@
     <base href="/">
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=11" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; connect-src *; script-src 'self' 'unsafe-eval' www.google-analytics.com; img-src www.google-analytics.com; style-src 'self' 'unsafe-inline'; font-src 'self';">
     <title>Microsoft IIS Web Manager</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -20,64 +21,11 @@
     <!-- app settings -->
     <script src="settings.v1.0.22.js"></script>
     <script src="modules.v1.0.0.js"></script>
-
-    <!-- Configure SystemJS -->
-    <script type="text/javascript">
-
-        System.config({
-            defaultJSExtensions: true,
-            map: {
-
-                // angular bundles
-                '@angular/core': 'node_modules/@angular/core/bundles/core.umd.js',
-                '@angular/common': 'node_modules/@angular/common/bundles/common.umd.js',
-                '@angular/compiler': 'node_modules/@angular/compiler/bundles/compiler.umd.js',
-                '@angular/platform-browser': 'node_modules/@angular/platform-browser/bundles/platform-browser.umd.js',
-                '@angular/platform-browser-dynamic': 'node_modules/@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
-                '@angular/http': 'node_modules/@angular/http/bundles/http.umd.js',
-                '@angular/router': 'node_modules/@angular/router/bundles/router.umd.js',
-                '@angular/forms': 'node_modules/@angular/forms/bundles/forms.umd.js',
-                '@angular/upgrade': 'node_modules/@angular/upgrade/bundles/upgrade.umd.js',
-
-                // other libraries
-                'rxjs': 'node_modules/rxjs',
-                'ts': 'node_modules/plugin-typescript@4.0.10/lib/plugin.js',
-                'typescript': 'node_modules/typescript@2.0.2/lib/typescript.js',
-
-                'angulartics2': 'node_modules/angulartics2'
-            },
-            packages: {
-                defaultExtension: 'js',
-                app: {
-                    format: 'cjs',
-                    defaultExtension: 'v' + SETTINGS.version + '.js'
-                },
-                angulartics2: {
-                    main: 'index',
-                    defaultExtension: 'v' + SETTINGS.version + '.js'
-                }
-            }
-        });
-    </script>
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 
     <script src="analytics.js"></script>
-
-    <!-- Import app using SystemJS -->
-    <script type="text/javascript">
-        // Activate loading indicator
-        $(document).ready(function () {
-            window.setTimeout(function () {
-                $(".loader").addClass("active");
-            }, 1)
-        });
-
-
-        System.import('app/main/main').catch(function (err) {
-            console.error(err);
-        });
-    </script>
+    <script src="main.js"></script>
 </head>
 <body class="color-normal background-normal">
     <app>
