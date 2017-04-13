@@ -1,4 +1,5 @@
 {
+  "name": "Microsoft.IIS.WebManager",
   "dependencies": {
     "@angular/common": "2.0.2",
     "@angular/compiler": "2.0.2",
@@ -15,7 +16,7 @@
     "es6-promise": "4.0.5",
     "es6-shim": "0.35.3",
     "font-awesome": "4.7.0",
-    "jquery": "2.2.4",
+    "jquery": "3.2.0",
     "reflect-metadata": "0.1.10",
     "rxjs": "5.0.0-beta.12",
     "systemjs": "0.19.27",

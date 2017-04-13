@@ -1,4 +1,5 @@
 ﻿{
+    "name":  "Microsoft.IIS.WebManager",
     "dependencies":  {
                          "@angular/common":  {
                                                  "version":  "2.0.2",
@@ -91,10 +92,10 @@
                                               "Hash":  "BDA77D728D08B1524BAD43C364C46843966F0CCD952D0E7B64A699695C0A3422"
                                           },
                          "jquery":  {
-                                        "version":  "2.2.4",
-                                        "from":  "jquery@2.2.4",
-                                        "resolved":  "https://registry.npmjs.org/jquery/-/jquery-2.2.4.tgz",
-                                        "Hash":  "B94D4202FE640FAABEB4623275670A5188A7F113BE60DBB5D341F7C443A3EB5E"
+                                        "version":  "3.2.0",
+                                        "from":  "jquery@3.2.0",
+                                        "resolved":  "https://registry.npmjs.org/jquery/-/jquery-3.2.0.tgz",
+                                        "Hash":  "CE2F836F59B0FD23413C293CDD4C808E6711B569B4945763BA7C6FAA483F9089"
                                     },
                          "monaco-editor":  {
                                                "version":  "0.8.1",
