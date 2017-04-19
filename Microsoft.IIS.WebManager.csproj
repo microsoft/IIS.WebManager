@@ -104,7 +104,10 @@
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="app\certificates\certificate-list-item.ts" />
+    <TypeScriptCompile Include="app\certificates\certificate-details.component.ts" />
     <TypeScriptCompile Include="app\certificates\certificates-list.component.ts" />
+    <TypeScriptCompile Include="app\certificates\certificates.component.ts" />
     <TypeScriptCompile Include="app\certificates\certificates.module.ts" />
     <TypeScriptCompile Include="app\certificates\certificates.service.ts" />
     <TypeScriptCompile Include="app\certificates\certificate.ts" />
@@ -196,6 +199,10 @@
     <TypeScriptCompile Include="app\webserver\authorization\authorization.component.ts" />
     <TypeScriptCompile Include="app\webserver\authorization\authorization.ts" />
     <TypeScriptCompile Include="app\webserver\authorization\rule.component.ts" />
+    <TypeScriptCompile Include="app\webserver\central-certificates\central-certificate.component.ts" />
+    <TypeScriptCompile Include="app\webserver\central-certificates\central-certificate.module.ts" />
+    <TypeScriptCompile Include="app\webserver\central-certificates\central-certificate.service.ts" />
+    <TypeScriptCompile Include="app\webserver\central-certificates\central-certificates.ts" />
     <TypeScriptCompile Include="app\webserver\compression\compression.component.ts" />
     <TypeScriptCompile Include="app\webserver\compression\compression.module.ts" />
     <TypeScriptCompile Include="app\webserver\compression\compression.service.ts" />

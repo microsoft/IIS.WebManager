@@ -1,13 +1,42 @@
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 
-import {DateTime} from '../common/primitives';
-import {Certificate} from './certificate';
-import {CertificatesService} from './certificates.service';
-
+import { Certificate } from './certificate';
+import { DateTime } from '../common/primitives';
+import { Range } from '../common/virtual-list.component';
+import { CertificatesService } from './certificates.service';
 
 @Component({
     selector: 'certificates-list',
+    template: `
+        <loading *ngIf="!_items"></loading>
+        <div class="toolbar">
+            <button class="refresh" title="Refresh" (click)="refresh()"></button>
+            <div class="clear"></div>
+        </div>
+        <div *ngIf="_items" class="col-xs-8 col-sm-4 col-md-2 actions filter hidden-xs">
+            <input type="search" class="form-control" [class.border-active]="_filter" [(ngModel)]="_filter" (ngModelChange)="filter($event)" [throttle]="300" />
+        </div>
+        <div *ngIf="_items" class="container-fluid">
+            <div class="border-active grid-list-header row hidden-xs" [hidden]="_items.length == 0">
+                <label class="col-xs-12 col-sm-6 col-md-4 col-lg-3">Name</label>
+                <label class="col-xs-3 col-md-4 col-lg-3 hidden-xs hidden-sm">Issued By</label>
+                <label class="col-lg-3 col-md-1 hidden-xs hidden-sm">Store</label>
+                <label class="col-lg-1 hidden-xs hidden-sm hidden-md">Valid To</label>
+            </div>
+        </div>
+        <virtual-list class="container-fluid grid-list"
+                        *ngIf="_items"
+                        [count]="_items.length"
+                        (rangeChange)="onRangeChange($event)">
+            <li class="hover-editing"
+                            *ngFor="let cert of _view"
+                            (click)="selectCert(cert, $event)">
+                <certificate [model]="cert"></certificate>
+            </li>
+        </virtual-list>
+    `,
     styles: [`
         .grid-item:hover {
             cursor: pointer;
@@ -16,10 +45,6 @@ import {CertificatesService} from './certificates.service';
         li > div {
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-
-        li {
-            line-height: 30px;
         }
 
         .grid-item small {
@@ -43,44 +68,29 @@ import {CertificatesService} from './certificates.service';
             font-size: 16px;
         }
 
-        [class*="col-"] {
-            padding-left: 0;
+        .container-fluid,
+        .row {
+            margin: 0;
+            padding: 0;
         }
-    `],
-    template: `
-        <loading *ngIf="!certs"></loading>
-        <div *ngIf="certs" class="container-fluid">
-            <div class="border-active grid-list-header row hidden-xs" [hidden]="certs.length == 0">
-                <label class="col-xs-12 col-sm-6  col-md-4 col-lg-3">Name</label>
-                <label class="col-xs-3 col-md-4 col-lg-3 hidden-xs hidden-sm">Issued By</label>
-                <label class="col-lg-3 hidden-xs hidden-sm hidden-md">Valid To</label>
-                <label class="col-sm-6 col-md-4 col-lg-3 hidden-xs">Thumbprint</label>
-            </div>
-            <ul class="grid-list">
-                <li *ngFor="let cert of certs" (click)="selectCert(cert, $event)" class="hover-editing grid-item row">
-                    <div class="col-xs-12 col-sm-6  col-md-4 col-lg-3">
-                        <span class='name'>{{cert.name}}</span>
-                        <small class="visible-xs color-accent">{{cert.thumbprint}}</small>
-                    </div>
-                    <div class="col-xs-3 col-md-4 col-lg-3 hidden-xs hidden-sm">
-                        <span>{{friendlyIssuedBy(cert)}}</span>
-                    </div>
-                    <div class="col-lg-3 hidden-xs hidden-sm hidden-md">
-                        <span>{{friendlyValidTo(cert)}}</span>
-                    </div>
-                    <div class="col-sm-6 col-md-4 col-lg-3 hidden-xs">
-                        <span>{{cert.thumbprint}}</span>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    `,
-    providers: [
-        CertificatesService
-    ]
+
+        .toolbar button span {
+            font-size: 85%;
+        }
+
+        .toolbar button {
+            border: none;
+            float: right;
+        }
+    `]
 })
-export class CertificatesListComponent implements OnInit {
-    certs: Array<Certificate>;
+export class CertificatesListComponent implements OnInit, OnDestroy {
+    private _filter = "";
+    private certs: Array<Certificate>;
+    private _view: Array<Certificate> = [];
+    private _items: Array<Certificate>;
+    private _range: Range = new Range(0, 0);
+    private _subscriptions: Array<Subscription> = [];
 
     @Output() itemSelected: EventEmitter<any> = new EventEmitter();
 
@@ -96,36 +106,45 @@ export class CertificatesListComponent implements OnInit {
         }
     }
 
-    activate(): Promise<any> {
-        return this._service.getAll()
-            .then(certs => this.certs = certs);
+    public ngOnDestroy() {
+        this._subscriptions.forEach(s => s.unsubscribe());
     }
 
-    selectCert(cert, evt) {        
+    activate() {
+        this._service.certificates.subscribe(certs => {
+            this.certs = certs;
+            this.filter(this._filter);
+        });
+        this.refresh();
+    }
+
+    selectCert(cert, evt: Event) {
+        if (evt.defaultPrevented) {
+            return;
+        }
+
         this.itemSelected.emit(cert);
     }
 
-    friendlyValidTo(cert: Certificate) {
-        if (!cert.valid_to) {
-            return "";
-        }
-            
-        return cert.valid_to.substring(0, 10);
+    private onRangeChange(range: Range) {
+        Range.fillView(this._view, this._items, range);
+        this._range = range;
     }
 
-    isExpired(cert: Certificate): boolean {
-        return DateTime.UtcNow > new Date(cert.valid_to);
+    private filter(filter: string) {
+        if (!filter) {
+            this._items = this.certs;
+            return;
+        }
+
+        filter = ("*" + this._filter + "*").replace("**", "*").replace("?", "");
+        let rule = new RegExp("^" + filter.split("*").join(".*") + "$", "i");
+        this._items = this.certs.filter(c => rule.test(Certificate.displayName(c)));
+
+        this.onRangeChange(this._range);
     }
 
-    friendlyIssuedBy(cert: Certificate) {
-        if (!cert.issued_by) {
-            return "";
-        }
-
-        if (cert.issued_by.indexOf("CN=") == 0) {
-            return cert.issued_by.substring(3, cert.issued_by.length);
-        }
-
-        return cert.issued_by;
+    private refresh() {
+        this._service.load();
     }
 }

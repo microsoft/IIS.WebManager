@@ -15,18 +15,6 @@ import { FormsModule } from '@angular/forms';
         <div class="clear"></div>
     `,
     styles: [`
-        ul {
-            margin-bottom: 0;
-        }
-
-        .grid-item {
-            padding: 0;
-        }
-
-        .grid-item:last-of-type {
-            border-bottom: none;
-        }
-
         button span {
             font-size: 85%;
         }

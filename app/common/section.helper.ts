@@ -57,7 +57,7 @@ export class SectionHelper implements IDisposable {
     }
 
     public static normalize(val: string) {
-        return val.toLocaleLowerCase().replace(" ", "-");
+        return val.toLocaleLowerCase().replace(/ /g, "-");
     }
 
     private get section(): string {
@@ -80,6 +80,15 @@ export class SectionHelper implements IDisposable {
         }
 
         this.selectSectionInternal(name, false);
+    }
+
+    public removeSection(name: string) {
+        let v = SectionHelper.normalize(name);
+        let i = this._sections.findIndex(s => SectionHelper.normalize(s) === v);
+
+        if (i != -1) {
+            this._sections.splice(i, 1);
+        }
     }
 
     private selectSectionInternal(name: string, replaceState: boolean) {

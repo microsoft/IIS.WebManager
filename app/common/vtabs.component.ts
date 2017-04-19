@@ -89,6 +89,16 @@ export class VTabsComponent implements OnDestroy {
         this.tabs.push(tab);
     }
 
+    public removeTab(tab: Item) {
+        this._sectionHelper.removeSection(tab.name);
+
+        let i = this.tabs.findIndex(item => item == tab);
+
+        if (i != -1) {
+            this.tabs.splice(i, 1);
+        }
+    }
+
     private selectItem(index: number) {
         let tab = this.tabs[index];
 
@@ -188,6 +198,7 @@ export class Item implements OnInit, OnDestroy {
             this.dynamicChildren.forEach(child => child.deactivate());
             this.dynamicChildren.forEach(child => child.destroy());
         }
+        this._tabs.removeTab(this);
     }
 }
 

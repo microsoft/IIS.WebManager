@@ -1,73 +1,16 @@
-
-import {Component, Input, Output, EventEmitter, ElementRef, ViewChild, ViewChildren, QueryList, OnInit, OnChanges, SimpleChange} from '@angular/core';
-import {NgModel} from '@angular/forms';
-
-import {DateTime, DateTimeUnit} from '../../common/primitives';
-import {Certificate} from '../../certificates/certificate';
+import { Component, Input, Output, EventEmitter, ElementRef, ViewChild, ViewChildren, QueryList, OnInit, OnChanges, SimpleChange, Optional } from '@angular/core';
+import { NgModel } from '@angular/forms';
 
 import 'rxjs/add/operator/first';
 
-import {Binding} from './site';
+import { DateTime, DateTimeUnit } from '../../common/primitives';
+import { Certificate } from '../../certificates/certificate';
+import { CertificatesService } from '../../certificates/certificates.service';
+import { Binding } from './site';
 
 
 @Component({
     selector: 'binding-item',
-    styles: [`
-        .grid-item > div {
-            padding-left: 0px;
-        }
-
-        .fa-lock {
-            padding-right: 5px;
-            font-size: 16px;
-        }
-
-        .selector {
-            display: flex;
-        }
-
-        .cert .name {
-            display: block;
-        }
-
-        .cert .name:before {
-            font-family: FontAwesome;
-            content: "\\f023";
-            padding-right: 5px;
-        }
-
-        .cert .expired .name:before {
-            content: "\\f09c";
-        }
-
-        .hostname {
-            max-width: 400px;
-            width: 100%;
-        }
-
-        .ip {
-            max-width: 640px;
-            width: 100%;
-        }
-
-        .ip-address {
-            max-width: 400px;
-            width: 100%;
-        }
-
-        .protocol {
-            max-width: 150px;
-            margin-right: 0px;
-        }
-
-        .cert span.inline-block {
-            vertical-align: text-bottom;
-        }
-
-        label.visible-xs.visible-sm:not(:first-child) {
-            color: green;
-        }
-    `],
     template: `
         <div class="row grid-item" [class.background-editing]="edit">
             <div class="actions">
@@ -133,21 +76,23 @@ import {Binding} from './site';
                         <label>HTTPS</label>
                         <switch class="block" (modelChange)="model.is_https=$event" [model]="model.is_https" (modelChanged)=onHttps()>{{model.is_https ? "On" : "Off"}}</switch>
                     </fieldset>
-                    <fieldset class="inline-block cert" *ngIf="model.is_https && model.certificate">
-                        <label class="block">Certificate</label>
-                        <span class="inline-block" [class.expired]="isCertExpired()">{{certName()}}</span>
-                    </fieldset>
-                    <div *ngIf="model.is_https">
+                    <fieldset class="inline-block cert" *ngIf="model.is_https">
+                        <label>&nbsp;</label>
                         <button (click)="selectCert()" class="background-normal" [class.background-active]="!!certSelect && certSelect.opened">
                             Select Certificate <i class="fa fa-caret-down"></i>
                         </button>
-                    </div>
-                    <fieldset>
-                        <div class="selector" *ngIf="model.is_https">
-                            <selector #certSelect [hidden]="!certSelect || !certSelect.isOpen()" (hide)="onCertSelected()" class="container-fluid">
-                                <certificates-list #list (itemSelected)="onCertSelected($event)"></certificates-list>
-                            </selector>
-                        </div>    
+                    </fieldset>
+                    <fieldset class="inline-block" *ngIf="model.is_https">
+                        <label>&nbsp;</label>
+                        <checkbox2 [(model)]="model.require_sni">Require SNI</checkbox2>
+                    </fieldset>
+                    <div class="selector" *ngIf="model.is_https">
+                        <selector #certSelect [hidden]="!certSelect || !certSelect.isOpen()" (hide)="onCertSelected()" class="container-fluid">
+                            <certificates-list #list (itemSelected)="onCertSelected($event)"></certificates-list>
+                        </selector>
+                    </div> 
+                    <fieldset class="certificate" *ngIf="model.is_https && model.certificate">
+                        <certificate-details [model]="model.certificate"></certificate-details>
                     </fieldset>
                 </div>
 
@@ -167,7 +112,67 @@ import {Binding} from './site';
                 </div>
             </div>
         </div>
-    `
+    `,
+    styles: [`
+        .grid-item > div {
+            padding-left: 0px;
+        }
+
+        .fa-lock {
+            padding-right: 5px;
+            font-size: 16px;
+        }
+
+        .selector {
+            display: flex;
+        }
+
+        .cert .name {
+            display: block;
+        }
+
+        .cert .name:before {
+            font-family: FontAwesome;
+            content: "\\f023";
+            padding-right: 5px;
+        }
+
+        .cert .expired .name:before {
+            content: "\\f09c";
+        }
+
+        .hostname {
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .ip {
+            max-width: 640px;
+            width: 100%;
+        }
+
+        .ip-address {
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .protocol {
+            max-width: 150px;
+            margin-right: 0px;
+        }
+
+        .cert span.inline-block {
+            vertical-align: text-bottom;
+        }
+
+        label.visible-xs.visible-sm:not(:first-child) {
+            color: green;
+        }
+
+        fieldset.certificate {
+            overflow: visible;
+        }
+    `]
 })
 export class BindingItem implements OnInit, OnChanges {
     @Input() model: Binding;
@@ -184,9 +189,12 @@ export class BindingItem implements OnInit, OnChanges {
 
     private _original: Binding;
 
+    constructor(@Optional() private _service: CertificatesService) {
+    }
 
     ngOnInit() {
         this.setOriginal();
+        this.getFullCert();
     }
 
     ngOnChanges(changes: { [key: string]: SimpleChange; }): any {
@@ -220,6 +228,12 @@ export class BindingItem implements OnInit, OnChanges {
     private onCertSelected(cert: Certificate) {
         if (cert) {
             this.certSelect.first.close();
+
+            if (cert.store && cert.store.name == 'IIS Central Certificate Store') {
+                this.model.require_sni = true;
+                this.model.hostname = cert.alias.replace(/\.pfx$/g, '');
+            }
+
             this.model.certificate = cert;
         }
         else {
@@ -354,7 +368,22 @@ export class BindingItem implements OnInit, OnChanges {
             note = " (Will Expire: " + validTo.toDateString() + ")";
         }
 
-        return this.model.certificate.name + note;
+        let cert = <any>this.model.certificate;
+        let name = cert.name || cert.alias || cert.subject || cert.thumbprint;
+
+        return name + note;
+    }
+
+    private getFullCert() {
+        if (!this.model.certificate || !this._service) {
+            return;
+        }
+
+        this._service.get(this.model.certificate.id)
+            .then(cert => {
+                this.model.certificate = cert;
+                this.setOriginal();
+            })
     }
 }
 

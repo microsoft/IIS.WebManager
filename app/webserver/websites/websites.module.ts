@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { Module as BModel } from '../../common/bmodel';
 import { Module as NotFound } from '../../common/notfound.component';
+import { Module as Checkbox } from '../../common/checkbox.component';
 import { Module as Switch } from '../../common/switch.component';
 import { Module as Dynamic } from '../../common/dynamic.component';
 import { Module as VTabs } from '../../common/vtabs.component';
@@ -37,6 +38,7 @@ import { LimitsComponent } from './limits.component';
         Routing,
         BModel,
         NotFound,
+        Checkbox,
         Switch,
         Dynamic,
         VTabs,

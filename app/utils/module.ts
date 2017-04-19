@@ -1,4 +1,4 @@
-declare var GLOBAL_MODULES: any;
+declare var GLOBAL_MODULES: Array<any>;
 
 import { UrlUtil } from './url';
 
@@ -26,5 +26,21 @@ export class ModuleUtil {
         }
 
         return modules
+    }
+
+    public static addModule(modules: Array<any>, moduleName: string): void {
+        let targetIndex = GLOBAL_MODULES.findIndex(m => m.name.toLocaleLowerCase() == moduleName.toLocaleLowerCase());
+
+        if (targetIndex == -1) {
+            return;
+        }
+
+        let nextModules = GLOBAL_MODULES.filter((module, i) => i > targetIndex);
+
+        let nextIndex = modules.findIndex(m => !!nextModules.find(nm => nm.name.toLocaleLowerCase() == m.name.toLocaleLowerCase()))
+
+        let insertionIndex = nextIndex == -1 ? 0 : nextIndex;
+
+        modules.splice(insertionIndex, 0, GLOBAL_MODULES[targetIndex]);
     }
 }

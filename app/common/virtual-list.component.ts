@@ -106,13 +106,15 @@ export class VirtualListComponent implements OnDestroy, OnChanges, AfterContentI
 
     public ngAfterContentInit() {
         let sub = this._listItems.changes.subscribe((v: QueryList<VirtualListItem>) => {
-            if (v.length > 0 && !this._heightKnown) {
+            if (v.length > 0 && !this._heightKnown && v.first.host.nativeElement.offsetHeight) {
                 this._elementHeight = v.first.host.nativeElement.offsetHeight;
                 this._heightKnown = true;
                 this.onChangeHandler();
                 sub.unsubscribe();
             }
         });
+        // Fallback to unsubscribe even if list is never populated
+        this._subscriptions.push(sub);
     }
 
     private onChangeHandler() {

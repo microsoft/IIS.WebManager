@@ -20,7 +20,7 @@ import { OptionsService } from '../../main/options.service';
             <ul class="items">
                 <li class="home"><a [routerLink]="['/']">Home</a></li>
                 <li class="webserver"><a [routerLink]="['/webserver']">Web Server</a></li>
-                <li class="websites"><a [routerLink]="['/webserver/web-sites']">Web Sites</a></li>
+                <li class="websites color-active"><a [routerLink]="['/webserver/web-sites']">Web Sites</a></li>
             </ul>
             <vtabs [markLocation]="true" (activate)="_options.refresh()">
                 <item [name]="'General'" [ico]="'fa fa-wrench'">

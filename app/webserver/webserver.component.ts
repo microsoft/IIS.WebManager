@@ -1,13 +1,12 @@
-declare var GLOBAL_MODULES: any;
+import { Component, Inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
-import {Component, Inject} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import { ModuleUtil } from '../utils/Module';
+import { OptionsService } from '../main/options.service';
 
-import {ModuleUtil} from '../utils/Module';
-import {OptionsService} from '../main/options.service';
-
-import {WebServer} from './webserver';
-import {WebServerService} from './webserver.service';
+import { HttpClient } from '../common/httpclient';
+import { WebServer } from './webserver';
+import { WebServerService } from './webserver.service';
 
 
 
@@ -48,14 +47,21 @@ export class WebServerComponent {
     modules: Array<any> = [];
 
     constructor( @Inject('WebServerService') private _service: WebServerService,
-                private _options: OptionsService,
-                private _route: ActivatedRoute) {
+        private _http: HttpClient,
+        private _options: OptionsService,
+        private _route: ActivatedRoute) {
     }
 
     ngOnInit() {
         this._service.server.then(ws => {
             this.webServer = ws;
             ModuleUtil.initModules(this.modules, this.webServer, "webserver");
+            ModuleUtil.addModule(this.modules, "Certificates");
+
+            this._http.head('/certificates/', null, false)
+                .catch(res => {
+                    this.modules = this.modules.filter(m => m.name.toLocaleLowerCase() !== 'certificates')
+                });
         });
     }
 }

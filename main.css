@@ -101,8 +101,8 @@ input[type='number'] {
     max-width: 100%;
 }
 
-input:required:invalid:not(.ng-pristine),
-input.ng-invalid:not(.ng-pristine) {
+input:required:invalid,
+input.ng-invalid {
     border-left-width: 6px;
     border-left-style: solid;
 }
@@ -404,11 +404,6 @@ button.select {
 
 .grid-list .grid-item .valign {
     padding-top: 8px;
-}
-
-.grid-list .grid-item .valign button {
-    margin-top: -5px;
-    padding-top: 5px;
 }
 
 .grid-list .grid-item select,
@@ -745,6 +740,7 @@ button.save:before {
 }
 
 .sidebar .items li.active span,
+.sidebar .items li.active a,
 .sidebar .items li:hover span,
 .sidebar .items li:hover a {
     border-bottom-style: solid;

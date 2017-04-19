@@ -56,6 +56,22 @@
         "api_path": "/api/webserver/authorization/{id}"
     },
     {
+        "name": "Certificates",
+        "ico": "fa fa-lock",
+        "component_name": "CertificatesComponent",
+        "module": "app/certificates/certificates.module#CertificatesModule",
+        "api_name": "certificates",
+        "api_path": "/api/certificates"
+    },
+    {
+        "name": "Central Certificate Store",
+        "ico": "fa fa-certificate",
+        "component_name": "CentralCertificateComponent",
+        "module": "app/webserver/central-certificates/central-certificate.module#CentralCertificateModule",
+        "api_name": "central_certificates",
+        "api_path": "/api/webserver/centralized-certificates/{id}"
+    },
+    {
         "name": "Default Documents",
         "ico": "fa fa-file-text-o",
         "component_name": "DefaultDocumentsComponent",

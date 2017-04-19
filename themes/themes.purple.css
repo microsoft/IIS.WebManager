@@ -133,9 +133,9 @@ input.highlight {
     background-color: lightgoldenrodyellow;
 }
 
-input:required:invalid:not(.ng-pristine),
-input.ng-invalid:not(.ng-pristine),
-input.ng-invalid:focus:not(.ng-pristine) {
+input:required:invalid,
+input.ng-invalid,
+input.ng-invalid:focus {
     border-left-color: red;
 }
 

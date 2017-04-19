@@ -35,6 +35,7 @@ export class Binding {
     ip_address: string;
     port: number;
     hostname: string;
+    require_sni: boolean;
     is_https: boolean;
     protocol: string; // required
     binding_information: boolean;

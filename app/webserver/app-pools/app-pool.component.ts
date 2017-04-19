@@ -21,7 +21,7 @@ import {AppPoolsService} from './app-pools.service';
             <ul class="items">
                 <li class="home"><a [routerLink]="['/']">Home</a></li>
                 <li class="webserver"><a [routerLink]="['/webserver']">Web Server</a></li>
-                <li class="apppools"><a [routerLink]="['/webserver/application-pools']">Applicaion Pools</a></li>
+                <li class="apppools color-active"><a [routerLink]="['/webserver/application-pools']">Application Pools</a></li>
             </ul>
             <vtabs [markLocation]="true" (activate)="_options.refresh()">
                 <item [name]="'General'" [ico]="'fa fa-wrench'">

@@ -219,7 +219,16 @@ export class HttpClient {
             }
 
             if (apiError && apiError.title == "Forbidden" && apiError.name) {
-                msg = "Forbidden: '" + apiError.name + "'";
+                if (apiError[apiError.name]) {
+                    msg = "Forbidden: '" + apiError[apiError.name] + "'";
+                }
+                else {
+                    msg = "Forbidden: '" + apiError.name + "'";
+                }
+
+                if (apiError.detail) {
+                    msg += "\n" + apiError.detail;
+                }
             }
         }
         if (httpError.status == 404) {
