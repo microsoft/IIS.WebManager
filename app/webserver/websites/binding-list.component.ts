@@ -1,8 +1,9 @@
-import { Component, Input, Output, EventEmitter, ElementRef, ViewChild, ViewChildren, QueryList, OnInit, OnChanges, SimpleChange, Optional } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef, ViewChild, ViewChildren, QueryList, OnInit, OnChanges, SimpleChange, Optional, Inject } from '@angular/core';
 import { NgModel } from '@angular/forms';
 
 import 'rxjs/add/operator/first';
 
+import { WebServerService } from '../webserver.service';
 import { DateTime, DateTimeUnit } from '../../common/primitives';
 import { Certificate } from '../../certificates/certificate';
 import { CertificatesService } from '../../certificates/certificates.service';
@@ -76,14 +77,12 @@ import { Binding } from './site';
                         <label>HTTPS</label>
                         <switch class="block" (modelChange)="model.is_https=$event" [model]="model.is_https" (modelChanged)=onHttps()>{{model.is_https ? "On" : "Off"}}</switch>
                     </fieldset>
-                    <fieldset class="inline-block cert" *ngIf="model.is_https">
-                        <label>&nbsp;</label>
-                        <button (click)="selectCert()" class="background-normal" [class.background-active]="!!certSelect && certSelect.opened">
-                            Select Certificate <i class="fa fa-caret-down"></i>
+                    <fieldset class="inline-block cert bottom" *ngIf="model.is_https">
+                        <button (click)="selectCert()" class="background-normal select-cert" [class.background-active]="!!certSelect && certSelect.opened">
+                            <span>{{!model.certificate ? 'Select Certificate' : name()}}</span><i class="fa fa-caret-down"></i>
                         </button>
                     </fieldset>
-                    <fieldset class="inline-block" *ngIf="model.is_https">
-                        <label>&nbsp;</label>
+                    <fieldset class="inline-block bottom" *ngIf="model.is_https && _supportsSni">
                         <checkbox2 [(model)]="model.require_sni">Require SNI</checkbox2>
                     </fieldset>
                     <div class="selector" *ngIf="model.is_https">
@@ -165,12 +164,34 @@ import { Binding } from './site';
             vertical-align: text-bottom;
         }
 
+        .bottom {
+            vertical-align: bottom;
+        }
+
+        .bottom checkbox2 {
+            vertical-align: super;
+        }
+
         label.visible-xs.visible-sm:not(:first-child) {
             color: green;
         }
 
         fieldset.certificate {
             overflow: visible;
+        }
+
+        .select-cert {
+            max-width: 275px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .select-cert span {
+            max-width: 240px;
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: middle;
         }
     `]
 })
@@ -188,13 +209,21 @@ export class BindingItem implements OnInit, OnChanges {
     @ViewChildren(NgModel) validators: QueryList<NgModel>;
 
     private _original: Binding;
+    private _supportsSni: boolean;
 
-    constructor(@Optional() private _service: CertificatesService) {
+    constructor(@Optional() private _service: CertificatesService,
+                @Inject("WebServerService") private _webServerService: WebServerService) {
     }
 
     ngOnInit() {
         this.setOriginal();
         this.getFullCert();
+        this._webServerService.server
+            .then(server => {
+                if (server.supports_sni) {
+                    this._supportsSni = true;
+                }
+            });
     }
 
     ngOnChanges(changes: { [key: string]: SimpleChange; }): any {
@@ -372,6 +401,10 @@ export class BindingItem implements OnInit, OnChanges {
         let name = cert.name || cert.alias || cert.subject || cert.thumbprint;
 
         return name + note;
+    }
+
+    private name() {
+        return Certificate.displayName(this.model.certificate);
     }
 
     private getFullCert() {

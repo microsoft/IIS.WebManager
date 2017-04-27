@@ -1,17 +1,15 @@
+import { Injectable, EventEmitter } from '@angular/core';
+import { Response } from '@angular/http';
 
-import {Injectable, EventEmitter} from '@angular/core';
-import {Response} from '@angular/http';
+import { Observable } from "rxjs/Observable";
+import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
-import {Observable} from "rxjs/Observable";
-import {IntervalObservable} from 'rxjs/observable/IntervalObservable';
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import { Status } from '../common/status';
+import { HttpClient } from '../common/httpclient';
+import { NotificationService } from '../notification/notification.service';
 
-import {Status} from '../common/status';
-import {HttpClient} from '../common/httpclient';
-import {NotificationService} from '../notification/notification.service';
-
-import {WebServer} from './webserver';
-
+import { WebServer } from './webserver';
 
 @Injectable()
 export class WebServerService {
@@ -106,6 +104,7 @@ export class WebServerService {
                 this._server.name = info.name;
                 this._server.status = info.status;
                 this._server.version = info.version;
+                this._server.supports_sni = info.supports_sni;
 
                 this.triggerStatusUpdate();
 
@@ -120,10 +119,10 @@ export class WebServerService {
         }
 
         return this._http.patch(this._server._links.service_controller.href.replace("/api", ""), JSON.stringify({ status: status }))
-                         .then(sc => {
-                             this._server.status = sc.status; // Update the status
-                             return this._server;
-                          });
+            .then(sc => {
+                this._server.status = sc.status; // Update the status
+                return this._server;
+            });
     }
 
     private triggerStatusUpdate() {

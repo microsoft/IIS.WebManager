@@ -175,7 +175,8 @@ export class NewWebSiteComponent {
             is_https: false,
             certificate: null,
             binding_information: null,
-            protocol: "http"
+            protocol: "http",
+            require_sni: false
         };
 
         site.bindings.unshift(binding);
