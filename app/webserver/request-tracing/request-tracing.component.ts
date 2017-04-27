@@ -156,7 +156,7 @@ export class RequestTracingComponent implements OnInit, OnDestroy {
                                 if (prov.name.toLocaleLowerCase() == "www server") {
                                     let trace = new Trace();
                                     trace.provider = prov;
-                                    trace.verbosity = Verbosity.Warning;
+                                    trace.verbosity = Verbosity.Verbose;
                                     trace.allowed_areas = {};
                                     prov.areas.forEach(area => trace.allowed_areas[area] = true);
                                     rule.traces = [trace];
