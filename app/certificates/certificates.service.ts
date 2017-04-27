@@ -8,14 +8,14 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { HttpClient } from '../common/httpclient';
 import { Certificate } from './certificate'
 
-
 @Injectable()
 export class CertificatesService {
     private static URL: string = "/certificates/";
     private static FIELDS: string = "alias,name,friendly_name,issued_by,subject,thumbprint,signature_algorithm,valid_to,valid_from,intended_purposes,subject_alternative_names,store";
     private static RANGE_SIZE: number = 50;
     private _certificates: BehaviorSubject<Array<Certificate>> = new BehaviorSubject<Array<Certificate>>([]);
-    private _stopRangeRetrievals: Subject<boolean> = new Subject<boolean>();
+    private _stopRetrievals: Subject<boolean> = new Subject<boolean>();
+    private _loading: number = 0;
 
     constructor(private _http: HttpClient) {
     }
@@ -24,19 +24,22 @@ export class CertificatesService {
         return this._certificates.asObservable();
     }
 
-    public load() {
+    public get loading(): boolean {
+        return this._loading != 0;
+    }
+
+    public load(): Promise<any> {
         this._certificates.getValue().splice(0);
         this._certificates.next(this._certificates.getValue());
 
-        this.supportsRange()
+        return this.supportsRange()
             .then(result => {
-
                 if (result) {
-                    this._stopRangeRetrievals.next(true);
-                    this.getAllByRange();
+                    this._stopRetrievals.next(true);
+                    return this.getAllByRange();
                 }
                 else {
-                    this.getAll();
+                    return this.getAll();
                 }
             })
     }
@@ -61,21 +64,32 @@ export class CertificatesService {
 
 
 
-    private getAll() {
+    private getAll(): Promise<Array<Certificate>> {
+        this._loading++;
         return this._http.get(CertificatesService.URL + "?fields=" + CertificatesService.FIELDS)
             .then(obj => {
+                this._loading--;
                 let certs = obj.certificates;
                 let current = this._certificates.getValue();
                 certs.forEach(c => current.push(c));
                 this._certificates.next(current);
+                return current;
+            })
+            .catch(e => {
+                this._loading--;
+                throw e;
             });
     }
 
-    private getAllByRange(start: number = 0, total: number = 0) {
+    private getAllByRange(start: number = 0, total: number = 0): Promise<Array<Certificate>> {
         let stop = false;
-        let sub = this._stopRangeRetrievals.take(1).subscribe(() => {
+        let sub = this._stopRetrievals.take(1).subscribe(() => {
             stop = true;
         });
+
+        if (start == 0) {
+            this._loading++;
+        }
 
         return (total == 0 ? this.getTotal() : Promise.resolve(total))
             .then(total => {
@@ -83,6 +97,7 @@ export class CertificatesService {
                 return this.getRange(start, length)
                     .then(certs => {
                         if (stop) {
+                            this._loading--;
                             return this._certificates.getValue();
                         }
 
@@ -94,11 +109,13 @@ export class CertificatesService {
                             return this.getAllByRange(start + length, total);
                         }
                         else {
+                            this._loading--;
                             sub.unsubscribe();
                             return this._certificates.getValue();
                         }
                     })
                     .catch(e => {
+                        this._loading--;
                         sub.unsubscribe();
                         throw e;
                     });

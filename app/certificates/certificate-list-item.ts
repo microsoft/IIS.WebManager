@@ -15,10 +15,13 @@ import { Certificate } from './certificate';
                     <span class='name'>{{displayName}}</span>
                     <small class="visible-xs color-accent">{{model.thumbprint}}</small>
                 </div>
-                <div class="col-xs-3 col-md-4 col-lg-3 hidden-xs hidden-sm support">
+                <div class="col-xs-4 col-md-4 col-lg-3 hidden-xs support">
+                    <span>{{model.subject}}</span>
+                </div>
+                <div class="col-xs-2 col-lg-2 hidden-xs hidden-sm support">
                     <span>{{issuedBy}}</span>
                 </div>
-                <div class="col-md-3 hidden-xs hidden-sm support">
+                <div class="col-lg-1 col-md-1 hidden-xs hidden-sm support">
                     <span>{{model.store && model.store.name}}</span>
                 </div>
                 <div class="col-lg-2 hidden-xs hidden-sm hidden-md support">
