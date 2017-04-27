@@ -210,6 +210,12 @@ export class FileNavService implements IDisposable {
 
         (!dir.physical_path ? this._svc.getRoots() : this._svc.getChildren(dir))
             .then(fs => {
+                //
+                // Make sure the files returned are for the directory we are in
+                if (this._current.getValue() != dir) {
+                    return;
+                }
+
                 files.splice(0); // Clear
 
                 fs.forEach((f: ApiFile) => files.push(f));
