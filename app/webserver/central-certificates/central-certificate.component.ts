@@ -3,22 +3,29 @@ import { NgModel } from '@angular/forms';
 
 import { Subscription } from 'rxjs/Subscription';
 
-import { DiffUtil } from '../../utils/diff';
 import { ApiFile } from '../../files/file';
+import { DiffUtil } from '../../utils/diff';
+import { Status } from '../../common/status';
 import { CentralCertificateService } from './central-certificate.service';
 import { CentralCertificateConfiguration } from './central-certificates';
 
 @Component({
     template: `
         <fieldset>
-            <switch [model]="_enabled" (modelChange)="onEnabled($event)"></switch>
+            <switch #s
+                [model]="_enabled"
+                (modelChange)="onEnabled($event)"
+                [disabled]="_service.status == 'starting' || _service.status == 'stopping'">
+                    <span *ngIf="!isPending">{{s.model ? "On" : "Off"}}</span>
+                    <span *ngIf="isPending" class="loading"></span>
+            </switch>
         </fieldset>
         <div *ngIf="_configuration">
             <fieldset class="path">
                 <label>Physical Path</label>
-                <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="right select" (click)="fileSelector.toggle()"></button>
+                <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="right select" (click)="fileSelector.toggle()" [attr.disabled]="isPending || null" ></button>
                 <div class="fill">
-                    <input type="text" class="form-control" [(ngModel)]="_configuration.path" (modelChanged)="onModelChanged()" throttle required />
+                    <input type="text" class="form-control" [(ngModel)]="_configuration.path" (modelChanged)="onModelChanged()" throttle required [attr.disabled]="isPending || null" />
                 </div>
                 <server-file-selector #fileSelector (selected)="onSelectPath($event)" [types]="['directory']"></server-file-selector>
             </fieldset>
@@ -26,25 +33,35 @@ import { CentralCertificateConfiguration } from './central-certificates';
             <div class="in">
                 <fieldset>
                     <label>Username</label>
-                    <input type="text" class="form-control name" [(ngModel)]="_configuration.identity.username" required (modelChanged)="onModelChanged()" throttle />
+                    <input type="text" class="form-control name" [(ngModel)]="_configuration.identity.username" required (modelChanged)="onModelChanged()" throttle [attr.disabled]="isPending || null" />
                 </fieldset>
                 <fieldset>
                     <label>Password</label>
-                    <input type="password" class="form-control name" #identityPassword [(ngModel)]="_identityPassword" [attr.required]="!_configuration.id ? true : null" (modelChanged)="clearIdentityPassword(f)" [attr.placeholder]="_configuration.id ? '*************' : null" throttle />
+                    <input type="password" class="form-control name" #identityPassword [(ngModel)]="_identityPassword" 
+                        [attr.required]="!_configuration.id ? true : null" (modelChanged)="clearIdentityPassword(f)" 
+                        [attr.placeholder]="_configuration.id ? '*************' : null" throttle 
+                        [attr.disabled]="isPending || null" />
                 </fieldset>
                 <fieldset *ngIf="identityPassword.value">
                     <label>Confirm Password</label>
-                    <input type="password" class="form-control name" ngModel (ngModelChange)="onConfirmIdentityPassword($event)" [validateEqual]="_identityPassword" throttle />
+                    <input type="password" class="form-control name" ngModel (ngModelChange)="onConfirmIdentityPassword($event)" [validateEqual]="_identityPassword" throttle [attr.disabled]="isPending || null" />
                 </fieldset>
             </div>
-            <fieldset>
-                <label>Certificate Password</label>
-                <input type="password" class="form-control name" #pvkPass [(ngModel)]="_privateKeyPassword" (modelChanged)="clearPkPassword()" [attr.required]="!_configuration.id ? true : null" throttle />
-            </fieldset>
-            <fieldset *ngIf="pvkPass.value">
-                <label>Confirm Private Key Password</label>
-                <input type="password" class="form-control name" ngModel (ngModelChange)="onConfirmPkPassword($event)" [validateEqual]="_privateKeyPassword" throttle />
-            </fieldset>
+            <div>
+                <label class="block" title="Specify the password that is used to encrypt the private key for each certificate file.">Use Private Key Password</label>
+                <switch style="display:inline-block;margin-bottom:5px;" [(model)]="_usePvkPass" (modelChange)="onPvkPassRequired($event)" [attr.disabled]="isPending || null" ></switch>
+            </div>
+            <div class="in" *ngIf="_usePvkPass">
+                <fieldset>
+                    <label>Password</label>
+                    <input type="password" class="form-control name" #pvkPass [(ngModel)]="_privateKeyPassword" (modelChanged)="clearPkPassword()" [attr.required]="!_configuration.id ? true : null" throttle 
+                        [attr.disabled]="isPending || null" />
+                </fieldset>
+                <fieldset *ngIf="pvkPass.value">
+                    <label>Confirm Password</label>
+                    <input type="password" class="form-control name" ngModel (ngModelChange)="onConfirmPkPassword($event)" [validateEqual]="_privateKeyPassword" throttle [attr.disabled]="isPending || null" />
+                </fieldset>
+            </div>
         </div>
     `,
     styles: [`
@@ -58,6 +75,7 @@ import { CentralCertificateConfiguration } from './central-certificates';
 export class CentralCertificateComponent implements OnInit, OnDestroy {
     id: string;
     private _enabled: boolean;
+    private _usePvkPass: boolean = true;
     private _identityPassword: string = null;
     private _privateKeyPassword: string = null;
     private _subscriptions: Array<Subscription> = [];
@@ -71,8 +89,8 @@ export class CentralCertificateComponent implements OnInit, OnDestroy {
     private get canEnable(): boolean {
         return !!this._configuration &&
             !!this._configuration.identity.username &&
-            !!this._configuration.identity.password;
-            //!!this._configuration.private_key_password
+            !!this._configuration.identity.password &&
+            (!this._usePvkPass || !!this._privateKeyPassword);
     }
 
     private get canUpdate(): boolean {
@@ -150,7 +168,10 @@ export class CentralCertificateComponent implements OnInit, OnDestroy {
 
     private onEnabled(val: boolean) {
         if (!val) {
-            this._service.disable();
+            if (this._configuration && this._configuration.id) {
+                this._service.disable();
+            }
+            this._configuration = null;
         }
         else {
             this.setFeature(new CentralCertificateConfiguration());
@@ -162,5 +183,18 @@ export class CentralCertificateComponent implements OnInit, OnDestroy {
             this._configuration.path = event[0].physical_path;
             this.onModelChanged();
         }
+    }
+
+    private onPvkPassRequired(val: boolean): void {
+        if (!val) {
+            this._privateKeyPassword = null;
+            this.clearPkPassword();
+            this.onModelChanged();
+        }
+    }
+
+    private get isPending(): boolean {
+        return this._service.status == Status.Starting
+            || this._service.status == Status.Stopping;
     }
 }

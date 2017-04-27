@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { DiffUtil } from '../../utils/diff';
+import { Status } from '../../common/status';
 import { ApiErrorType } from '../../error/api-error';
 import { HttpClient } from '../../common/httpclient';
 import { NotificationService } from '../../notification/notification.service';
@@ -16,6 +17,7 @@ export class CentralCertificateService {
     public error: any;
     private _configuration: BehaviorSubject<CentralCertificateConfiguration> = new BehaviorSubject<CentralCertificateConfiguration>(null);
     private _enabled: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    private _status: Status = Status.Unknown;
 
     public get configuration(): Observable<CentralCertificateConfiguration> {
         return this._configuration.asObservable();
@@ -25,6 +27,10 @@ export class CentralCertificateService {
         return this._enabled.asObservable();
     }
 
+    public get status(): Status {
+        return this._status;
+    }
+
     constructor(private _http: HttpClient, private _notificationService: NotificationService) {
     }
 
@@ -32,12 +38,14 @@ export class CentralCertificateService {
         return this._http.get(CentralCertificateService.URL + id)
             .then(obj => {
                 this._enabled.next(true);
+                this._status = Status.Started;
                 this._configuration.next(obj);
                 return obj;
             })
             .catch(e => {
                 if (e.type && e.type == ApiErrorType.FeatureNotInstalled) {
                     this._enabled.next(false);
+                    this._status = Status.Stopped;
                     return;
                 }
 
@@ -58,22 +66,31 @@ export class CentralCertificateService {
     }
 
     public enable(data: CentralCertificateConfiguration) {
+        this._status = Status.Starting;
         return this._http.post(CentralCertificateService.URL, JSON.stringify(data))
             .then(obj => {
                 this._enabled.next(true);
+                this._status = Status.Started;
                 this._configuration.next(obj);
             })
             .catch(e => {
+                this._status = Status.Unknown;
                 this.onError(e);
                 throw e;
             });
     }
 
     public disable() {
+        this._status = Status.Stopping;
         return this._http.delete(CentralCertificateService.URL + this._configuration.getValue().id)
             .then(() => {
                 this._configuration.next(null);
                 this._enabled.next(false);
+                this._status = Status.Stopped;
+            })
+            .catch(e => {
+                this._status = Status.Unknown;
+                throw e;
             });
     }
 
