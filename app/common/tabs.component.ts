@@ -1,4 +1,4 @@
-import { NgModule, Component, AfterViewInit, Input, Inject, Optional, ViewChild, ViewChildren, ContentChildren, QueryList, OnInit, ElementRef, Renderer, OnDestroy } from '@angular/core';
+import { NgModule, Component, AfterViewInit, Input, Output, EventEmitter, Inject, Optional, ViewChild, ViewChildren, ContentChildren, QueryList, OnInit, ElementRef, Renderer, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -24,34 +24,42 @@ import { UrlUtil } from '../utils/url';
 
         .tab-nav li {
           cursor: pointer;
-          text-transform: uppercase;
-          font-size: 13px;
+          text-transform: Capitalize;
+          font-size: 15px;
           font-family: 'Segoe UI';
         }
 
         .tabs {
-          overflow: hidden;
           width: 100%;
-          height: 25px;
+          height: 28px;
+          border-bottom-style: solid;
+          border-bottom-width: 1px;
         }
 
         .tabs ul {
           list-style: none;
           display: inline-block;
-          padding-right: -30px;
           padding:0;
+          padding-top: 5px;
           margin:0;
-          height: 40px;
+          height: 35px;
         }
 
         .tabs li {
           display: inline;
-          margin: 5px;
-          margin-left: 10px;
+          padding-top: 2px;
           padding-bottom: 2px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          padding-left: 5px;
+          padding-right: 5px;
+          border-style: solid;
+          border-width: 1px;
+        }
+
+        .tabs li:not(.active) {
+          border-color: transparent;
         }
 
         .tabs > ul > li:first-of-type {
@@ -60,13 +68,12 @@ import { UrlUtil } from '../utils/url';
 
         .tabs li span {
             padding: 0;
-            padding-bottom: 4px;
+            padding-bottom: 0;
         }
 
-        .tabs li.active span,
-        .tabs li:hover span {
-          border-bottom-style: solid;
-          border-bottom-width: 2px;
+        .tabs li.active {
+          border-style: solid;
+          border-width: 1px;
         }
 
         .hider {
@@ -150,10 +157,10 @@ import { UrlUtil } from '../utils/url';
     `],
     template: `
         <div class="tab-nav">
-            <div class='tabs'>
+            <div class='tabs border-active'>
                 <ul>
-                    <li #item *ngFor="let tab of tabs; let i = index;" [ngClass]="{active: tab.active && !_menuOn}" (click)="selectTab(i)">
-                        <span class="border-active" >{{tab.name}}</span>
+                    <li #item *ngFor="let tab of tabs; let i = index;" class="border-active border-bottom-normal" [ngClass]="{active: tab.active && !_menuOn}" (click)="selectTab(i)">
+                        <span>{{tab.name}}</span>
                     </li>
                     <li *ngIf="_selectedIndex != -1" class="sticky background-normal" [ngClass]="{active: !_menuOn, hidden: tabs[_selectedIndex].visible}" (click)="selectTab(_selectedIndex)">
                         <span class="border-active">{{tabs[_selectedIndex].name}}</span>
