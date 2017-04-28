@@ -31,7 +31,7 @@ import { FilesService } from '../../files/files.service';
                     <selector #selector [right]="true">
                         <ul>
                             <li><button title="Download" class="download" *ngIf="model.type=='file'" (click)="onDownload($event)">Download</button></li>
-                            <li><button class="delete" click="onDelete($event)">Delete</button></li>
+                            <li><button class="delete" (click)="onDelete($event)">Delete</button></li>
                         </ul>
                     </selector>
                 </div>

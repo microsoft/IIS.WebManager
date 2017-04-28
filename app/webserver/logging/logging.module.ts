@@ -15,6 +15,7 @@ import { Module as VirtualList } from '../../common/virtual-list.component';
 import { Module as Selectable } from '../../common/selectable';
 import { Module as Toolbar } from '../../files/toolbar.component';
 import { Module as Warning } from '../../notification/warning.component';
+import { Module as Tabs } from '../../common/tabs.component';
 
 import { FilesModule } from '../../files/files.module';
 
@@ -43,7 +44,8 @@ import { LogFilesComponent } from './log-files.component';
         Selectable,
         Toolbar,
         Warning,
-        FilesModule
+        FilesModule,
+        Tabs
     ],
     declarations: [
         FormatComponent,

@@ -317,6 +317,9 @@ export class FilesService implements IDisposable {
             else if (e.status == 409) {
                 e.message = "Already exists\n\n" + (path || "");
             }
+            else if (e.status == 403 && e.title && e.title.toLowerCase() == 'object is locked') {
+                e.message = "File in use\n\n" + (path || "");
+            }
 
             this._notificationService.apiError(e);
         }

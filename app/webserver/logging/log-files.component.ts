@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { OrderBy, SortPipe } from '../../common/sort.pipe';
 import { Range } from '../../common/virtual-list.component';
-import { NotificationService } from '../../notification/notification.service';
 
 import { ApiFile } from '../../files/file';
 import { FilesService } from '../../files/files.service';
@@ -33,9 +32,6 @@ import { LoggingService } from './logging.service';
                     <label class="col-md-2 visible-lg visible-md" [ngClass]="_orderBy.css('description')" (click)="sort('description')">Type</label>
                     <label class="col-md-1 visible-lg visible-md text-right" [ngClass]="_orderBy.css('size')" (click)="sort('size')">Size</label>
                 </div>
-            </div>
-            <div *ngIf="_error && _error.message">
-                <warning [warning]="_error.message"></warning>
             </div>
             <virtual-list class="container-fluid grid-list"
                         *ngIf="!!_logs"
@@ -67,7 +63,6 @@ import { LoggingService } from './logging.service';
     `]
 })
 export class LogFilesComponent implements OnInit, OnDestroy {
-    private _error: any;
     private _orderBy: OrderBy = new OrderBy();
     private _sortPipe: SortPipe = new SortPipe();
     private _subscriptions: Array<Subscription> = [];
@@ -77,17 +72,10 @@ export class LogFilesComponent implements OnInit, OnDestroy {
     private _view: Array<ApiFile> = [];
     private _selected: Array<ApiFile> = [];
 
-    constructor(private _service: LoggingService,
-                private _notifications: NotificationService) {
-
+    constructor(private _service: LoggingService) {
         this._subscriptions.push(this._service.logs.subscribe(t => {
             this._logs = t;
             this.doSort();
-        }));
-
-        this._subscriptions.push(this._service.logsError.subscribe(e => {
-            this._notifications.clearWarnings();
-            this._error = e;
         }));
     }
 

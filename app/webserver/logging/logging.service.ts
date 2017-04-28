@@ -13,6 +13,7 @@ import { IDisposable } from '../../common/idisposable';
 import { FilesService } from '../../files/files.service';
 import { ApiError, ApiErrorType } from '../../error/api-error';
 import { WebSitesService } from '../websites/websites.service';
+import { NotificationService } from '../../notification/notification.service';
 
 @Injectable()
 export class LoggingService implements IDisposable {
@@ -22,12 +23,12 @@ export class LoggingService implements IDisposable {
     private _webserverScope: boolean;
     private _status: Status = Status.Unknown;
     private _subscriptions: Array<Subscription> = [];
-    private _logsError: BehaviorSubject<any> = new BehaviorSubject<any>(null);
     private _logging: BehaviorSubject<Logging> = new BehaviorSubject<Logging>(null);
     private _logs: BehaviorSubject<Array<ApiFile>> = new BehaviorSubject<Array<ApiFile>>([]);
 
     constructor(private _http: HttpClient,
                 route: ActivatedRoute,
+                private _notifications: NotificationService,
                 @Inject('FilesService') private _filesService: FilesService,
                 @Inject('WebSitesService') private _webSitesService: WebSitesService) {
 
@@ -129,10 +130,6 @@ export class LoggingService implements IDisposable {
         return this._logs.asObservable();
     }
 
-    public get logsError(): Observable<any> {
-        return this._logsError.asObservable();
-    }
-
     public loadLogs() {
         let settings = this._logging.getValue();
         if (!settings.directory || !settings.website) {
@@ -155,7 +152,10 @@ export class LoggingService implements IDisposable {
                     });
             })
             .catch(e => {
-                this._logsError.next(e);
+                if (e.status && e.status == 404) {
+                    this._notifications.clearWarnings();
+                }
+                throw e;
             });
     }
 

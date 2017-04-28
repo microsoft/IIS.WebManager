@@ -101,7 +101,7 @@ export class NotificationService {
     public apiError(error: ApiError) {
 
         if (error.type === ApiErrorType.FeatureNotInstalled ||
-            error.type === ApiErrorType.SectionLocked) {
+            (error.type === ApiErrorType.SectionLocked && error.name && error.name.startsWith("system.webServer"))) {
             return;
         }
 

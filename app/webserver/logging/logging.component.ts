@@ -24,56 +24,47 @@ import { NotificationService } from '../../notification/notification.service';
         <span *ngIf="_service.status == 'stopped' && !_service.webserverScope">Logging is off. Turn it on <a [routerLink]="['/webserver/logging']">here</a></span>
         <override-mode class="pull-right" *ngIf="logging" [scope]="logging.scope" [metadata]="logging.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="logging">
-            <fieldset>
+            <fieldset class="collect">
                 <label>Collect Logs</label>
                 <switch class="block" [(model)]="logging.enabled" (modelChanged)="onModelChanged()">{{logging.enabled ? "On" : "Off"}}</switch>
             </fieldset>
-            <div [hidden]="!logging.enabled">
-                <fieldset class="path">
-                    <label>Directory</label>
-                    <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="right select" (click)="fileSelector.toggle()"></button>
-                    <div class="fill">
-                        <input [disabled]="!logging.log_per_site && logging.website" type="text" class="form-control" [(ngModel)]="logging.directory" throttle (modelChanged)="onModelChanged()" throttle required />
-                    </div>
-                    <server-file-selector #fileSelector [types]="['directory']" (selected)="onSelectPath($event)"></server-file-selector>
-                </fieldset>
-                <fieldset *ngIf="!logging.website">
-                    <label>Separate Log per Web Site</label>
-                    <switch class="block" [(model)]="logging.log_per_site" (modelChanged)="onModelChanged()">{{logging.log_per_site ? "On" : "Off"}}</switch>
-                </fieldset>
-                <fieldset>
-                    <format [model]="logging" (modelChange)="onModelChanged()"></format>
-                </fieldset>
-                <section *ngIf="logging.log_per_site || !logging.website">
-                    <div class="collapse-heading collapsed" data-toggle="collapse" data-target="#logginRollover">
-                        <h2>Log File Rollover</h2>
-                    </div>
-                    <div id="logginRollover" class="collapse">
-                        <rollover [model]="logging.rollover" (modelChange)="onModelChanged()"></rollover>
-                    </div>
-                </section>        
-                <section *ngIf="logging.log_fields">
-                    <div class="collapse-heading collapsed" data-toggle="collapse" data-target="#logFields">
-                        <h2>Log Fields</h2>
-                    </div>
-                    <div class="collapse" id="logFields">
-                        <logfields [model]="logging.log_fields" (modelChange)="onModelChanged()"></logfields>
-                        <br />
-                        <customfields *ngIf="logging.custom_log_fields" [(model)]="logging.custom_log_fields" (modelChange)="onModelChanged()"></customfields>
-                    </div>
-                </section>
-                <section *ngIf="this.logging.scope && logging.log_per_site">
-                    <div class="collapse-heading" data-toggle="collapse" data-target="#file-list">
-                        <h2>Logs</h2>
-                    </div>
-                    <div id="file-list" class="collapse in">
-                        <log-files></log-files>
-                    </div>
-                </section>
-            </div>
+            <tabs [hidden]="!logging.enabled">
+                <tab *ngIf="this.logging.scope && logging.log_per_site" [name]="'Logs'" (activate)="load()">
+                    <log-files></log-files>
+                </tab>
+                <tab *ngIf="'true'" [name]="'Settings'">
+                    <fieldset class="path">
+                        <label>Directory</label>
+                        <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="right select" (click)="fileSelector.toggle()"></button>
+                        <div class="fill">
+                            <input [disabled]="!logging.log_per_site && logging.website" type="text" class="form-control" [(ngModel)]="logging.directory" throttle (modelChanged)="onModelChanged()" throttle required />
+                        </div>
+                        <server-file-selector #fileSelector [types]="['directory']" (selected)="onSelectPath($event)"></server-file-selector>
+                    </fieldset>
+                    <fieldset *ngIf="!logging.website">
+                        <label>Separate Log per Web Site</label>
+                        <switch class="block" [(model)]="logging.log_per_site" (modelChanged)="onModelChanged()">{{logging.log_per_site ? "On" : "Off"}}</switch>
+                    </fieldset>
+                    <fieldset>
+                        <format [model]="logging" (modelChange)="onModelChanged()"></format>
+                    </fieldset>
+                </tab>
+                <tab *ngIf="logging.log_per_site || !logging.website" [name]="'Rollover'">
+                    <rollover [model]="logging.rollover" (modelChange)="onModelChanged()"></rollover>
+                </tab>
+                <tab *ngIf="logging.log_fields" [name]="'Log Fields'">
+                    <logfields [model]="logging.log_fields" (modelChange)="onModelChanged()"></logfields>
+                    <br />
+                    <customfields *ngIf="logging.custom_log_fields" [(model)]="logging.custom_log_fields" (modelChange)="onModelChanged()"></customfields>
+                </tab>
+            </tabs>
         </div>
     `,
     styles: [`
+        .collect {
+            margin-bottom: 20px;
+        }
+
         fieldset {
             padding-left: 0;
         }
@@ -152,5 +143,10 @@ export class LoggingComponent implements OnInit, OnDestroy {
                     }
                 });
         }
+    }
+
+    private load() {
+        console.log("activate");
+        this._service.loadLogs();
     }
 }
