@@ -44,7 +44,7 @@ import { CentralCertificateConfiguration } from './central-certificates';
                 </fieldset>
                 <fieldset *ngIf="identityPassword.value">
                     <label>Confirm Password</label>
-                    <input type="password" class="form-control name" ngModel (ngModelChange)="onConfirmIdentityPassword($event)" [validateEqual]="_identityPassword" throttle [attr.disabled]="isPending || null" />
+                    <input type="password" class="form-control name" [(ngModel)]="_identityPasswordConfirm" (ngModelChange)="onConfirmIdentityPassword($event)" [validateEqual]="_identityPassword" throttle [attr.disabled]="isPending || null" />
                 </fieldset>
             </div>
             <div>
@@ -59,7 +59,7 @@ import { CentralCertificateConfiguration } from './central-certificates';
                 </fieldset>
                 <fieldset *ngIf="pvkPass.value">
                     <label>Confirm Password</label>
-                    <input type="password" class="form-control name" ngModel (ngModelChange)="onConfirmPkPassword($event)" [validateEqual]="_privateKeyPassword" throttle [attr.disabled]="isPending || null" />
+                    <input type="password" class="form-control name" [(ngModel)]="_privateKeyPasswordConfirm" (ngModelChange)="onConfirmPkPassword($event)" [validateEqual]="_privateKeyPassword" throttle [attr.disabled]="isPending || null" />
                 </fieldset>
             </div>
         </div>
@@ -77,7 +77,9 @@ export class CentralCertificateComponent implements OnInit, OnDestroy {
     private _enabled: boolean;
     private _usePvkPass: boolean = true;
     private _identityPassword: string = null;
+    private _identityPasswordConfirm: string = null;
     private _privateKeyPassword: string = null;
+    private _privateKeyPasswordConfirm: string = null;
     private _subscriptions: Array<Subscription> = [];
     private _original: CentralCertificateConfiguration;
     private _configuration: CentralCertificateConfiguration;
@@ -96,8 +98,7 @@ export class CentralCertificateComponent implements OnInit, OnDestroy {
     private get canUpdate(): boolean {
         let changes = DiffUtil.diff(this._original, this._configuration);
 
-        return !changes.identity ||
-            changes.identity.username && changes.identity.password;
+        return !changes.identity || !!changes.identity.password;
     }
 
     public ngOnInit() {
@@ -135,11 +136,10 @@ export class CentralCertificateComponent implements OnInit, OnDestroy {
 
         if (Object.keys(changes).length > 0) {
             let action = this._configuration.id ? this._service.update(changes) : this._service.enable(changes);
+            action.then(_ => {
+                this.clearFormData();
+            })
         }
-    }
-
-    private clearIdentityPassword(f = null) {
-        this._configuration.identity.password = null;
     }
 
     private onConfirmIdentityPassword(identityPassword: string) {
@@ -150,10 +150,6 @@ export class CentralCertificateComponent implements OnInit, OnDestroy {
         else {
             this.clearIdentityPassword();
         }
-    }
-
-    private clearPkPassword() {
-        this._configuration.private_key_password = null;
     }
 
     private onConfirmPkPassword(pkPassword: string) {
@@ -171,6 +167,7 @@ export class CentralCertificateComponent implements OnInit, OnDestroy {
             if (this._configuration && this._configuration.id) {
                 this._service.disable();
             }
+            this.clearFormData();
             this._configuration = null;
         }
         else {
@@ -191,6 +188,21 @@ export class CentralCertificateComponent implements OnInit, OnDestroy {
             this.clearPkPassword();
             this.onModelChanged();
         }
+    }
+
+    private clearIdentityPassword(f = null) {
+        this._configuration.identity.password = null;
+    }
+
+    private clearPkPassword() {
+        this._configuration.private_key_password = null;
+    }
+
+    private clearFormData() {
+        this._privateKeyPassword = null;
+        this._privateKeyPasswordConfirm = null;
+        this._identityPassword = null;
+        this._identityPasswordConfirm = null;
     }
 
     private get isPending(): boolean {
