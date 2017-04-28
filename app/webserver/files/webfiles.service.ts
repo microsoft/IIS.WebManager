@@ -24,7 +24,7 @@ import { LocationHash } from '../../common/location-hash';
 
 @Injectable()
 export class WebFilesService implements IDisposable {
-    private _fileInfoFields: string = "file_info.name,file_info.alias,file_info.type,file_info.physical_path,file_info.size,created,file_info.last_modified,file_info.mime_type,file_info.e_tag";
+    private _fileInfoFields: string = "file_info.name,file_info.alias,file_info.type,file_info.physical_path,file_info.size,created,file_info.last_modified,file_info.mime_type,file_info.e_tag,file_info.parent";
     private _website: WebSite;
     private _hashWatcher: LocationHash;
     private _current: BehaviorSubject<WebFile> = new BehaviorSubject<WebFile>(null);
