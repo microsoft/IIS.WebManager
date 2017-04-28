@@ -36,13 +36,19 @@ import { UrlUtil } from '../utils/url';
           border-bottom-width: 1px;
         }
 
+        /* Same height as .tabs */
+        .tabs-container {
+          overflow: hidden;
+          max-height: 28px;
+        }
+
         .tabs ul {
           list-style: none;
           display: inline-block;
           padding:0;
           padding-top: 5px;
           margin:0;
-          height: 35px;
+          height: 28px;
         }
 
         .tabs li {
@@ -77,7 +83,6 @@ import { UrlUtil } from '../utils/url';
         }
 
         .hider {
-          margin: 5px;
           margin-left: 10px;
           margin-top: 0;
           z-index: 10;
@@ -87,7 +92,7 @@ import { UrlUtil } from '../utils/url';
           position: relative;
           cursor: default;
           padding-left: 40px;
-          padding-bottom: 24px;
+          padding-bottom: 27px;
           border-bottom: none;  
         }
 
@@ -97,8 +102,6 @@ import { UrlUtil } from '../utils/url';
           top: 0;
           right: 0;
           cursor: pointer;
-          padding-right: 10px;
-          padding-left: 10px;
           z-index: 9;
           outline: none;
           height: 25px;
@@ -106,13 +109,7 @@ import { UrlUtil } from '../utils/url';
 
         .menu-btn span {
             display: inline-block;
-            border-style: solid;
-            border-width: 1px;
-            padding: 0 5px;
-        }
-
-        .menu-btn i {
-            margin-left: 6px;
+            padding: 3px 8px;
         }
 
         .menu {
@@ -145,8 +142,8 @@ import { UrlUtil } from '../utils/url';
           position: absolute;
           display: inline-flex;
           margin: 0;
-          right: 55px;
-          top: 0;
+          right: 27px;
+          top: 1px;
         }
 
         .tabs li.sticky:before {
@@ -157,18 +154,22 @@ import { UrlUtil } from '../utils/url';
     `],
     template: `
         <div class="tab-nav">
-            <div class='tabs border-active'>
-                <ul>
-                    <li #item *ngFor="let tab of tabs; let i = index;" class="border-active border-bottom-normal" [ngClass]="{active: tab.active && !_menuOn}" (click)="selectTab(i)">
-                        <span>{{tab.name}}</span>
-                    </li>
-                    <li *ngIf="_selectedIndex != -1" class="sticky background-normal" [ngClass]="{active: !_menuOn, hidden: tabs[_selectedIndex].visible}" (click)="selectTab(_selectedIndex)">
-                        <span class="border-active">{{tabs[_selectedIndex].name}}</span>
-                    </li>
-                </ul>
-                <div class="hider background-normal"></div>
+
+            <div class="tabs-container">
+                <div class='tabs border-active'>
+                    <ul>
+                        <li #item *ngFor="let tab of tabs; let i = index;" class="border-active border-bottom-normal" [ngClass]="{active: tab.active}" (click)="selectTab(i)">
+                            <span>{{tab.name}}</span>
+                        </li>
+                        <li *ngIf="_selectedIndex != -1" class="sticky background-normal border-active border-bottom-normal" [ngClass]="{active: !!'true', hidden: tabs[_selectedIndex].visible}" (click)="selectTab(_selectedIndex)">
+                            <span class="border-active">{{tabs[_selectedIndex].name}}</span>
+                        </li>
+                    </ul>
+                    <div class="hider background-normal"></div>
+                </div>
             </div>
-            <div class='menu-btn color-active background-normal' #menuBtn tabindex='0' (click)="showMenu()"><span class="border-active hover-active color-normal" [class.background-active]="_menuOn">...<i class="fa fa-caret-down"></i></span></div>
+
+            <div class='menu-btn color-active background-normal' #menuBtn tabindex='0' (click)="showMenu()"><span class="border-active hover-active color-normal" [class.background-active]="_menuOn"><i class="fa fa-ellipsis-h"></i></span></div>
             <div class='menu border-active background-normal' [hidden]="!_menuOn">
                 <ul>
                     <li *ngFor="let tab of tabs; let i = index;" class="hover-active" [ngClass]="{'background-active': tab.active}" (click)="selectTab(i)">{{tab.name}}</li>
