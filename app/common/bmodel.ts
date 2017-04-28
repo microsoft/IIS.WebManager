@@ -90,6 +90,17 @@ class Throttle implements ControlValueAccessor, OnDestroy {
 }
 
 @Directive({
+    selector: 'input',
+    host: {
+        '[class.unfocused]': '!_visited',
+        '(focus)': '_visited=true'
+    }
+})
+class FocusMarker {
+    private _visited: boolean;
+}
+
+@Directive({
     selector: '[ngModel][validate]'
 })
 class Validator {
@@ -166,6 +177,7 @@ class ModelChange {
 
 export const MODEL_DIRECTIVES: any[] = [
     Throttle,
+    FocusMarker,
     ModelChange,
     Validator
 ];
