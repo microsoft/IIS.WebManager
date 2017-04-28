@@ -101,8 +101,8 @@ input[type='number'] {
     max-width: 100%;
 }
 
-input:required:invalid,
-input.ng-invalid {
+input:required:invalid:not(.unfocused),
+input:not(:required).ng-invalid {
     border-left-width: 6px;
     border-left-style: solid;
 }

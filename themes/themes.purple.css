@@ -60,6 +60,10 @@ button,
     border-color: #8b4298;
 }
 
+.border-bottom-normal {
+    border-bottom-color: white;
+}
+
 .color-accent,
 h2 {
     color: #90A01C;
@@ -133,9 +137,9 @@ input.highlight {
     background-color: lightgoldenrodyellow;
 }
 
-input:required:invalid,
-input.ng-invalid,
-input.ng-invalid:focus {
+input:required:invalid:not(.unfocused),
+input:not(:required).ng-invalid,
+input:not(:required).ng-invalid:focus {
     border-left-color: red;
 }
 
