@@ -29,7 +29,7 @@ import { NotificationService } from '../../notification/notification.service';
                 <switch class="block" [(model)]="logging.enabled" (modelChanged)="onModelChanged()">{{logging.enabled ? "On" : "Off"}}</switch>
             </fieldset>
             <tabs [hidden]="!logging.enabled">
-                <tab *ngIf="this.logging.scope && logging.log_per_site" [name]="'Logs'" (activate)="load()">
+                <tab *ngIf="this.logging.scope && logging.log_per_site" [name]="'Logs'">
                     <log-files></log-files>
                 </tab>
                 <tab *ngIf="'true'" [name]="'Settings'">
@@ -143,10 +143,5 @@ export class LoggingComponent implements OnInit, OnDestroy {
                     }
                 });
         }
-    }
-
-    private load() {
-        console.log("activate");
-        this._service.loadLogs();
     }
 }

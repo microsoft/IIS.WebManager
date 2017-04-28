@@ -23,41 +23,43 @@ import { RequestFilteringSettings, RequestFilteringChildType, RequestFiltering }
         </switch>
         <span *ngIf="_service.status == 'stopped' && !_service.webserverScope">Request Filtering is off. Turn it on <a [routerLink]="['/webserver/request-filtering']">here</a></span>
         <div *ngIf="settings">
-            <div class="row">
-                <div class="col-xs-7 col-md-4 col-lg-3">
-                    <fieldset>
-                        <label>Unlisted File Extensions</label>
-                        <switch class="block" [disabled]="_locked" [(model)]="settings.allow_unlisted_file_extensions" (modelChanged)="onFeatureChanged()">{{settings.allow_unlisted_file_extensions ? "Allow" : "Deny"}}</switch>
-                    </fieldset>
-                    <fieldset>
-                        <label>Unlisted Verbs</label>
-                        <switch class="block" [disabled]="_locked" [(model)]="settings.allow_unlisted_verbs" (modelChanged)="onFeatureChanged()">{{settings.allow_unlisted_verbs ? "Allow" : "Deny"}}</switch>
-                    </fieldset>
-                    <fieldset>
-                        <label>High Bit Characters</label>
-                        <switch class="block" [disabled]="_locked" [(model)]="settings.allow_high_bit_characters" (modelChanged)="onFeatureChanged()">{{settings.allow_high_bit_characters ? "Allow" : "Deny"}}</switch>
-                    </fieldset>
-                    <fieldset>
-                        <label>Double Escaping</label>
-                        <switch class="block" [disabled]="_locked" [(model)]="settings.allow_double_escaping" (modelChanged)="onFeatureChanged()">{{settings.allow_double_escaping ? "Allow" : "Deny"}}</switch>
-                    </fieldset>
-                </div>
-                <div class="col-xs-7 col-md-4">
-                    <fieldset>
-                        <label>Max Content Length <span class="units">(bytes)</span></label>
-                        <input class="form-control" [disabled]="_locked" [(ngModel)]="settings.max_content_length" (modelChanged)="onFeatureChanged()" type="number" throttle />
-                    </fieldset>
-                    <fieldset>
-                        <label>Max Url Length <span class="units">(bytes)</span></label>
-                        <input class="form-control" [disabled]="_locked" [(ngModel)]="settings.max_url_length" (modelChanged)="onFeatureChanged()" type="number" throttle />
-                    </fieldset>
-                    <fieldset>
-                        <label>Max Query String Length <span class="units">(bytes)</span></label>
-                        <input class="form-control" [disabled]="_locked" [(ngModel)]="settings.max_query_string_length" (modelChanged)="onFeatureChanged()" type="number" throttle />
-                    </fieldset>
-                </div>
-            </div>
             <tabs>
+                <tab [name]="'Settings'">
+                    <div class="row">
+                        <div class="col-xs-7 col-md-4 col-lg-3">
+                            <fieldset>
+                                <label>Unlisted File Extensions</label>
+                                <switch class="block" [disabled]="_locked" [(model)]="settings.allow_unlisted_file_extensions" (modelChanged)="onFeatureChanged()">{{settings.allow_unlisted_file_extensions ? "Allow" : "Deny"}}</switch>
+                            </fieldset>
+                            <fieldset>
+                                <label>Unlisted Verbs</label>
+                                <switch class="block" [disabled]="_locked" [(model)]="settings.allow_unlisted_verbs" (modelChanged)="onFeatureChanged()">{{settings.allow_unlisted_verbs ? "Allow" : "Deny"}}</switch>
+                            </fieldset>
+                            <fieldset>
+                                <label>High Bit Characters</label>
+                                <switch class="block" [disabled]="_locked" [(model)]="settings.allow_high_bit_characters" (modelChanged)="onFeatureChanged()">{{settings.allow_high_bit_characters ? "Allow" : "Deny"}}</switch>
+                            </fieldset>
+                            <fieldset>
+                                <label>Double Escaping</label>
+                                <switch class="block" [disabled]="_locked" [(model)]="settings.allow_double_escaping" (modelChanged)="onFeatureChanged()">{{settings.allow_double_escaping ? "Allow" : "Deny"}}</switch>
+                            </fieldset>
+                        </div>
+                        <div class="col-xs-7 col-md-4">
+                            <fieldset>
+                                <label>Max Content Length <span class="units">(bytes)</span></label>
+                                <input class="form-control" [disabled]="_locked" [(ngModel)]="settings.max_content_length" (modelChanged)="onFeatureChanged()" type="number" throttle />
+                            </fieldset>
+                            <fieldset>
+                                <label>Max Url Length <span class="units">(bytes)</span></label>
+                                <input class="form-control" [disabled]="_locked" [(ngModel)]="settings.max_url_length" (modelChanged)="onFeatureChanged()" type="number" throttle />
+                            </fieldset>
+                            <fieldset>
+                                <label>Max Query String Length <span class="units">(bytes)</span></label>
+                                <input class="form-control" [disabled]="_locked" [(ngModel)]="settings.max_query_string_length" (modelChanged)="onFeatureChanged()" type="number" throttle />
+                            </fieldset>
+                        </div>
+                    </div>
+                </tab>
                 <tab [name]="'Rules'">
                     <rules [locked]="_locked"></rules>
                 </tab>
@@ -71,6 +73,7 @@ import { RequestFilteringSettings, RequestFilteringChildType, RequestFiltering }
         tabs {
             display: block;
             margin-top: 10px;
+            clear: both;
         }
 
         .install {
