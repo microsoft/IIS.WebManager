@@ -11,7 +11,7 @@ import {ComponentUtil} from '../utils/component';
     selector: 'connection-picker',
     template: `
         <div id="connectRoot">
-            <div id="connectBtn" (click)="onClick()">
+            <div id="connectBtn" class="v-center" (click)="onClick()">
                 <span>{{currentName()}}</span>
             </div>
             <div id="connectMenu" class="background-normal" [hidden]="!_focused">
@@ -53,7 +53,6 @@ import {ComponentUtil} from '../utils/component';
 
         #connectBtn {
             height:55px;
-            padding-top:16px;
             cursor:pointer;
             max-width:300px;
         }
@@ -150,6 +149,12 @@ import {ComponentUtil} from '../utils/component';
 
         .no-border {
             border-width: 0;
+        }
+
+        .v-center {
+            vertical-align: middle;
+            height: 55px;
+            display: table-cell;
         }
     `],
     host: {

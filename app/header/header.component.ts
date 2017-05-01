@@ -9,7 +9,7 @@ import { OptionsService } from '../main/options.service';
         <div class="nav background-active">
             <button class="fa fa-bars nav-item nav-options hover-active" (click)="this._options.toggle()" [class.active]="this._options.active"></button>
             <a [routerLink]="['/']" class="nav-brand nav-item background-active">
-                <span><span class="hidden-xs">Microsoft</span> IIS</span>
+                <span class="v-center"><span class="hidden-xs">Microsoft</span> IIS</span>
             </a>
             <div class="separator padded"></div>
             <connection-picker class="nav-item"></connection-picker>
@@ -36,12 +36,11 @@ import { OptionsService } from '../main/options.service';
 
         .nav-item {
             display: inline-block;
-            height: 55px;
             cursor: pointer;
+            vertical-align: middle;
         }
 
         .nav-options {
-            float: left;
             padding: 10px;
         }
 
@@ -50,22 +49,8 @@ import { OptionsService } from '../main/options.service';
         }
 
         .nav-brand {
-            padding: 10px 5px;
-            line-height:20px;
-            padding-top: 18px;
+            padding: 0px 5px;
             font-size: 20px;
-            vertical-align:top;
-            text-align: center;
-        }
-
-        .nav-brand > span:first-of-type {
-            line-height: 8px;
-            display: block;
-        }
-
-        .nav-brand .small {
-            color: yellow;
-            font-size: 10px;
         }
 
         .separator {
@@ -79,25 +64,12 @@ import { OptionsService } from '../main/options.service';
  
         .separator.padded {
             margin-right: 12px;
-        }
- 
-        .left-icon {
-            vertical-align: middle;
-            margin-right: 4px;
-        }
-
-        .full-width {
-            width: 100%;
+            margin-left: 6px;
         }
 
         .right {
             display:inline-block;
             float:right;
-        }
-
-        .v-aligned {
-            padding: 0 15px;
-            padding-top: 16px;
         }
 
         .palette {
