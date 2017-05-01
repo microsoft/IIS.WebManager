@@ -10,7 +10,6 @@ import { OptionsService } from '../main/options.service';
             <button class="fa fa-bars nav-item nav-options hover-active" (click)="this._options.toggle()" [class.active]="this._options.active"></button>
             <a [routerLink]="['/']" class="nav-brand nav-item background-active">
                 <span><span class="hidden-xs">Microsoft</span> IIS</span>
-                <span class="small">Preview</span>
             </a>
             <div class="separator padded"></div>
             <connection-picker class="nav-item"></connection-picker>
