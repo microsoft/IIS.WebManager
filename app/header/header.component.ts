@@ -56,10 +56,9 @@ import { OptionsService } from '../main/options.service';
         .separator {
             width:1px;
             display: inline-block;
-            vertical-align:top;
+            vertical-align: middle;
             border-left:1px solid white;
             height:23px;
-            margin-top:16px;
         }
  
         .separator.padded {
