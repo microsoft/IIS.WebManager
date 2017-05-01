@@ -1,14 +1,15 @@
-import {NgModule, Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild, ElementRef, Renderer} from '@angular/core';
-import {Router} from '@angular/router';
+import { NgModule, Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild, ElementRef, Renderer } from '@angular/core';
+import { Router } from '@angular/router';
 
 import 'rxjs/add/operator/take';
 
-import {Angulartics2} from 'angulartics2';
-import {Angulartics2GoogleAnalytics} from 'angulartics2/src/providers/angulartics2-ga';
+import { Angulartics2 } from 'angulartics2';
+import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-ga';
 
-import {ConnectService} from '../connect/connect.service';
-import {LoadingService} from '../notification/loading.service';
-import {WindowService} from './window.service';
+import { ConnectService } from '../connect/connect.service';
+import { LoadingService } from '../notification/loading.service';
+import { WindowService } from './window.service';
+import { VersionService } from '../versioning/version.service';
 
 
 @Component({
@@ -68,9 +69,10 @@ export class AppComponent implements OnInit, OnDestroy {
                 private _connectService: ConnectService,
                 private _loadingSvc: LoadingService,
                 private _windowService: WindowService,
+                private _versionService: VersionService,
                 private _renderer: Renderer,
                 angulartics2: Angulartics2,
-                angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) { 
+                angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
     }
 
     @ViewChild('mainContainer') mainContainer: ElementRef;
@@ -85,7 +87,7 @@ export class AppComponent implements OnInit, OnDestroy {
         });
 
         this._windowService.initialize(this.mainContainer, this._renderer);
-    }    
+    }
 
     ngOnDestroy() {
         this._loadingSvc.destroy();
