@@ -2,10 +2,10 @@
   <ItemGroup>  
     <NodeModulesDir Include="node_modules" /> 
   </ItemGroup>  
-  <Target Name="NpmInstall" BeforeTargets="PreComputeCompileTypeScript" Condition="!Exists(@(NodeModulesDir))">
+  <Target Name="NpmInstall" BeforeTargets="PreComputeCompileTypeScript" Condition="!Exists(@(NodeModulesDir)) And '$(Configuration)' != 'Release'">
     <Exec Command="npm install" />
   </Target>
-  <Target Name="NpmInstall" AfterTargets="CompileTypeScript" Condition="'$(Configuration)' == 'Release'">
-    <Exec Command="npm prune --production" />
+  <Target Name="NpmInstall" AfterTargets="PreComputeCompileTypeScript" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="npm install" />
   </Target>
 </Project>
