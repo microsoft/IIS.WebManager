@@ -15,9 +15,6 @@ import {WebFileType, WebFile} from './webfile';
                 <input [(ngModel)]="model.name" class="form-control" type="text" (keyup.enter)="onOk()" (blur)="cancel.next()" (keyup.esc)="cancel.next()" autofocus>
             </div>
             <div class="actions">
-                <button [attr.disabled]="!model.name || null" title="Ok" (click)="onOk()">
-                    <i class="fa fa-check blue"></i>
-                </button>
                 <button title="Cancel" (click)="cancel.next()">
                     <i class="fa fa-times red"></i>
                 </button>
