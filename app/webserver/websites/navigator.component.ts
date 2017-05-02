@@ -100,10 +100,14 @@ import {WebSitesService} from './websites.service';
             padding-left: 5px;
         }
 
-        .cert:before {
+        .cert span:before {
             font-family: FontAwesome;
             content: "\\f023";
             padding-right: 5px;
+        }
+
+        .cert span {
+            vertical-align: middle;
         }
 
         .browse:before {
