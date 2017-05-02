@@ -27,6 +27,14 @@ button.refresh:not([disabled]):not(:hover):not(:active)::before {
     color: #0093fe;
 }
 
+button.start:not([disabled]):not(:hover):not(:active)::before {
+    color: #3c763d;
+}
+
+button.stop:not([disabled]):not(:hover):not(:active)::before {
+    color: #a94442;
+}
+
 .border-color,
 .form-control,
 .dataGroup {

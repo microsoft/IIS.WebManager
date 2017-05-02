@@ -1,7 +1,7 @@
-
-import {Component, OnInit, Input, Output, EventEmitter, Inject} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter, ViewChild, Inject} from '@angular/core';
 import {Router} from '@angular/router';
 
+import { Selector } from '../../common/selector';
 import {WebSite} from './site';
 import {WebSitesService} from './websites.service';
 import {OrderBy} from '../../common/sort.pipe';
@@ -33,16 +33,19 @@ import {OrderBy} from '../../common/sort.pipe';
         <div class='col-xs-4 col-xs-push-1 col-sm-3 col-md-3 valign' *ngIf="allow('browse')">
             <navigator [model]="model.bindings" [right]="true"></navigator>
         </div>
-        <div class="actions">
-            <button class="hidden-xs" *ngIf="allow('start')" title="Start" [attr.disabled]="model.status != 'stopped' || null" (click)="onStart($event)">
-                <i class="fa fa-play green"></i>
-            </button>
-            <button class="hidden-xs" *ngIf="allow('stop')" title="Stop" [attr.disabled]="!started() || null" (click)="onStop($event)">
-                <i class="fa fa-stop red"></i>
-            </button>
-            <button class="hidden-xs" *ngIf="allow('delete')" title="Delete" (click)="onDelete($event)">
-                <i class="fa fa-trash-o red"></i>
-            </button>
+        <div class="actions hidden-xs">
+            <div class="selector-wrapper">
+                <button title="More" (click)="openSelector($event)" [class.background-active]="(selector && selector.opened) || false">
+                    <i class="fa fa-ellipsis-h"></i>
+                </button>
+                <selector [right]="true">
+                    <ul>
+                        <li><button class="start" title="Start" *ngIf="allow('start')" [attr.disabled]="model.status != 'stopped' || null" (click)="onStart($event)">Start</button></li>
+                        <li><button class="stop" title="Stop" *ngIf="allow('stop')" [attr.disabled]="!started() || null" (click)="onStop($event)">Stop</button></li>
+                        <li><button class="delete" *ngIf="allow('delete')" title="Delete" (click)="onDelete($event)">Delete</button></li>
+                    </ul>
+                </selector>
+            </div>
         </div>
     </div>
     `,
@@ -89,6 +92,20 @@ import {OrderBy} from '../../common/sort.pipe';
         .actions {
             padding-top: 4px;
         }
+
+        .selector-wrapper {
+            position: relative;
+        }
+
+        selector {
+            position:absolute;
+            right:0;
+        }
+
+        selector button {
+            min-width: 125px;
+            width: 100%;
+        }
     `]
 })
 export class WebSiteItem {
@@ -99,6 +116,8 @@ export class WebSiteItem {
     @Output() start: EventEmitter<any> = new EventEmitter<any>();
     @Output() stop: EventEmitter<any> = new EventEmitter<any>();
     @Output() delete: EventEmitter<any> = new EventEmitter<any>();
+
+    @ViewChild(Selector) private _selector: Selector;
 
     constructor(@Inject("WebSitesService") private _service: WebSitesService) {
     }
@@ -113,11 +132,13 @@ export class WebSiteItem {
 
     private onStart(e: Event) {
         e.preventDefault();
+        this._selector.close();
         this._service.start(this.model);
     }
 
     private onStop(e: Event) {
         e.preventDefault();
+        this._selector.close();
         this._service.stop(this.model);
     }
 
@@ -144,6 +165,11 @@ export class WebSiteItem {
             }
         }
         return false;
+    }
+
+    private openSelector(e: Event) {
+        e.preventDefault();
+        this._selector.toggle();
     }
 }
 

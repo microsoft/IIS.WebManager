@@ -695,6 +695,14 @@ button.save:before {
     content: "\f0c7";
 }
 
+button.start:before {
+    content: "\f04b";
+}
+
+button.stop:before {
+    content: "\f04d";
+}
+
 
 /*
     SideBar
