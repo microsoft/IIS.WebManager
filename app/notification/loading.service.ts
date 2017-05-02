@@ -8,15 +8,18 @@ import {Observable} from 'rxjs/Observable';
 @Injectable()
 export class LoadingService {
     private _activate: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    private _navStart: boolean;
     private _subs = [];
     private _counter: number = 0;
 
     constructor(router: Router) {
         this._subs.push(router.events.subscribe(e => {
-            if (e instanceof NavigationStart) {
+            if (e instanceof NavigationStart && !this._navStart) {
+                this._navStart = true;
                 this.begin();
             }
             else if (e instanceof NavigationEnd) {
+                this._navStart = false;
                 this.end();
             }
         }));
