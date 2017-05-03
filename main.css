@@ -757,10 +757,11 @@ button.save:before {
 
 .sidebar-nav-content,
 .sidebar.nav .content {
-    left: 230px;
+    left: 215px;
     right: 0;
     position: absolute;
     padding-right: 15px;
+    padding-left: 15px;
 }
 
 .sidebar-nav-content {

@@ -11,6 +11,7 @@ import { Module as VTabs } from '../../common/vtabs.component';
 import { Module as Loading } from '../../notification/loading.component';
 import { Module as Sort } from '../../common/sort.pipe';
 import { Module as Selector } from '../../common/selector';
+import { Module as Tabs } from '../../common/tabs.component';
 
 import { Module } from './module';
 import { Module as AppPoolModule } from '../app-pools/module';
@@ -44,7 +45,8 @@ import { LimitsComponent } from './limits.component';
         VTabs,
         Loading,
         Sort,
-        Selector
+        Selector,
+        Tabs
     ],
     declarations: [
         WebSiteComponent,
