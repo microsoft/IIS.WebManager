@@ -43,7 +43,7 @@ import { RestrictionRule, IpRestrictions } from './ip-restrictions'
                 <label class="visible-xs visible-sm">IP Address</label>
                 <label class="hidden-xs hidden-sm editing">IP Address</label>
                 <span>{{model.ip_address}}</span>
-                <input class="form-control" type="text" [(ngModel)]="model.ip_address" throttle required pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" />
+                <input class="form-control" type="text" [(ngModel)]="model.ip_address" required pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" />
                 <div *ngIf="!_editing">
                     <br class="visible-xs visible-sm" />
                 </div>
@@ -53,7 +53,7 @@ import { RestrictionRule, IpRestrictions } from './ip-restrictions'
                 <label class="visible-xs visible-sm">Subnet Mask</label>
                 <label class="hidden-xs hidden-sm editing">Subnet Mask</label>
                 <span>{{model.subnet_mask}}</span>
-                <input class="form-control" type="text" [(ngModel)]="model.subnet_mask" throttle required />
+                <input class="form-control" type="text" [(ngModel)]="model.subnet_mask" required />
                 <div *ngIf="!_editing">
                     <br class="visible-xs visible-sm" />
                 </div>
@@ -63,7 +63,7 @@ import { RestrictionRule, IpRestrictions } from './ip-restrictions'
                 <label class="visible-xs visible-sm">Domain Name</label>
                 <label class="hidden-xs hidden-sm editing">Domain Name</label>
                 <span>{{model.domain_name}}</span>
-                <input class="form-control" type="text" [(ngModel)]="model.domain_name" throttle />
+                <input class="form-control" type="text" [(ngModel)]="model.domain_name" />
                 <div *ngIf="!_editing">
                     <br class="visible-xs visible-sm" />
                 </div>
@@ -174,6 +174,10 @@ export class RestrictionRuleComponent implements OnChanges, OnInit {
     selector: 'restriction-rules',
     template: `
         <fieldset>
+            <label>Allow Unlisted</label>
+            <switch class="block" [(model)]="ipRestrictions.allow_unlisted" (modelChanged)="onModelChanged()">{{ipRestrictions.allow_unlisted ? "Yes" : "No"}}</switch>
+        </fieldset>
+        <fieldset>
             <button class="create" (click)="createRule()" [class.inactive]="_editing || _newRule"><i class="fa fa-plus blue"></i><span>Add</span></button>
             <div class="container-fluid">
                 <div class="row hidden-xs hidden-sm border-active grid-list-header" [hidden]="rules.length == 0">
@@ -186,13 +190,13 @@ export class RestrictionRuleComponent implements OnChanges, OnInit {
             <ul class="grid-list container-fluid">
                 <li *ngIf="_newRule">
                     <restriction-rule [model]="_newRule"
-                                      [enableDomainName]="_enable_reverse_dns"
+                                      [enableDomainName]="ipRestrictions.enable_reverse_dns"
                                       (discard)="onDiscardNew()">
                     </restriction-rule>
                 </li>
                 <li *ngFor="let rule of rules; let i = index;">
                     <restriction-rule [model]="rule"
-                                      [enableDomainName]="_enable_reverse_dns" 
+                                      [enableDomainName]="ipRestrictions.enable_reverse_dns" 
                                       (edit)="edit(i)"
                                       (discard)="discard()">
                     </restriction-rule>
@@ -214,6 +218,10 @@ export class RestrictionRuleComponent implements OnChanges, OnInit {
         .grid-list > li.background-editing .actions {
             top: 32px;
         }
+
+        fieldset:first-of-type {
+            margin-bottom: 15px;
+        }
     `]
 })
 export class RestrictionRulesComponent implements OnInit, OnDestroy {
@@ -233,6 +241,7 @@ export class RestrictionRulesComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._subscriptions.push(this._service.rules.subscribe(rules => this.setRules(rules)));
+        this._service.loadRules();
     }
 
     public ngOnDestroy() {

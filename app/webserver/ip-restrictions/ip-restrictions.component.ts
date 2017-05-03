@@ -24,27 +24,16 @@ import { NotificationService } from '../../notification/notification.service';
         <override-mode class="pull-right" *ngIf="ipRestrictions" [scope]="ipRestrictions.scope" [metadata]="ipRestrictions.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="ipRestrictions" [attr.disabled]="_locked || null">
             <fieldset>
-                <label *ngIf="!ipRestrictions.scope">Default Behavior</label>
+                <label *ngIf="!ipRestrictions.scope">Web Site Default</label>
                 <switch class="block" [(model)]="enabled" (modelChanged)="onEnabledChanged()">{{enabled ? "On" : "Off"}}</switch>
             </fieldset>
-            <div [hidden]="!enabled">
-                <fieldset>
-                    <label>Denied Response Type</label>
-                    <select class="form-control path" [(ngModel)]="ipRestrictions.deny_action" (modelChanged)="onModelChanged()">
-                        <option value="Abort">Abort Connection</option>
-                        <option value="Unauthorized">HTTP 401 Unauthorized</option>
-                        <option value="Forbidden">HTTP 403 Forbidden</option>
-                        <option value="NotFound">HTTP 404 Not Found</option>
-                    </select>
-                </fieldset>
+            <div *ngIf="enabled">
                 <tabs>
                     <tab [name]="'General'">
                             <ip-addresses [model]="ipRestrictions" (modelChanged)="onModelChanged()"></ip-addresses>
-                    </tab>
-                    <tab [name]="'Dynamic Restrictions'">
                             <dynamic-restrictions [model]="ipRestrictions" (modelChange)="onModelChanged()"></dynamic-restrictions>
                     </tab>
-                    <tab [name]="'Rules'">
+                    <tab [name]="'IP/Domain Rules'">
                             <restriction-rules [ipRestrictions]="ipRestrictions" (modelChange)="onModelChanged()"></restriction-rules>
                     </tab>
                 </tabs>
@@ -65,6 +54,10 @@ import { NotificationService } from '../../notification/notification.service';
         tabs {
             margin-top: 10px;
             display: block;
+        }
+
+        fieldset:last-of-type {
+            margin-bottom: 30px;
         }
     `]
 })
