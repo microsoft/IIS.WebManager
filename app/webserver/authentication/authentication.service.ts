@@ -131,13 +131,6 @@ export class AuthenticationService {
         }
     }
 
-    public installWindows(val: boolean) {
-        const windows = "windows";
-        if (val) {
-            return this.installAuth(windows);
-        }
-    }
-
     private loadAnon(): Promise<AnonymousAuthentication> {
         return this._http.get(this._settings.getValue()._links.anonymous.href.replace("/api", ""))
             .then(anonymous => {

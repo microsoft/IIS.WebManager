@@ -11,18 +11,21 @@ import { DiffUtil } from '../../utils/diff';
 @Component({
     template: `
         <loading *ngIf="!settings"></loading>
-        <div *ngIf="settings">
-            <anon-auth></anon-auth>
-            <basic-auth></basic-auth>
-            <digest-auth></digest-auth>
-            <win-auth></win-auth>
-        </div>
-    `,
-    styles: [`
-        h2:first-of-type {
-            margin-top: 0;
-        }
-    `]
+        <tabs *ngIf="settings">
+            <tab [name]="'Anonymous'">
+                <anon-auth></anon-auth>
+            </tab>
+            <tab [name]="'Basic'">
+                <basic-auth></basic-auth>
+            </tab>
+            <tab [name]="'Digest'">
+                <digest-auth></digest-auth>
+            </tab>
+            <tab [name]="'Windows'">
+                <win-auth></win-auth>
+            </tab>
+        </tabs>
+    `
 })
 export class AuthenticationComponent implements OnInit, OnDestroy {
     id: string;
