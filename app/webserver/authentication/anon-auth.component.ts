@@ -9,37 +9,25 @@ import { AuthenticationService } from './authentication.service';
 @Component({
     selector: 'anon-auth',
     template: `
-        <section *ngIf="_model || _service.anonymousError">
-            <div class="collapse-heading" data-toggle="collapse" data-target="#anonAuthentication">
-                <h2>Anonymous Authentication</h2>
-            </div>
-            <div id="anonAuthentication" class="collapse in">
-                <error [error]="_service.anonymousError"></error>
-                <div *ngIf="_model">
-                    <override-mode class="pull-right" [metadata]="_model.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
-                    <fieldset>
-                        <label *ngIf="!_model.scope">Default Behavior</label>
-                        <switch class="block" [disabled]="_locked" [(model)]="_model.enabled" (modelChanged)="onModelChanged()">{{_model.enabled ? "On" : "Off"}}</switch>
-                    </fieldset>
-                    <div class="clear" *ngIf="_model.enabled">
-                        <fieldset>
-                            <label>User</label>
-                            <input class="form-control path" type="text" [disabled]="_locked" [(ngModel)]="_model.user" throttle (modelChanged)="onModelChanged()" />
-                        </fieldset>
-                        <fieldset>
-                            <label>Password</label>
-                            <input class="form-control path" type="text" [disabled]="_locked" [(ngModel)]="_model.password" throttle (modelChanged)="onModelChanged()" />
-                        </fieldset>  
-                    </div>  
-                </div>
-            </div>
-        </section>
-    `,
-    styles: [`
-        .clear {
-            clear: both;
-        }
-    `]
+        <error [error]="_service.anonymousError"></error>
+        <div *ngIf="_model">
+            <override-mode class="pull-right" [metadata]="_model.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
+            <fieldset>
+                <label *ngIf="!_model.scope">Default Behavior</label>
+                <switch class="block" [disabled]="_locked" [(model)]="_model.enabled" (modelChanged)="onModelChanged()">{{_model.enabled ? "On" : "Off"}}</switch>
+            </fieldset>
+            <div class="clear" *ngIf="_model.enabled">
+                <fieldset>
+                    <label>User</label>
+                    <input class="form-control path" type="text" [disabled]="_locked" [(ngModel)]="_model.user" throttle (modelChanged)="onModelChanged()" />
+                </fieldset>
+                <fieldset>
+                    <label>Password</label>
+                    <input class="form-control path" type="text" [disabled]="_locked" [(ngModel)]="_model.password" throttle (modelChanged)="onModelChanged()" />
+                </fieldset>  
+            </div>  
+        </div>
+    `
 })
 export class AnonymousAuthenticationComponent implements OnDestroy {
     private _model: AnonymousAuthentication;

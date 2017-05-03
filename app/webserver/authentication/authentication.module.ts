@@ -9,6 +9,7 @@ import { Module as Switch } from '../../common/switch.component';
 import { Module as Loading } from '../../notification/loading.component';
 import { Module as OverrideMode } from '../../common/override-mode.component';
 import { Module as ErrorComponent } from '../../error/error.component';
+import { Module as Tabs } from '../../common/tabs.component';
 
 import { AuthenticationService } from './authentication.service';
 
@@ -28,7 +29,8 @@ import { WindowsAuthenticationComponent } from './win-auth.component';
         Switch,
         Loading,
         OverrideMode,
-        ErrorComponent
+        ErrorComponent,
+        Tabs
     ],
     declarations: [
         AnonymousAuthenticationComponent,
