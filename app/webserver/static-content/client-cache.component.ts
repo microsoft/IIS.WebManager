@@ -6,11 +6,11 @@ import {ClientCache} from './static-content'
     selector: 'client-cache',
     template: `
         <fieldset>
-            <label>Set E Tag</label>
+            <label>E-Tag</label>
             <switch class="block" [disabled]="locked" [(model)]="model.set_e_tag" (modelChanged)="onModelChanged()">{{model.set_e_tag ? "On" : "Off"}}</switch>
         </fieldset>
         <fieldset>
-            <label>Cache Control</label>
+            <label>Cache-Control</label>
             <enum [disabled]="locked" [(model)]="model.control_mode" (modelChanged)="onModelChanged()">
                 <field name="Not Set" value="no_control"></field>
                 <field name="Disabled" value="disable_cache"></field>
@@ -27,7 +27,7 @@ import {ClientCache} from './static-content'
             <input class="form-control path" type="text" [disabled]="locked" [(ngModel)]="model.http_expires" (modelChanged)="onModelChanged()" throttle />
         </fieldset>
         <fieldset class="inline-block pull-left">
-            <label>Custom</label>
+            <label>Custom Cache-Control</label>
             <switch [(model)]="_useCustom" (modelChanged)="onCustom()">{{_useCustom ? "On" : "Off"}}</switch>
         </fieldset>
         <fieldset *ngIf="_useCustom" class="fill">
