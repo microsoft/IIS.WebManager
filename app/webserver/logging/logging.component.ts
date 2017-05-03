@@ -62,7 +62,7 @@ import { NotificationService } from '../../notification/notification.service';
     `,
     styles: [`
         .collect {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         fieldset {
