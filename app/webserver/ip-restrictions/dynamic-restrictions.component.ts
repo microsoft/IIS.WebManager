@@ -36,7 +36,7 @@ import {IpRestrictions} from './ip-restrictions'
 
         <fieldset>
             <label>Log Only When Denied</label>
-            <switch class="block" [(model)]="model.logging_only_mode" (modelChanged)="onModelChanged()">{{model.logging_only_mode ? "On" : "Off"}}</switch>
+            <switch class="block" [(model)]="model.logging_only_mode" (modelChanged)="onModelChanged()">{{model.logging_only_mode ? "Yes" : "No"}}</switch>
         </fieldset>
     `,
     styles: [`

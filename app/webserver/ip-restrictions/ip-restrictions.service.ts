@@ -41,7 +41,7 @@ export class IpRestrictionsService {
     }
 
     public initialize(id: string) {
-        this.load(id).then(() => this.loadRules());
+        this.load(id);
     }
 
     //
@@ -138,7 +138,7 @@ export class IpRestrictionsService {
             });
     }
 
-    private loadRules() {
+    public loadRules() {
         return this._http.get(this._ipRestrictions.getValue()._links.entries.href.replace("/api", "") + "&fields=*")
             .then(rulesArr => {
                 this._rules.next(rulesArr.entries);
