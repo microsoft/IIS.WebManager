@@ -28,20 +28,20 @@ import { RequestFilteringSettings, RequestFilteringChildType, RequestFiltering }
                     <div class="row">
                         <div class="col-xs-7 col-md-4 col-lg-3">
                             <fieldset>
-                                <label>Unlisted File Extensions</label>
-                                <switch class="block" [disabled]="_locked" [(model)]="settings.allow_unlisted_file_extensions" (modelChanged)="onFeatureChanged()">{{settings.allow_unlisted_file_extensions ? "Allow" : "Deny"}}</switch>
+                                <label>Allow Unlisted File Extensions</label>
+                                <switch class="block" [disabled]="_locked" [(model)]="settings.allow_unlisted_file_extensions" (modelChanged)="onFeatureChanged()">{{settings.allow_unlisted_file_extensions ? "Yes" : "No"}}</switch>
                             </fieldset>
                             <fieldset>
-                                <label>Unlisted Verbs</label>
-                                <switch class="block" [disabled]="_locked" [(model)]="settings.allow_unlisted_verbs" (modelChanged)="onFeatureChanged()">{{settings.allow_unlisted_verbs ? "Allow" : "Deny"}}</switch>
+                                <label>Allow Unlisted Verbs</label>
+                                <switch class="block" [disabled]="_locked" [(model)]="settings.allow_unlisted_verbs" (modelChanged)="onFeatureChanged()">{{settings.allow_unlisted_verbs ? "Yes" : "No"}}</switch>
                             </fieldset>
                             <fieldset>
-                                <label>High Bit Characters</label>
-                                <switch class="block" [disabled]="_locked" [(model)]="settings.allow_high_bit_characters" (modelChanged)="onFeatureChanged()">{{settings.allow_high_bit_characters ? "Allow" : "Deny"}}</switch>
+                                <label>Allow High Bit Characters</label>
+                                <switch class="block" [disabled]="_locked" [(model)]="settings.allow_high_bit_characters" (modelChanged)="onFeatureChanged()">{{settings.allow_high_bit_characters ? "Yes" : "No"}}</switch>
                             </fieldset>
                             <fieldset>
-                                <label>Double Escaping</label>
-                                <switch class="block" [disabled]="_locked" [(model)]="settings.allow_double_escaping" (modelChanged)="onFeatureChanged()">{{settings.allow_double_escaping ? "Allow" : "Deny"}}</switch>
+                                <label>Allow Double Escaping</label>
+                                <switch class="block" [disabled]="_locked" [(model)]="settings.allow_double_escaping" (modelChanged)="onFeatureChanged()">{{settings.allow_double_escaping ? "Yes" : "No"}}</switch>
                             </fieldset>
                         </div>
                         <div class="col-xs-7 col-md-4">
@@ -72,13 +72,12 @@ import { RequestFilteringSettings, RequestFilteringChildType, RequestFiltering }
     styles: [`
         tabs {
             display: block;
-            margin-top: 10px;
             clear: both;
         }
 
         .install {
             display: inline-block;
-            margin-bottom: 15px;
+            margin-bottom: 45px;
         }
     `]
 })
