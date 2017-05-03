@@ -30,9 +30,9 @@ import {HttpResponseHeaders, CustomHeader, RedirectHeader} from './http-response
         </div>
     `,
     styles: [`
-        tabs {
-            display: block;
-            margin-top: 10px;
+        fieldset:first-of-type {
+            padding-top: 0;
+            margin-bottom: 30px;
         }
     `]
 })
