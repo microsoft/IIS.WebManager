@@ -27,21 +27,6 @@ import {AppPoolsService} from './app-pools.service';
                 <item [name]="'General'" [ico]="'fa fa-wrench'">
                     <app-pool-general [pool]="pool" (modelChanged)="onModelChanged()"></app-pool-general>
                 </item>
-                <item [name]="'Process Settings'" [ico]="'fa fa-cog'">
-                    <process-model [model]="pool" (modelChanged)="onModelChanged()"></process-model>
-                    <process-orphaning [model]="pool.process_orphaning" (modelChanged)="onModelChanged()"></process-orphaning>
-                    <section>
-                        <div class="collapse-heading collapsed" data-toggle="collapse" data-target="#rapidFailProtection">
-                            <h2>Rapid Fail Protection</h2>
-                        </div>
-                        <div id="rapidFailProtection" class="collapse">
-                            <rapid-fail-protection [model]="pool.rapid_fail_protection" (modelChanged)="onModelChanged()"></rapid-fail-protection>
-                        </div>
-                    </section>
-                </item>
-                <item [name]="'Recycling'" [ico]="'fa fa-refresh'">
-                    <recycling [model]="pool.recycling" (modelChanged)="onModelChanged()"></recycling>
-                </item>
                 <item *ngFor="let module of modules" [name]="module.name" [ico]="module.ico">
                     <dynamic [name]="module.component_name" [module]="module.module" [data]="module.data"></dynamic>
                 </item>
