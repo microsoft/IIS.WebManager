@@ -15,62 +15,54 @@ import { AppPoolsService } from '../app-pools/app-pools.service';
 @Component({
     selector: 'website-general',
     template: `
-        <fieldset>
-            <label>Name</label>
-            <input class="form-control name" type="text" [(ngModel)]="site.name" throttle (modelChanged)="onModelChanged()" required/>
-        </fieldset>
-        <fieldset class="path">
-            <label>Physical Path</label>
-            <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="right select" (click)="fileSelector.toggle()"></button>
-            <div class="fill">
-                <input type="text" class="form-control" [(ngModel)]="site.physical_path" (modelChanged)="onModelChanged()" throttle required />
-            </div>
-            <server-file-selector #fileSelector [types]="['directory']" (selected)="onSelectPath($event)"></server-file-selector>
-        </fieldset>
-        <fieldset>
-            <label>Auto Start</label>
-            <switch class="block" [(model)]="site.server_auto_start" (modelChanged)="onModelChanged()">{{site.server_auto_start ? "On" : "Off"}}</switch>
-        </fieldset>
-        <fieldset class="inline-block">
-            <label>Custom Protocols</label>
-            <switch class="block" [(model)]="custom_protocols" (modelChange)="useCustomProtocols($event)">{{custom_protocols ? "On" : "Off"}}</switch>
-        </fieldset>
-        <fieldset class="inline-block" *ngIf="custom_protocols">
-            <label>Protocols</label>
-            <input class="form-control" type="text" [(ngModel)]="site.enabled_protocols" (modelChanged)="onModelChanged()" required throttle />
-        </fieldset>
-        <section>
-            <div class="collapse-heading" data-toggle="collapse" data-target="#applicationPool">
-                <h2>Application Pool</h2>
-            </div>
-            <div id="applicationPool" class="collapse in">
-                <fieldset *ngIf="site.application_pool" class="hover-editing pointer" [routerLink]="['/webserver', 'app-pools', site.application_pool.id]">
-                    <app-pool-item [model]="site.application_pool" [actions]="'recycle,start,stop'"></app-pool-item>
+        <tabs>
+            <tab [name]="'Settings'">
+                <fieldset>
+                    <label>Name</label>
+                    <input class="form-control name" type="text" [(ngModel)]="site.name" throttle (modelChanged)="onModelChanged()" required/>
                 </fieldset>
-                <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Select <i class="fa fa-caret-down"></i></button>
-                <selector #poolSelect class="container-fluid">
-                    <app-pools #appPools [actions]="'view'" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
-                </selector>
-            </div>
-        </section>
-
-        <section>
-            <div class="collapse-heading collapsed" data-toggle="collapse" data-target="#bindings">
-                <h2>Bindings</h2>
-            </div>
-            <div id="bindings" class="collapse">
+                <fieldset class="path">
+                    <label>Physical Path</label>
+                    <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="right select" (click)="fileSelector.toggle()"></button>
+                    <div class="fill">
+                        <input type="text" class="form-control" [(ngModel)]="site.physical_path" (modelChanged)="onModelChanged()" throttle required />
+                    </div>
+                    <server-file-selector #fileSelector [types]="['directory']" (selected)="onSelectPath($event)"></server-file-selector>
+                </fieldset>
+                <fieldset>
+                    <label>Auto Start</label>
+                    <switch class="block" [(model)]="site.server_auto_start" (modelChanged)="onModelChanged()">{{site.server_auto_start ? "On" : "Off"}}</switch>
+                </fieldset>
+                <fieldset class="inline-block">
+                    <label>Custom Protocols</label>
+                    <switch class="block" [(model)]="custom_protocols" (modelChange)="useCustomProtocols($event)">{{custom_protocols ? "On" : "Off"}}</switch>
+                </fieldset>
+                <fieldset class="inline-block" *ngIf="custom_protocols">
+                    <label>Protocols</label>
+                    <input class="form-control" type="text" [(ngModel)]="site.enabled_protocols" (modelChanged)="onModelChanged()" required throttle />
+                </fieldset>
+                <section>
+                    <div class="collapse-heading" data-toggle="collapse" data-target="#applicationPool">
+                        <h2>Application Pool</h2>
+                    </div>
+                    <div id="applicationPool" class="collapse in">
+                        <fieldset *ngIf="site.application_pool" class="hover-editing pointer" [routerLink]="['/webserver', 'app-pools', site.application_pool.id]">
+                            <app-pool-item [model]="site.application_pool" [actions]="'recycle,start,stop'"></app-pool-item>
+                        </fieldset>
+                        <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Select <i class="fa fa-caret-down"></i></button>
+                        <selector #poolSelect class="container-fluid">
+                            <app-pools #appPools [actions]="'view'" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
+                        </selector>
+                    </div>
+                </section>
+            </tab>
+            <tab [name]="'Bindings'">
                 <binding-list *ngIf="site.bindings" [(model)]="site.bindings" (modelChange)="onModelChanged()"></binding-list>
-            </div>
-        </section>
-
-        <section>
-            <div class="collapse-heading collapsed" data-toggle="collapse" data-target="#siteLimits">
-                <h2>Limits</h2>
-            </div>
-            <div id="siteLimits" class="collapse">
+            </tab>
+            <tab [name]="'Limits'">
                 <limits [model]="site.limits" (modelChanged)="onModelChanged()"></limits>
-            </div>
-        </section>
+            </tab>
+        </tabs>
     `
 })
 export class WebSiteGeneralComponent {

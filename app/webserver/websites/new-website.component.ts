@@ -15,49 +15,46 @@ import { ApplicationPool } from '../app-pools/app-pool';
 @Component({
     selector: 'new-website',
     template: `
-        <fieldset>
-            <label>Name</label>
-            <input type="text" class="form-control name" [ngModel]="site.name" (ngModelChange)="onNameChange($event)" required />
-        </fieldset>
-        <fieldset class="path">
-            <label>Physical Path</label>
-            <button [class.background-active]="fileSelector.isOpen()" title="Select Folder" class="right select" (click)="fileSelector.toggle()"></button>
-            <div class="fill">
-                <input type="text" class="form-control" [(ngModel)]="site.physical_path" required />
-            </div>
-            <server-file-selector #fileSelector [types]="['directory']" (selected)="onSelectPath($event)"></server-file-selector>
-        </fieldset>
-
-        <section>
-            <div class="collapse-heading" data-toggle="collapse" data-target="#bindings">
-                <h2>Bindings</h2>
-            </div>
-            <div id="bindings" class="collapse in">
-                <binding-list #bindingList [(model)]="site.bindings"></binding-list>
-            </div>
-        </section>
-
-        <section>
-            <div class="collapse-heading collapsed" data-toggle="collapse" data-target="#applicationPool">
-                <h2>Application Pool</h2>
-            </div>
-            <div id="applicationPool" class="collapse">
+        <tabs>
+            <tab [name]="'Settings'">
                 <fieldset>
-                    <label>Create Own Application Pool</label>
-                    <switch class="block" [(model)]="_createAppPool" (modelChange)="onNewAppPool($event)">{{_createAppPool ? "Yes" : "No"}}</switch>
+                    <label>Name</label>
+                    <input type="text" class="form-control name" [ngModel]="site.name" (ngModelChange)="onNameChange($event)" required />
                 </fieldset>
-                <div *ngIf="!_createAppPool">
-                    <fieldset>
-                        <app-pool-item [model]="site.application_pool" [actions]="'view,recycle,start,stop'"></app-pool-item>
-                    </fieldset>
-                    <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Select <i class="fa fa-caret-down"></i></button>
-                    <selector #poolSelect class="container-fluid">
-                        <app-pools #appPools [actions]="'view'" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
-                    </selector>
-                </div>
-            </div>
-        </section>
+                <fieldset class="path">
+                    <label>Physical Path</label>
+                    <button [class.background-active]="fileSelector.isOpen()" title="Select Folder" class="right select" (click)="fileSelector.toggle()"></button>
+                    <div class="fill">
+                        <input type="text" class="form-control" [(ngModel)]="site.physical_path" required />
+                    </div>
+                    <server-file-selector #fileSelector [types]="['directory']" (selected)="onSelectPath($event)"></server-file-selector>
+                </fieldset>
 
+                <section>
+                    <div class="collapse-heading" data-toggle="collapse" data-target="#applicationPool">
+                        <h2>Application Pool</h2>
+                    </div>
+                    <div id="applicationPool" class="collapse in">
+                        <fieldset>
+                            <label>Create Own Application Pool</label>
+                            <switch class="block" [(model)]="_createAppPool" (modelChange)="onNewAppPool($event)">{{_createAppPool ? "Yes" : "No"}}</switch>
+                        </fieldset>
+                        <div *ngIf="!_createAppPool">
+                            <fieldset>
+                                <app-pool-item [model]="site.application_pool" [actions]="'view,recycle,start,stop'"></app-pool-item>
+                            </fieldset>
+                            <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Select <i class="fa fa-caret-down"></i></button>
+                            <selector #poolSelect class="container-fluid">
+                                <app-pools #appPools [actions]="'view'" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
+                            </selector>
+                        </div>
+                    </div>
+                </section>
+            </tab>
+            <tab [name]="'Bindings'">
+                <binding-list #bindingList [(model)]="site.bindings"></binding-list>
+            </tab>
+        </tabs>
         <p class="pull-right">
             <button (click)="onSave()" [disabled]="!IsValid() || bindingList.isEditing()">
                 <i title="Create" class="fa fa-check color-active"></i> Create
