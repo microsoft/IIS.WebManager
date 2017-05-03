@@ -36,7 +36,7 @@ import { DynamicComponent } from '../common/dynamic.component';
     `],
     template: `
         <div class="notifications shadow">
-            <div *ngIf="_warning" class="entry warning border-active">
+            <div *ngIf="_warning" class="entry warning border-active" (keyup.esc)="clearWarning()" tabindex="-1" autofocus (blur)="onBlur()" (focus)="onFocus()">
                 <i class="fa fa-times exit" (click)="clearWarning()" title="Dismiss"></i>
                 <dynamic [name]="_warning.componentName" [module]="_warning.module" [data]="_warning.data" [eager]="true"></dynamic>
             </div>
@@ -50,12 +50,12 @@ import { DynamicComponent } from '../common/dynamic.component';
     `
 })
 export class NotificationComponent implements OnDestroy {
-
-    private _warning: Notification;
-    private _notifications: Array<Notification> = [];
-
     private _active: boolean;
+    private _warningTimer: number;
+    private _warning: Notification;
     private _subscriptions: Subscription[] = [];
+    private _notifications: Array<Notification> = [];
+    private _warningTimeout: number = 1.5 * 1000; // ms
 
     @ViewChildren(DynamicComponent) private _dynamics: QueryList<DynamicComponent>;
 
@@ -116,6 +116,29 @@ export class NotificationComponent implements OnDestroy {
                     dynamic.rebind(this._warning.data);
                 }
             }
+        }
+    }
+
+    private resetWarningTimer() {
+        if (this._warningTimer > 0) {
+            clearTimeout(this._warningTimer);
+        }
+
+        this._warningTimer = setTimeout(() => {
+            this.clearWarning();
+        }, this._warningTimeout);
+    }
+
+    private onBlur() {
+        this.resetWarningTimer();
+    }
+
+    private onFocus() {
+        if (this._warningTimer <= 0) {
+            this.resetWarningTimer();
+        }
+        else {
+            clearTimeout(this._warningTimer);
         }
     }
 }

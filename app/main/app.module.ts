@@ -11,6 +11,7 @@ import { Module as NotFound } from '../common/notfound.component';
 import { Module as CheckBox } from '../common/checkbox.component';
 import { Module as Dynamic } from '../common/dynamic.component';
 import { Module as VTabs } from '../common/vtabs.component';
+import { Module as AutoFocus } from '../common/focus';
 
 import { HttpClient } from '../common/httpclient';
 import { NotificationService } from '../notification/notification.service';
@@ -34,11 +35,6 @@ import { InformationComponent } from '../notification/information.component';
 import { ModalComponent } from '../notification/modal.component';
 import { NewVersionNotificationComponent } from '../versioning/new-version-notification.component';
 
-import { CheckBoxComponent } from '../common/checkbox.component';
-import { SwitchComponent } from '../common/switch.component';
-import { DynamicComponent } from '../common/dynamic.component';
-import { TabComponent, TabsComponent } from '../common/tabs.component';
-
 import { FilesService } from '../files/files.service';
 import { WebServerService } from '../webserver/webserver.service';
 import { AppPoolsService } from '../webserver/app-pools/app-pools.service';
@@ -56,7 +52,8 @@ import { WindowService } from './window.service';
         NotFound,
         CheckBox,
         Dynamic,
-        VTabs
+        VTabs,
+        AutoFocus
     ],
     declarations: [
         AppComponent,
