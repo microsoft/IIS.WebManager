@@ -54,11 +54,13 @@ import { WebSite } from '../websites/site';
                         (rangeChange)="onRangeChange($event)">
                 <li class="hover-editing" tabindex="-1" 
                     *ngFor="let child of _view"
-                    [class.background-selected]="_active == child"
+                    #marker="itemMarker"
+                    [class.background-selected]="_active == child || marker.isSelected"
                     (dblclick)="onBrowseChild(child, $event)"
                     dragable="true"
                     (dragstart)="drag(child, $event)"
                     (dragenter)="onDragItemEnter(child, $event)"
+                    (dragleave)="onDragItemLeave(child, $event)"
                     (drop)="drop($event, child)">
                     <file [model]="child" (modelChanged)="doSort()"></file>
                 </li>

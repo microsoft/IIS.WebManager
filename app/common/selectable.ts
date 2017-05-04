@@ -71,23 +71,19 @@ class SelectableService {
 
 @Directive({
     selector: 'li',
-    host: {
-        '[class.background-selected]': "isSelected()"
-    }
+    exportAs: 'itemMarker'
 })
 export class ItemMarker {
     private _model: any;
-    private _active = null;
 
-    constructor(public host: ElementRef,
-                @Optional() private _svc: SelectableService) {
+    constructor(@Optional() private _svc: SelectableService) {
     }
 
     public setModel(model: any) {
         this._model = model;
     }
 
-    private isSelected(): boolean {
+    public get isSelected(): boolean {
         if (!this._svc) {
             return false;
         }

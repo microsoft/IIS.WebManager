@@ -56,7 +56,8 @@ import { FileNavService } from './file-nav.service';
                         (rangeChange)="onRangeChange($event)">
                 <li class="hover-editing" tabindex="-1" 
                     *ngFor="let child of _view"
-                    [class.background-selected]="_active == child"
+                    #marker="itemMarker"
+                    [class.background-selected]="_active == child || marker.isSelected"
                     (dblclick)="onBrowseChild(child, $event)"
                     dragable="true"
                     (dragstart)="drag(child, $event)"
