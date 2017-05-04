@@ -1,28 +1,28 @@
 {
   "name": "Microsoft.IIS.WebManager",
   "dependencies": {
-    "@angular/common": "~2.4.0",
-    "@angular/compiler": "~2.4.0",
-    "@angular/core": "~2.4.0",
-    "@angular/forms": "~2.4.0",
-    "@angular/http": "~2.4.0",
-    "@angular/platform-browser": "~2.4.0",
-    "@angular/platform-browser-dynamic": "~2.4.0",
-    "@angular/router": "~3.4.0",
-    "@angular/upgrade": "~2.4.0",
-
+    "@angular/common": "2.4.10",
+    "@angular/compiler": "2.4.10",
+    "@angular/core": "2.4.10",
+    "@angular/forms": "2.4.10",
+    "@angular/http": "2.4.10",
+    "@angular/platform-browser": "2.4.10",
+    "@angular/platform-browser-dynamic": "2.4.10",
+    "@angular/router": "3.4.10",
+    "@angular/upgrade": "2.4.10",
+    
+    "angulartics2": "1.1.12",
     "bootstrap": "3.3.7",
     "core-js": "2.4.1",
     "es6-promise": "4.0.5",
     "es6-shim": "0.35.3",
     "font-awesome": "4.7.0",
     "jquery": "3.2.0",
+    "monaco-editor": "0.8.1",
     "reflect-metadata": "0.1.10",
     "rxjs": "5.0.1",
     "systemjs": "0.19.40",
-    "zone.js": "0.7.4",
-    "angulartics2": "1.1.12",
-    "monaco-editor": "0.8.1"
+    "zone.js": "0.7.4"
   },
   "devDependencies": {
     "@types/core-js": "0.9.35",
