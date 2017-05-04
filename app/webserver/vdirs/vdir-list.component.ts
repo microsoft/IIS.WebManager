@@ -59,7 +59,7 @@ import { WebApp } from '../webapps/webapp';
                     <label class="block">Physical Path</label>
                     <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="right select" (click)="fileSelector.toggle()"></button>
                     <div class="fill">
-                        <input type="text" class="form-control block" [(ngModel)]="model.physical_path" (modelChanged)="onModelChanged()" throttle required />
+                        <input type="text" class="form-control block" [(ngModel)]="model.physical_path" throttle required />
                     </div>
                     <server-file-selector #fileSelector [types]="['directory']" (selected)="onSelectPath($event)"></server-file-selector>
                 </fieldset>
