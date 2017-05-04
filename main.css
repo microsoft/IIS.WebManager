@@ -409,7 +409,6 @@ button.select {
 .grid-list .grid-item select,
 .grid-list .grid-item input,
 .grid-list .grid-item .editing, 
-.grid-list .grid-item.background-editing fieldset > span,
 .grid-list .grid-item.background-editing .no-editing {
     display: none;
 }

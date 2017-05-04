@@ -32,7 +32,7 @@ import { RestrictionRule, IpRestrictions } from './ip-restrictions'
                 <label class="hidden-xs hidden-sm editing">Status</label>
                 <i class="fa fa-circle green hidden-xs hidden-sm" *ngIf="model.allowed && !_editing"></i>
                 <i class="fa fa-ban red hidden-xs hidden-sm" *ngIf="!model.allowed && !_editing"></i>
-                <span>{{model.allowed ? "Allow" : "Deny"}}</span>
+                <span *ngIf="!_editing">{{model.allowed ? "Allow" : "Deny"}}</span>
                 <switch class="block" *ngIf="_editing" [(model)]="model.allowed">{{model.allowed ? "Allow" : "Deny"}}</switch>
                 <div *ngIf="!_editing">
                     <br class="visible-xs visible-sm" />
@@ -42,7 +42,7 @@ import { RestrictionRule, IpRestrictions } from './ip-restrictions'
             <fieldset class="col-xs-12 col-md-3">
                 <label class="visible-xs visible-sm">IP Address</label>
                 <label class="hidden-xs hidden-sm editing">IP Address</label>
-                <span>{{model.ip_address}}</span>
+                <span *ngIf="!_editing">{{model.ip_address}}</span>
                 <input class="form-control" type="text" [(ngModel)]="model.ip_address" required pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" />
                 <div *ngIf="!_editing">
                     <br class="visible-xs visible-sm" />
@@ -52,7 +52,7 @@ import { RestrictionRule, IpRestrictions } from './ip-restrictions'
             <fieldset class="col-xs-12 col-md-3">
                 <label class="visible-xs visible-sm">Subnet Mask</label>
                 <label class="hidden-xs hidden-sm editing">Subnet Mask</label>
-                <span>{{model.subnet_mask}}</span>
+                <span *ngIf="!_editing">{{model.subnet_mask}}</span>
                 <input class="form-control" type="text" [(ngModel)]="model.subnet_mask" required />
                 <div *ngIf="!_editing">
                     <br class="visible-xs visible-sm" />
@@ -62,7 +62,7 @@ import { RestrictionRule, IpRestrictions } from './ip-restrictions'
             <fieldset class="col-xs-12 col-md-2" *ngIf="enableDomainName && (_editing || model.domain_name != '')">
                 <label class="visible-xs visible-sm">Domain Name</label>
                 <label class="hidden-xs hidden-sm editing">Domain Name</label>
-                <span>{{model.domain_name}}</span>
+                <span *ngIf="!_editing">{{model.domain_name}}</span>
                 <input class="form-control" type="text" [(ngModel)]="model.domain_name" />
                 <div *ngIf="!_editing">
                     <br class="visible-xs visible-sm" />

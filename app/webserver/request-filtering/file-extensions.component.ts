@@ -33,7 +33,7 @@ import { RequestFilteringService } from './request-filtering.service';
                 <i class="fa fa-circle green hidden-xs" *ngIf="model.allow && !_editing"></i>
                 <i class="fa fa-ban red hidden-xs" *ngIf="!model.allow && !_editing"></i>
                 <input class="form-control" type="text" [disabled]="locked" [(ngModel)]="model.extension" throttle required />
-                <span>{{model.extension}}</span>
+                <span *ngIf="!_editing">{{model.extension}}</span>
                 <div *ngIf="!_editing">
                     <br class="visible-xs" />
                 </div>
@@ -42,7 +42,7 @@ import { RequestFilteringService } from './request-filtering.service';
             <fieldset class="col-xs-12 col-sm-4">
                 <label class="visible-xs">Allowed</label>
                 <label class="hidden-xs" [hidden]="!_editing">Allowed</label>
-                <span>{{model.allow ? "Allow" : "Deny"}}</span>
+                <span *ngIf="!_editing">{{model.allow ? "Allow" : "Deny"}}</span>
                 <switch class="block" *ngIf="_editing" [disabled]="locked" [(model)]="model.allow">{{model.allow ? "Allow" : "Deny"}}</switch>
             </fieldset>
 
