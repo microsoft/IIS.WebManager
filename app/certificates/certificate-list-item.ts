@@ -11,9 +11,14 @@ import { Certificate } from './certificate';
     template: `
         <div *ngIf="model" class="grid-item row" tabindex="-1">
             <div *ngIf="!_viewing" class="row-data">
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 cer">
+                <div class="visible-xs col-xs-9 col-data cer">
+                    <label>Name</label>
+                    <span>{{displayName}}</span>
+                    <label>Valid To</label>
+                    <span>{{validTo}}</span>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden-xs cer">
                     <span class='name'>{{displayName}}</span>
-                    <small class="visible-xs color-accent">{{model.thumbprint}}</small>
                 </div>
                 <div class="col-xs-4 col-md-4 col-lg-3 hidden-xs support">
                     <span>{{model.subject}}</span>
@@ -35,7 +40,8 @@ import { Certificate } from './certificate';
                     </button>
                     <selector [right]="true">
                         <ul>
-                            <li><button class="edit" title="Details" (click)="onDetails($event)">Details</button></li>
+                            <li><button *ngIf="!_viewing" class="edit" title="Details" (click)="onDetails($event)">Details</button></li>
+                            <li><button  *ngIf="_viewing" class="cancel" title="Close" (click)="onDetails($event)">Close</button></li>
                         </ul>
                     </selector>
                 </div>
@@ -50,12 +56,24 @@ import { Certificate } from './certificate';
             white-space: nowrap;
         }
 
+        .visible-xs span {
+            display: block;
+        }
+
+        .visible-xs span:not(:last-of-type) {
+            margin-bottom: 10px;
+        }
+
         .row {
             margin: 0px;
         }
 
         .row-data {
             line-height: 30px;
+        }
+
+        .col-data {
+            line-height: 20px;
         }
 
         .cer {
