@@ -98,6 +98,7 @@ import { WebSite } from '../websites/site';
 export class WebFileListComponent implements OnInit, OnDestroy {
     private _current: WebFile;
     private _newDir: WebFile = null;
+    private _ignoreDragLeave: boolean;
     private _orderBy: OrderBy = new OrderBy();
     private _sortPipe: SortPipe = new SortPipe();
     private _filter: string = "";
@@ -349,7 +350,26 @@ export class WebFileListComponent implements OnInit, OnDestroy {
         e.preventDefault();
         e.stopImmediatePropagation();
 
-        this._active = WebFile.isDir(f) ? f : null;
+        let active = WebFile.isDir(f) ? f : null;
+
+        //
+        // Entered the already active item, meaning a leave will be triggered
+        if (active == this._active) {
+            this._ignoreDragLeave = true;
+        }
+
+        this._active = active;
+    }
+
+    private onDragItemLeave(f: WebFile, e: DragEvent) {
+        if (this._ignoreDragLeave) {
+            this._ignoreDragLeave = false;
+            return;
+        }
+
+        if (this._active == f) {
+            this._active = null;
+        }
     }
 
     private copy(e: ClipboardEvent) {

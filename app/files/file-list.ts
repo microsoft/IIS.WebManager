@@ -61,9 +61,9 @@ import { FileNavService } from './file-nav.service';
                     (dblclick)="onBrowseChild(child, $event)"
                     dragable="true"
                     (dragstart)="drag(child, $event)"
+                    (drop)="drop($event, child)"
                     (dragenter)="onDragItemEnter(child, $event)"
-                    (dragleave)="onDragItemLeave(child, $event)"
-                    (drop)="drop($event, child)">
+                    (dragleave)="onDragItemLeave(child, $event)">
                     <file [model]="child" (modelChanged)="doSort()"></file>
                 </li>
             </virtual-list>
@@ -101,6 +101,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     private _current: ApiFile;
     private _filter: string = "";
     private _newDir: ApiFile = null;
+    private _ignoreDragLeave: boolean;
     private _orderBy: OrderBy = new OrderBy();
     private _sortPipe: SortPipe = new SortPipe();
     private _subscriptions: Array<Subscription> = [];
@@ -352,10 +353,23 @@ export class FileListComponent implements OnInit, OnDestroy {
         e.preventDefault();
         e.stopImmediatePropagation();
 
-        this._active = ApiFile.isDir(f) ? f : null;
+        let active = ApiFile.isDir(f) ? f : null;
+
+        //
+        // Entered the already active item, meaning a leave will be triggered
+        if (active == this._active) {
+            this._ignoreDragLeave = true;
+        }
+
+        this._active = active;
     }
 
-    private onDragItemLeave(f: ApiFile) {
+    private onDragItemLeave(f: ApiFile, e: DragEvent) {
+        if (this._ignoreDragLeave) {
+            this._ignoreDragLeave = false;
+            return;
+        }
+
         if (this._active == f) {
             this._active = null;
         }
