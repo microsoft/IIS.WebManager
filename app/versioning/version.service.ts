@@ -60,7 +60,8 @@ export class VersionService {
                     module: "app/main/app.module#AppModule",
                     data: {
                         version: SETTINGS.api_setup_version
-                    }
+                    },
+                    highPriority: true
                 });
             }
             if (this._analytics) {

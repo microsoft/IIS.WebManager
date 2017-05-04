@@ -40,8 +40,8 @@ import { DynamicComponent } from '../common/dynamic.component';
                 <i class="fa fa-times exit" (click)="clearWarning()" title="Dismiss"></i>
                 <dynamic [name]="_warning.componentName" [module]="_warning.module" [data]="_warning.data" [eager]="true"></dynamic>
             </div>
-            <div *ngIf="_active">
-                <div *ngFor="let notification of _notifications; let i = index;" class="entry background-normal border-active">
+            <div [hidden]="!_active">
+                <div *ngFor="let notification of _notifications; let i = index;" [hidden]="notification._hidden" class="entry background-normal border-active">
                     <i class="fa fa-times exit" (click)="dismiss(i)" title="Dismiss"></i>
                     <dynamic [name]="notification.componentName" [module]="notification.module" [data]="notification.data" [eager]="true"></dynamic>
                 </div>
@@ -56,6 +56,7 @@ export class NotificationComponent implements OnDestroy {
     private _subscriptions: Subscription[] = [];
     private _notifications: Array<Notification> = [];
     private _warningTimeout: number = 1.5 * 1000; // ms
+    private _showNext: boolean = true;
 
     @ViewChildren(DynamicComponent) private _dynamics: QueryList<DynamicComponent>;
 
@@ -66,7 +67,6 @@ export class NotificationComponent implements OnDestroy {
     private initialize() {
 
         this._subscriptions.push(this._service.notifications.subscribe(notifications => {
-
             this._notifications = notifications.filter(notification => {
                 return notification.type == NotificationType.Information;
             });
@@ -75,9 +75,18 @@ export class NotificationComponent implements OnDestroy {
             let warnings = notifications.filter(not => not.type == NotificationType.Warning);
             this._warning = warnings.length > 0 ? warnings[warnings.length - 1] : null;
             this.rebindWarning();
+
+            if (this._showNext) {
+                this._active = true;
+                this._showNext = false;
+            }
         }));
 
         this._subscriptions.push(this._service.activate.subscribe(a => {
+            if (a) {
+                this._notifications.forEach(n => (<any>n)._hidden = false);
+            }
+
             this._active = a;
         }));
 
@@ -100,7 +109,19 @@ export class NotificationComponent implements OnDestroy {
     }
 
     private dismiss(index: number) {
-        this._service.remove(this._notifications[index]);
+        let notification = this._notifications[index];
+
+        if (notification.highPriority) {
+            (<any>notification)._hidden = true;
+        }
+        else {
+            this._service.remove(notification);
+        }
+
+        if (this._notifications.filter(n => !(<any>n)._hidden).length == 0) {
+            this._service.hide();
+            this._showNext = true;
+        }
     }
 
     public ngOnDestroy() {
