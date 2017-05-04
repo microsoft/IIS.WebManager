@@ -45,7 +45,8 @@ export class NotificationService {
             module: 'app/notification/warning.component#Module',
             data: {
                 warning: message
-            }
+            },
+            highPriority: false
         }
 
         this._data.push(notification);

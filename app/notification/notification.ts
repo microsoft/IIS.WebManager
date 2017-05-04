@@ -9,4 +9,5 @@ export class Notification {
     data: any;
     componentName: string;
     module: string;
+    highPriority: boolean;
 }

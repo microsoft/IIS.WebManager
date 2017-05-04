@@ -818,7 +818,8 @@ export class FilesService implements IDisposable {
                     type: NotificationType.Information,
                     componentName: this._uploadComponentName,
                     module: "app/files/upload.component#Module",
-                    data: null
+                    data: null,
+                    highPriority: true
                 });
                 this._notificationService.show();
             }
