@@ -28,7 +28,7 @@ import { NotificationService } from '../../notification/notification.service';
         <span *ngIf="_service.status == 'stopped' && !_service.webserverScope">Default Documents are off. Turn them on <a [routerLink]="['/webserver/default-documents']">here</a></span>
         <div *ngIf="_defDoc" [attr.disabled]="_defDoc.metadata.is_locked ? true : null">
             <fieldset>
-                <label *ngIf="!_defDoc.scope">Default Behavior</label>
+                <label *ngIf="!_defDoc.scope">Web Site Default</label>
                 <switch class="block" [(model)]="_defDoc.enabled" (modelChanged)="onModelChanged()">{{_defDoc.enabled ? "On" : "Off"}}</switch>
             </fieldset>
             <files *ngIf="_defDoc.enabled"></files>

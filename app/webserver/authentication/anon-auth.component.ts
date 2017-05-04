@@ -13,7 +13,7 @@ import { AuthenticationService } from './authentication.service';
         <div *ngIf="_model">
             <override-mode class="pull-right" [metadata]="_model.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
             <fieldset>
-                <label *ngIf="!_model.scope">Default Behavior</label>
+                <label *ngIf="!_model.scope">Web Site Default</label>
                 <switch class="block" [disabled]="_locked" [(model)]="_model.enabled" (modelChanged)="onModelChanged()">{{_model.enabled ? "On" : "Off"}}</switch>
             </fieldset>
             <div class="clear" *ngIf="_model.enabled">

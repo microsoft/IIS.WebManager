@@ -23,7 +23,7 @@ import { NotificationService } from '../../notification/notification.service';
         <override-mode class="pull-right" *ngIf="feature" [scope]="feature.scope" [metadata]="feature.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="feature">
             <fieldset>
-                <label *ngIf="!feature.scope">Default Behavior</label>
+                <label *ngIf="!feature.scope">Web Site Default</label>
                 <switch class="block" [disabled]="_locked" [(model)]="feature.enabled" (modelChanged)="onModelChanged()">{{feature.enabled ? "On" : "Off"}}</switch>
             </fieldset>
             <div [hidden]="!feature.enabled">
