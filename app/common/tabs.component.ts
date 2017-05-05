@@ -80,6 +80,8 @@ import { UrlUtil } from '../utils/url';
         .tabs li.active {
           border-style: solid;
           border-width: 1px;
+          border-bottom-width: 2px;
+          padding-bottom: 1px;
         }
 
         .hider {
