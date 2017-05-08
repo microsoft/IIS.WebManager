@@ -132,10 +132,17 @@ export class WebFilesService implements IDisposable {
     }
 
     public delete(files: Array<WebFile>) {
-        return this._svc.delete(files.map(f => f.file_info));
+        // file_info can be null if the child physical path is forbidden
+        let filtered = this.removeChildrenWithoutInfo(files);
+
+        return this._svc.delete(filtered.map(f => f.file_info));
     }
 
     public rename(file: WebFile, name: string) {
+        if (!file.file_info) {
+            this._notificationService.warn("'" + file.path + "' could not be renamed");
+        }
+
         if (name) {
             this._notificationService.clearWarnings();
 
@@ -154,11 +161,15 @@ export class WebFilesService implements IDisposable {
     }
 
     public copy(sources: Array<WebFile>, to: WebFile, name?: string) {
+        let filtered = this.removeChildrenWithoutInfo(sources);
+
         this._svc.copy(sources.map(s => (s.file_info || <any>s)), to.file_info, name);
     }
 
     public move(sources: Array<WebFile>, to: WebFile, name?: string) {
-        this._svc.move(sources.map(s => (s.file_info || <any>s)), to.file_info, name);
+        let filtered = this.removeChildrenWithoutInfo(sources);
+
+        this._svc.move(filtered.map(s => (s.file_info || <any>s)), to.file_info, name);
     }
 
     public drag(e: DragEvent, files: Array<ApiFile>) {
@@ -177,6 +188,7 @@ export class WebFilesService implements IDisposable {
             //
             // Copy/Move File(s)
             if (apiFiles.length > 0) {
+                apiFiles = apiFiles.filter(f => f);
                 copy ? this._svc.copy(apiFiles, dir.file_info) : this._svc.move(apiFiles, dir.file_info);
                 return;
             }
@@ -206,6 +218,7 @@ export class WebFilesService implements IDisposable {
     }
 
     public clipboardCopy(e: ClipboardEvent, files: Array<WebFile>) {
+        files = files.filter(f => f.file_info);
         this._svc.clipboardCopy(e, files.map(f => f.file_info));
     }
 
@@ -264,5 +277,24 @@ export class WebFilesService implements IDisposable {
 
     private isDir(file: WebFile) {
         return file.type == WebFileType.Directory || file.type == WebFileType.Vdir || file.type == WebFileType.Application;
+    }
+
+    private removeChildrenWithoutInfo(files: Array<WebFile>): Array<WebFile> {
+        let removed = "";
+        let filtered = files.filter(f => {
+            if (!f.file_info) {
+                removed += !!removed ? ", " : "";
+                removed += "'" + f.path + "'";
+            }
+
+            return f.file_info
+        });
+
+        if (removed) {
+            let warning = "Forbidden: " + removed;
+            this._notificationService.warn(warning);
+        }
+
+        return filtered;
     }
 }
