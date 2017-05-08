@@ -12,7 +12,7 @@ import { WebFileType, WebFile } from './webfile';
     selector: 'file',
     template: `
         <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing" (keyup.f2)="onRename($event)" tabindex="-1">
-            <div class="col-xs-9 col-sm-5 col-lg-4 fi" [ngClass]="[model.type, model.file_info.extension]">
+            <div class="col-xs-9 col-sm-5 col-lg-4 fi" [ngClass]="[model.type, !model.file_info ? '' : model.file_info.extension]">
                 <div *ngIf="!_editing">
                     <a class="color-normal hover-color-active" [href]="href" nofocus><i></i>{{model.name}}</a>
                 </div>
@@ -27,13 +27,13 @@ import { WebFileType, WebFile } from './webfile';
                 </div>
             </div>
             <div class="col-sm-3 col-md-2 hidden-xs valign support">
-                <span *ngIf="model.file_info.last_modified">{{displayDate}}</span>
+                <span *ngIf="model.file_info && model.file_info.last_modified">{{displayDate}}</span>
             </div>     
             <div class="col-md-2 visible-lg visible-md valign support">
                 {{this.model.description}}
             </div>
             <div class="col-md-1 visible-lg visible-md valign text-right support">
-                <span *ngIf="model.file_info.size">{{getSize()}}</span>
+                <span *ngIf="model.file_info && model.file_info.size">{{getSize()}}</span>
             </div>
             <div class="actions">
                 <div class="selector-wrapper">
@@ -42,8 +42,8 @@ import { WebFileType, WebFile } from './webfile';
                     </button>
                     <selector [right]="true">
                         <ul>
-                            <li><button class="edit" title="Rename" *ngIf="model.type!='vdir'" (click)="onRename($event)">Rename</button></li>
-                            <li><button class="download" title="Download" *ngIf="model.type=='file'" (click)="onDownload($event)">Download</button></li>
+                            <li><button class="edit" title="Rename" *ngIf="model.type!='vdir' && model.file_info" (click)="onRename($event)">Rename</button></li>
+                            <li><button class="download" title="Download" *ngIf="model.type=='file' && model.file_info" (click)="onDownload($event)">Download</button></li>
                             <li><button class="delete" title="Delete" *ngIf="model.type!='vdir'" (click)="onDelete($event)">Delete</button></li>
                         </ul>
                     </selector>

@@ -46,7 +46,7 @@ export class WebFile {
             case WebFileType.Vdir:
                 return "Virtual Directory";
             default:
-                return this.file_info.description;
+                return !this.file_info ? "" : this.file_info.description;
         }
     }
 
