@@ -22,7 +22,7 @@ import { WebSite } from '../websites/site';
             (onNewFolder)="createDirectory()"
             (onNewFile)="createFile()"
             (onUpload)="fileSelector.open()"
-            (onDelete)="deleteFiles(_selected)">
+            (onDelete)="deleteFiles(_list.selected)">
 	    </toolbar>
         <navigation></navigation>
         <webfile-list *ngIf="isDir(_current)"></webfile-list>
