@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Selector } from '../../common/selector';
 import { WebSite } from './site';
 import { WebSitesService } from './websites.service';
-import { OrderBy } from '../../common/sort.pipe';
+import { OrderBy, SortPipe } from '../../common/sort.pipe';
 import { Range } from '../../common/virtual-list.component';
 
 
@@ -182,16 +182,16 @@ export class WebSiteItem {
     template: `
         <div class="container-fluid">
             <div class="hidden-xs border-active grid-list-header row" [hidden]="model.length == 0">
-                <label class="col-xs-8 col-sm-4 col-md-3 col-lg-3" [ngClass]="_orderBy.css('name')" (click)="_orderBy.sort('name')">Name</label>
-                <label class="col-xs-3 col-md-1 col-lg-1" [ngClass]="_orderBy.css('status')" (click)="_orderBy.sort('status')">Status</label>
-                <label class="col-lg-2 visible-lg" *ngIf="hasField('app-pool')" [ngClass]="_orderBy.css('application_pool.name')" (click)="_orderBy.sort('application_pool.name')">Application Pool</label>
+                <label class="col-xs-8 col-sm-4 col-md-3 col-lg-3" [ngClass]="_orderBy.css('name')" (click)="doSort('name')">Name</label>
+                <label class="col-xs-3 col-md-1 col-lg-1" [ngClass]="_orderBy.css('status')" (click)="doSort('status')">Status</label>
+                <label class="col-lg-2 visible-lg" *ngIf="hasField('app-pool')" [ngClass]="_orderBy.css('application_pool.name')" (click)="doSort('application_pool.name')">Application Pool</label>
             </div>
             <virtual-list class="grid-list"
                         *ngIf="model"
                         [count]="model.length"
                         (rangeChange)="onRangeChange($event)">
                 <li class="hover-editing" tabindex="-1" *ngFor="let s of _view">
-                    <website-item [model]="s" [actions]="actions" [fields]="fields"></website-item>
+                    <website-item (click)="onItemClicked($event, s)" [model]="s" [actions]="actions" [fields]="fields"></website-item>
                 </li>
             </virtual-list>
         </div>
@@ -219,6 +219,7 @@ export class WebSiteList {
     @Output() itemSelected: EventEmitter<any> = new EventEmitter();
 
     private _orderBy: OrderBy = new OrderBy();
+    private _sortPipe: SortPipe = new SortPipe();
     private _range: Range = new Range(0, 0);
     private _view: Array<WebSite> = [];
 
@@ -249,5 +250,11 @@ export class WebSiteList {
     private onRangeChange(range: Range) {
         Range.fillView(this._view, this.model, range);
         this._range = range;
+    }
+
+    private doSort(field: string) {
+        this._orderBy.sort(field);
+        this._sortPipe.transform(this.model, this._orderBy.Field, this._orderBy.Asc, null, true);
+        this.onRangeChange(this._range);
     }
 }
