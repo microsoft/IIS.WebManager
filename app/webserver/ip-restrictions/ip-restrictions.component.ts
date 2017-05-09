@@ -64,7 +64,7 @@ import { NotificationService } from '../../notification/notification.service';
 export class IpRestrictionsComponent implements OnInit, OnDestroy {
     id: string;
     ipRestrictions: IpRestrictions;
-    enabled: boolean;
+    enabled: boolean = null;
 
     private _original: IpRestrictions;
     private _error: any;
@@ -116,7 +116,9 @@ export class IpRestrictionsComponent implements OnInit, OnDestroy {
                 feature.enabled = false;
             }
 
-            this.enabled = feature.enabled;
+            if (this.enabled === null) {
+                this.enabled = feature.enabled;
+            }
         }
 
         this.ipRestrictions = feature;
