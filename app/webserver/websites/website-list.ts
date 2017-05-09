@@ -1,10 +1,10 @@
-import {Component, OnInit, Input, Output, EventEmitter, ViewChild, Inject} from '@angular/core';
-import {Router} from '@angular/router';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, Inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Selector } from '../../common/selector';
-import {WebSite} from './site';
-import {WebSitesService} from './websites.service';
-import {OrderBy} from '../../common/sort.pipe';
+import { WebSite } from './site';
+import { WebSitesService } from './websites.service';
+import { OrderBy } from '../../common/sort.pipe';
 
 
 @Component({
@@ -35,7 +35,7 @@ import {OrderBy} from '../../common/sort.pipe';
         </div>
         <div class="actions hidden-xs">
             <div class="selector-wrapper">
-                <button title="More" (click)="openSelector($event)" [class.background-active]="(selector && selector.opened) || false">
+                <button title="More" (click)="openSelector($event)" [class.background-active]="(_selector && _selector.opened) || false">
                     <i class="fa fa-ellipsis-h"></i>
                 </button>
                 <selector [right]="true">
@@ -124,6 +124,7 @@ export class WebSiteItem {
         
     private onDelete(e: Event) {
         e.preventDefault();
+        this._selector.close();
 
         if (confirm("Are you sure you want to delete '" + this.model.name + "'?")) {
             this._service.delete(this.model);
