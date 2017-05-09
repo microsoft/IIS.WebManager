@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter, ViewChildren, QueryList, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgModel } from '@angular/forms';
 
 import { Selector } from '../../common/selector';
@@ -46,7 +47,7 @@ import { AppPoolsService } from '../app-pools/app-pools.service';
                         <h2>Application Pool</h2>
                     </div>
                     <div id="applicationPool" class="collapse in">
-                        <fieldset *ngIf="site.application_pool" class="hover-editing pointer" [routerLink]="['/webserver', 'app-pools', site.application_pool.id]">
+                        <fieldset *ngIf="site.application_pool" class="hover-editing pointer" (click)="onAppPoolClick($event)">
                             <app-pool-item [model]="site.application_pool" [actions]="'recycle,start,stop'"></app-pool-item>
                         </fieldset>
                         <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Select <i class="fa fa-caret-down"></i></button>
@@ -76,6 +77,10 @@ export class WebSiteGeneralComponent {
 
     custom_protocols: boolean;
 
+    constructor(private _router: Router) {
+
+    }
+
     ngOnInit() {
         this.custom_protocols = !(this.site.enabled_protocols.toLowerCase() == "http" ||
                                   this.site.enabled_protocols.toLowerCase() == "https");
@@ -102,6 +107,12 @@ export class WebSiteGeneralComponent {
         }
 
         return true;
+    }
+
+    private onAppPoolClick(e: Event) {
+        if (!e.defaultPrevented) {
+            this._router.navigate(['/webserver', 'app-pools', this.site.application_pool.id]);
+        }
     }
 
     selectAppPool() {

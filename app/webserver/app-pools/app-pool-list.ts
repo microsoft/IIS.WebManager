@@ -1,11 +1,12 @@
-import {Component, Input, Output, Inject, EventEmitter} from '@angular/core';
-import {Router} from '@angular/router';
+import { Component, Input, Output, Inject, EventEmitter, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
-import {Status} from '../../common/status';
-import {OrderBy} from '../../common/sort.pipe';
+import { Selector } from '../../common/selector';
+import { Status } from '../../common/status';
+import { OrderBy } from '../../common/sort.pipe';
 
-import {AppPoolsService} from './app-pools.service';
-import {ApplicationPool, ProcessModelIdentityType} from './app-pool';
+import { AppPoolsService } from './app-pools.service';
+import { ApplicationPool, ProcessModelIdentityType } from './app-pool';
 
 
 @Component({
@@ -31,19 +32,20 @@ import {ApplicationPool, ProcessModelIdentityType} from './app-pool';
         <div class='col-sm-2 col-md-1 hidden-xs valign'>
             <span>{{runtimeVer()}}</span>
         </div>
-        <div class="actions">
-            <button *ngIf="allow('recycle')" title="Recycle"  [attr.disabled]="!started() || null" (click)="onRecycle($event)">
-                <i class="fa fa-refresh color-active"></i>
-            </button>
-            <button class="hidden-xs" *ngIf="allow('start')" title="Start" [attr.disabled]="model.status != 'stopped' ? true : null" (click)="onStart($event)">
-                <i class="fa fa-play green"></i>
-            </button>
-            <button class="hidden-xs" *ngIf="allow('stop')" title="Stop" [attr.disabled]="!started() || null" (click)="onStop($event)">
-                <i class="fa fa-stop red"></i>
-            </button>
-            <button class="hidden-xs" *ngIf="allow('delete')" title="Delete" (click)="onDelete($event)">
-                <i class="fa fa-trash-o red"></i>
-            </button>
+        <div class="actions hidden-xs">
+            <div class="selector-wrapper">
+                <button title="More" (click)="openSelector($event)" [class.background-active]="(_selector && _selector.opened) || false">
+                    <i class="fa fa-ellipsis-h"></i>
+                </button>
+                <selector [right]="true">
+                    <ul>
+                        <li><button class="refresh" title="Start" *ngIf="allow('recycle')" title="Recycle"  [attr.disabled]="!started() || null" (click)="onRecycle($event)">Recycle</button></li>
+                        <li><button class="start" title="Start" *ngIf="allow('start')" [attr.disabled]="model.status != 'stopped' ? true : null" (click)="onStart($event)">Start</button></li>
+                        <li><button class="stop" *ngIf="allow('stop')" title="Stop" [attr.disabled]="!started() || null" (click)="onStop($event)">Stop</button></li>
+                        <li><button class="delete" *ngIf="allow('delete')" title="Delete" (click)="onDelete($event)">Delete</button></li>
+                    </ul>
+                </selector>
+            </div>
         </div>
     </div>
     `,
@@ -85,18 +87,38 @@ import {ApplicationPool, ProcessModelIdentityType} from './app-pool';
         .actions {
             padding-top: 4px;
         }
+
+        .actions ul {
+            margin-bottom: 0;
+        }
+
+        .selector-wrapper {
+            position: relative;
+        }
+
+        selector {
+            position:absolute;
+            right:0;
+        }
+
+        selector button {
+            min-width: 125px;
+            width: 100%;
+        }
     `]
 })
 export class AppPoolItem {
     @Input() model: ApplicationPool;
     @Input() actions: string = "";
+    @ViewChild(Selector) private _selector: Selector;
 
     constructor(private _router: Router,
-                @Inject("AppPoolsService") private _service: AppPoolsService) {
+        @Inject("AppPoolsService") private _service: AppPoolsService) {
     }
 
     onDelete(e: Event) {
         e.stopPropagation();
+        this._selector.close();
 
         if (confirm("Are you sure you want to delete Application Pool '" + this.model.name + "'")) {
             this._service.delete(this.model);
@@ -105,16 +127,19 @@ export class AppPoolItem {
 
     onStart(e: Event) {
         e.stopPropagation();
+        this._selector.close();
         this._service.start(this.model);
     }
 
     onStop(e: Event) {
         e.stopPropagation();
+        this._selector.close();
         this._service.stop(this.model);
     }
 
     onRecycle(e: Event) {
         e.stopPropagation();
+        this._selector.close();
         this._service.recycle(this.model);
     }
 
@@ -160,6 +185,11 @@ export class AppPoolItem {
     started(): boolean {
         return this.model.status == 'started';
     }
+
+    private openSelector(e: Event) {
+        e.preventDefault();
+        this._selector.toggle();
+    }
 }
 
 
@@ -176,7 +206,7 @@ export class AppPoolItem {
             </div>
             
             <ul class="grid-list">
-                <li *ngFor="let p of model | orderby: _orderBy.Field: _orderBy.Asc" (click)="itemSelected.emit(p);" class="hover-editing">
+                <li *ngFor="let p of model | orderby: _orderBy.Field: _orderBy.Asc" (click)="onItemSelected($event, p);" class="hover-editing">
                     <app-pool-item [model]="p" [actions]="actions"></app-pool-item>
                 </li>
             </ul>
@@ -205,6 +235,14 @@ export class AppPoolList {
 
     private _orderBy: OrderBy = new OrderBy();
 
-    constructor(@Inject("AppPoolsService") private _service: AppPoolsService) {
+    constructor( @Inject("AppPoolsService") private _service: AppPoolsService) {
+    }
+
+    private onItemSelected(e: Event, pool: ApplicationPool) {
+        if (e.defaultPrevented) {
+            return;
+        }
+
+        this.itemSelected.next(pool);
     }
 }
