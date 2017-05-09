@@ -12,6 +12,7 @@ import { Module as Loading } from '../../notification/loading.component';
 import { Module as Sort } from '../../common/sort.pipe';
 import { Module as Selector } from '../../common/selector';
 import { Module as Tabs } from '../../common/tabs.component';
+import { Module as VirtualList } from '../../common/virtual-list.component';
 
 import { Module } from './module';
 import { Module as AppPoolModule } from '../app-pools/module';
@@ -46,7 +47,8 @@ import { LimitsComponent } from './limits.component';
         Loading,
         Sort,
         Selector,
-        Tabs
+        Tabs,
+        VirtualList
     ],
     declarations: [
         WebSiteComponent,
