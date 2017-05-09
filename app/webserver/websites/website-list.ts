@@ -5,6 +5,7 @@ import { Selector } from '../../common/selector';
 import { WebSite } from './site';
 import { WebSitesService } from './websites.service';
 import { OrderBy } from '../../common/sort.pipe';
+import { Range } from '../../common/virtual-list.component';
 
 
 @Component({
@@ -185,11 +186,14 @@ export class WebSiteItem {
                 <label class="col-xs-3 col-md-1 col-lg-1" [ngClass]="_orderBy.css('status')" (click)="_orderBy.sort('status')">Status</label>
                 <label class="col-lg-2 visible-lg" *ngIf="hasField('app-pool')" [ngClass]="_orderBy.css('application_pool.name')" (click)="_orderBy.sort('application_pool.name')">Application Pool</label>
             </div>
-            <ul class="grid-list">
-                <li *ngFor="let s of model | orderby: _orderBy.Field: _orderBy.Asc" (click)="onItemClicked($event, s)" class="hover-editing">
+            <virtual-list class="grid-list"
+                        *ngIf="model"
+                        [count]="model.length"
+                        (rangeChange)="onRangeChange($event)">
+                <li class="hover-editing" tabindex="-1" *ngFor="let s of _view">
                     <website-item [model]="s" [actions]="actions" [fields]="fields"></website-item>
                 </li>
-            </ul>
+            </virtual-list>
         </div>
     `,
     styles: [`
@@ -215,8 +219,14 @@ export class WebSiteList {
     @Output() itemSelected: EventEmitter<any> = new EventEmitter();
 
     private _orderBy: OrderBy = new OrderBy();
+    private _range: Range = new Range(0, 0);
+    private _view: Array<WebSite> = [];
 
     constructor(private _router: Router) {
+    }
+
+    public ngOnInit() {
+        this.onRangeChange(this._range);
     }
 
     private onItemClicked(e: Event, site: WebSite) {
@@ -234,5 +244,10 @@ export class WebSiteList {
 
     private hasField(field: string): boolean {
         return this.fields.indexOf(field) >= 0;
+    }
+
+    private onRangeChange(range: Range) {
+        Range.fillView(this._view, this.model, range);
+        this._range = range;
     }
 }

@@ -105,16 +105,21 @@ export class VirtualListComponent implements OnDestroy, OnChanges, AfterContentI
     }
 
     public ngAfterContentInit() {
-        let sub = this._listItems.changes.subscribe((v: QueryList<VirtualListItem>) => {
-            if (v.length > 0 && !this._heightKnown && v.first.host.nativeElement.offsetHeight) {
-                this._elementHeight = v.first.host.nativeElement.offsetHeight;
-                this._heightKnown = true;
-                this.onChangeHandler();
-                sub.unsubscribe();
-            }
-        });
-        // Fallback to unsubscribe even if list is never populated
-        this._subscriptions.push(sub);
+
+        if (this._listItems.length > 0 && !this._heightKnown && this._listItems.first.host.nativeElement.offsetHeight) {
+            this.setElementHeight(this._listItems.first.host.nativeElement.offsetHeight);
+        }
+
+        if (!this._heightKnown) {
+            let sub = this._listItems.changes.subscribe((v: QueryList<VirtualListItem>) => {
+                if (v.length > 0 && !this._heightKnown && v.first.host.nativeElement.offsetHeight) {
+                    this.setElementHeight(v.first.host.nativeElement.offsetHeight);
+                    sub.unsubscribe();
+                }
+            });
+            // Fallback to unsubscribe even if list is never populated
+            this._subscriptions.push(sub);
+        }
     }
 
     private onChangeHandler() {
@@ -181,6 +186,12 @@ export class VirtualListComponent implements OnDestroy, OnChanges, AfterContentI
     private get postHeight(): number {
         let val = this._totalHeight - this._scrollTop - this._listSize;
         return val < 0 ? 0 : val;
+    }
+
+    private setElementHeight(height: number) {
+        this._elementHeight = height;
+        this._heightKnown = true;
+        this.onChangeHandler();
     }
 
     public ngOnDestroy() {
