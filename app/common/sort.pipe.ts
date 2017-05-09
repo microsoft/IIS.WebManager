@@ -7,7 +7,7 @@ import {FormsModule} from '@angular/forms';
     name: "orderby"
 })
 export class SortPipe implements PipeTransform {
-    transform(arr: Array<any>, field: string, asc: boolean, comparer: (x, y, o1, o2)=> number = null): Array<any> {
+    transform(arr: Array<any>, field: string, asc: boolean, comparer: (x, y, o1, o2) => number = null, inPlace: boolean = false): Array<any> {
         if (arr.length == 0 || !field) {
             return arr;
         }
@@ -15,7 +15,9 @@ export class SortPipe implements PipeTransform {
         let fields = field.split('.');
         let stringSort: boolean = (typeof SortPipe.value(arr[0], fields) === 'string');
 
-        arr = arr.slice(); // Copy
+        if (!inPlace) {
+            arr = arr.slice(); // Copy
+        }
 
         arr.sort((l: any, r: any) => {
             let res: number;
