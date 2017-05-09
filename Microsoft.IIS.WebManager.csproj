@@ -299,12 +299,12 @@
     <TypeScriptCompile Include="app\webserver\websites\navigator.component.ts" />
     <TypeScriptCompile Include="app\webserver\websites\site.ts" />
     <TypeScriptCompile Include="app\utils\diff.ts" />
-    <Content Include="main.js" />
-    <Content Include="analytics.js" />
+    <Content Include="js\main.js" />
+    <Content Include="js\analytics.js" />
     <TypeScriptCompile Include="app\files\filesystem.d.ts" />
     <Content Include="app\files\file-icons.css" />
-    <Content Include="main.css" />
-    <Content Include="settings.js" />
+    <Content Include="themes\main.css" />
+    <Content Include="js\settings.js" />
     <Content Include="themes\themes.black.css" />
     <Content Include="themes\themes.blue.css" />
     <Content Include="themes\themes.purple.css" />
@@ -354,7 +354,7 @@
     <TypeScriptCompile Include="app\webserver\websites\websites.service.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="modules.js" />
+    <Content Include="js\modules.js" />
     <Content Include="package.json" />
   </ItemGroup>
   <PropertyGroup>
