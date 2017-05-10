@@ -11,7 +11,6 @@ import { RestrictionRule, IpRestrictions } from './ip-restrictions'
     selector: 'restriction-rule',
     template: `
         <div class="row grid-item" [class.background-editing]="_editing">
-
             <div class="actions">
                 <button class="no-border" title="Ok" *ngIf="_editing" [disabled]="!isValid() || null" (click)="onSave()">
                     <i class="fa fa-check blue"></i>
@@ -26,48 +25,52 @@ import { RestrictionRule, IpRestrictions } from './ip-restrictions'
                     <i class="fa fa-trash-o red"></i>
                 </button>
             </div>
-
-            <fieldset class="col-xs-8 col-md-2">
-                <label class="visible-xs visible-sm">Status</label>
-                <label class="hidden-xs hidden-sm editing">Status</label>
-                <i class="fa fa-circle green hidden-xs hidden-sm" *ngIf="model.allowed && !_editing"></i>
-                <i class="fa fa-ban red hidden-xs hidden-sm" *ngIf="!model.allowed && !_editing"></i>
-                <span *ngIf="!_editing">{{model.allowed ? "Allow" : "Deny"}}</span>
-                <switch class="block" *ngIf="_editing" [(model)]="model.allowed">{{model.allowed ? "Allow" : "Deny"}}</switch>
-                <div *ngIf="!_editing">
-                    <br class="visible-xs visible-sm" />
-                </div>
-            </fieldset>
-
-            <fieldset class="col-xs-12 col-md-3">
-                <label class="visible-xs visible-sm">IP Address</label>
-                <label class="hidden-xs hidden-sm editing">IP Address</label>
-                <span *ngIf="!_editing">{{model.ip_address}}</span>
-                <input class="form-control" type="text" [(ngModel)]="model.ip_address" required pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" />
-                <div *ngIf="!_editing">
-                    <br class="visible-xs visible-sm" />
-                </div>
-            </fieldset>
-
-            <fieldset class="col-xs-12 col-md-3">
-                <label class="visible-xs visible-sm">Subnet Mask</label>
-                <label class="hidden-xs hidden-sm editing">Subnet Mask</label>
-                <span *ngIf="!_editing">{{model.subnet_mask}}</span>
-                <input class="form-control" type="text" [(ngModel)]="model.subnet_mask" required />
-                <div *ngIf="!_editing">
-                    <br class="visible-xs visible-sm" />
-                </div>
-            </fieldset>
-
-            <fieldset class="col-xs-12 col-md-2" *ngIf="enableDomainName && (_editing || model.domain_name != '')">
-                <label class="visible-xs visible-sm">Domain Name</label>
-                <label class="hidden-xs hidden-sm editing">Domain Name</label>
-                <span *ngIf="!_editing">{{model.domain_name}}</span>
-                <input class="form-control" type="text" [(ngModel)]="model.domain_name" />
-                <div *ngIf="!_editing">
-                    <br class="visible-xs visible-sm" />
-                </div>
-            </fieldset>
+            <div *ngIf="!_editing">
+                <fieldset class="col-xs-8 col-md-2">
+                    <label class="visible-xs visible-sm">Status</label>
+                    <i class="fa fa-circle green hidden-xs hidden-sm" *ngIf="model.allowed"></i>
+                    <i class="fa fa-ban red hidden-xs hidden-sm" *ngIf="!model.allowed"></i>
+                    <span>{{model.allowed ? "Allow" : "Deny"}}</span>
+                </fieldset>
+                <fieldset class="col-xs-12 col-md-3">
+                    <label class="visible-xs visible-sm">IP Address</label>
+                    <span>{{model.ip_address}}</span>
+                </fieldset>
+                <fieldset class="col-xs-12 col-md-3">
+                    <label class="visible-xs visible-sm">Subnet Mask</label>
+                    <span>{{model.subnet_mask}}</span>
+                </fieldset>
+                <fieldset class="col-xs-12 col-md-2" *ngIf="enableDomainName && model.domain_name != ''">
+                    <label class="visible-xs visible-sm">Domain Name</label>
+                    <span>{{model.domain_name}}</span>
+                </fieldset>
+            </div>
+            <div *ngIf="_editing" class="col-left">
+                <fieldset>
+                    <label>Status</label>
+                    <enum [model]="model.allowed" (modelChange)="model.allowed=($event==='true')">
+                        <field name="Allow" value="true"></field>
+                        <field name="Deny" value="false"></field>
+                    </enum>
+                </fieldset>
+                <fieldset>
+                    <label>IP Address</label>
+                    <input class="form-control name" type="text" [(ngModel)]="model.ip_address" required pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" />
+                </fieldset>
+                <fieldset>
+                    <div class="inline-block">
+                        <label class="block">Restrict by Subnet Mask</label>
+                        <switch #s [model]="model.subnet_mask!='255.255.255.255'" (modelChange)="onEnableSubnetMask($event)">{{s.model ? "Yes" : "No"}}</switch>
+                    </div>
+                    <div class="inline-block no-label" *ngIf="s.model">
+                        <input class="form-control name" placeholder="Example: 255.255.0.0" type="text" [(ngModel)]="model.subnet_mask" required />
+                    </div>
+                </fieldset>
+                <fieldset *ngIf="enableDomainName">
+                    <label>Domain Name</label>
+                    <input class="form-control name" type="text" [(ngModel)]="model.domain_name" />
+                </fieldset>
+            </div>
         </div>
     `,
     styles: [`
@@ -81,6 +84,22 @@ import { RestrictionRule, IpRestrictions } from './ip-restrictions'
         .grid-item:not(.background-editing) fieldset {
             padding-top: 5px;
             padding-bottom: 0;
+        }
+        
+        .col-left {
+            padding-left: 15px;
+        }
+
+        .no-label {
+            vertical-align: bottom;
+        }
+
+        .no-label input {
+            margin-top: 15px;
+        }
+
+        div.inline-block {
+            margin-right:40px;
         }
     `]
 })
@@ -167,6 +186,10 @@ export class RestrictionRuleComponent implements OnChanges, OnInit {
     private setModel(model: RestrictionRule) {
         this.model = model;
         this._original = JSON.parse(JSON.stringify(this.model));
+    }
+
+    private onEnableSubnetMask(val: boolean): void {
+        this.model.subnet_mask = val ? "" : "255.255.255.255";
     }
 }
 

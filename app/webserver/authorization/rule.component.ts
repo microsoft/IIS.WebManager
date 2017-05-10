@@ -55,20 +55,20 @@ import {AuthRule, AccessType} from './authorization'
                             <field name="Roles or Groups" value="roles"></field>
                         </enum>
                     </fieldset>
-                    <fieldset *ngIf="_target == 'roles' || _target == 'users'">   
+                    <fieldset class="no-label" *ngIf="_target == 'roles' || _target == 'users'">   
                         <div *ngIf="_target == 'roles'">
-                            <input placeholder="Example: Administrators" class="form-control path" type="text" [disabled]="locked" [(ngModel)]="rule.roles" />
+                            <input placeholder="Example: Administrators" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="rule.roles" />
                         </div>
                         <div *ngIf="_target == 'users'">
-                            <input placeholder="Example: Administrator" class="form-control path" type="text" [disabled]="locked" [(ngModel)]="rule.users" />
+                            <input placeholder="Example: Administrator" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="rule.users" />
                         </div>
                     </fieldset>
                     <fieldset>
                         <label>Use Specific HTTP Methods</label>
                         <switch [model]="!_allVerbs" (modelChange)="_allVerbs=!$event">{{_allVerbs ? "No" : "Yes"}}</switch>
                     </fieldset>
-                    <fieldset *ngIf="!_allVerbs">
-                        <input placeholder="Example: GET, PUT, POST" class="form-control path" type="text" [disabled]="locked" [(ngModel)]="rule.verbs" />
+                    <fieldset class="no-label" *ngIf="!_allVerbs">
+                        <input placeholder="Example: GET, PUT, POST" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="rule.verbs" />
                     </fieldset>
                 </div>
         </div>
@@ -95,6 +95,10 @@ import {AuthRule, AccessType} from './authorization'
 
         .col-pad {
             padding-left: 15px;
+        }
+
+        fieldset.no-label {
+            padding-top: 0;
         }
     `]
 })
