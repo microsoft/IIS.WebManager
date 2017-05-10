@@ -1,18 +1,19 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
-import {Module as BModel} from '../../common/bmodel';
-import {Module as CheckBox} from '../../common/checkbox.component';
-import {Module as Switch} from '../../common/switch.component';
-import {Module as Loading} from '../../notification/loading.component';
-import {Module as OverrideMode} from '../../common/override-mode.component';
-import {Module as ErrorComponent} from '../../error/error.component';
+import { Module as BModel } from '../../common/bmodel';
+import { Module as CheckBox } from '../../common/checkbox.component';
+import { Module as Switch } from '../../common/switch.component';
+import { Module as Loading } from '../../notification/loading.component';
+import { Module as OverrideMode } from '../../common/override-mode.component';
+import { Module as ErrorComponent } from '../../error/error.component';
+import { Module as Enum } from '../../common/enum.component';
 
-import {AuthorizationService} from './authorization.service';
+import { AuthorizationService } from './authorization.service';
 
-import {AuthorizationComponent} from './authorization.component';
-import {RuleComponent} from './rule.component';
+import { AuthorizationComponent } from './authorization.component';
+import { RuleComponent } from './rule.component';
 
 @NgModule({
     imports: [
@@ -23,7 +24,8 @@ import {RuleComponent} from './rule.component';
         Switch,
         Loading,
         OverrideMode,
-        ErrorComponent
+        ErrorComponent,
+        Enum
     ],
     declarations: [
         AuthorizationComponent,

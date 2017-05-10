@@ -5,6 +5,74 @@ import {AuthRule, AccessType} from './authorization'
 
 @Component({
     selector: 'rule',
+    template: `
+        <div *ngIf="rule">    
+            <div class="row grid-item" [class.background-editing]="_editing">                
+                <div class="actions">
+                    <button class="no-border" title="Ok" *ngIf="_editing" [disabled]="locked || !isValid() || null" (click)="onOk()">
+                        <i class="fa fa-check blue"></i>
+                    </button>
+                    <button class="no-border" title="Cancel" *ngIf="_editing" (click)="onDiscard()">
+                        <i class="fa fa-times red"></i>
+                    </button>
+                    <button class="no-border" title="Edit" [class.inactive]="!_editable" *ngIf="!_editing" (click)="onEdit()">
+                        <i class="fa fa-pencil color-active"></i>
+                    </button>
+                    <button class="no-border" *ngIf="rule.id" title="Delete" [disabled]="locked || _editing" [class.inactive]="!_editable" (click)="onDelete()">
+                        <i class="fa fa-trash-o red"></i>
+                    </button>
+                </div>
+                <div *ngIf="!_editing">
+                    <fieldset class="col-xs-8 col-sm-8 col-md-2">
+                        <label class="visible-xs visible-sm">Access Type</label>
+                        <i class="fa fa-circle green hidden-xs hidden-sm" *ngIf="rule.access_type == 'allow'"></i>
+                        <i class="fa fa-ban red hidden-xs hidden-sm" *ngIf="rule.access_type == 'deny'"></i>
+                        <span class="capitalize">{{rule.access_type}}</span>
+                    </fieldset> 
+                    <fieldset class="col-xs-12 col-sm-12 col-md-4">
+                        <label class="visible-xs visible-sm">Users</label>
+                        <span>{{targetName()}}</span>
+                    </fieldset>
+                    <fieldset class="col-xs-12 col-sm-12 col-md-4">
+                        <label class="visible-xs visible-sm">Http Methods</label>
+                        <span>{{_allVerbs ? "All" : rule.verbs}}</span>
+                    </fieldset>  
+                </div>
+                <div *ngIf="_editing" class="col-pad">
+                    <fieldset>
+                        <label>Access Type</label>
+                        <enum [disabled]="locked" [(model)]="rule.access_type">
+                            <field name="Allow" value="allow"></field>
+                            <field name="Deny" value="deny"></field>
+                        </enum>
+                    </fieldset> 
+                    <fieldset>
+                        <label>Users</label>
+                        <enum [disabled]="locked" [(model)]="_target">
+                            <field name="All" value="*"></field>
+                            <field name="Anonymous" value="?"></field>
+                            <field name="Specific Users" value="users"></field>
+                            <field name="Roles or Groups" value="roles"></field>
+                        </enum>
+                    </fieldset>
+                    <fieldset *ngIf="_target == 'roles' || _target == 'users'">   
+                        <div *ngIf="_target == 'roles'">
+                            <input placeholder="Example: Administrators" class="form-control path" type="text" [disabled]="locked" [(ngModel)]="rule.roles" />
+                        </div>
+                        <div *ngIf="_target == 'users'">
+                            <input placeholder="Example: Administrator" class="form-control path" type="text" [disabled]="locked" [(ngModel)]="rule.users" />
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <label>Use Specific HTTP Methods</label>
+                        <switch [model]="!_allVerbs" (modelChange)="_allVerbs=!$event">{{_allVerbs ? "No" : "Yes"}}</switch>
+                    </fieldset>
+                    <fieldset *ngIf="!_allVerbs">
+                        <input placeholder="Example: GET, PUT, POST" class="form-control path" type="text" [disabled]="locked" [(ngModel)]="rule.verbs" />
+                    </fieldset>
+                </div>
+        </div>
+    `,
     styles: [`
         .checkbox {
             margin: 6px 0 0 0;
@@ -24,78 +92,11 @@ import {AuthRule, AccessType} from './authorization'
         label.visible-xs {
             margin-bottom: 5px;
         }
-    `],
-    template: `
-        <div *ngIf="rule">    
-            <div class="row grid-item" [class.background-editing]="_editing">                
-                <div class="actions">
-                    <button class="no-border" title="Ok" *ngIf="_editing" [disabled]="locked || !isValid() || null" (click)="onOk()">
-                        <i class="fa fa-check blue"></i>
-                    </button>
-                    <button class="no-border" title="Cancel" *ngIf="_editing" (click)="onDiscard()">
-                        <i class="fa fa-times red"></i>
-                    </button>
-                    <button class="no-border" title="Edit" [class.inactive]="!_editable" *ngIf="!_editing" (click)="onEdit()">
-                        <i class="fa fa-pencil color-active"></i>
-                    </button>
-                    <button class="no-border" *ngIf="rule.id" title="Delete" [disabled]="locked || _editing" [class.inactive]="!_editable" (click)="onDelete()">
-                        <i class="fa fa-trash-o red"></i>
-                    </button>
-                </div>                
-                <fieldset class="col-xs-8 col-sm-8 col-md-2">
-                    <label class="visible-xs visible-sm">Access Type</label>
-                    <label class="hidden-xs hidden-sm editing">Access Type</label>
-                    <i class="fa fa-circle green hidden-xs hidden-sm" *ngIf="_allowAccess && !_editing"></i>
-                    <i class="fa fa-ban red hidden-xs hidden-sm" *ngIf="!_allowAccess && !_editing"></i>
-                    <span *ngIf="!_editing">{{_allowAccess ? "Allow" : "Deny"}}</span>
-                    <switch class="block" *ngIf="_editing" [disabled]="locked" [(model)]="_allowAccess">{{_allowAccess ? "Allow" : "Deny"}}</switch>
-                </fieldset> 
 
-                <fieldset class="col-xs-12 col-sm-12 col-md-4" *ngIf="!_editing">
-                    <label class="visible-xs visible-sm">Users</label>
-                    <span *ngIf="!_editing">{{targetName()}}</span>
-                </fieldset>
-                <fieldset class="col-xs-6 col-sm-6 col-md-2" *ngIf="_editing">
-                    <label class="visible-xs visible-sm">Users</label>            
-                    <label class="hidden-xs hidden-sm editing">Users</label>
-                    <select class="form-control" [disabled]="locked" [(ngModel)]="_target">
-                        <option value="*">All</option>
-                        <option value="?">Anonymous</option>
-                        <option value="users">Specified Users</option>
-                        <option value="roles">Roles or Groups</option>
-                    </select>
-                </fieldset>
-                <fieldset class="col-xs-6 col-sm-6 col-md-2" *ngIf="_editing">   
-                    <label class="visible-xs visible-sm">&nbsp;</label>         
-                    <label class="hidden-xs hidden-sm editing">&nbsp;</label>
-                    <div *ngIf="_target == 'roles'">
-                        <input class="form-control" *ngIf="_editing" type="text" [disabled]="locked" [(ngModel)]="rule.roles" throttle />
-                    </div>
-                    <div *ngIf="_target == 'users'">
-                        <input class="form-control" *ngIf="_editing" type="text" [disabled]="locked" [(ngModel)]="rule.users" throttle />
-                    </div>
-                </fieldset>
-
-                <fieldset class="col-xs-12 col-sm-12 col-md-4" *ngIf="!_editing">
-                    <label class="visible-xs visible-sm">Http Methods</label>
-                    <span *ngIf="!_editing">{{_allVerbs ? "All" : rule.verbs}}</span>
-                </fieldset>
-                <fieldset class="col-xs-12 col-sm-12 col-md-4" *ngIf="_editing">
-                    <label class="visible-xs visible-sm">Http Methods</label>
-                    <label class="hidden-xs hidden-sm editing">Http Methods</label>
-                    <div class="row">
-                        <div class="col-xs-12 col-md-3">
-                            <checkbox2 *ngIf="_editing" [disabled]="locked" [(model)]="_allVerbs" class="checkbox">All</checkbox2>
-                        </div>
-                        <div class="col-xs-12 col-md-9" *ngIf="!_allVerbs">
-                            <label class="visible-xs visible-sm">&nbsp;</label>
-                            <input class="form-control" type="text" [disabled]="locked" [(ngModel)]="rule.verbs" throttle />
-                        </div>
-                    </div>
-                </fieldset>                    
-            </div>
-        </div>
-    `
+        .col-pad {
+            padding-left: 15px;
+        }
+    `]
 })
 export class RuleComponent implements OnInit {    
     @Input() rule: AuthRule;
@@ -114,12 +115,10 @@ export class RuleComponent implements OnInit {
     private _initializing: boolean;
     private _editable: boolean = true;
     private _allVerbs: boolean;
-    private _allowAccess: boolean;
 
     public ngOnInit() {
         this._initializing = !("id" in this.rule) || (this.rule.id == "");
         this._editing = this._initializing;
-        this._allowAccess = (this.rule.access_type == AccessType.Allow);
         this._allVerbs = (this.rule.verbs == "");
 
         if (!this._initializing) {
@@ -153,8 +152,6 @@ export class RuleComponent implements OnInit {
         if (!this._editing) {
             return;
         }
-
-        this.rule.access_type = (this._allowAccess) ? AccessType.Allow : AccessType.Deny;
 
         switch (this._target) {
             case "*":
