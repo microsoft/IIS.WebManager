@@ -9,6 +9,7 @@ import { Module as Loading } from '../../notification/loading.component';
 import { Module as OverrideMode } from '../../common/override-mode.component';
 import { Module as ErrorComponent } from '../../error/error.component';
 import { Module as Tabs } from '../../common/tabs.component';
+import { Module as Enum } from '../../common/enum.component';
 
 import { IpRestrictionsService } from './ip-restrictions.service';
 
@@ -27,7 +28,8 @@ import { RestrictionRuleComponent, RestrictionRulesComponent } from './restricti
         Loading,
         OverrideMode,
         ErrorComponent,
-        Tabs
+        Tabs,
+        Enum
     ],
     declarations: [
         DynamicRestrictionsComponent,
