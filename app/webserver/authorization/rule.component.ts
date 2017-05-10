@@ -57,10 +57,10 @@ import {AuthRule, AccessType} from './authorization'
                     </fieldset>
                     <fieldset class="no-label" *ngIf="_target == 'roles' || _target == 'users'">   
                         <div *ngIf="_target == 'roles'">
-                            <input placeholder="Example: Administrators" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="rule.roles" />
+                            <input placeholder="ex: Administrators, Power Users" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="rule.roles" />
                         </div>
                         <div *ngIf="_target == 'users'">
-                            <input placeholder="Example: Administrator" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="rule.users" />
+                            <input placeholder="ex: Administrator, Guest" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="rule.users" />
                         </div>
                     </fieldset>
                     <fieldset>
@@ -68,7 +68,7 @@ import {AuthRule, AccessType} from './authorization'
                         <switch [model]="!_allVerbs" (modelChange)="_allVerbs=!$event">{{_allVerbs ? "No" : "Yes"}}</switch>
                     </fieldset>
                     <fieldset class="no-label" *ngIf="!_allVerbs">
-                        <input placeholder="Example: GET, PUT, POST" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="rule.verbs" />
+                        <input placeholder="ex: GET, PUT, POST, DELETE" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="rule.verbs" />
                     </fieldset>
                 </div>
         </div>
