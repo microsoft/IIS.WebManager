@@ -15,6 +15,8 @@ import {FormsModule} from '@angular/forms';
             cursor: pointer;
             padding: 7px;
             margin-right: 5px;
+            text-align: center;
+            min-width: 45px;
         }
     `],
 
