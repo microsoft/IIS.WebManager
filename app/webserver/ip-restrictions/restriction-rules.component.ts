@@ -55,7 +55,7 @@ import { RestrictionRule, IpRestrictions } from './ip-restrictions'
                 </fieldset>
                 <fieldset>
                     <label>IP Address</label>
-                    <input class="form-control name" type="text" [(ngModel)]="model.ip_address" required pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" />
+                    <input class="form-control name" type="text" placeholder="Example: 192.168.100.1" [(ngModel)]="model.ip_address" required pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" />
                 </fieldset>
                 <fieldset>
                     <div class="inline-block">
