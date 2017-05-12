@@ -11,7 +11,7 @@ import { CentralCertificateConfiguration } from './central-certificates';
 
 @Component({
     template: `
-        <fieldset disabled>
+        <fieldset>
             <switch #s
                 [model]="_enabled"
                 (modelChange)="onEnabled($event)"
@@ -21,7 +21,7 @@ import { CentralCertificateConfiguration } from './central-certificates';
             </switch>
         </fieldset>
         <div *ngIf="_configuration">
-            <fieldset class="path" disabled>
+            <fieldset class="path">
                 <label>Physical Path</label>
                 <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="right select" (click)="fileSelector.toggle()" [attr.disabled]="isPending || null" ></button>
                 <div class="fill">
@@ -31,33 +31,33 @@ import { CentralCertificateConfiguration } from './central-certificates';
             </fieldset>
             <label class="block">Connection Credentials</label>
             <div class="in">
-                <fieldset disabled>
+                <fieldset>
                     <label>Username</label>
                     <input type="text" class="form-control name" [(ngModel)]="_configuration.identity.username" required (modelChanged)="onModelChanged()" throttle [attr.disabled]="isPending || null" />
                 </fieldset>
-                <fieldset disabled>
+                <fieldset>
                     <label>Password</label>
                     <input type="password" class="form-control name" #identityPassword [(ngModel)]="_identityPassword" 
                         [attr.required]="!_configuration.id ? true : null" (modelChanged)="clearIdentityPassword(f)" 
                         [attr.placeholder]="_configuration.id ? '*************' : null" throttle 
                         [attr.disabled]="isPending || null" />
                 </fieldset>
-                <fieldset *ngIf="identityPassword.value" disabled>
+                <fieldset *ngIf="identityPassword.value">
                     <label>Confirm Password</label>
                     <input type="password" class="form-control name" [(ngModel)]="_identityPasswordConfirm" (ngModelChange)="onConfirmIdentityPassword($event)" [validateEqual]="_identityPassword" throttle [attr.disabled]="isPending || null" />
                 </fieldset>
             </div>
-            <div disabled>
+            <div>
                 <label class="block" title="Specify the password that is used to encrypt the private key for each certificate file.">Use Private Key Password</label>
                 <switch style="display:inline-block;margin-bottom:5px;" [(model)]="_usePvkPass" (modelChange)="onPvkPassRequired($event)" [attr.disabled]="isPending || null" ></switch>
             </div>
             <div class="in" *ngIf="_usePvkPass">
-                <fieldset disabled>
+                <fieldset>
                     <label>Password</label>
                     <input type="password" class="form-control name" #pvkPass [(ngModel)]="_privateKeyPassword" (modelChanged)="clearPkPassword()" [attr.required]="!_configuration.id ? true : null" throttle 
                         [attr.disabled]="isPending || null" />
                 </fieldset>
-                <fieldset *ngIf="pvkPass.value" disabled>
+                <fieldset *ngIf="pvkPass.value">
                     <label>Confirm Password</label>
                     <input type="password" class="form-control name" [(ngModel)]="_privateKeyPasswordConfirm" (ngModelChange)="onConfirmPkPassword($event)" [validateEqual]="_privateKeyPassword" throttle [attr.disabled]="isPending || null" />
                 </fieldset>
