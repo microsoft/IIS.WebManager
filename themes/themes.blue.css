@@ -19,7 +19,8 @@ button.ok:not([disabled]):not(:hover):not(:active)::before {
 }
 
 button.save:not([disabled]):not(:hover):not(:active)::before,
-button.edit:not([disabled]):not(:hover):not(:active)::before {
+button.edit:not([disabled]):not(:hover):not(:active)::before,
+.bttn.edit:not([disabled]):not(:hover):not(:active)::before {
     color: #0093fe;
 }
 
@@ -33,6 +34,10 @@ button.start:not([disabled]):not(:hover):not(:active)::before {
 
 button.stop:not([disabled]):not(:hover):not(:active)::before {
     color: #a94442;
+}
+
+.bttn.link:not([disabled]):not(:hover):not(:active)::before {
+    color: #0093fe;
 }
 
 .border-color,

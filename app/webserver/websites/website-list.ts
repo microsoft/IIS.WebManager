@@ -6,7 +6,7 @@ import { WebSite } from './site';
 import { WebSitesService } from './websites.service';
 import { OrderBy, SortPipe } from '../../common/sort.pipe';
 import { Range } from '../../common/virtual-list.component';
-
+import { NotificationService } from '../../notification/notification.service';
 
 @Component({
     selector: 'website-item',
@@ -14,7 +14,7 @@ import { Range } from '../../common/virtual-list.component';
     <div *ngIf="model" class="row grid-item border-color">
         <div class='col-xs-8 col-sm-4 col-md-3 col-lg-3'>
             <div class='name' [class.https]="hasHttps()" [class.started]="started()">
-                <span>{{model.name}}</span>
+                <a class="color-normal hover-color-active" [routerLink]="['/webserver/websites', model.id]">{{model.name}}</a>
                 <small class='physical-path hidden-xs' *ngIf="field('path')">{{model.physical_path}}</small>
                 <small class='status visible-xs' *ngIf="field('status')">{{model.status}}</small>
             </div>
@@ -31,19 +31,21 @@ import { Range } from '../../common/virtual-list.component';
                 </a>
             </div>
         </div>
-        <div class='col-xs-4 col-xs-push-1 col-sm-3 col-md-3 valign' *ngIf="allow('browse')">
+        <div class=' hidden-xs col-xs-4 col-xs-push-1 col-sm-3 col-md-3 valign' *ngIf="allow('browse')">
             <navigator [model]="model.bindings" [right]="true"></navigator>
         </div>
-        <div class="actions hidden-xs">
+        <div class="actions">
             <div class="selector-wrapper">
                 <button title="More" (click)="openSelector($event)" [class.background-active]="(_selector && _selector.opened) || false">
                     <i class="fa fa-ellipsis-h"></i>
                 </button>
                 <selector [right]="true">
                     <ul>
-                        <li><button class="start" title="Start" *ngIf="allow('start')" [attr.disabled]="model.status != 'stopped' || null" (click)="onStart($event)">Start</button></li>
-                        <li><button class="stop" title="Stop" *ngIf="allow('stop')" [attr.disabled]="!started() || null" (click)="onStop($event)">Stop</button></li>
-                        <li><button class="delete" *ngIf="allow('delete')" title="Delete" (click)="onDelete($event)">Delete</button></li>
+                        <li *ngIf="allow('edit')"><a class="bttn edit" title={{url}} [routerLink]="['/webserver/websites', model.id]">Edit</a></li>
+                        <li *ngIf="allow('browse')"><a class="bttn link" href={{url}} title={{url}}>Browse</a></li>
+                        <li *ngIf="allow('start')"><button class="start" title="Start" [attr.disabled]="model.status != 'stopped' || null" (click)="onStart($event)">Start</button></li>
+                        <li *ngIf="allow('stop')"><button class="stop" title="Stop" [attr.disabled]="!started() || null" (click)="onStop($event)">Stop</button></li>
+                        <li *ngIf="allow('delete')"><button class="delete" title="Delete" (click)="onDelete($event)">Delete</button></li>
                     </ul>
                 </selector>
             </div>
@@ -68,6 +70,10 @@ import { Range } from '../../common/virtual-list.component';
             font-family: FontAwesome;
             content: "\\f023";
             padding-left: 5px;
+        }
+
+        .name a {
+            background: transparent;
         }
 
         .status {
@@ -104,7 +110,8 @@ import { Range } from '../../common/virtual-list.component';
             top: 32px;
         }
 
-        selector button {
+        selector button,
+        selector .bttn {
             min-width: 125px;
             width: 100%;
         }
@@ -120,17 +127,26 @@ export class WebSiteItem {
     @Output() delete: EventEmitter<any> = new EventEmitter<any>();
 
     @ViewChild(Selector) private _selector: Selector;
+    private _url: string;
 
-    constructor(@Inject("WebSitesService") private _service: WebSitesService) {
+    constructor(@Inject("WebSitesService") private _service: WebSitesService,
+                private _notificationService: NotificationService) {
+    }
+
+    private get url() {
+        if (!this._url && this.model.bindings.length > 0) {
+            this._url = this._service.getUrl(this.model.bindings[0]);
+        }
+
+        return this._url;
     }
         
     private onDelete(e: Event) {
         e.preventDefault();
         this._selector.close();
 
-        if (confirm("Are you sure you want to delete '" + this.model.name + "'?")) {
-            this._service.delete(this.model);
-        }
+        this._notificationService.confirm("Delete Web Site", "Are you sure you want to delete '" + this.model.name + "'?")
+            .then(confirmed => confirmed && this._service.delete(this.model));
     }
 
     private onStart(e: Event) {
@@ -143,10 +159,6 @@ export class WebSiteItem {
         e.preventDefault();
         this._selector.close();
         this._service.stop(this.model);
-    }
-
-    private onBrowse(e: Event) {
-        e.preventDefault();
     }
 
     private allow(action: string): boolean {
@@ -198,10 +210,6 @@ export class WebSiteItem {
         </div>
     `,
     styles: [`
-        li:hover {
-            cursor: pointer;
-        }
-
         .grid-list-header [class*="col-"] {
             padding-left: 0;
         }
@@ -216,7 +224,7 @@ export class WebSiteItem {
 export class WebSiteList {
     @Input() model: Array<WebSite>;
     @Input() fields: string = "name,path,status,app-pool";
-    @Input() actions: string = "browse,start,stop,delete";
+    @Input() actions: string = "edit,browse,start,stop,delete";
     @Output() itemSelected: EventEmitter<any> = new EventEmitter();
 
     private _orderBy: OrderBy = new OrderBy();
@@ -238,9 +246,6 @@ export class WebSiteList {
 
         if (this.itemSelected.observers.length > 0) {
             this.itemSelected.emit(site);
-        }
-        else {
-            this._router.navigate(['webserver', 'websites', site.id]);
         }
     }
 

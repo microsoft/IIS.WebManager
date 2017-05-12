@@ -165,14 +165,16 @@ button.active {
 }
 
 button::before,
-button::after {
+button::after,
+.bttn:before {
     font-family: FontAwesome;
     font-size: 120%;
     line-height: 22px;
     vertical-align: middle;
 }
 
-button:not(:empty)::before {
+button:not(:empty)::before,
+.bttn:not(:empty)::before {
     width: 22px;
     text-align:left;
     display: inline-block;
@@ -368,7 +370,8 @@ button.select {
     display: inline-flex;
 }
 
-.actions button {
+.actions button,
+.actions .bttn {
     border: none;
     display: inline-flex;
 }
@@ -675,7 +678,8 @@ button.ok:before {
     content: "\f00c";
 }
 
-button.edit:before {
+button.edit:before,
+.bttn.edit:before {
     content: "\f040";
 }
 
@@ -701,6 +705,10 @@ button.start:before {
 
 button.stop:before {
     content: "\f04d";
+}
+
+.bttn.link:before {
+    content: "\f08e";
 }
 
 
