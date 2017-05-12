@@ -101,6 +101,7 @@ import { Range } from '../../common/virtual-list.component';
         selector {
             position:absolute;
             right:0;
+            top: 32px;
         }
 
         selector button {

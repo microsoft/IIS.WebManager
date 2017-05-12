@@ -28,6 +28,14 @@ export class WindowService {
     }
 
     public trigger() {
-        window.dispatchEvent(new Event('resize'));
+        try {
+            window.dispatchEvent(new Event('resize'));
+        }
+        catch (e) {
+            let event = document.createEvent("Event");
+            event.initEvent("resize", false, true);
+            // args: string type, boolean bubbles, boolean cancelable
+            window.dispatchEvent(event);
+        }
     }
 }

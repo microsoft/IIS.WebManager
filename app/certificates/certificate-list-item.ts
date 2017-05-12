@@ -92,6 +92,7 @@ import { Certificate } from './certificate';
         selector {
             position:absolute;
             right:0;
+            top: 32px;
         }
 
         selector button {

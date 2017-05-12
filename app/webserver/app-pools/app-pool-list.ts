@@ -99,6 +99,7 @@ import { ApplicationPool, ProcessModelIdentityType } from './app-pool';
         selector {
             position:absolute;
             right:0;
+            top: 32px;
         }
 
         selector button {

@@ -65,6 +65,7 @@ import { FilesService } from '../../files/files.service';
         selector {
             position:absolute;
             right:0;
+            top: 32px;
         }
 
         selector button {

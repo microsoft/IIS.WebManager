@@ -86,6 +86,7 @@ import { ApiFile, ApiFileType } from './file';
         selector {
             position:absolute;
             right:0;
+            top: 32px;
         }
 
         selector button {
