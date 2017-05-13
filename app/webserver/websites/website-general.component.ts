@@ -42,26 +42,19 @@ import { AppPoolsService } from '../app-pools/app-pools.service';
                     <label>Protocols</label>
                     <input class="form-control" type="text" [(ngModel)]="site.enabled_protocols" (modelChanged)="onModelChanged()" required throttle />
                 </fieldset>
-                <section>
-                    <div class="collapse-heading" data-toggle="collapse" data-target="#applicationPool">
-                        <h2>Application Pool</h2>
-                    </div>
-                    <div id="applicationPool" class="collapse in">
-                        <fieldset *ngIf="site.application_pool" class="hover-editing pointer" (click)="onAppPoolClick($event)">
-                            <app-pool-item [model]="site.application_pool" [actions]="'recycle,start,stop'"></app-pool-item>
-                        </fieldset>
-                        <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Select <i class="fa fa-caret-down"></i></button>
-                        <selector #poolSelect class="container-fluid">
-                            <app-pools #appPools [actions]="'view'" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
-                        </selector>
-                    </div>
-                </section>
             </tab>
             <tab [name]="'Bindings'">
                 <binding-list *ngIf="site.bindings" [(model)]="site.bindings" (modelChange)="onModelChanged()"></binding-list>
             </tab>
             <tab [name]="'Limits'">
                 <limits [model]="site.limits" (modelChanged)="onModelChanged()"></limits>
+            </tab>
+            <tab [name]="'Application Pool'">
+                <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">{{site.application_pool ? site.application_pool.name : 'select'}} <i class="fa fa-caret-down"></i></button>
+                <selector #poolSelect class="container-fluid">
+                    <app-pools #appPools [actions]="'view'" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
+                </selector>
+                <app-pool-details [model]="site.application_pool"></app-pool-details>
             </tab>
         </tabs>
     `
@@ -70,16 +63,11 @@ export class WebSiteGeneralComponent {
     @Input() site: WebSite;
     @Output() modelChanged: EventEmitter<any> = new EventEmitter();
 
-
     @ViewChild('poolSelect') poolSelect: Selector;
     @ViewChild('appPools') appPools: AppPoolListComponent;
     @ViewChildren(NgModel) validators: QueryList<NgModel>;
 
     custom_protocols: boolean;
-
-    constructor(private _router: Router) {
-
-    }
 
     ngOnInit() {
         this.custom_protocols = !(this.site.enabled_protocols.toLowerCase() == "http" ||
@@ -107,12 +95,6 @@ export class WebSiteGeneralComponent {
         }
 
         return true;
-    }
-
-    private onAppPoolClick(e: Event) {
-        if (!e.defaultPrevented) {
-            this._router.navigate(['/webserver', 'app-pools', this.site.application_pool.id]);
-        }
     }
 
     selectAppPool() {

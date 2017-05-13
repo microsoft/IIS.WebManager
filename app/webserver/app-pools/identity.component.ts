@@ -1,6 +1,5 @@
-
-import {Component, Input, Output, EventEmitter} from '@angular/core';
-import {ApplicationPoolIdentity} from './app-pool';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { ApplicationPoolIdentity } from './app-pool';
 
 
 @Component({
@@ -32,7 +31,7 @@ import {ApplicationPoolIdentity} from './app-pool';
                 </fieldset>
             </div>
         </div>
-        <fieldset class='inline-block'>
+        <fieldset class='inline-block' *ngIf="useUserProfile">
             <label>Load User Profile</label>
             <switch class="block" [(model)]="model.load_user_profile" (modelChanged)="onModelChanged()">
                 {{model.load_user_profile ? "On" : "Off"}}
@@ -43,6 +42,9 @@ import {ApplicationPoolIdentity} from './app-pool';
 export class IdentityComponent {
     @Input()
     model: ApplicationPoolIdentity;
+
+    @Input()
+    public useUserProfile: boolean = true;
 
     @Output()
     modelChanged: EventEmitter<any> = new EventEmitter();

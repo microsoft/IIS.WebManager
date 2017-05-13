@@ -295,6 +295,7 @@
     <TypeScriptCompile Include="app\main\home.component.ts" />
     <TypeScriptCompile Include="app\webserver\webserver-header.component.ts" />
     <TypeScriptCompile Include="app\webserver\webserver-general.component.ts" />
+    <TypeScriptCompile Include="app\webserver\websites\app-pool-details.ts" />
     <TypeScriptCompile Include="app\webserver\websites\binding-list.component.ts" />
     <TypeScriptCompile Include="app\webserver\websites\navigator.component.ts" />
     <TypeScriptCompile Include="app\webserver\websites\site.ts" />

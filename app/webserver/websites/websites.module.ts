@@ -1,6 +1,7 @@
 import { NgModule, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { Module as BModel } from '../../common/bmodel';
 import { Module as NotFound } from '../../common/notfound.component';
@@ -13,6 +14,7 @@ import { Module as Sort } from '../../common/sort.pipe';
 import { Module as Selector } from '../../common/selector';
 import { Module as Tabs } from '../../common/tabs.component';
 import { Module as VirtualList } from '../../common/virtual-list.component';
+import { Module as Enum } from '../../common/enum.component';
 
 import { Module } from './module';
 import { Module as AppPoolModule } from '../app-pools/module';
@@ -28,6 +30,7 @@ import { WebSiteListComponent } from './website-list.component';
 import { NewWebSiteComponent } from './new-website.component';
 import { BindingList, BindingItem } from './binding-list.component';
 import { LimitsComponent } from './limits.component';
+import { AppPoolDetailsComponent } from './app-pool-details';
 
 @NgModule({
     imports: [
@@ -48,7 +51,9 @@ import { LimitsComponent } from './limits.component';
         Sort,
         Selector,
         Tabs,
-        VirtualList
+        VirtualList,
+        Enum,
+        RouterModule
     ],
     declarations: [
         WebSiteComponent,
@@ -60,7 +65,8 @@ import { LimitsComponent } from './limits.component';
         NewWebSiteComponent,
         BindingList,
         BindingItem,
-        LimitsComponent
+        LimitsComponent,
+        AppPoolDetailsComponent
     ]
 
 })

@@ -24,7 +24,7 @@ import {NotificationService} from '../../notification/notification.service';
 
 @Injectable()
 export class WebSitesService implements OnDestroy {
-    private static _appPoolFields: string = "application_pool.name,application_pool.status,application_pool.identity,application_pool.pipeline_mode,application_pool.managed_runtime_version";
+    private static _appPoolFields: string = "application_pool.name,application_pool.auto_start,application_pool.status,application_pool.identity,application_pool.pipeline_mode,application_pool.managed_runtime_version";
 
     private _all: boolean;
     private _loadedAppPools: Set<string> = new Set<string>();
