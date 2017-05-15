@@ -26,7 +26,7 @@ import { NotificationService } from '../../notification/notification.service';
                 <label *ngIf="!feature.scope">Web Site Default</label>
                 <switch class="block" [disabled]="_locked" [(model)]="feature.enabled" (modelChanged)="onModelChanged()">{{feature.enabled ? "On" : "Off"}}</switch>
             </fieldset>
-            <div [hidden]="!feature.enabled">
+            <div [hidden]="!feature.enabled && feature.scope">
                 <fieldset>
                     <label>Directory Attributes</label>
                     <ul class="allowed-attributes">

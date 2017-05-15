@@ -27,7 +27,7 @@ import { NotificationService } from '../../notification/notification.service';
                 <label *ngIf="!_model.scope">Web Site Default</label>
                 <switch class="block" [disabled]="_locked" [(model)]="_model.enabled" (modelChanged)="onModelChanged()">{{_model.enabled ? "On" : "Off"}}</switch>
             </fieldset>
-            <fieldset class="clear" *ngIf="_model.enabled">
+            <fieldset class="clear" *ngIf="_model.enabled || !_model.scope">
                 <label>Realm</label>
                 <input class="form-control path" type="text" [disabled]="_locked" [(ngModel)]="_model.realm" throttle (modelChanged)="onModelChanged()" />
             </fieldset>

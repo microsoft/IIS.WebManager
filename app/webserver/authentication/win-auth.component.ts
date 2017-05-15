@@ -15,7 +15,7 @@ import { AuthenticationService } from './authentication.service';
             <fieldset>
                 <switch class="block" [disabled]="_locked" [(model)]="_model.enabled" (modelChanged)="onModelChanged()">{{_model.enabled ? "On" : "Off"}}</switch>
             </fieldset>
-            <div class="clear" *ngIf="_model.enabled">
+            <div class="clear" *ngIf="_model.enabled || !_model.scope">
                 <fieldset>
                     <label>Use Kernel Mode</label>
                     <switch class="block" [disabled]="_locked" [(model)]="_model.use_kernel_mode" (modelChanged)="onModelChanged()">{{_model.use_kernel_mode ? "On" : "Off"}}</switch>

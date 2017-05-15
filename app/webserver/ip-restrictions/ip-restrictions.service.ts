@@ -54,6 +54,13 @@ export class IpRestrictionsService {
             .then(feature => {
                 let restrictions = this._ipRestrictions.getValue();
                 DiffUtil.set(restrictions, feature);
+
+                if (!restrictions.enabled) {
+                    let rules = this._rules.getValue();
+                    rules.splice(0);
+                    this._rules.next(rules);
+                }
+
                 this._ipRestrictions.next(restrictions);
             });
     }
@@ -117,8 +124,16 @@ export class IpRestrictionsService {
 
         return this._http.post(this._ipRestrictions.getValue()._links.entries.href.replace("/api", ""), JSON.stringify(rule))
             .then(rule => {
-                this._rules.getValue().unshift(rule);
-                this._rules.next(this._rules.getValue());
+                let rules = this._rules.getValue();
+
+                rules.unshift(rule);
+
+                // Adding first rule enables the feature
+                if (rules.length == 1) {
+                    this.load(this._ipRestrictions.getValue().id);
+                }
+
+                this._rules.next(rules);
             });
     }
 

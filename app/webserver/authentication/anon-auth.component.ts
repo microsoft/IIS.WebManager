@@ -16,7 +16,7 @@ import { AuthenticationService } from './authentication.service';
                 <label *ngIf="!_model.scope">Web Site Default</label>
                 <switch class="block" [disabled]="_locked" [(model)]="_model.enabled" (modelChanged)="onModelChanged()">{{_model.enabled ? "On" : "Off"}}</switch>
             </fieldset>
-            <div class="clear" *ngIf="_model.enabled">
+            <div class="clear" *ngIf="_model.enabled || !_model.scope">
                 <fieldset>
                     <label>User</label>
                     <input class="form-control path" type="text" [disabled]="_locked" [(ngModel)]="_model.user" throttle (modelChanged)="onModelChanged()" />

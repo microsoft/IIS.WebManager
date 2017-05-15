@@ -25,9 +25,9 @@ import { NotificationService } from '../../notification/notification.service';
         <div *ngIf="ipRestrictions" [attr.disabled]="_locked || null">
             <fieldset>
                 <label *ngIf="!ipRestrictions.scope">Web Site Default</label>
-                <switch class="block" [(model)]="enabled" (modelChanged)="onEnabledChanged()">{{enabled ? "On" : "Off"}}</switch>
+                <switch class="block" [(model)]="enabled" #s [auto]="false" (modelChanged)="onEnabledChanging(!s.model)">{{enabled ? "On" : "Off"}}</switch>
             </fieldset>
-            <div *ngIf="enabled">
+            <div *ngIf="enabled || !ipRestrictions.scope">
                 <tabs>
                     <tab [name]="'General'">
                             <ip-addresses [model]="ipRestrictions" (modelChanged)="onModelChanged()"></ip-addresses>
@@ -84,16 +84,23 @@ export class IpRestrictionsComponent implements OnInit, OnDestroy {
         this._subscriptions.forEach(sub => sub.unsubscribe());
     }
 
-    onEnabledChanged() {
-        if (!this.enabled) {
-            this.ipRestrictions.enabled = false;
-            if (!confirm("CAUTION: All rules will be deleted when IP Restrictions is turned off.")) {
-                setTimeout(() => this.enabled = true, 1); // Restore
-                this.ipRestrictions.enabled = true;
-            }
-            else {
-                this.onModelChanged();
-            }
+    onEnabledChanging(val: boolean) {
+        if (!val) {
+            this._notificationService.confirm("Disable IP Restrictions", "CAUTION: All rules will be deleted when IP Restrictions is turned off.")
+                .then(confirmed => {
+                    if (confirmed) {
+                        this.ipRestrictions.enabled = false;
+                        this.enabled = false;
+                        this.onModelChanged();
+                    }
+                    else {
+                        setTimeout(() => this.enabled = true, 1); // Restore
+                        this.ipRestrictions.enabled = true;
+                    }
+                })
+        }
+        else {
+            this.enabled = true;
         }
     }
 
@@ -116,7 +123,7 @@ export class IpRestrictionsComponent implements OnInit, OnDestroy {
                 feature.enabled = false;
             }
 
-            if (this.enabled === null) {
+            if (this.enabled === null || feature.enabled) {
                 this.enabled = feature.enabled;
             }
         }

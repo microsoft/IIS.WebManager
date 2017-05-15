@@ -31,7 +31,7 @@ import { NotificationService } from '../../notification/notification.service';
                 <label *ngIf="!_defDoc.scope">Web Site Default</label>
                 <switch class="block" [(model)]="_defDoc.enabled" (modelChanged)="onModelChanged()">{{_defDoc.enabled ? "On" : "Off"}}</switch>
             </fieldset>
-            <files *ngIf="_defDoc.enabled"></files>
+            <files *ngIf="_defDoc.enabled || !_defDoc.scope"></files>
         </div>
     `,
     styles: [`
