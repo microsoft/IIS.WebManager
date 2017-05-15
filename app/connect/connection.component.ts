@@ -1,11 +1,9 @@
-import {Component, OnDestroy} from '@angular/core';
-import {Router, RouterLink} from '@angular/router';
-import {Subscription}   from 'rxjs/Subscription';
+import { Component, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
-import {CheckBoxComponent} from '../common/checkbox.component';
-import {ConnectService} from './connect.service';
-import {ApiConnection} from './api-connection';
-
+import { ConnectService } from './connect.service';
+import { ApiConnection } from './api-connection';
 
 @Component({
     template: `
@@ -17,11 +15,21 @@ import {ApiConnection} from './api-connection';
                 <input type="text" class="form-control" [(ngModel)]="_conn.displayName"/>
             </fieldset>
             <fieldset>
-                <label>Server URL</label>
+                <label class="inline-block">Server URL</label>
+                <tooltip>
+                    <p class="help-content">
+                        The URL of the server to connect to. The default port for the IIS Administration API is 55539.
+                    </p>
+                </tooltip>
                 <input type="text" placeholder="e.g. localhost or example.com" class="form-control" [ngModel]="_conn.url" (ngModelChange)="setUrl($event)" required throttle/>
             </fieldset>
             <fieldset>
-                <label class="emph">Access Token</label>
+                <label class="emph inline-block">Access Token</label>
+                <tooltip>
+                    <p class="help-content">
+                        An access token is an auto generated value that is used to connect to the IIS Administration API. Only Administrators can create these tokens. <a class="link" title="More Information" href="https://docs.microsoft.com/en-us/iis-administration/management-portal/connecting#connecting"></a>
+                    </p>
+                </tooltip>
                 <input type="text" autocomplete="off" 
                         class="form-control"
                         [ngModel]="''"
@@ -29,8 +37,12 @@ import {ApiConnection} from './api-connection';
                         [attr.placeholder]="!_conn.accessToken ? null : '******************************'" 
                         [attr.required]="!_conn.accessToken || null"/>
             </fieldset>
+            <tooltip class="tokenLink">
+                <p class="help-content">
+                    Access tokens are generated on the server that you wish to connect to. This link will open the access token generation page for the specified server. <a class="link" title="More Information" href="https://docs.microsoft.com/en-us/iis-administration/security/access-tokens"></a>
+                </p>
+            </tooltip>
             <a class="tokenLink" [attr.disabled]="!tokenLink() ? true : null" (click)="gotoAccessToken($event)" [attr.href]="tokenLink()">Get Access Token</a>
-        
             <fieldset>
                 <checkbox2 [(model)]="_conn.persist"><b>Keep me connected from now on</b></checkbox2>
                 <small *ngIf='_conn.persist'>
@@ -73,6 +85,15 @@ import {ApiConnection} from './api-connection';
         .tokenLink {
             float:right;
             margin-top: -12px;
+        }
+
+        tooltip {
+            margin-left: 5px;
+        }
+
+        .help-content {
+            padding: 5px 10px;
+            margin: 0;
         }
 
         checkbox2 {

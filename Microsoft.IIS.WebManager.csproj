@@ -113,6 +113,7 @@
     <TypeScriptCompile Include="app\certificates\certificate.ts" />
     <TypeScriptCompile Include="app\common\focus.ts" />
     <TypeScriptCompile Include="app\common\file-selector.ts" />
+    <TypeScriptCompile Include="app\common\tooltip.component.ts" />
     <TypeScriptCompile Include="app\common\idisposable.ts" />
     <TypeScriptCompile Include="app\common\location-hash.ts" />
     <TypeScriptCompile Include="app\common\section.helper.ts" />

@@ -36,7 +36,7 @@ button.stop:not([disabled]):not(:hover):not(:active)::before {
     color: #a94442;
 }
 
-.bttn.link:not([disabled]):not(:hover):not(:active)::before {
+a.link:not([disabled]):not(:hover):not(:active)::before {
     color: #0093fe;
 }
 

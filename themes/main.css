@@ -20,6 +20,10 @@ h2 {
     font-size: 20px;
 }
 
+h3 {
+    margin-top: 10px;
+}
+
 a,
 a:hover,
 a:focus{
@@ -707,8 +711,11 @@ button.stop:before {
     content: "\f04d";
 }
 
-.bttn.link:before {
+a.link:before {
     content: "\f08e";
+    font-family: FontAwesome;
+    line-height: 22px;
+    vertical-align: middle;
 }
 
 

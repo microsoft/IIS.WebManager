@@ -12,6 +12,7 @@ import { Module as CheckBox } from '../common/checkbox.component';
 import { Module as Dynamic } from '../common/dynamic.component';
 import { Module as VTabs } from '../common/vtabs.component';
 import { Module as AutoFocus } from '../common/focus';
+import { Module as Tooltip} from '../common/tooltip.component';
 
 import { HttpClient } from '../common/httpclient';
 import { NotificationService } from '../notification/notification.service';
@@ -53,7 +54,8 @@ import { WindowService } from './window.service';
         CheckBox,
         Dynamic,
         VTabs,
-        AutoFocus
+        AutoFocus,
+        Tooltip
     ],
     declarations: [
         AppComponent,
