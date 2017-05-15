@@ -61,7 +61,7 @@ export class DirectoryBrowsingService {
 
     public revert() {
         let id = this._directoryBrowsing.getValue().id;
-        return this._http.delete(DirectoryBrowsingService.URL)
+        return this._http.delete(DirectoryBrowsingService.URL + id)
             .then(() => this.init(id));
     }
 
