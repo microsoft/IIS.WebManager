@@ -1,4 +1,4 @@
-﻿import { NgModule, Component, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+﻿import { NgModule, Component, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -43,7 +43,7 @@ import { WindowService } from '../main/window.service';
         }
     `]
 })
-export class TooltipComponent implements OnDestroy {
+export class TooltipComponent implements OnDestroy, AfterViewInit {
 
     private _defaultHeight: number = null;
     private _defaultWidth: number = null;

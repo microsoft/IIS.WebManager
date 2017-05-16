@@ -122,6 +122,7 @@
     <TypeScriptCompile Include="app\common\sort.pipe.ts" />
     <TypeScriptCompile Include="app\common\vtabs.component.ts" />
     <TypeScriptCompile Include="app\common\virtual-list.component.ts" />
+    <TypeScriptCompile Include="app\connect\connection-type.ts" />
     <TypeScriptCompile Include="app\error\api-error.ts" />
     <TypeScriptCompile Include="app\common\bmodel.ts" />
     <TypeScriptCompile Include="app\common\enum.component.ts" />

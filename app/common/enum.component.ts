@@ -1,15 +1,22 @@
-
-import {NgModule, Component, Input, Output, EventEmitter, OnInit, ViewEncapsulation} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import { NgModule, Component, Input, Output, EventEmitter, OnInit, ViewEncapsulation } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'enum',
+    template: `
+        <ul [attr.disabled]="disabled ? true : null">
+            <li *ngFor="let field of fields" [class.background-active]="'' + model == field.value" [hidden]="field.hidden" (click)="select(field)">
+                {{field.name}}
+            </li>
+        </ul>
+    `,
     styles: [`
         ul {
             padding: 0;
             margin: 0;
         }
+
         li {
             float: left;
             cursor: pointer;
@@ -18,15 +25,11 @@ import {FormsModule} from '@angular/forms';
             text-align: center;
             min-width: 45px;
         }
-    `],
 
-    template: `
-        <ul [attr.disabled]="disabled ? true : null">
-            <li *ngFor="let field of fields" [class.background-active]="'' + model == field.value" [hidden]="field.hidden" (click)="select(field)">
-                {{field.name}}
-            </li>
-        </ul>
-    `
+        li:last-of-type {
+            margin-right: 0;
+        }
+    `]
 })
 export class EnumComponent {
     fields: FieldComponent[] = [];

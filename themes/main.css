@@ -81,6 +81,10 @@ span.form-control {
     text-align: right;
 }
 
+.v-top {
+    vertical-align: top;
+}
+
 .capitalize {
     text-transform:capitalize;
 }

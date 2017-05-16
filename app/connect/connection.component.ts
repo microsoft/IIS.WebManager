@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
+import { ConnectionType } from './connection-type';
 import { ConnectService } from './connect.service';
 import { ApiConnection } from './api-connection';
 
@@ -11,12 +12,11 @@ import { ApiConnection } from './api-connection';
         <div *ngIf='!_connecting'>
             <h1>Connect</h1>
             <fieldset>
-                <label>Display Name</label>
-                <input type="text" class="form-control" [(ngModel)]="_conn.displayName"/>
-            </fieldset>
-            <fieldset>
-                <label class="inline-block">Server URL</label>
-                <tooltip>
+                <enum [(model)]="_connectionType" (modelChanged)="onServerTypeChange()">
+                    <field name="Local Server" value="local"></field>
+                    <field name="Remote Server" value="remote"></field>
+                </enum>
+                <tooltip class="inline-block v-top">
                     <p class="help-content">
                         The URL of the server to connect to. The default port for the IIS Administration API is 55539.
                     </p>
@@ -24,10 +24,14 @@ import { ApiConnection } from './api-connection';
                 <input type="text" placeholder="e.g. localhost or example.com" class="form-control" [ngModel]="_conn.url" (ngModelChange)="setUrl($event)" required throttle/>
             </fieldset>
             <fieldset>
+                <label>Display Name</label>
+                <input type="text" class="form-control" [(ngModel)]="_conn.displayName"/>
+            </fieldset>
+            <fieldset>
                 <label class="emph inline-block">Access Token</label>
                 <tooltip>
                     <p class="help-content">
-                        An access token is an auto generated value that is used to connect to the IIS Administration API. Only Administrators can create these tokens. <a class="link" title="More Information" href="https://docs.microsoft.com/en-us/iis-administration/management-portal/connecting#connecting"></a>
+                        An access token is an auto generated value that is used to connect to the IIS Administration API. Only Administrators can create these tokens. <a class="link" title="More Information" href="https://docs.microsoft.com/en-us/IIS-Administration/management-portal/connecting#acquiring-an-access-token"></a>
                     </p>
                 </tooltip>
                 <input type="text" autocomplete="off" 
@@ -124,10 +128,15 @@ import { ApiConnection } from './api-connection';
             text-align: right;
             margin-top: 30px;
         }
+
+        enum {
+            display: inline-block;
+        }
     `]
 })
 export class ConnectionComponent implements OnDestroy {
     private _conn: ApiConnection = new ApiConnection("");
+    private _connectionType: ConnectionType = ConnectionType.Local;
     private _original: ApiConnection;
     private _connecting: boolean;
     private _subs: Array<Subscription> = [];
@@ -149,6 +158,10 @@ export class ConnectionComponent implements OnDestroy {
 
             this._connecting = (c != null);
         }));
+    }
+
+    public ngOnInit() {
+        this.onServerTypeChange();
     }
 
     ngOnDestroy() {
@@ -214,6 +227,11 @@ export class ConnectionComponent implements OnDestroy {
 
         setTimeout(_ => {
             this._conn.url = url;
+
+            if (this._conn.hostname() != 'localhost' && this._connectionType == ConnectionType.Local) {
+                this._connectionType = ConnectionType.Remote;
+                this.onServerTypeChange();
+            }
         });
     }
 
@@ -223,5 +241,20 @@ export class ConnectionComponent implements OnDestroy {
 
     private connName(): string {
         return this._conn.displayName || this._conn.hostname();
+    }
+
+    private onServerTypeChange(): void {
+        if (this._connectionType == ConnectionType.Local) {
+            this._conn.url = "https://localhost:55539";
+            this._conn.displayName = "Local IIS";
+        }
+        else {
+            if (this._conn.hostname() == 'localhost') {
+                this._conn.url = "";
+            }
+            if (this._conn.displayName == "Local IIS") {
+                this._conn.displayName = this._conn.hostname();
+            }
+        }
     }
 }
