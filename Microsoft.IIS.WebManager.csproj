@@ -143,6 +143,7 @@
     <TypeScriptCompile Include="app\files\parallel-executor.ts" />
     <TypeScriptCompile Include="app\files\code-editor.component.ts" />
     <TypeScriptCompile Include="app\files\upload.component.ts" />
+    <TypeScriptCompile Include="app\header\settings.component.ts" />
     <TypeScriptCompile Include="app\main\options.service.ts" />
     <TypeScriptCompile Include="app\main\window.service.ts" />
     <TypeScriptCompile Include="app\notification\modal.component.ts" />

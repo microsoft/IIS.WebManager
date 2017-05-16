@@ -18,6 +18,9 @@ import { OptionsService } from '../main/options.service';
             <modal class="color-normal"></modal>
             
             <div class="right">
+                <settings class="v-center"></settings>
+            </div>
+            <div class="right">
                 <notification-indicator class="v-center"></notification-indicator>
             </div>
         </div>
@@ -69,18 +72,6 @@ import { OptionsService } from '../main/options.service';
         .right {
             display:inline-block;
             float:right;
-        }
-
-        .palette {
-            width: 15px;
-            height: 15px;
-            display: inline-block;
-            vertical-align: middle;
-            margin-top: 19px;
-            margin-right: 5px;
-            border-style: solid;
-            border-width: 1px;
-            cursor: pointer;
         }
 
         .progress {

@@ -14,6 +14,7 @@ import { Module as VTabs } from '../common/vtabs.component';
 import { Module as AutoFocus } from '../common/focus';
 import { Module as Tooltip } from '../common/tooltip.component';
 import { Module as Enum } from '../common/enum.component';
+import { Module as Selector } from '../common/selector';
 
 import { HttpClient } from '../common/httpclient';
 import { NotificationService } from '../notification/notification.service';
@@ -31,6 +32,7 @@ import { ConnectionComponent } from '../connect/connection.component';
 import { ConnectionPickerComponent } from '../connect/connection-picker.component';
 import { GetComponent } from './get.component';
 import { HeaderComponent } from '../header/header.component';
+import { SettingsComponent } from '../header/settings.component';
 import { NotificationComponent } from '../notification/notification.component';
 import { NotificationIndicator } from '../notification/notification-indicator';
 import { InformationComponent } from '../notification/information.component';
@@ -58,6 +60,7 @@ import { WindowService } from './window.service';
         AutoFocus,
         Tooltip,
         Enum,
+        Selector
     ],
     declarations: [
         AppComponent,
@@ -66,6 +69,7 @@ import { WindowService } from './window.service';
         ConnectionPickerComponent,
         GetComponent,
         HeaderComponent,
+        SettingsComponent,
         NotificationComponent,
         NotificationIndicator,
         ModalComponent,
