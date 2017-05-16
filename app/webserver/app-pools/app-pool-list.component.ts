@@ -67,8 +67,5 @@ export class AppPoolListComponent implements OnInit, OnDestroy {
         if (this.itemSelected.observers.length > 0) {
             this.itemSelected.emit(pool);
         }
-        else {
-            this._router.navigate(['/webserver', 'app-pools', pool.id]);
-        }
     }
 }

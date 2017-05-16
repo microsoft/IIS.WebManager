@@ -50,7 +50,7 @@ import { AppPoolsService } from '../app-pools/app-pools.service';
                 <limits [model]="site.limits" (modelChanged)="onModelChanged()"></limits>
             </tab>
             <tab [name]="'Application Pool'">
-                <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">{{site.application_pool ? site.application_pool.name : 'select'}} <i class="fa fa-caret-down"></i></button>
+                <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Select Application Pool <i class="fa fa-caret-down"></i></button>
                 <selector #poolSelect class="container-fluid">
                     <app-pools #appPools [actions]="'view'" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
                 </selector>

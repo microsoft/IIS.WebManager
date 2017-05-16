@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { Module as BModel } from '../../common/bmodel';
 import { Module as Validators } from '../../common/validators';
@@ -19,6 +20,7 @@ import { IdentityComponent } from './identity.component';
     imports: [
         FormsModule,
         CommonModule,
+        RouterModule,
         BModel,
         Validators,
         Switch,

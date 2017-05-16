@@ -12,20 +12,20 @@ import { NotificationService } from '../../notification/notification.service';
     selector: 'website-item',
     template: `
     <div *ngIf="model" class="row grid-item border-color">
-        <div class='col-xs-8 col-sm-4 col-md-3 col-lg-3'>
-            <div class='name' [class.https]="hasHttps()" [class.started]="started()">
+        <div class='col-xs-7 col-sm-4 col-md-3 col-lg-3'>
+            <div class='name'>
                 <a class="color-normal hover-color-active" [routerLink]="['/webserver/websites', model.id]">{{model.name}}</a>
-                <small class='physical-path hidden-xs' *ngIf="field('path')">{{model.physical_path}}</small>
-                <small class='status visible-xs' *ngIf="field('status')">{{model.status}}</small>
+                <small class='physical-path' *ngIf="field('path')">{{model.physical_path}}</small>
             </div>
         </div>
-        <div class='col-xs-3 col-sm-2 col-md-1 hidden-xs valign' *ngIf="field('status')">
+        <div class='col-xs-3 col-sm-2 col-md-1 valign' *ngIf="field('status')">
             <span class='status' [ngClass]="model.status">{{model.status}}</span>
+            <span title="HTTPS is ON" class="visible-xs-inline https" *ngIf="hasHttps()"></span>
         </div>
         <div class='col-lg-2 visible-lg valign'  *ngIf="field('app-pool')">
             <div *ngIf="model.application_pool">
                 <a [routerLink]="['/webserver', 'app-pools', model.application_pool.id]">
-                    <span class="block" [ngClass]="model.application_pool.status">{{model.application_pool.name}}
+                    <span [ngClass]="model.application_pool.status">{{model.application_pool.name}}
                         <span class="status" *ngIf="model.application_pool.status != 'started'">  ({{model.application_pool.status}})</span>
                     </span>
                 </a>
@@ -36,7 +36,7 @@ import { NotificationService } from '../../notification/notification.service';
         </div>
         <div class="actions">
             <div class="selector-wrapper">
-                <button title="More" (click)="openSelector($event)" [class.background-active]="(_selector && _selector.opened) || false">
+                <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="(_selector && _selector.opened) || false">
                     <i class="fa fa-ellipsis-h"></i>
                 </button>
                 <selector [right]="true">
@@ -62,18 +62,15 @@ import { NotificationService } from '../../notification/notification.service';
             font-size: 16px;
         }
 
-        .name > span:first-of-type {
-            display: block;
-        }
-
-        .name.https .status:after {
+        .https:after {
             font-family: FontAwesome;
             content: "\\f023";
             padding-left: 5px;
         }
 
-        .name a {
+        a {
             background: transparent;
+            display: inline;
         }
 
         .status {
@@ -186,6 +183,10 @@ export class WebSiteItem {
         e.preventDefault();
         this._selector.toggle();
     }
+
+    private prevent(e: Event) {
+        e.preventDefault();
+    }
 }
 
 
@@ -204,7 +205,7 @@ export class WebSiteItem {
                         [count]="model.length"
                         (rangeChange)="onRangeChange($event)">
                 <li class="hover-editing" tabindex="-1" *ngFor="let s of _view">
-                    <website-item (click)="onItemClicked($event, s)" [model]="s" [actions]="actions" [fields]="fields"></website-item>
+                    <website-item (click)="onItemClicked($event, s)" (dblclick)="onDblClick($event, s)" [model]="s" [actions]="actions" [fields]="fields"></website-item>
                 </li>
             </virtual-list>
         </div>
@@ -247,6 +248,14 @@ export class WebSiteList {
         if (this.itemSelected.observers.length > 0) {
             this.itemSelected.emit(site);
         }
+    }
+
+    private onDblClick(e: Event, site: WebSite) {
+        if (e.defaultPrevented) {
+            return;
+        }
+
+        this._router.navigate(['webserver', 'websites', site.id]);
     }
 
     private hasField(field: string): boolean {

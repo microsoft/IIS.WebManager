@@ -5,6 +5,7 @@ import { Selector } from '../../common/selector';
 import { Status } from '../../common/status';
 import { OrderBy } from '../../common/sort.pipe';
 
+import { NotificationService } from '../../notification/notification.service';
 import { AppPoolsService } from './app-pools.service';
 import { ApplicationPool, ProcessModelIdentityType } from './app-pool';
 
@@ -13,28 +14,24 @@ import { ApplicationPool, ProcessModelIdentityType } from './app-pool';
     selector: 'app-pool-item',
     template: `
     <div *ngIf="model" class="grid-item row border-color">
-        <div class='col-xs-9 col-sm-4 col-md-3 col-lg-3'>
-            <div class='name' [class.started]="started()">
-                <span class="block">{{model.name}}</span>
-                <small>
-                    <span class='status visible-xs'>{{model.status}}</span>
-                    <span class='visible-xs' *ngIf='identity()'>,&nbsp;</span>
-                    <span>{{identity()}}</span>
-                </small>
-            </div>
+        <div class='col-xs-7 col-sm-4 col-md-3 v-align big'>
+            <a class="color-normal hover-color-active" [routerLink]="['/webserver/app-pools', model.id]">{{model.name}}</a>
         </div>
-        <div class='col-xs-3 col-md-1 col-lg-1 hidden-xs valign'>
+        <div class='col-xs-3 col-md-2 v-align'>
             <span class='status' [ngClass]="model.status">{{model.status}}</span>
         </div>
-        <div class='col-md-1 hidden-xs hidden-sm valign capitalize'>
+        <div class='col-md-2 hidden-xs hidden-sm v-align capitalize'>
             <span>{{model.pipeline_mode}}</span>
         </div>
-        <div class='col-sm-2 col-md-1 hidden-xs valign'>
+        <div class='col-sm-2 hidden-xs v-align'>
             <span>{{runtimeVer()}}</span>
         </div>
-        <div class="actions hidden-xs">
+        <div class="col-lg-2 visible-lg v-align">
+            {{identity()}}
+        </div>
+        <div class="actions">
             <div class="selector-wrapper">
-                <button title="More" (click)="openSelector($event)" [class.background-active]="(_selector && _selector.opened) || false">
+                <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="(_selector && _selector.opened) || false">
                     <i class="fa fa-ellipsis-h"></i>
                 </button>
                 <selector [right]="true">
@@ -50,30 +47,18 @@ import { ApplicationPool, ProcessModelIdentityType } from './app-pool';
     </div>
     `,
     styles: [`
-        .name {
+        .big {
             font-size: 16px;
         }
 
-        .name > span:first-of-type {
-            display: block;
-        }
-
-        .name small {
-            font-size: 12px;
-            font-weight: normal;
-        }
-
-        .name small span {
-            float:left;
+        .big a {
+            display: inline;
+            background: transparent;
         }
 
         span {
             overflow: hidden;
             white-space:nowrap;
-        }
-
-        .valign {
-            padding-top: 10px;
         }
 
         .row {
@@ -82,10 +67,9 @@ import { ApplicationPool, ProcessModelIdentityType } from './app-pool';
 
         [class*="col-"] {
             padding-left: 0;
-        }
-
-        .actions {
-            padding-top: 4px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
 
         .actions ul {
@@ -94,6 +78,10 @@ import { ApplicationPool, ProcessModelIdentityType } from './app-pool';
 
         .selector-wrapper {
             position: relative;
+        }
+
+        .v-align {
+            padding-top: 6px;
         }
 
         selector {
@@ -114,16 +102,16 @@ export class AppPoolItem {
     @ViewChild(Selector) private _selector: Selector;
 
     constructor(private _router: Router,
-        @Inject("AppPoolsService") private _service: AppPoolsService) {
+                @Inject("AppPoolsService") private _service: AppPoolsService,
+                private _notificationService: NotificationService) {
     }
 
     onDelete(e: Event) {
         e.stopPropagation();
         this._selector.close();
 
-        if (confirm("Are you sure you want to delete Application Pool '" + this.model.name + "'")) {
-            this._service.delete(this.model);
-        }
+        this._notificationService.confirm("Delete Application Pool", "Are you sure you want to delete Application Pool '" + this.model.name + "'")
+            .then(confirmed => confirmed && this._service.delete(this.model));
     }
 
     onStart(e: Event) {
@@ -156,10 +144,10 @@ export class AppPoolItem {
                 return "Local Service";
             case ProcessModelIdentityType.NetworkService:
                 return "Network Service";
+            case ProcessModelIdentityType.ApplicationPoolIdentity:
+                return "AppPool Identity";
             case ProcessModelIdentityType.SpecificUser:
                 return this.model.identity.username;
-            case ProcessModelIdentityType.ApplicationPoolIdentity:
-                return "";
             default:
         }
 
@@ -191,6 +179,10 @@ export class AppPoolItem {
         e.preventDefault();
         this._selector.toggle();
     }
+
+    private prevent(e: Event) {
+        e.preventDefault();
+    }
 }
 
 
@@ -200,24 +192,21 @@ export class AppPoolItem {
     template: `
         <div class="container-fluid">
             <div class="hidden-xs border-active grid-list-header row" [hidden]="model.length == 0">
-                <label class="col-xs-8 col-sm-4 col-md-3 col-lg-3" [ngClass]="_orderBy.css('name')" (click)="_orderBy.sort('name')">Name</label>
-                <label class="col-xs-3 col-md-1 col-lg-1" [ngClass]="_orderBy.css('status')" (click)="_orderBy.sort('status')">Status</label>
-                <label class="col-md-1 hidden-sm" [ngClass]="_orderBy.css('pipeline_mode')" (click)="_orderBy.sort('pipeline_mode')">Pipeline</label>
+                <label class="col-xs-7 col-sm-4 col-md-3" [ngClass]="_orderBy.css('name')" (click)="_orderBy.sort('name')">Name</label>
+                <label class="col-xs-3 col-md-2" [ngClass]="_orderBy.css('status')" (click)="_orderBy.sort('status')">Status</label>
+                <label class="col-md-2 hidden-sm" [ngClass]="_orderBy.css('pipeline_mode')" (click)="_orderBy.sort('pipeline_mode')">Pipeline</label>
                 <label class="col-md-2" [ngClass]="_orderBy.css('managed_runtime_version')" (click)="_orderBy.sort('managed_runtime_version')">.NET Framework</label>
+                <label class="col-lg-2 visible-lg">Identity</label>
             </div>
             
             <ul class="grid-list">
-                <li *ngFor="let p of model | orderby: _orderBy.Field: _orderBy.Asc" (click)="onItemSelected($event, p);" class="hover-editing">
+                <li *ngFor="let p of model | orderby: _orderBy.Field: _orderBy.Asc" (click)="onItemSelected($event, p);" (dblclick)="onDblClick($event, p)" class="hover-editing">
                     <app-pool-item [model]="p" [actions]="actions"></app-pool-item>
                 </li>
             </ul>
         </div>
     `,
     styles: [`
-        li:hover {
-            cursor: pointer;
-        }
-
         [class*="col-"] {
             padding-left: 0;
         }
@@ -236,7 +225,8 @@ export class AppPoolList {
 
     private _orderBy: OrderBy = new OrderBy();
 
-    constructor( @Inject("AppPoolsService") private _service: AppPoolsService) {
+    constructor(@Inject("AppPoolsService") private _service: AppPoolsService,
+                private _router: Router) {
     }
 
     private onItemSelected(e: Event, pool: ApplicationPool) {
@@ -245,5 +235,13 @@ export class AppPoolList {
         }
 
         this.itemSelected.next(pool);
+    }
+
+    private onDblClick(e: Event, pool: ApplicationPool) {
+        if (e.defaultPrevented) {
+            return;
+        }
+
+        this._router.navigate(['webserver', 'app-pools', pool.id]);
     }
 }
