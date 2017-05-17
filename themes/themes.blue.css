@@ -238,3 +238,9 @@ button[disabled] i.fa,
 .sidebar > vtabs .items:before {
     color: #0093fe;
 }
+
+.sidebar .items,
+.sidebar hr {
+    background-color: #f3f3f3;
+    border-color: #d4d4d4;
+}

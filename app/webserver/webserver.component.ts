@@ -15,9 +15,11 @@ import { WebServerService } from './webserver.service';
         <div *ngIf="webServer">
             <loading *ngIf="!webServer"></loading>
             <webserver-header [model]="webServer" [class.sidebar-nav-content]="_options.active"></webserver-header>
-            <div class="sidebar" [class.nav]="_options.active">
+            <div class="sidebar crumb" [class.nav]="_options.active">
                 <ul class="items">
                     <li class="home"><a [routerLink]="['/']">Home</a></li>
+                    <li class="webserver color-active">Web Server</li>
+                    <hr />
                 </ul>
                 <vtabs *ngIf="webServer" [markLocation]="true" (activate)="_options.refresh()">
                     <item [name]="'General'" [ico]="'fa fa-wrench'">
@@ -32,9 +34,10 @@ import { WebServerService } from './webserver.service';
     `,
     styles: [`
         .sidebar .home::before {content: "\\f015";}
+        .sidebar .webserver::before {content: "\\f233";}
 
         :host >>> .sidebar > vtabs .vtabs > .items {
-            top: 110px;
+            top: 143px;
         }
 
         :host >>> .sidebar.nav > vtabs .vtabs > .content {

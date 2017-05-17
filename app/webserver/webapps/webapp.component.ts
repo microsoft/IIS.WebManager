@@ -18,10 +18,15 @@ import {WebAppsService} from './webapps.service';
         <loading *ngIf="!(app || notFound)"></loading>
         <webapp-header *ngIf="app" [model]="app" [class.sidebar-nav-content]="_options.active"></webapp-header>
 
-        <div *ngIf="app" class="sidebar" [class.nav]="_options.active">
+        <div *ngIf="app" class="sidebar crumb" [class.nav]="_options.active">
             <ul class="items">
                 <li class="home"><a [routerLink]="['/']">Home</a></li>
-                <li class="website color-active"><a [routerLink]="['/webserver/websites/' + app.website.id]">{{app.website.name}}</a></li>
+                <li class="webserver"><a [routerLink]="['/webserver']">Web Server</a></li>
+                <li class="website"><a [routerLink]="['/webserver/web-sites']">Web Sites</a></li>
+                <li class="website"><a [routerLink]="['/webserver/websites/', app.website.id]">{{app.website.name}}</a></li>
+                <li class="webapps"><a [routerLink]="['/webserver/websites', app.website.id, 'web-applications']">Web Applications</a></li>
+                <li class="webapps color-active"><a>{{app.path}}</a></li>
+                <hr />
             </ul>
             <vtabs [markLocation]="true" (activate)="_options.refresh()">
                 <item [name]="'General'" [ico]="'fa fa-wrench'">
@@ -40,7 +45,7 @@ import {WebAppsService} from './webapps.service';
         .sidebar .webapps::before {content: "\\f121";}
 
         :host >>> .sidebar > vtabs .vtabs > .items {
-            top: 145px;
+            top: 287px;
         }
 
         :host >>> .sidebar.nav > vtabs .vtabs > .content {

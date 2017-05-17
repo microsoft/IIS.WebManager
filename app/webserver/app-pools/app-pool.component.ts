@@ -17,11 +17,13 @@ import {AppPoolsService} from './app-pools.service';
         <loading *ngIf="!(pool || notFound)"></loading>
         <app-pool-header *ngIf="pool" [pool]="pool" [class.sidebar-nav-content]="_options.active"></app-pool-header>
 
-        <div *ngIf="pool" class="sidebar" [class.nav]="_options.active">
+        <div *ngIf="pool" class="sidebar crumb" [class.nav]="_options.active">
             <ul class="items">
                 <li class="home"><a [routerLink]="['/']">Home</a></li>
                 <li class="webserver"><a [routerLink]="['/webserver']">Web Server</a></li>
-                <li class="apppools color-active"><a [routerLink]="['/webserver/application-pools']">Application Pools</a></li>
+                <li class="apppools"><a [routerLink]="['/webserver/application-pools']">Application Pools</a></li>
+                <li class="apppools color-active"><a>{{pool.name}}</a></li>
+                <hr />
             </ul>
             <vtabs [markLocation]="true" (activate)="_options.refresh()">
                 <item [name]="'General'" [ico]="'fa fa-wrench'">
@@ -39,7 +41,7 @@ import {AppPoolsService} from './app-pools.service';
         .sidebar .apppools::before {content: "\\f085";}
 
         :host >>> .sidebar > vtabs .vtabs > .items {
-            top: 185px;
+            top: 215px;
         }
 
         :host >>> .sidebar.nav > vtabs .vtabs > .content {

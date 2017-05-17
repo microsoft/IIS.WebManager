@@ -12,7 +12,7 @@ import { OptionsService } from './options.service';
         }
 
         :host >>> .sidebar > vtabs .items {
-            top: 115px;
+            top: 107px;
         }
 
         :host >>> .sidebar.nav > vtabs .content {
@@ -23,7 +23,8 @@ import { OptionsService } from './options.service';
         <div>
             <div class="sidebar" [class.nav]="_options.active">
                 <ul class="items">
-                    <li class="home"><a [routerLink]="['/']">Home</a></li>
+                    <li class="home color-active"><a [routerLink]="['/']">Home</a></li>
+                    <hr />
                 </ul>
                 <vtabs [markLocation]="true" (activate)="_options.refresh()">
                     <item [name]="'Web Sites'" [ico]="'fa fa-globe'">

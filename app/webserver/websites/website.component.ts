@@ -1,5 +1,3 @@
-declare var GLOBAL_MODULES: any;
-
 import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -16,11 +14,13 @@ import { OptionsService } from '../../main/options.service';
         <not-found *ngIf="notFound"></not-found>
         <loading *ngIf="!(site || notFound)"></loading>
         <website-header *ngIf="site" [site]="site" [class.sidebar-nav-content]="_options.active"></website-header>
-        <div *ngIf="site" class="sidebar" [class.nav]="_options.active">
+        <div *ngIf="site" class="sidebar crumb" [class.nav]="_options.active">
             <ul class="items">
                 <li class="home"><a [routerLink]="['/']">Home</a></li>
                 <li class="webserver"><a [routerLink]="['/webserver']">Web Server</a></li>
-                <li class="websites color-active"><a [routerLink]="['/webserver/web-sites']">Web Sites</a></li>
+                <li class="websites"><a [routerLink]="['/webserver/web-sites']">Web Sites</a></li>
+                <li class="websites color-active">{{site.name}}</li>
+                <hr />
             </ul>
             <vtabs [markLocation]="true" (activate)="_options.refresh()">
                 <item [name]="'General'" [ico]="'fa fa-wrench'">
@@ -38,7 +38,7 @@ import { OptionsService } from '../../main/options.service';
         .sidebar .websites::before {content: "\\f0ac";}
 
         :host >>> .sidebar vtabs .vtabs > .items {
-            top: 185px;
+            top: 215px;
         }
 
         :host >>> .sidebar.nav vtabs .vtabs > .content {

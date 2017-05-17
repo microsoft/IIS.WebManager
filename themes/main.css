@@ -557,9 +557,9 @@ select[enabled]:not(.inactive) {
     font-family: FontAwesome;
     padding-right: 10px;
     display:inline-block;
-    font-size: 60%;
     line-height: 32px;
     opacity: .7;
+    vertical-align: bottom;
 }
 
 
@@ -726,10 +726,6 @@ a.link:before {
 /*
     SideBar
 */
-.sidebar {
-    margin-top: 15px;
-}
-
 .sidebar .items {
     width: 200px;
     padding: 0;
@@ -740,6 +736,18 @@ a.link:before {
     display: inline-block;
     overflow: hidden;
     overflow-y: auto;
+    left: 0;
+    padding-left: 10px;
+    border-right-style: solid;
+    border-right-width: 1px;
+}
+
+.sidebar > .items {
+    padding-top: 15px;
+}
+
+.sidebar vtabs .items {
+    padding-left: 25px;
 }
 
 .sidebar .items li {
@@ -750,10 +758,33 @@ a.link:before {
     font-family: 'Segoe UI';
     padding: 0;
     font-weight: 500;
+    position: relative;
 
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.sidebar.crumb > .items li {
+    overflow: visible;
+}
+
+.sidebar.crumb > .items li:not(:last-of-type):after {
+    content: "";
+    position: absolute;
+    left: 5px;
+    bottom: -6px;
+    border-left: 1px solid #0093fe;
+    height: 14px;
+}
+
+.sidebar.crumb > .items li:nth-last-child(2):after {
+    height: 26px;
+    bottom: -18px;
+}
+
+.sidebar.crumb > .items li:last-child:not(:first-child) {
+    /*padding-top: 10px;*/
 }
 
 .sidebar .items li > i,
@@ -803,14 +834,10 @@ a.link:before {
     bottom: 0;
 }
 
-.sidebar > vtabs:last-child .items:before {
-    content: "FEATURES";
-    text-transform: capitalize;
-    font-size: 70%;
-    font-weight: bold;
-    display: inline-block;
-    width:100%;
-    border-bottom:1px dotted;
-    margin-bottom: 5px;
-    padding-bottom: 2px;
+.sidebar hr {
+    margin-bottom: 0;
+    margin-top: 5px;
+    margin-right: 10px;
+    border-style: solid;
+    border-width: 1px;
 }
