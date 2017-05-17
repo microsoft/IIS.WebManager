@@ -1,7 +1,8 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 
+import { CertificateListItem } from './certificate-list-item';
 import { Certificate } from './certificate';
 import { DateTime } from '../common/primitives';
 import { Range } from '../common/virtual-list.component';
@@ -33,8 +34,9 @@ import { CertificatesService } from './certificates.service';
                         [count]="_items.length"
                         (rangeChange)="onRangeChange($event)">
             <li class="hover-editing"
-                            *ngFor="let cert of _view"
-                            (click)="selectCert(cert, $event)">
+                            *ngFor="let cert of _view; let i = index;"
+                            (click)="selectCert(cert, $event)"
+                            (dblclick)="onDblClick($event, i)">
                 <certificate [model]="cert"></certificate>
             </li>
         </virtual-list>
@@ -99,17 +101,16 @@ import { CertificatesService } from './certificates.service';
     `]
 })
 export class CertificatesListComponent implements OnInit, OnDestroy {
+    @Output() public itemSelected: EventEmitter<any> = new EventEmitter();
+    @Input() public lazy: boolean;
+
     private _filter = "";
     private certs: Array<Certificate>;
     private _view: Array<Certificate> = [];
     private _items: Array<Certificate>;
     private _range: Range = new Range(0, 0);
     private _subscriptions: Array<Subscription> = [];
-
-    @Output() itemSelected: EventEmitter<any> = new EventEmitter();
-
-    @Input()
-    lazy: boolean;
+    @ViewChildren(CertificateListItem) private _listItems: QueryList<CertificateListItem>;
 
     constructor(private _service: CertificatesService) {
     }
@@ -160,5 +161,17 @@ export class CertificatesListComponent implements OnInit, OnDestroy {
 
     private refresh() {
         this._service.load();
+    }
+
+    private onDblClick(e: Event, index: number) {
+        if (e.defaultPrevented) {
+            return;
+        }
+
+        this._listItems.forEach((c, i) => {
+            if (i == index) {
+                c.toggleView();
+            }
+        });
     }
 }

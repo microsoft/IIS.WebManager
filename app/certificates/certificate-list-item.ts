@@ -106,6 +106,10 @@ export class CertificateListItem {
     private _viewing: boolean;
     @ViewChild(Selector) private _selector: Selector;
 
+    public toggleView() {
+        this._viewing = !this._viewing;
+    }
+
     private get validTo() {
         return Certificate.friendlyValidTo(this.model);
     }
@@ -121,8 +125,7 @@ export class CertificateListItem {
     private onDetails(e: Event) {
         e.preventDefault();
         this._selector.close();
-
-        this._viewing = !this._viewing;
+        this.toggleView();
     }
 
     private prevent(e: Event) {

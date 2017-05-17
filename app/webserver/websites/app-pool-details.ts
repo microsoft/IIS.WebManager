@@ -1,5 +1,6 @@
-﻿import { Component, OnInit, Input, Optional, Inject } from '@angular/core';
+﻿import { Component, OnInit, Input, Optional, Inject, ViewChild } from '@angular/core';
 
+import { Selector } from '../../common/selector';
 import { AppPoolsService } from '../app-pools/app-pools.service';
 import { ApplicationPool } from '../app-pools/app-pool';
 import { DiffUtil } from '../../utils/diff';
@@ -7,9 +8,24 @@ import { DiffUtil } from '../../utils/diff';
 @Component({
     selector: 'app-pool-details',
     template: `
+        <div class="actions">
+            <div class="selector-wrapper">
+                <button (click)="openSelector()" [class.background-active]="(_selector && _selector.opened) || false">
+                    <i class="fa fa-ellipsis-h"></i>
+                </button>
+                <selector [right]="true">
+                    <ul>
+                        <li><button class="refresh" title="Recycle" title="Recycle" [attr.disabled]="!started || null" (click)="onRecycle()">Recycle</button></li>
+                        <li><button class="start" title="Start" [attr.disabled]="model.status != 'stopped' ? true : null" (click)="onStart()">Start</button></li>
+                        <li><button class="stop" title="Stop" [attr.disabled]="!started || null" (click)="onStop()">Stop</button></li>
+                    </ul>
+                </selector>
+            </div>
+        </div>
         <fieldset>
             <label>Name</label>
             <a [routerLink]="['/webserver', 'app-pools', model.id]" class="name">{{model.name}}</a>
+            <span class="status" *ngIf="!started">({{pool.status}})</span>
         </fieldset>
         <fieldset *ngIf="_svc">
             <label>Auto Start</label>
@@ -38,11 +54,31 @@ import { DiffUtil } from '../../utils/diff';
         .name {
             font-size: 16px;
         }
+
+        .actions ul {
+            margin-bottom: 0;
+        }
+
+        .selector-wrapper {
+            position: relative;
+        }
+
+        selector {
+            position:absolute;
+            right:0;
+            top: 32px;
+        }
+
+        selector button {
+            min-width: 125px;
+            width: 100%;
+        }
     `]
 })
 export class AppPoolDetailsComponent {
     @Input() public model: ApplicationPool;
 
+    @ViewChild(Selector) private _selector: Selector;
     private _original: ApplicationPool;
 
     constructor(@Optional() @Inject("AppPoolsService") private _svc: AppPoolsService) {
@@ -71,5 +107,28 @@ export class AppPoolDetailsComponent {
     private setAppPool(p: ApplicationPool) {
         this.model = p;
         this._original = JSON.parse(JSON.stringify(p));
+    }
+
+    private openSelector() {
+        this._selector.toggle();
+    }
+
+    private get started(): boolean {
+        return this.model.status == 'started';
+    }
+
+    onStart(e: Event) {
+        this._selector.close();
+        this._svc.start(this.model);
+    }
+
+    onStop(e: Event) {
+        this._selector.close();
+        this._svc.stop(this.model);
+    }
+
+    onRecycle(e: Event) {
+        this._selector.close();
+        this._svc.recycle(this.model);
     }
 }

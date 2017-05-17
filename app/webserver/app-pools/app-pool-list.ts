@@ -36,7 +36,7 @@ import { ApplicationPool, ProcessModelIdentityType } from './app-pool';
                 </button>
                 <selector [right]="true">
                     <ul>
-                        <li><button class="refresh" title="Start" *ngIf="allow('recycle')" title="Recycle"  [attr.disabled]="!started() || null" (click)="onRecycle($event)">Recycle</button></li>
+                        <li><button class="refresh" title="Recycle" *ngIf="allow('recycle')" title="Recycle"  [attr.disabled]="!started() || null" (click)="onRecycle($event)">Recycle</button></li>
                         <li><button class="start" title="Start" *ngIf="allow('start')" [attr.disabled]="model.status != 'stopped' ? true : null" (click)="onStart($event)">Start</button></li>
                         <li><button class="stop" *ngIf="allow('stop')" title="Stop" [attr.disabled]="!started() || null" (click)="onStop($event)">Stop</button></li>
                         <li><button class="delete" *ngIf="allow('delete')" title="Delete" (click)="onDelete($event)">Delete</button></li>
