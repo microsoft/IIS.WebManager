@@ -93,7 +93,6 @@ export class DiffUtil {
         return result;
     }
 
-
     public static set(obj: any, data: any): any {
         if (!data) {
             return obj;
@@ -112,6 +111,20 @@ export class DiffUtil {
             }
             else {
                 obj[k] = val;
+            }
+        }
+
+        return obj;
+    }
+
+    public static merge(obj: any, data: any): any {
+        if (!data) {
+            return obj;
+        }
+
+        for (let k in data) {
+            if (!obj[k]) {
+                obj[k] = data[k];
             }
         }
 

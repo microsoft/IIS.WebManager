@@ -1,25 +1,22 @@
+import { Injectable, OnDestroy, Inject, Optional } from '@angular/core';
+import { Response } from '@angular/http';
 
-import {Injectable, OnDestroy, Inject, Optional} from '@angular/core';
-import {Response} from '@angular/http';
+import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
+import { Observable } from "rxjs/Observable";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { Subscription } from "rxjs/subscription";
 
-// 
-// Don't import rxjs/Rx. Loading is too slow!
-// Import only needed operators
-import {IntervalObservable} from 'rxjs/observable/IntervalObservable';
-import {Observable} from "rxjs/Observable";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {Subscription} from "rxjs/subscription";
+import { DiffUtil } from '../../utils/diff';
+import { HttpClient } from '../../common/httpclient';
+import { Status } from '../../common/status';
+import { WebSite, Binding } from './site';
 
-import {HttpClient} from '../../common/httpclient';
-import {Status} from '../../common/status';
-import {WebSite, Binding} from './site';
+import { WebServerService } from '../webserver.service';
+import { AppPoolsService } from '../app-pools/app-pools.service';
+import { ApplicationPool } from '../app-pools/app-pool';
 
-import {WebServerService} from '../webserver.service';
-import {AppPoolsService} from '../app-pools/app-pools.service';
-import {ApplicationPool} from '../app-pools/app-pool';
-
-import {ApiError} from '../../error/api-error';
-import {NotificationService} from '../../notification/notification.service';
+import { ApiError } from '../../error/api-error';
+import { NotificationService } from '../../notification/notification.service';
 
 
 @Injectable()
@@ -32,7 +29,7 @@ export class WebSitesService implements OnDestroy {
     private _data: Map<string, WebSite> = new Map<string, WebSite>();
     private _webSites: BehaviorSubject<Map<string, WebSite>> = new BehaviorSubject<Map<string, WebSite>>(this._data);
     private _appPools: Map<string, ApplicationPool> = new Map<string, ApplicationPool>();
-    
+
     private _subscriptions: Array<Subscription> = [];
 
 
@@ -64,8 +61,12 @@ export class WebSitesService implements OnDestroy {
                 this._data.forEach(s => {
                     if (s.application_pool) {
                         let pool = this._appPools.get(s.application_pool.id);
-                        if (pool || !s.application_pool.id) {
+                        if (pool && pool !== s.application_pool) {
+                            let p = s.application_pool;
                             s.application_pool = pool;
+                            if ((<any>s)._full) {
+                                DiffUtil.merge(s.application_pool, p);
+                            }
                         }
                     }
                 });
@@ -271,6 +272,10 @@ export class WebSitesService implements OnDestroy {
             // Update existing
             // Keep all _links
             let links = site._links;
+
+            if (s.application_pool && site.application_pool) {
+                DiffUtil.merge(s.application_pool, site.application_pool);
+            }
 
             for (var p in s) {
                 site[p] = s[p];
