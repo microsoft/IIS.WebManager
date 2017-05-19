@@ -36,8 +36,11 @@ import { WindowService } from '../main/window.service';
             bottom: 16px;
             left: 12px;
             min-width: 250px;
+            padding: 5px 10px;
+            margin: 0;
+            display: inline-block;
         }
-        
+
         .help-container:hover .help-content {
             visibility: visible !important;
         }

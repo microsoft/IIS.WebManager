@@ -106,7 +106,13 @@ export class ConnectService {
     }
 
     public delete(conn: ApiConnection) {
+        let deletingActive = conn == this._active;
+
         this._store.delete(conn);
+
+        if (deletingActive) {
+            this._router.navigate(['/connect']);
+        }
     }
 
     public edit(conn: ApiConnection) {

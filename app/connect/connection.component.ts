@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -10,54 +10,49 @@ import { ApiConnection } from './api-connection';
     template: `
     <div class="center">
         <div *ngIf='!_connecting'>
-            <h1>Connect</h1>
-            <fieldset>
-                <enum [(model)]="_connectionType" (modelChanged)="onServerTypeChange()">
-                    <field name="Local Server" value="local"></field>
-                    <field name="Remote Server" value="remote"></field>
-                </enum>
+            <h1 [class.advanced]="_connectionType == 'advanced'">Connect</h1>
+            <p *ngIf="_connectionType == 'simple'">to Local Server</p>
+            <fieldset *ngIf="_connectionType == 'advanced'">
+                <label class="inline-block">Server Url</label>
                 <tooltip class="inline-block v-top">
-                    <p class="help-content">
                         The URL of the server to connect to. The default port for the IIS Administration API is 55539.
-                    </p>
                 </tooltip>
-                <input type="text" placeholder="e.g. localhost or example.com" class="form-control" [ngModel]="_conn.url" (ngModelChange)="setUrl($event)" required throttle/>
+                <input type="text" placeholder="ex. contoso.com" class="form-control" #urlField [ngModel]="_conn.url" (ngModelChange)="setUrl($event)" required throttle/>
             </fieldset>
-            <fieldset>
+            <fieldset *ngIf="_connectionType == 'advanced'">
                 <label>Display Name</label>
                 <input type="text" class="form-control" [(ngModel)]="_conn.displayName"/>
             </fieldset>
             <fieldset>
                 <label class="emph inline-block">Access Token</label>
                 <tooltip>
-                    <p class="help-content">
-                        An access token is an auto generated value that is used to connect to the IIS Administration API. Only Administrators can create these tokens. <a class="link" title="More Information" href="https://docs.microsoft.com/en-us/IIS-Administration/management-portal/connecting#acquiring-an-access-token"></a>
-                    </p>
+                    An access token is an auto generated value that is used to connect to the IIS Administration API. Only Administrators can create these tokens. <a class="link" title="More Information" href="https://docs.microsoft.com/en-us/IIS-Administration/management-portal/connecting#acquiring-an-access-token"></a>
                 </tooltip>
-                <input type="text" autocomplete="off" 
-                        class="form-control"
-                        [ngModel]="''"
-                        (ngModelChange)="setAccessToken($event)"
-                        [attr.placeholder]="!_conn.accessToken ? null : '******************************'" 
-                        [attr.required]="!_conn.accessToken || null"/>
+                <input type="text" autocomplete="off" #tokenField
+                    class="form-control"
+                    [ngModel]="''"
+                    (ngModelChange)="setAccessToken($event)"
+                    [attr.placeholder]="!_conn.accessToken ? null : '******************************'" 
+                    [attr.required]="!_conn.accessToken || null"/>
             </fieldset>
-            <tooltip class="tokenLink">
-                <p class="help-content">
-                    Access tokens are generated on the server that you wish to connect to. This link will open the access token generation page for the specified server. <a class="link" title="More Information" href="https://docs.microsoft.com/en-us/iis-administration/security/access-tokens"></a>
-                </p>
-            </tooltip>
-            <a class="tokenLink" [attr.disabled]="!tokenLink() ? true : null" (click)="gotoAccessToken($event)" [attr.href]="tokenLink()">Get Access Token</a>
-            <fieldset>
+            <p class="tokenLink">Don't have an access token? <a [attr.disabled]="!tokenLink() ? true : null" (click)="gotoAccessToken($event)" [attr.href]="tokenLink()">Get access token</a></p>
+            <fieldset class="rememberMe">
                 <checkbox2 [(model)]="_conn.persist"><b>Keep me connected from now on</b></checkbox2>
-                <small *ngIf='_conn.persist'>
-                    Your Access Token and Connection will be stored locally.
-                    <b>Use only if your device is private and trusted!</b>
-                </small>
-             </fieldset>
-            <fieldset>
-                <button class="active pull-right" [attr.disabled]="!isValid() || null" (click)="connect()">Connect</button>
-                <button class="pull-right" [attr.disabled]="!isValid() || null" (click)="save()">Save</button>
+                <tooltip>
+                    Your Access Token and Connection will be stored locally.<br/>
+                    Use only if your device is trusted!
+                </tooltip>
             </fieldset>
+            <fieldset>
+                <button class="active right" (click)="connect()">Connect</button>
+            </fieldset>
+
+            <div class="advanced" *ngIf="_connectionType == 'simple'">
+                <button (click)="onAdvanced()">Remote Server or Manual Setup<i class="fa fa-arrow-right"></i></button>
+            </div>
+            <div class="simple" *ngIf="_connectionType == 'advanced' && !_disableSimple">
+                <button (click)="onSimple()">Local Server Setup<i class="fa fa-arrow-right"></i></button>
+            </div>
         </div>
 
         <div class="in-progress" *ngIf='_connecting'>
@@ -72,36 +67,14 @@ import { ApiConnection } from './api-connection';
     </div>
     `,
     styles: [`
-        h1 {
-            display: block;
+        h1.advanced,
+        h1 + p {
             margin-bottom: 40px;
         }
 
-        fieldset {
-            margin-top: 10px;
-        }
-
-        input,
-        button {
-            height: 40px;
-        }
-
-        .tokenLink {
-            float:right;
-            margin-top: -12px;
-        }
-
-        tooltip {
-            margin-left: 5px;
-        }
-
-        .help-content {
-            padding: 5px 10px;
-            margin: 0;
-        }
-
-        checkbox2 {
+        h1 + p {
             display: block;
+            margin-left: 5px;
         }
 
         button {
@@ -110,9 +83,13 @@ import { ApiConnection } from './api-connection';
             width: 100px;
         }
 
-        checkbox2 + small {
-            padding-left: 25px;
-            display: block;
+        input,
+        button {
+            height: 40px;
+        }
+
+        fieldset {
+            margin-top: 10px;
         }
 
         .in-progress {
@@ -130,23 +107,78 @@ import { ApiConnection } from './api-connection';
         }
 
         enum {
-            display: inline-block;
+            display: block;
+            position: fixed;
+            top: 70px;
+            left: 15px;
+        }
+
+        .advanced {
+            margin-top: 35px;
+        }
+
+        .advanced button,
+        .simple button {
+            height: 30px;
+            margin-top: 0;
+            width: 46px;
+            vertical-align: middle;
+            padding: 0;
+            font-size: 12px;
+            width: auto;
+            border: none;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+        
+        .advanced i,
+        .simple i {
+            margin-left: 5px;
+        }
+
+        .tokenLink {
+            float:right;
+            margin-top: -12px;
+        }
+
+        tooltip {
+            margin-left: 5px;
+        }
+
+        .rememberMe {
+            margin-top: 35px;
         }
     `]
 })
 export class ConnectionComponent implements OnDestroy {
-    private _conn: ApiConnection = new ApiConnection("");
-    private _connectionType: ConnectionType = ConnectionType.Local;
+    private _localUrl: string = "https://localhost:55539";
+    private _localDisplayName: string = "Local IIS";
+    private _conn: ApiConnection = this.localConnection;
+    private _advancedState: ApiConnection = new ApiConnection("");
     private _original: ApiConnection;
     private _connecting: boolean;
     private _subs: Array<Subscription> = [];
+    private _connectionType = ConnectionType.Simple;
+    private _disableSimple: boolean;
+    @ViewChild('urlField') private _urlField: ElementRef;
+    @ViewChild('tokenField') private _tokenField: ElementRef;
 
     constructor(private _service: ConnectService, private _router: Router) {
         this._subs.push(this._service.editting.subscribe(c => {
             if (c) {
                 this._conn = c;
                 this._original = ApiConnection.clone(this._conn);
+                this._advancedState = new ApiConnection("");
                 this._connecting = false;
+
+                if (!c.url) {
+                    this._disableSimple = false;
+                    this.onSimple();
+                }
+                else {
+                    this._disableSimple = true;
+                    this.onAdvanced();
+                }
             }
         }));
 
@@ -158,10 +190,6 @@ export class ConnectionComponent implements OnDestroy {
 
             this._connecting = (c != null);
         }));
-    }
-
-    public ngOnInit() {
-        this.onServerTypeChange();
     }
 
     ngOnDestroy() {
@@ -179,7 +207,13 @@ export class ConnectionComponent implements OnDestroy {
         }
     }
 
-    save() {
+    private get localConnection(): ApiConnection {
+        let c = new ApiConnection(this._localUrl);
+        c.displayName = this._localDisplayName;
+        return c;
+    }
+
+    private save() {
         this._service.save(this._conn);
 
         this._service.active.subscribe(c => {
@@ -194,20 +228,25 @@ export class ConnectionComponent implements OnDestroy {
         this._router.navigate(["/"]);
     }
 
-    connect() {
+    private connect() {
+        if (!this._conn.url && this._urlField) {
+            this._urlField.nativeElement.focus();
+        }
+        if (!this._conn.accessToken) {
+            this._tokenField.nativeElement.focus();
+        }
+        if (!this.isValid) {
+            return;
+        }
+
         this._service.connect(this._conn).then(conn => {
             this._service.save(this._conn);
         });
     }
 
-    cancel() {
+    private cancel() {
         this._service.cancel();
         this._service.edit(this._conn);
-    }
-
-    private gotoAccessToken(evt) {
-        evt.preventDefault();
-        window.open(this.tokenLink());
     }
 
     private tokenLink() {
@@ -216,6 +255,10 @@ export class ConnectionComponent implements OnDestroy {
         }
 
         return null;
+    }
+
+    private connName(): string {
+        return this._conn.displayName || this._conn.hostname();
     }
 
     private setAccessToken(value: string) {
@@ -227,34 +270,36 @@ export class ConnectionComponent implements OnDestroy {
 
         setTimeout(_ => {
             this._conn.url = url;
-
-            if (this._conn.hostname() != 'localhost' && this._connectionType == ConnectionType.Local) {
-                this._connectionType = ConnectionType.Remote;
-                this.onServerTypeChange();
-            }
         });
     }
 
-    private isValid(): boolean {
+    private gotoAccessToken(evt) {
+        evt.preventDefault();
+        window.open(this.tokenLink());
+    }
+
+    private onAdvanced() {
+        this._connectionType = ConnectionType.Advanced;
+
+        if (this._advancedState.url || this._advancedState.displayName) {
+            this._conn.url = this._advancedState.url;
+            this._conn.displayName = this._advancedState.displayName;
+            this._conn.accessToken = this._advancedState.accessToken;
+        }
+    }
+
+    private onSimple() {
+        this._connectionType = ConnectionType.Simple;
+
+        this._advancedState.url = this._conn.url;
+        this._advancedState.displayName = this._conn.displayName;
+        this._advancedState.accessToken = this._conn.accessToken;
+
+        this._conn.url = this._localUrl;
+        this._conn.displayName = this._localDisplayName;
+    }
+
+    private get isValid(): boolean {
         return !!this._conn.url && !!this._conn.accessToken;
-    }
-
-    private connName(): string {
-        return this._conn.displayName || this._conn.hostname();
-    }
-
-    private onServerTypeChange(): void {
-        if (this._connectionType == ConnectionType.Local) {
-            this._conn.url = "https://localhost:55539";
-            this._conn.displayName = "Local IIS";
-        }
-        else {
-            if (this._conn.hostname() == 'localhost') {
-                this._conn.url = "";
-            }
-            if (this._conn.displayName == "Local IIS") {
-                this._conn.displayName = this._conn.hostname();
-            }
-        }
     }
 }

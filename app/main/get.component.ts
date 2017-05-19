@@ -29,18 +29,6 @@ import {ConnectService} from '../connect/connect.service';
                         For Windows and Windows Server (64-bit)
                     </small>
                 </p>
-                <div clas="prereq block">
-                    <div class="collapse-heading collapsed" data-toggle="collapse" data-target="#prereq">
-                        <h2>Prerequisites</h2>
-                    </div>
-                    <div id="prereq" class="collapse">
-                        <span>Internet Information Services (IIS)</span>&nbsp;|&nbsp;
-                        <a href='https://www.iis.net/'><small>Learn More</small></a>
-                        <br/>
-                        <a title="Download .NET Core" href="https://go.microsoft.com/fwlink/?LinkID=827547">Microsoft .NET Core</a>&nbsp;|&nbsp;
-                        <a href='https://www.microsoft.com/net/core/platform'><small>Learn More</small></a>
-                    </div>
-                </div>
             </div>
             <div *ngIf='_inProgress'>
                 <h1>Setting Up</h1>
@@ -163,8 +151,7 @@ export class GetComponent implements OnDestroy {
 
         this._inProgress = false;
 
-        let conn = new ApiConnection("localhost");
-        conn.displayName = "Local IIS";
+        let conn = new ApiConnection("");
 
         this._service.edit(conn);
     }

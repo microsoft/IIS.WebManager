@@ -1,5 +1,5 @@
-﻿export type ConnectionType = "local" | "remote";
+﻿export type ConnectionType = "simple" | "advanced";
 export const ConnectionType = {
-    Local: "local" as ConnectionType,
-    Remote: "remote" as ConnectionType
+    Simple: "simple" as ConnectionType,
+    Advanced: "advanced" as ConnectionType
 }
