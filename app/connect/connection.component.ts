@@ -166,26 +166,13 @@ export class ConnectionComponent implements OnDestroy {
     constructor(private _service: ConnectService, private _router: Router) {
         this._subs.push(this._service.editting.subscribe(c => {
             if (c) {
-                this._conn = c;
-                this._original = ApiConnection.clone(this._conn);
-                this._advancedState = new ApiConnection("");
-                this._connecting = false;
-
-                if (!c.url) {
-                    this._disableSimple = false;
-                    this.onSimple();
-                }
-                else {
-                    this._disableSimple = true;
-                    this.onAdvanced();
-                }
+                this.initializeConnection(c);
             }
         }));
 
         this._subs.push(this._service.connecting.subscribe(c => {
             if (c) {
-                this._conn = c;
-                this._original = ApiConnection.clone(this._conn);
+                this.initializeConnection(c);
             }
 
             this._connecting = (c != null);
@@ -297,6 +284,22 @@ export class ConnectionComponent implements OnDestroy {
 
         this._conn.url = this._localUrl;
         this._conn.displayName = this._localDisplayName;
+    }
+
+    private initializeConnection(connection: ApiConnection) {
+        this._conn = connection;
+        this._original = ApiConnection.clone(this._conn);
+        this._advancedState = new ApiConnection("");
+        this._connecting = false;
+
+        if (!connection.url) {
+            this._disableSimple = false;
+            this.onSimple();
+        }
+        else {
+            this._disableSimple = true;
+            this.onAdvanced();
+        }
     }
 
     private get isValid(): boolean {
