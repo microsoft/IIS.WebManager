@@ -13,14 +13,14 @@ import { Selector } from '../common/selector';
         </div>
         <selector #settingsMenu class="color-normal" [right]="true">
             <ul>
-                <li>
-                    <a href="https://github.com/microsoft/iis.administration/issues">Report an issue</a>
+                <li class="hover-editing">
+                    <a class="color-normal hover-editing block" href="https://github.com/microsoft/iis.administration/issues">Report an issue</a>
                 </li>
-                <li>
-                    <a href="https://docs.microsoft.com/iis-administration">Help</a>
+                <li class="hover-editing">
+                    <a class="color-normal hover-editing block" href="https://docs.microsoft.com/iis-administration">Help</a>
                 </li>
-                <li>
-                    <a [routerLink]="['/get']">Download Microsoft IIS Administration</a>
+                <li class="hover-editing">
+                    <a class="color-normal hover-editing block" [routerLink]="['/get']">Download Microsoft IIS Administration</a>
                 </li>
             </ul>
         </selector>
@@ -32,6 +32,7 @@ import { Selector } from '../common/selector';
             min-width: 25px;
             cursor: pointer;
             padding: 0 15px;
+            font-size: 120%;
         }
 
         selector {
@@ -46,6 +47,10 @@ import { Selector } from '../common/selector';
 
         li {
             white-space: nowrap;
+        }
+
+        a {
+            padding: 5px;
         }
     `]
 })
