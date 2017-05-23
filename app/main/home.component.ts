@@ -15,8 +15,8 @@ import { OptionsService } from './options.service';
             top: 107px;
         }
 
-        :host >>> .sidebar.nav > vtabs .content {
-            top: 15px;
+        :host >>> .sidebar > vtabs .content {
+            margin-top: 15px;
         }
     `],
     template: `

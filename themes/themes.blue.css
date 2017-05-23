@@ -59,6 +59,10 @@ a.link:not([disabled]):not(:hover):not(:active)::before {
 .bttn,
 .form-control {
     color: #444;
+}
+
+.bttn,
+.form-control {
     background-color: white;
 }
 

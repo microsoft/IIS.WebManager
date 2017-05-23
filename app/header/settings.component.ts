@@ -8,19 +8,19 @@ import { Selector } from '../common/selector';
 @Component({
     selector: 'settings',
     template: `
-        <div class="s-container hover-primary2" [class.background-primary2]="settingsMenu && settingsMenu.isOpen()" (click)="onClickSettings()">
+        <div title="Options" class="s-container hover-primary2" [class.background-primary2]="settingsMenu && settingsMenu.isOpen()" (click)="onClickSettings()">
             <i class="fa fa-cog"></i>
         </div>
         <selector #settingsMenu class="color-normal" [right]="true">
             <ul>
                 <li class="hover-editing">
-                    <a class="color-normal hover-editing block" href="https://github.com/microsoft/iis.administration/issues">Report an issue</a>
+                    <a class="color-normal server " [routerLink]="['/get']">Add or Remove Servers</a>
                 </li>
                 <li class="hover-editing">
-                    <a class="color-normal hover-editing block" href="https://docs.microsoft.com/iis-administration">Help</a>
+                    <a class="color-normal download" [routerLink]="['/get']">Download Microsoft IIS Administration</a>
                 </li>
                 <li class="hover-editing">
-                    <a class="color-normal hover-editing block" [routerLink]="['/get']">Download Microsoft IIS Administration</a>
+                    <a class="color-normal dev" href="https://github.com/microsoft/iis.administration">Developers</a>
                 </li>
             </ul>
         </selector>
@@ -55,7 +55,28 @@ import { Selector } from '../common/selector';
         }
 
         a {
-            padding: 5px;
+            padding: 7px 5px;
+            display: block;
+        }
+
+        a:before {
+            font-family: FontAwesome;
+            font-size: 120%;
+            line-height: 22px;
+            width: 25px;
+            display: inline-block;
+        }
+
+        .server:before {
+            content: "\\f233";
+        }
+
+        .dev:before {
+            content: "\\f121";
+        }
+
+        .download:before {
+            content: "\\f019";
         }
     `]
 })

@@ -41,11 +41,11 @@ import { NotificationService } from '../../notification/notification.service';
                 </button>
                 <selector [right]="true">
                     <ul>
-                        <li *ngIf="allow('edit')"><a class="bttn edit" title={{url}} [routerLink]="['/webserver/websites', model.id]">Edit</a></li>
+                        <li *ngIf="allow('edit')"><a class="bttn edit" [routerLink]="['/webserver/websites', model.id]">Edit</a></li>
                         <li *ngIf="allow('browse')"><a class="bttn link" href={{url}} title={{url}}>Browse</a></li>
-                        <li *ngIf="allow('start')"><button class="start" title="Start" [attr.disabled]="model.status != 'stopped' || null" (click)="onStart($event)">Start</button></li>
-                        <li *ngIf="allow('stop')"><button class="stop" title="Stop" [attr.disabled]="!started() || null" (click)="onStop($event)">Stop</button></li>
-                        <li *ngIf="allow('delete')"><button class="delete" title="Delete" (click)="onDelete($event)">Delete</button></li>
+                        <li *ngIf="allow('start')"><button class="start" [attr.disabled]="model.status != 'stopped' || null" (click)="onStart($event)">Start</button></li>
+                        <li *ngIf="allow('stop')"><button class="stop" [attr.disabled]="!started() || null" (click)="onStop($event)">Stop</button></li>
+                        <li *ngIf="allow('delete')"><button class="delete" (click)="onDelete($event)">Delete</button></li>
                     </ul>
                 </selector>
             </div>

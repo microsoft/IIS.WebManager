@@ -7,8 +7,8 @@ import { OptionsService } from '../main/options.service';
     selector: 'header',
     template: `
         <div class="nav background-active">
-            <button class="fa fa-bars nav-item nav-options hover-primary2" (click)="this._options.toggle()" [class.active]="this._options.active"></button>
-            <a [routerLink]="['/']" class="nav-brand nav-item hover-primary2 background-active">
+            <button class="fa fa-bars nav-item nav-options hover-primary2" [attr.title]="this._options.active ? 'Hide Sidebar' : 'Show Sidebar'" (click)="this._options.toggle()" [class.background-primary2]="this._options.active"></button>
+            <a [routerLink]="['/']" class="nav-brand nav-item background-active">
                 <span class="v-center"><span class="hidden-xs">Microsoft</span> IIS</span>
             </a>
             <div class="separator"></div>
@@ -47,10 +47,6 @@ import { OptionsService } from '../main/options.service';
             padding: 10px;
             height: 55px;
             border: none;
-        }
-
-        .nav-options:not(.active) {
-            opacity: .6;
         }
 
         .nav-brand {
