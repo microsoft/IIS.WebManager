@@ -86,9 +86,15 @@ button:hover::before,
     color: white;
 }
 
+.hover-primary2:hover,
+.background-primary2 {
+    background-color: #0086E7;
+    color: white;
+}
+
 .background-selected,
 .background-selected.hover-editing:hover {
-    background-color: #e3f3ff;
+    background-color: #D0EBFE;
 }
 
 
@@ -157,11 +163,11 @@ border-antiactive {
 }
 
 .background-editing {
-    background-color: azure;
+    background-color: #E7F5FE;
 }
 
 .hover-editing:hover {
-    background-color: azure;
+    background-color: #E7F5FE;
 }
 
 .background-list {

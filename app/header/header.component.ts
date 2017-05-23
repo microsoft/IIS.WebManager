@@ -7,21 +7,21 @@ import { OptionsService } from '../main/options.service';
     selector: 'header',
     template: `
         <div class="nav background-active">
-            <button class="fa fa-bars nav-item nav-options hover-active" (click)="this._options.toggle()" [class.active]="this._options.active"></button>
-            <a [routerLink]="['/']" class="nav-brand nav-item background-active">
+            <button class="fa fa-bars nav-item nav-options hover-primary2" (click)="this._options.toggle()" [class.active]="this._options.active"></button>
+            <a [routerLink]="['/']" class="nav-brand nav-item hover-primary2 background-active">
                 <span class="v-center"><span class="hidden-xs">Microsoft</span> IIS</span>
             </a>
-            <div class="separator padded"></div>
+            <div class="separator"></div>
             <connection-picker class="nav-item"></connection-picker>
 
             <notifications></notifications>
             <modal class="color-normal"></modal>
             
             <div class="right">
-                <settings class="v-center"></settings>
+                <settings></settings>
             </div>
             <div class="right">
-                <notification-indicator class="v-center"></notification-indicator>
+                <notification-indicator></notification-indicator>
             </div>
         </div>
         <div class="progress background-normal" [class.animation]='_inProgress'></div>
@@ -45,6 +45,8 @@ import { OptionsService } from '../main/options.service';
 
         .nav-options {
             padding: 10px;
+            height: 55px;
+            border: none;
         }
 
         .nav-options:not(.active) {
@@ -54,6 +56,7 @@ import { OptionsService } from '../main/options.service';
         .nav-brand {
             padding: 0px 5px;
             font-size: 20px;
+            padding: 0 10px;
         }
 
         .separator {
@@ -62,11 +65,8 @@ import { OptionsService } from '../main/options.service';
             vertical-align: middle;
             border-left:1px solid white;
             height:23px;
-        }
- 
-        .separator.padded {
-            margin-right: 12px;
-            margin-left: 6px;
+            margin-right: 2px;
+            margin-left: 2px;
         }
 
         .right {
@@ -99,10 +99,6 @@ import { OptionsService } from '../main/options.service';
             vertical-align: middle;
             height: 55px;
             display: table-cell;
-        }
-
-        notification-indicator {
-            padding: 0 10px;
         }
     `]
 })

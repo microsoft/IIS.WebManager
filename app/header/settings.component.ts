@@ -8,7 +8,7 @@ import { Selector } from '../common/selector';
 @Component({
     selector: 'settings',
     template: `
-        <div class="s-container" (click)="onClickSettings()">
+        <div class="s-container hover-primary2" [class.background-primary2]="settingsMenu && settingsMenu.isOpen()" (click)="onClickSettings()">
             <i class="fa fa-cog"></i>
         </div>
         <selector #settingsMenu class="color-normal" [right]="true">
@@ -33,6 +33,11 @@ import { Selector } from '../common/selector';
             cursor: pointer;
             padding: 0 15px;
             font-size: 120%;
+            height: 55px;
+        }
+
+        .s-container i {
+            line-height: 55px;
         }
 
         selector {

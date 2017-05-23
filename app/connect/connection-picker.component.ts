@@ -10,7 +10,7 @@ import {ComponentUtil} from '../utils/component';
 @Component({
     selector: 'connection-picker',
     template: `
-        <div id="connectRoot">
+        <div id="connectRoot" class="hover-primary2" [class.background-primary2]="_focused">
             <div id="connectBtn" class="v-center" (click)="onClick()">
                 <span>{{currentName()}}</span>
             </div>
@@ -27,7 +27,7 @@ import {ComponentUtil} from '../utils/component';
                         </div>
                     </div>
                     <ul>
-                        <li class="color-normal hover-editing" *ngFor="let conn of _connections;" [class.background-editing]="_active && _active.id() == conn.id()">
+                        <li class="color-normal hover-editing" *ngFor="let conn of _connections;" [class.background-selected]="_active && _active.id() == conn.id()">
                             <div class="actions">
                                 <button class="no-border" title="Edit" (click)="onEdit(conn)"><i class="fa fa-pencil color-active"></i></button>
                                 <button class="no-border" title="Delete" (click)="onDelete(conn)"><i class="fa fa-trash-o red"></i></button>
@@ -49,6 +49,7 @@ import {ComponentUtil} from '../utils/component';
             margin:0;
             padding:0;
             outline:none;
+            padding: 0 10px;
         }
 
         #connectBtn {
@@ -66,7 +67,7 @@ import {ComponentUtil} from '../utils/component';
         #connectMenu {
             position:absolute;
             top:55px;
-            left: -17px;
+            left: 0px;
             max-height:500px;
             z-index:3;
             cursor: default;
