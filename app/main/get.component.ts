@@ -107,10 +107,6 @@ export class GetComponent implements OnDestroy {
         this._client = new HttpConnection(_http);
     }
 
-    ngOnDestroy() {
-        this.skip();
-    }
-
     private download(e: Event): boolean {
         this._inProgress = true;
         this._status = GetComponent.STATUS_MSG[0];

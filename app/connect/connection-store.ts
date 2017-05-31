@@ -62,7 +62,7 @@ export class ConnectionStore {
     }
 
     public delete(conn: ApiConnection) {
-        if (this._activeConn && this._activeConn.id == conn.id) {
+        if (this._activeConn && this._activeConn.id() == conn.id()) {
             this.setActive(null);
         }
 

@@ -20,6 +20,7 @@ button.ok:not([disabled]):not(:hover):not(:active)::before {
 
 button.save:not([disabled]):not(:hover):not(:active)::before,
 button.edit:not([disabled]):not(:hover):not(:active)::before,
+button.go:not([disabled]):not(:hover):not(:active)::before,
 .bttn.edit:not([disabled]):not(:hover):not(:active)::before {
     color: #0093fe;
 }

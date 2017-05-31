@@ -384,6 +384,10 @@ button.select {
     display: inline-flex;
 }
 
+.actions button:empty::before {
+    padding: 3px;
+}
+
 .grid-list .grid-item {
     position: relative;
     border-bottom-style: solid;
@@ -609,7 +613,7 @@ select[enabled]:not(.inactive) {
     z-index: -1030; 
 }
  
-.loader .content {
+.load-data {
     display:table-cell;
     vertical-align:middle;
     visibility: hidden; 
@@ -622,7 +626,7 @@ select[enabled]:not(.inactive) {
     width: 100%;
 }
  
-.loader.active .content {
+.loader.active .load-data {
     visibility: visible;
     opacity: .5;
 }
@@ -713,6 +717,10 @@ button.start:before {
 
 button.stop:before {
     content: "\f04d";
+}
+
+button.go:before {
+    content: "\f061";
 }
 
 a.link:before {

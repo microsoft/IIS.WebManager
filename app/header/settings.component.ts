@@ -14,10 +14,10 @@ import { Selector } from '../common/selector';
         <selector #settingsMenu class="color-normal" [right]="true">
             <ul>
                 <li class="hover-editing">
-                    <a class="color-normal server " [routerLink]="['/get']">Add or Remove Servers</a>
+                    <a class="color-normal server" [routerLink]="['/connect']" (click)="_settingsMenu.close()">Add or Remove Servers</a>
                 </li>
                 <li class="hover-editing">
-                    <a class="color-normal download" [routerLink]="['/get']">Download Microsoft IIS Administration</a>
+                    <a class="color-normal download" [routerLink]="['/get']" (click)="_settingsMenu.close()">Download Microsoft IIS Administration</a>
                 </li>
                 <li class="hover-editing">
                     <a class="color-normal dev" href="https://github.com/microsoft/iis.administration">Developers</a>

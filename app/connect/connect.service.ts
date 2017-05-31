@@ -1,18 +1,15 @@
-
-declare var $: any;
-
-import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
-import {Http} from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
-import {Observable} from "rxjs/Observable";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import { Observable } from "rxjs/Observable";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
-import {HttpConnection} from './httpconnection';
-import {ApiConnection} from './api-connection';
-import {ConnectionStore} from './connection-store';
-import {NotificationService} from '../notification/notification.service';
+import { HttpConnection } from './httpconnection';
+import { ApiConnection } from './api-connection';
+import { ConnectionStore } from './connection-store';
+import { NotificationService } from '../notification/notification.service';
 
 
 
@@ -122,14 +119,14 @@ export class ConnectService {
 
     public gotoConnect(skipGet: boolean) {
         let totalConnections: number = 0;
-        this._store.connections.subscribe(conns => totalConnections = conns.length).unsubscribe();        
+        this._store.connections.subscribe(conns => totalConnections = conns.length).unsubscribe();
 
         if (totalConnections == 0 && !skipGet) {
             // Goto Get
             this._router.navigate(['/get']);
         }
         else {
-            this._router.navigate(['/connect']);            
+            this._router.navigate(['/connect']);
         }
     }
 

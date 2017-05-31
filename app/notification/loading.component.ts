@@ -1,16 +1,15 @@
+import { NgModule, Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { LoadingService } from "./loading.service"
 
-import {NgModule, Component, OnInit, OnDestroy} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-import {LoadingService} from "./loading.service"
-
-import {IntervalObservable} from 'rxjs/observable/IntervalObservable';
+import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 
 @Component({
     selector: 'loading',
     template: `
         ﻿<div class="loader" [class.active]="_active">
-            <div class="content">
+            <div class="load-data">
                 <span class="loading">Loading</span>
             </div>
         </div>
@@ -29,7 +28,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this._loadingSvc.begin();
-        setTimeout(_=> this.setActive(true), 10);
+        setTimeout(_ => this.setActive(true), 10);
     }
 
     ngOnDestroy() {
