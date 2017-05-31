@@ -8,7 +8,7 @@ import { NotificationService } from '../notification/notification.service';
 @Component({
     selector: 'server',
     template: `
-        <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing">
+        <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing" (dblclick)="onDblClick($event)">
             <div *ngIf="!_editing" class="actions">
                 <div class="selector-wrapper">
                     <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="(_selector && _selector.opened) || false">
@@ -119,6 +119,16 @@ export class ServerListItem implements OnInit {
         this._original = this.model;
         this.model = ApiConnection.clone(this.model);
         this._editing = true;
+    }
+
+    private onDblClick(e: Event) {
+        if (e.defaultPrevented) {
+            return;
+        }
+
+        if (!this._editing) {
+            this.onEdit();
+        }
     }
 
     private onConnect() {
