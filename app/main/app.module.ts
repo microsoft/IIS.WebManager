@@ -28,7 +28,7 @@ import { AppComponent } from './app.component';
 import { Routing } from './app.routes';
 
 import { HomeComponent } from './home.component';
-import { ConnectionComponent } from '../connect/connection.component';
+import { ConnectComponent } from '../connect/connect.component';
 import { ConnectionPickerComponent } from '../connect/connection-picker.component';
 import { GetComponent } from './get.component';
 import { HeaderComponent } from '../header/header.component';
@@ -65,7 +65,7 @@ import { WindowService } from './window.service';
     declarations: [
         AppComponent,
         HomeComponent,
-        ConnectionComponent,
+        ConnectComponent,
         ConnectionPickerComponent,
         GetComponent,
         HeaderComponent,

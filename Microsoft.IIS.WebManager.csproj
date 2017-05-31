@@ -122,7 +122,13 @@
     <TypeScriptCompile Include="app\common\sort.pipe.ts" />
     <TypeScriptCompile Include="app\common\vtabs.component.ts" />
     <TypeScriptCompile Include="app\common\virtual-list.component.ts" />
+    <TypeScriptCompile Include="app\connect\connect.routes.ts" />
+    <TypeScriptCompile Include="app\connect\constants.ts" />
+    <TypeScriptCompile Include="app\connect\server-edit.component.ts" />
     <TypeScriptCompile Include="app\connect\connection-type.ts" />
+    <TypeScriptCompile Include="app\connect\connect.module.ts" />
+    <TypeScriptCompile Include="app\connect\server-list-item.ts" />
+    <TypeScriptCompile Include="app\connect\server-list.ts" />
     <TypeScriptCompile Include="app\error\api-error.ts" />
     <TypeScriptCompile Include="app\common\bmodel.ts" />
     <TypeScriptCompile Include="app\common\enum.component.ts" />
@@ -322,7 +328,7 @@
     <TypeScriptCompile Include="app\common\notfound.component.ts" />
     <TypeScriptCompile Include="app\common\autosize.ts" />
     <TypeScriptCompile Include="app\connect\api-connection.ts" />
-    <TypeScriptCompile Include="app\connect\connection.component.ts" />
+    <TypeScriptCompile Include="app\connect\connect.component.ts" />
     <TypeScriptCompile Include="app\connect\connection-picker.component.ts" />
     <TypeScriptCompile Include="app\connect\connection-store.ts" />
     <TypeScriptCompile Include="app\notification\notification.service.ts" />

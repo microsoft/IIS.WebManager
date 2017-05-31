@@ -2,6 +2,7 @@ import { Component, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
+import { Constants } from './constants';
 import { ConnectionType } from './connection-type';
 import { ConnectService } from './connect.service';
 import { ApiConnection } from './api-connection';
@@ -150,9 +151,7 @@ import { ApiConnection } from './api-connection';
         }
     `]
 })
-export class ConnectionComponent implements OnDestroy {
-    private _localUrl: string = "https://localhost:55539";
-    private _localDisplayName: string = "Local IIS";
+export class ConnectComponent implements OnDestroy {
     private _conn: ApiConnection = this.localConnection;
     private _advancedState: ApiConnection = new ApiConnection("");
     private _original: ApiConnection;
@@ -195,8 +194,8 @@ export class ConnectionComponent implements OnDestroy {
     }
 
     private get localConnection(): ApiConnection {
-        let c = new ApiConnection(this._localUrl);
-        c.displayName = this._localDisplayName;
+        let c = new ApiConnection(Constants.localUrl);
+        c.displayName = Constants.localDisplayName;
         return c;
     }
 
@@ -282,8 +281,8 @@ export class ConnectionComponent implements OnDestroy {
         this._advancedState.displayName = this._conn.displayName;
         this._advancedState.accessToken = this._conn.accessToken;
 
-        this._conn.url = this._localUrl;
-        this._conn.displayName = this._localDisplayName;
+        this._conn.url = Constants.localUrl;
+        this._conn.displayName = Constants.localDisplayName;
     }
 
     private initializeConnection(connection: ApiConnection) {

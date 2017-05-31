@@ -1,12 +1,12 @@
 declare var SETTINGS: any;
 
-import {Component, OnDestroy} from '@angular/core';
-import {Http} from '@angular/http';
+import { Component } from '@angular/core';
+import { Http } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 
-import {ApiConnection} from '../connect/api-connection'
-import {HttpConnection} from '../connect/httpconnection'
-import {ConnectService} from '../connect/connect.service';
+import { ApiConnection } from '../connect/api-connection'
+import { HttpConnection } from '../connect/httpconnection'
+import { ConnectService } from '../connect/connect.service';
 
 
 @Component({
@@ -85,7 +85,7 @@ import {ConnectService} from '../connect/connect.service';
         }
     `]
 })
-export class GetComponent implements OnDestroy {
+export class GetComponent {
     private DOWNLOAD_URL: string = SETTINGS.api_download_url;
     private SETUP_VERSION: string = SETTINGS.api_setup_version;
     private static STATUS_MSG: string[] = [
