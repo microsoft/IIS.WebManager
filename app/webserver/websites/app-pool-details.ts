@@ -25,7 +25,7 @@ import { DiffUtil } from '../../utils/diff';
         <fieldset>
             <label>Name</label>
             <a [routerLink]="['/webserver', 'app-pools', model.id]" class="name">{{model.name}}</a>
-            <span class="status" *ngIf="!started">({{pool.status}})</span>
+            <span class="status" *ngIf="!started">({{model.status}})</span>
         </fieldset>
         <fieldset *ngIf="_svc">
             <label>Auto Start</label>

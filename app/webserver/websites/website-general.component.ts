@@ -57,7 +57,13 @@ import { AppPoolsService } from '../app-pools/app-pools.service';
                 <app-pool-details [model]="site.application_pool"></app-pool-details>
             </tab>
         </tabs>
-    `
+    `,
+    styles: [`
+        app-pool-details {
+            display: block;
+            max-width: 400px;
+        }
+    `]
 })
 export class WebSiteGeneralComponent {
     @Input() site: WebSite;
