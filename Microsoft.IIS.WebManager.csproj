@@ -124,7 +124,6 @@
     <TypeScriptCompile Include="app\common\virtual-list.component.ts" />
     <TypeScriptCompile Include="app\connect\connect.routes.ts" />
     <TypeScriptCompile Include="app\connect\constants.ts" />
-    <TypeScriptCompile Include="app\connect\server-edit.component.ts" />
     <TypeScriptCompile Include="app\connect\connection-type.ts" />
     <TypeScriptCompile Include="app\connect\connect.module.ts" />
     <TypeScriptCompile Include="app\connect\server-list-item.ts" />
