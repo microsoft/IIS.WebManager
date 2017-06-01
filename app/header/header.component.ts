@@ -17,11 +17,9 @@ import { OptionsService } from '../main/options.service';
             <notifications></notifications>
             <modal class="color-normal"></modal>
             
-            <div class="right">
-                <settings></settings>
-            </div>
-            <div class="right">
+            <div class="abs-right background-active">
                 <notification-indicator></notification-indicator>
+                <settings></settings>
             </div>
         </div>
         <div class="progress background-normal" [class.animation]='_inProgress'></div>
@@ -35,6 +33,7 @@ import { OptionsService } from '../main/options.service';
             right:0px;
             width:100%; 
             z-index:1030;
+            white-space: nowrap;
         }
 
         .nav-item {
@@ -65,9 +64,10 @@ import { OptionsService } from '../main/options.service';
             margin-left: 2px;
         }
 
-        .right {
+        .abs-right {
             display:inline-block;
-            float:right;
+            position: absolute;
+            right: 0;
         }
 
         .progress {

@@ -15,7 +15,7 @@ import { ApiConnection } from './api-connection';
             <p *ngIf="_connectionType == 'simple'">to Local Server</p>
             <fieldset *ngIf="_connectionType == 'advanced'">
                 <label class="inline-block">Server Url</label>
-                <tooltip class="inline-block v-top">
+                <tooltip>
                         The URL of the server to connect to. The default port for the IIS Administration API is 55539.
                 </tooltip>
                 <input type="text" placeholder="ex. contoso.com" class="form-control" #urlField [ngModel]="_conn.url" (ngModelChange)="setUrl($event)" required throttle/>
@@ -25,7 +25,7 @@ import { ApiConnection } from './api-connection';
                 <input type="text" class="form-control" [(ngModel)]="_conn.displayName"/>
             </fieldset>
             <fieldset>
-                <label class="emph inline-block">Access Token</label>
+                <label class="inline-block">Access Token</label>
                 <tooltip>
                     An access token is an auto generated value that is used to connect to the IIS Administration API. Only Administrators can create these tokens. <a class="link" title="More Information" href="https://docs.microsoft.com/en-us/IIS-Administration/management-portal/connecting#acquiring-an-access-token"></a>
                 </tooltip>

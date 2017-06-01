@@ -1,5 +1,7 @@
 ﻿import { Component, OnInit, OnDestroy, Output, Input, Inject, ViewChild, ElementRef, EventEmitter } from '@angular/core';
 
+import { Subscription } from 'rxjs/Subscription';
+
 import { Selector } from '../common/selector';
 import { ApiConnection } from './api-connection';
 import { ConnectService } from './connect.service';
@@ -28,10 +30,10 @@ import { NotificationService } from '../notification/notification.service';
                 <button class="no-border cancel" title="Cancel" (click)="onCancel()"></button>
             </div>
             <div *ngIf="!_editing">
-                <div class="col-xs-4 v-align">
-                    {{model.displayName}}
+                <div class="col-xs-9 col-sm-4 v-align">
+                    <a href="#" class="color-normal hover-color-active" (click)="onConnect($event)">{{model.displayName}}<span class="status started" *ngIf="_active == model"> (Active)</span></a>
                 </div>     
-                <div class="col-xs-4 v-align">
+                <div class="col-xs-9 col-sm-4 v-align">
                     {{model.url}}
                 </div>
             </div>
@@ -42,10 +44,16 @@ import { NotificationService } from '../notification/notification.service';
                 </fieldset>
                 <fieldset>
                     <label class="inline-block">Server Url</label>
+                    <tooltip>
+                            The URL of the server to connect to. The default port for the IIS Administration API is 55539.
+                    </tooltip>
                     <input type="text" placeholder="ex. contoso.com" class="form-control block" #urlField [ngModel]="model.url" (ngModelChange)="setUrl($event)" required throttle/>
                 </fieldset>
                 <fieldset>
-                    <label class="emph inline-block">Access Token</label>
+                    <label class="inline-block">Access Token</label>
+                    <tooltip>
+                        An access token is an auto generated value that is used to connect to the IIS Administration API. Only Administrators can create these tokens. <a class="link" title="More Information" href="https://docs.microsoft.com/en-us/IIS-Administration/management-portal/connecting#acquiring-an-access-token"></a>
+                    </tooltip>
                     <input type="text" autocomplete="off" #tokenField
                         class="form-control block"
                         [ngModel]="''"
@@ -54,10 +62,22 @@ import { NotificationService } from '../notification/notification.service';
                         [attr.required]="!model.accessToken || null"/>
                     <a class="right" [attr.disabled]="!tokenLink() ? true : null" (click)="gotoAccessToken($event)" [attr.href]="tokenLink()">Get access token</a>
                 </fieldset>
+                <fieldset>
+                    <checkbox2 [(model)]="model.persist"><b>Remember this server</b></checkbox2>
+                    <tooltip>
+                        Your Access Token and Connection will be stored locally.<br/>
+                        Use only if your device is trusted!
+                    </tooltip>
+                </fieldset>
             </div>
         </div>
     `,
     styles: [`
+        a {
+            display: inline;
+            background: transparent;
+        }
+
         .row {
             margin: 0px;
         }
@@ -84,23 +104,38 @@ import { NotificationService } from '../notification/notification.service';
         .name {
             padding: 0 15px;
         }
+
+        tooltip {
+            margin-left: 5px;
+        }
     `]
 })
-export class ServerListItem implements OnInit {
+export class ServerListItem implements OnInit, OnDestroy {
     @Input() public model: ApiConnection;
     @Output() public leave: EventEmitter<any> = new EventEmitter<any>();
 
     private _editing: boolean;
     private _original: ApiConnection;
+    private _active: ApiConnection;
+    private _new: boolean;
     @ViewChild(Selector) private _selector: Selector;
+    private _subscriptions: Array<Subscription> = [];
 
     constructor(private _svc: ConnectService, private _notificationService: NotificationService) {
+        this._subscriptions.push(_svc.active.subscribe(con => {
+            this._active = con;
+        }));
     }
 
     public ngOnInit() {
         if (!this.model.accessToken) {
+            this._new = true;
             this.onEdit();
         }
+    }
+
+    public ngOnDestroy() {
+        this._subscriptions.forEach(sub => sub.unsubscribe());
     }
 
     private prevent(e: Event) {
@@ -127,11 +162,15 @@ export class ServerListItem implements OnInit {
         }
 
         if (!this._editing) {
-            this.onEdit();
+            this.onConnect();
         }
     }
 
-    private onConnect() {
+    private onConnect(e: Event = null) {
+        if (e) {
+            e.preventDefault();
+        }
+
         this._svc.connect(this.model);
     }
 
@@ -153,6 +192,8 @@ export class ServerListItem implements OnInit {
 
         this._svc.save(this.model);
         this._editing = false;
+        this.model = this._original;
+        this._original = null;
         this.leave.next();
     }
 

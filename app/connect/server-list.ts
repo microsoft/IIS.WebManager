@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, OnDestroy, Output, Input, Inject, ViewChild, ElementRef } from '@angular/core';
+﻿import { Component, OnDestroy, ViewChild } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -24,7 +24,10 @@ import { ApiConnection } from './api-connection';
             <li *ngIf="_newServer" tabindex="-1">
                 <server [model]="_newServer" (leave)="onLeaveNewServer()"></server>
             </li>
-            <li class="hover-editing" tabindex="-1" *ngFor="let server of _servers">
+            <li class="hover-editing" tabindex="-1" *ngIf="_active">
+                <server [model]="_active"></server>
+            </li>
+            <li class="hover-editing" tabindex="-1" *ngFor="let server of _view">
                 <server [model]="server"></server>
             </li>
         </ul>
@@ -41,19 +44,24 @@ import { ApiConnection } from './api-connection';
         }
     `]
 })
-export class ServerListComponent implements OnInit, OnDestroy {
+export class ServerListComponent implements OnDestroy {
     private _servers: Array<ApiConnection> = [];
+    private _view: Array<ApiConnection> = [];
+    private _active: ApiConnection;
     private _subscriptions: Array<Subscription> = [];
     @ViewChild(Selector) private _selector: Selector;
     private _newServer: ApiConnection;
 
     constructor(private _svc: ConnectService) {
+        this._subscriptions.push(this._svc.active.subscribe(active => {
+            this._active = active;
+            this.filterConnections();
+        }));
+
         this._subscriptions.push(this._svc.connections.subscribe(connections => {
             this._servers = connections;
+            this.filterConnections();
         }));
-    }
-
-    public ngOnInit() {
     }
 
     public ngOnDestroy() {
@@ -69,5 +77,9 @@ export class ServerListComponent implements OnInit, OnDestroy {
 
     private onLeaveNewServer() {
         this._newServer = null;
+    }
+
+    private filterConnections() {
+        this._view = this._servers.filter(c => c != this._active);
     }
 }

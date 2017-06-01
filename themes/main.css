@@ -396,10 +396,6 @@ button.select {
     padding-bottom: 5px;
 }
 
-.grid-list .grid-item fieldset {
-    overflow: hidden;
-}
-
 .grid-list .grid-item [class*="col-"] {
     display: block;
 }

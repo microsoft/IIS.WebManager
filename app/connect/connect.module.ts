@@ -10,7 +10,6 @@ import { Routing } from './connect.routes';
 
 import { ServerListComponent } from './server-list';
 import { ServerListItem } from './server-list-item';
-import { ServerEditComponent } from './server-edit.component';
 
 @NgModule({
     imports: [
@@ -24,8 +23,7 @@ import { ServerEditComponent } from './server-edit.component';
     ],
     declarations: [
         ServerListComponent,
-        ServerListItem,
-        ServerEditComponent
+        ServerListItem
     ]
 })
 export class ConnectModule {
