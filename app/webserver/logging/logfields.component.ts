@@ -85,7 +85,7 @@ export class LogFieldsComponent {
                 <fieldset>
                     <label class="visible-xs">Read From</label>
                     <label class="hidden-xs editing">Read From</label>
-                    <span>{{sourceTypeName(field.source_type)}}</span>
+                    <span *ngIf="i !== _editing">{{sourceTypeName(field.source_type)}}</span>
                     <select [(ngModel)]="field.source_type" class="form-control">
                         <option value="request_header">Request Header</option>
                         <option value="response_header">Response Header</option>
@@ -100,7 +100,7 @@ export class LogFieldsComponent {
                 <fieldset>
                     <label class="visible-xs">Field Name</label>
                     <label class="hidden-xs editing">Field Name</label>
-                    <span>{{field.source_name}}</span>
+                    <span *ngIf="i !== _editing">{{field.source_name}}</span>
                     <input [(ngModel)]="field.source_name" throttle class="form-control" type="text" required/>
                 </fieldset>
                 <div *ngIf="i !== _editing">
@@ -111,7 +111,7 @@ export class LogFieldsComponent {
                 <fieldset>
                     <label class="visible-xs">Log As</label>
                     <label class="hidden-xs editing">Log As</label>
-                    <span>{{field.field_name}}</span>
+                    <span *ngIf="i !== _editing">{{field.field_name}}</span>
                     <input required [(ngModel)]="field.field_name" throttle class="form-control" type="text" required/>
                 </fieldset>
                 <div *ngIf="i !== _editing">

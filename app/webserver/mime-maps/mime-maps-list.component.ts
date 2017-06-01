@@ -31,7 +31,7 @@ import { StaticContentService } from '../static-content/static-content.service';
                 <label class="visible-xs">File Extension</label>
                 <label class="hidden-xs" [hidden]="!_editing">File Extension</label>
                 <input class="form-control" type="text" [(ngModel)]="model.file_extension" throttle required />
-                <span>{{model.file_extension}}</span>
+                <span *ngIf="!_editing">{{model.file_extension}}</span>
                 <div *ngIf="!_editing">
                     <br class="visible-xs" />
                 </div>
@@ -41,7 +41,7 @@ import { StaticContentService } from '../static-content/static-content.service';
                 <label class="visible-xs">Mime Type</label>
                 <label class="hidden-xs" [hidden]="!_editing">Mime Type</label>
                 <input class="form-control" type="text" [(ngModel)]="model.mime_type" throttle required />
-                <span>{{model.mime_type}}</span>
+                <span *ngIf="!_editing">{{model.mime_type}}</span>
             </fieldset>
 
         </div>
