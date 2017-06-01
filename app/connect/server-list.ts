@@ -12,7 +12,7 @@ import { ApiConnection } from './api-connection';
     selector: 'server-list',
     template: `
         <div>
-            <button class="New Server" [attr.disabled]="!!_newServer || null" (click)="onNewServer()"><i class="fa fa-plus color-active"></i><span>Add Server</span></button>
+            <button title="New Server" class="create" [attr.disabled]="!!_newServer || null" (click)="onNewServer()"><i class="fa fa-plus color-active"></i><span>Add Server</span></button>
         </div>
         <br/>
         <div class="container-fluid hidden-xs">
@@ -39,10 +39,6 @@ import { ApiConnection } from './api-connection';
             margin: 0;
             padding: 0;
         }
-
-        div:first-of-type {
-            margin-top: 30px;
-        }
     `]
 })
 export class ServerListComponent implements OnDestroy {
@@ -56,6 +52,7 @@ export class ServerListComponent implements OnDestroy {
     private _newServer: ApiConnection;
 
     constructor(private _svc: ConnectService) {
+
         this._subscriptions.push(this._svc.active.subscribe(active => {
             this._active = active;
             this.doSort();

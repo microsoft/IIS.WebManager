@@ -128,6 +128,7 @@
     <TypeScriptCompile Include="app\connect\connect.module.ts" />
     <TypeScriptCompile Include="app\connect\server-list-item.ts" />
     <TypeScriptCompile Include="app\connect\server-list.ts" />
+    <TypeScriptCompile Include="app\connect\servers.component.ts" />
     <TypeScriptCompile Include="app\error\api-error.ts" />
     <TypeScriptCompile Include="app\common\bmodel.ts" />
     <TypeScriptCompile Include="app\common\enum.component.ts" />

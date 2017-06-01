@@ -6,8 +6,10 @@ import { Module as BModel } from '../common/bmodel';
 import { Module as Selector } from '../common/selector';
 import { Module as CheckBox } from '../common/checkbox.component';
 import { Module as Tooltip } from '../common/tooltip.component';
+import { Module as VTabs } from '../common/vtabs.component';
 import { Routing } from './connect.routes';
 
+import { ServersComponent } from './servers.component';
 import { ServerListComponent } from './server-list';
 import { ServerListItem } from './server-list-item';
 
@@ -19,9 +21,11 @@ import { ServerListItem } from './server-list-item';
         BModel,
         Selector,
         CheckBox,
-        Tooltip
+        Tooltip,
+        VTabs
     ],
     declarations: [
+        ServersComponent,
         ServerListComponent,
         ServerListItem
     ]

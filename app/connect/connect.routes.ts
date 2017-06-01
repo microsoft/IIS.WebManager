@@ -2,10 +2,10 @@
 
 //
 // Components
-import { ServerListComponent } from './server-list';
+import { ServersComponent } from './servers.component';
 
 const routes: Routes = [
-    { path: '', component: ServerListComponent }
+    { path: '', component: ServersComponent }
 ];
 
 // - Updated Export
