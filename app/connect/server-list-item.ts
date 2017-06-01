@@ -31,7 +31,7 @@ import { NotificationService } from '../notification/notification.service';
             </div>
             <div *ngIf="!_editing">
                 <div class="col-xs-9 col-sm-4 v-align">
-                    <a href="#" class="color-normal hover-color-active" (click)="onConnect($event)">{{model.displayName}}<span class="status started" *ngIf="_active == model"> (Active)</span></a>
+                    <a href="#" class="color-normal hover-color-active" (click)="onConnect($event)">{{connName()}}<span class="status started" *ngIf="_active == model"> (Active)</span></a>
                 </div>     
                 <div class="col-xs-9 col-sm-4 v-align">
                     {{model.url}}
