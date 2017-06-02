@@ -2,6 +2,7 @@
 
 import { Subscription } from 'rxjs/Subscription';
 
+import { OrderBy, SortPipe } from '../common/sort.pipe';
 import { Constants } from './constants';
 import { Selector } from '../common/selector';
 import { ConnectService } from './connect.service';
@@ -16,15 +17,15 @@ import { ApiConnection } from './api-connection';
         <br/>
         <div class="container-fluid hidden-xs">
             <div class="border-active grid-list-header row">
-                <label class="col-xs-4">Display Name</label>
-                <label class="col-xs-4">Server Url</label>
+                <label class="col-xs-4" [ngClass]="_orderBy.css('displayName')" (click)="sort('displayName')">Display Name</label>
+                <label class="col-xs-4" [ngClass]="_orderBy.css('url')" (click)="sort('url')">Server Url</label>
             </div>
         </div>
         <ul class="container-fluid grid-list" *ngIf="_servers">
             <li *ngIf="_newServer" tabindex="-1">
                 <server [model]="_newServer" (leave)="onLeaveNewServer()"></server>
             </li>
-            <li class="hover-editing" tabindex="-1" *ngIf="_active">
+            <li class="hover-editing" tabindex="-1" *ngIf="_active && !_orderBy.Field">
                 <server [model]="_active"></server>
             </li>
             <li class="hover-editing" tabindex="-1" *ngFor="let server of _view">
@@ -48,6 +49,8 @@ export class ServerListComponent implements OnDestroy {
     private _servers: Array<ApiConnection> = [];
     private _view: Array<ApiConnection> = [];
     private _active: ApiConnection;
+    private _orderBy: OrderBy = new OrderBy();
+    private _sortPipe: SortPipe = new SortPipe();
     private _subscriptions: Array<Subscription> = [];
     @ViewChild(Selector) private _selector: Selector;
     private _newServer: ApiConnection;
@@ -55,12 +58,12 @@ export class ServerListComponent implements OnDestroy {
     constructor(private _svc: ConnectService) {
         this._subscriptions.push(this._svc.active.subscribe(active => {
             this._active = active;
-            this.filterConnections();
+            this.doSort();
         }));
 
         this._subscriptions.push(this._svc.connections.subscribe(connections => {
             this._servers = connections;
-            this.filterConnections();
+            this.doSort();
         }));
     }
 
@@ -79,7 +82,17 @@ export class ServerListComponent implements OnDestroy {
         this._newServer = null;
     }
 
-    private filterConnections() {
-        this._view = this._servers.filter(c => c != this._active);
+    private sort(field: string) {
+        this._orderBy.sort(field);
+        this.doSort();
+    }
+
+    private doSort() {
+        this._view = this._servers;
+        this._sortPipe.transform(this._view, this._orderBy.Field, this._orderBy.Asc, null, true);
+
+        if (!this._orderBy.Field) {
+            this._view = this._view.filter(c => c != this._active);
+        }
     }
 }
