@@ -29,6 +29,16 @@ import { WindowService } from '../main/window.service';
         .align-right {
             right: 0;
         }
+
+        :host >>> ul {
+            margin-bottom: 0;
+        }
+
+        :host >>> li > button,
+        :host >>> li > .bttn {
+            min-width: 125px;
+            width: 100%;
+        }
     `
     ],
     host: {

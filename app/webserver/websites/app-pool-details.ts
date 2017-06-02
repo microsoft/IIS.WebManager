@@ -8,24 +8,23 @@ import { DiffUtil } from '../../utils/diff';
 @Component({
     selector: 'app-pool-details',
     template: `
-        <div class="actions">
-            <div class="selector-wrapper">
-                <button (click)="openSelector()" [class.background-active]="(_selector && _selector.opened) || false">
-                    <i class="fa fa-ellipsis-h"></i>
-                </button>
-                <selector [right]="true">
-                    <ul>
-                        <li><button class="refresh" title="Recycle" title="Recycle" [attr.disabled]="!started || null" (click)="onRecycle()">Recycle</button></li>
-                        <li><button class="start" title="Start" [attr.disabled]="model.status != 'stopped' ? true : null" (click)="onStart()">Start</button></li>
-                        <li><button class="stop" title="Stop" [attr.disabled]="!started || null" (click)="onStop()">Stop</button></li>
-                    </ul>
-                </selector>
-            </div>
-        </div>
         <fieldset>
             <label>Name</label>
-            <a [routerLink]="['/webserver', 'app-pools', model.id]" class="name">{{model.name}}</a>
+            <span class="name">{{model.name}}</span>
             <span class="status" *ngIf="!started">({{model.status}})</span>
+            <div class="actions">
+                <div class="selector-wrapper">
+                    <button (click)="openSelector()" [class.background-active]="(_selector && _selector.opened) || false"><i class="fa fa-caret-down"></i></button>
+                    <selector [right]="true">
+                        <ul>
+                            <li><a class="bttn edit" [routerLink]="['/webserver/app-pools', model.id]">Edit</a></li>
+                            <li><button class="refresh" title="Recycle" [attr.disabled]="!started || null" (click)="onRecycle()">Recycle</button></li>
+                            <li><button class="start" title="Start" [attr.disabled]="model.status != 'stopped' ? true : null" (click)="onStart()">Start</button></li>
+                            <li><button class="stop" title="Stop" [attr.disabled]="!started || null" (click)="onStop()">Stop</button></li>
+                        </ul>
+                    </selector>
+                </div>
+            </div>
         </fieldset>
         <fieldset *ngIf="_svc">
             <label>Auto Start</label>
@@ -55,23 +54,16 @@ import { DiffUtil } from '../../utils/diff';
             font-size: 16px;
         }
 
-        .actions ul {
-            margin-bottom: 0;
-        }
-
         .selector-wrapper {
             position: relative;
         }
 
-        selector {
-            position:absolute;
-            right:0;
-            top: 32px;
+        .actions {
+            float: none;
         }
 
-        selector button {
-            min-width: 125px;
-            width: 100%;
+        .actions ul {
+            margin-bottom: 0;
         }
     `]
 })
