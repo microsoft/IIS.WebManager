@@ -32,7 +32,7 @@ import { ConnectComponent } from '../connect/connect.component';
 import { ConnectionPickerComponent } from '../connect/connection-picker.component';
 import { GetComponent } from './get.component';
 import { HeaderComponent } from '../header/header.component';
-import { SettingsComponent } from '../header/settings.component';
+import { SettingsMenuComponent } from '../settings/settings-menu.component';
 import { NotificationComponent } from '../notification/notification.component';
 import { NotificationIndicator } from '../notification/notification-indicator';
 import { InformationComponent } from '../notification/information.component';
@@ -69,7 +69,7 @@ import { WindowService } from './window.service';
         ConnectionPickerComponent,
         GetComponent,
         HeaderComponent,
-        SettingsComponent,
+        SettingsMenuComponent,
         NotificationComponent,
         NotificationIndicator,
         ModalComponent,

@@ -7,9 +7,9 @@ import { Module as Selector } from '../common/selector';
 import { Module as CheckBox } from '../common/checkbox.component';
 import { Module as Tooltip } from '../common/tooltip.component';
 import { Module as VTabs } from '../common/vtabs.component';
-import { Routing } from './connect.routes';
+import { Routing } from './settings.routes';
 
-import { ServersComponent } from './servers.component';
+import { SettingsComponent } from './settings.component';
 import { ServerListComponent } from './server-list';
 import { ServerListItem } from './server-list-item';
 
@@ -25,10 +25,10 @@ import { ServerListItem } from './server-list-item';
         VTabs
     ],
     declarations: [
-        ServersComponent,
+        SettingsComponent,
         ServerListComponent,
         ServerListItem
     ]
 })
-export class ConnectModule {
+export class SettingsModule {
 }

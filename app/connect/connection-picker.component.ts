@@ -10,7 +10,7 @@ import {ComponentUtil} from '../utils/component';
 @Component({
     selector: 'connection-picker',
     template: `
-        <a class="background-active hover-primary2" [routerLink]="[_connections.length > 0 ? '/connections' : '/connect']">{{currentName()}}</a>
+        <a class="background-active hover-primary2" [routerLink]="[_connections.length > 0 ? '/settings' : '/connect']">{{currentName()}}</a>
     `,
     styles: [`
         a {

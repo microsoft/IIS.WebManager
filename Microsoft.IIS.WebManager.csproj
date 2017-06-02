@@ -122,13 +122,13 @@
     <TypeScriptCompile Include="app\common\sort.pipe.ts" />
     <TypeScriptCompile Include="app\common\vtabs.component.ts" />
     <TypeScriptCompile Include="app\common\virtual-list.component.ts" />
-    <TypeScriptCompile Include="app\connect\connect.routes.ts" />
+    <TypeScriptCompile Include="app\settings\settings.routes.ts" />
     <TypeScriptCompile Include="app\connect\constants.ts" />
     <TypeScriptCompile Include="app\connect\connection-type.ts" />
-    <TypeScriptCompile Include="app\connect\connect.module.ts" />
-    <TypeScriptCompile Include="app\connect\server-list-item.ts" />
-    <TypeScriptCompile Include="app\connect\server-list.ts" />
-    <TypeScriptCompile Include="app\connect\servers.component.ts" />
+    <TypeScriptCompile Include="app\settings\settings.module.ts" />
+    <TypeScriptCompile Include="app\settings\server-list-item.ts" />
+    <TypeScriptCompile Include="app\settings\server-list.ts" />
+    <TypeScriptCompile Include="app\settings\settings.component.ts" />
     <TypeScriptCompile Include="app\error\api-error.ts" />
     <TypeScriptCompile Include="app\common\bmodel.ts" />
     <TypeScriptCompile Include="app\common\enum.component.ts" />
@@ -149,7 +149,7 @@
     <TypeScriptCompile Include="app\files\parallel-executor.ts" />
     <TypeScriptCompile Include="app\files\code-editor.component.ts" />
     <TypeScriptCompile Include="app\files\upload.component.ts" />
-    <TypeScriptCompile Include="app\header\settings.component.ts" />
+    <TypeScriptCompile Include="app\settings\settings-menu.component.ts" />
     <TypeScriptCompile Include="app\main\options.service.ts" />
     <TypeScriptCompile Include="app\main\window.service.ts" />
     <TypeScriptCompile Include="app\notification\modal.component.ts" />

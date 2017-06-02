@@ -2,10 +2,11 @@
 
 //
 // Components
-import { ServersComponent } from './servers.component';
+import { SettingsComponent } from './settings.component';
 
 const routes: Routes = [
-    { path: '', component: ServersComponent }
+    { path: '', component: SettingsComponent },
+    { path: ':section', component: SettingsComponent }
 ];
 
 // - Updated Export

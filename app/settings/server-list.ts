@@ -3,10 +3,10 @@
 import { Subscription } from 'rxjs/Subscription';
 
 import { OrderBy, SortPipe } from '../common/sort.pipe';
-import { Constants } from './constants';
+import { Constants } from '../connect/constants';
 import { Selector } from '../common/selector';
-import { ConnectService } from './connect.service';
-import { ApiConnection } from './api-connection';
+import { ConnectService } from '../connect/connect.service';
+import { ApiConnection } from '../connect/api-connection';
 
 @Component({
     selector: 'server-list',

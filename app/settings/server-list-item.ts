@@ -3,8 +3,8 @@
 import { Subscription } from 'rxjs/Subscription';
 
 import { Selector } from '../common/selector';
-import { ApiConnection } from './api-connection';
-import { ConnectService } from './connect.service';
+import { ApiConnection } from '../connect/api-connection';
+import { ConnectService } from '../connect/connect.service';
 import { NotificationService } from '../notification/notification.service';
 
 @Component({

@@ -17,7 +17,7 @@ const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'get', component: GetComponent },
     { path: 'connect', component: ConnectComponent },
-    { path: 'connections', loadChildren: './app/connect/connect.module#ConnectModule' },
+    { path: 'settings', loadChildren: './app/settings/settings.module#SettingsModule' },
     { path: 'webserver', loadChildren: './app/webserver/webserver.module#WebServerModule' },
     { path: ':section', component: HomeComponent },
     // Not Found
