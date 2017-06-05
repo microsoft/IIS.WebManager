@@ -510,14 +510,11 @@ select[enabled]:not(.inactive) {
 
 /* 
     Feature Header 
-*/
 .feature-header {
     padding-top: 20px;
     padding-bottom: 10px;
     display: block;
     width:100%;
-
-    overflow: hidden;
     white-space:nowrap;
     text-overflow: ellipsis;
 }
@@ -554,6 +551,38 @@ select[enabled]:not(.inactive) {
 }
 
 .feature-title:before {
+    font-family: FontAwesome;
+    padding-right: 10px;
+    display:inline-block;
+    line-height: 32px;
+    opacity: .7;
+    vertical-align: bottom;
+}
+*/
+
+.feature-header {
+    margin: 0;
+    margin-bottom: 20px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    max-width: 100%;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.feature-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-right: 15px;
+}
+
+.feature-title h1 {
+    font-size: 25px;
+    display: inline;
+}
+
+.feature-title h1:before {
     font-family: FontAwesome;
     padding-right: 10px;
     display:inline-block;
@@ -826,7 +855,6 @@ a.link:before {
 }
 
 .sidebar-nav-content {
-    width: 100%;
     top: 0;
 }
 

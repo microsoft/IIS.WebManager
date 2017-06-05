@@ -1,62 +1,65 @@
+import { Component, Input, Inject, ViewChild } from '@angular/core';
+import { RouterLink, Router } from '@angular/router';
 
-import {Component, Input, Inject} from '@angular/core';
-import {RouterLink, Router} from '@angular/router';
-
-import {WebSitesService} from './websites.service';
-import {WebSite} from './site';
+import { Selector } from '../../common/selector';
+import { WebSitesService } from './websites.service';
+import { WebSite } from './site';
 
 
 @Component({
     selector: 'website-header',
-    styles: [`
-        .navigator {
-            float: left;
-        }
-
-        .feature-title:before {
-            content: "\\f0ac";
-        }
-    `],
     template: `
-        <div *ngIf="site">
-            <div class="feature-header">
-                <div class="subject">
-                    <h1 class="feature-title" [ngClass]="site.status"><span>{{site.name}}</span></h1>
-                    <span class="status hidden-xs" *ngIf="site.status == 'stopped'">({{site.status}})</span>
+        <div class="feature-header" *ngIf="site">
+            <div class="actions">
+                <div class="selector-wrapper">
+                    <button title="Actions" (click)="_selector.toggle()" [class.background-active]="(_selector && _selector.opened) || false"><i class="fa fa-caret-down"></i></button>
+                    <selector [right]="true">
+                        <ul>
+                            <li><a class="bttn link" title="Browse" [attr.href]="url">Browse</a></li>
+                            <li><button class="start" title="Start" [attr.disabled]="site.status == 'started' ? true : null" (click)="onStart()">Start</button></li>
+                            <li><button class="stop" title="Stop" [attr.disabled]="site.status == 'stopped' ? true : null" (click)="onStop()">Stop</button></li>
+                            <li><button class="delete" title="Delete" (click)="onDelete()">Delete</button></li>
+                        </ul>
+                    </selector>
                 </div>
             </div>
-            <div>
-                <div class="navigator">
-                    <navigator [model]="site.bindings" [left]="true" [small]="true"></navigator>
-                </div>
-                <div>
-                    <button class="no-border" title="Start" [attr.disabled]="site.status == 'started' ? true : null" (click)="onStart()">
-                        <i class="fa fa-play green"></i><span class="hidden-xs">Start</span>
-                    </button>
-                    <button class="no-border" title="Stop" [attr.disabled]="site.status == 'stopped' ? true : null" (click)="onStop()">
-                        <i class="fa fa-stop red"></i><span class="hidden-xs">Stop</span>
-                    </button>
-                    <button class="no-border" title="Delete" (click)="onDelete()">
-                        <i class="fa fa-trash-o red large"></i><span class="hidden-xs">Delete</span>
-                    </button>
-                </div>
+            <span class="status right" *ngIf="site.status == 'stopped'">({{site.status}})</span>
+            <div class="feature-title">
+                <h1 [ngClass]="site.status">{{site.name}}</h1>
             </div>
         </div>
-    `
+    `,
+    styles: [`
+        .selector-wrapper {
+            position: relative;
+        }
+
+        .feature-title h1:before {
+            content: "\\f0ac";
+        }
+
+        .status {
+            line-height: 32px;
+            padding-right: 5px;
+        }
+    `]
 })
 export class WebSiteHeaderComponent {
     @Input() site: WebSite;
+    @ViewChild(Selector) private _selector: Selector;
 
     constructor(@Inject("WebSitesService") private _service: WebSitesService,
-                private _router: Router) {
+        private _router: Router) {
     }
 
     onStart() {
         this._service.start(this.site);
+        this._selector.close();
     }
 
     onStop() {
         this._service.stop(this.site);
+        this._selector.close();
     }
 
     onDelete() {
@@ -66,5 +69,14 @@ export class WebSiteHeaderComponent {
                     this._router.navigate(["/webserver/web-sites"]);
                 });
         }
+        this._selector.close();
+    }
+
+    private get url() {
+        if (this.site.bindings.length == 0) {
+            return "";
+        }
+
+        return this._service.getUrl(this.site.bindings[0]);
     }
 }

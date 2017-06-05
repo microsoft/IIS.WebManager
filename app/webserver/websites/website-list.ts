@@ -60,6 +60,9 @@ import { NotificationService } from '../../notification/notification.service';
 
         .name {
             font-size: 16px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
         }
 
         .https:after {

@@ -1,47 +1,48 @@
+import { Component, Input, Inject, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
-import {Component, Input, Inject} from '@angular/core';
-import {Router} from '@angular/router';
-
-import {WebApp} from './webapp'
-import {WebAppsService} from './webapps.service'
-
+import { Selector } from '../../common/selector';
+import { WebApp } from './webapp'
+import { WebAppsService } from './webapps.service'
+import { WebSitesService } from '../websites/websites.service';
 
 @Component({
     selector: 'webapp-header',
-    styles: [`
-        .navigator {
-            float: left;
-        }
-
-        .feature-title:before {
-            content: "\\f121";
-        }
-    `],
     template: `
-        <div>
-            <div class="feature-header">
-                <div class="subject">
-                    <h1 class="feature-title" [title]="model.website.name + model.path">
-                        <span>{{model.path}}</span>
-                    </h1>
+        <div class="feature-header">
+            <div class="actions">
+                <div class="selector-wrapper">
+                    <button title="Actions" (click)="_selector.toggle()" [class.background-active]="(_selector && _selector.opened) || false"><i class="fa fa-caret-down"></i></button>
+                    <selector [right]="true">
+                        <ul>
+                            <li><a class="bttn link" title="Browse" [attr.href]="url">Browse</a></li>
+                            <li><button class="delete" title="Delete" (click)="onDelete()">Delete</button></li>
+                        </ul>
+                    </selector>
                 </div>
             </div>
-            <div>
-                <div class="navigator">
-                    <navigator *ngIf="model.website.bindings" [model]="model.website.bindings" [path]="model.path" [left]="true" [small]="true"></navigator>
-                </div>
-                <button class="no-border" title="Delete" (click)="onDelete()">
-                    <i class="fa fa-trash-o red"></i><span class="hidden-xs">Delete</span>
-                </button>
+            <div class="feature-title">
+                <h1 [title]="model.website.name + model.path">{{model.path}}</h1>
             </div>
         </div>
-    `
+    `,
+    styles: [`
+        .selector-wrapper {
+            position: relative;
+        }
+
+        .feature-title h1:before {
+            content: "\\f121";
+        }
+    `]
 })
 export class WebAppHeaderComponent {
     @Input() model: WebApp;
+    @ViewChild(Selector) private _selector: Selector;
 
-    constructor(@Inject("WebAppsService") private _service: WebAppsService,
-                private _router: Router) {
+    constructor( @Inject("WebAppsService") private _service: WebAppsService,
+        @Inject("WebSitesService") private _siteService: WebSitesService,
+        private _router: Router) {
     }
 
     onDelete() {
@@ -51,5 +52,14 @@ export class WebAppHeaderComponent {
                     this._router.navigate(['/WebServer/WebSites/WebSite', { id: this.model.website.id }]);
                 });
         }
+        this._selector.close();
+    }
+
+    private get url() {
+        if (!this.model.website || this.model.website.bindings.length == 0) {
+            return "";
+        }
+
+        return this._siteService.getUrl(this.model.website.bindings[0]) + this.model.path;
     }
 }

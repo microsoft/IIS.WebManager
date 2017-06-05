@@ -45,7 +45,7 @@ import {AppPoolsService} from './app-pools.service';
         }
 
         :host >>> .sidebar.nav > vtabs .vtabs > .content {
-            top: 130px;
+            top: 82px;
         }
     `]
 })

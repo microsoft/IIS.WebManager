@@ -1,43 +1,52 @@
+import { Component, Input, Inject, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
-import {Component, Input, Inject} from '@angular/core';
-import {Router} from '@angular/router';
-
-import {ApplicationPool} from './app-pool';
-import {AppPoolsService} from './app-pools.service';
+import { Selector } from '../../common/selector';
+import { ApplicationPool } from './app-pool';
+import { AppPoolsService } from './app-pools.service';
 
 
 @Component({
     selector: 'app-pool-header',
-    styles: [`
-        .feature-title:before {
-            content: "\\f085";
-        }
-    `],
     template: `
-        <div *ngIf="pool">
-            <div class="feature-header">
-                <div class="subject">
-                    <h1 class="feature-title" [ngClass]="pool.status"><span>{{pool.name}}</span></h1>
-                    <span class="status hidden-xs" *ngIf="pool.status == 'stopped'">({{pool.status}})</span>
+        <div class="feature-header" *ngIf="pool">
+            <div class="actions">
+                <div class="selector-wrapper">
+                    <button title="Actions" (click)="_selector.toggle()" [class.background-active]="(_selector && _selector.opened) || false"><i class="fa fa-caret-down"></i></button>
+                    <selector [right]="true">
+                        <ul>
+                            <li><button class="refresh" title="Recycle" [attr.disabled]="pool.status != 'started' ? true : null" (click)="onRecycle()">Recycle</button></li>
+                            <li><button class="start" title="Start" [attr.disabled]="pool.status != 'stopped' ? true : null" (click)="onStart()">Start</button></li>
+                            <li><button class="stop" title="Stop" [attr.disabled]="pool.status != 'started' ? true : null" (click)="onStop()">Stop</button></li>
+                            <li><button class="delete" title="Delete" (click)="onDelete()">Delete</button></li>
+                        </ul>
+                    </selector>
                 </div>
             </div>
-            <button title="Recycle" class="no-border" [attr.disabled]="pool.status != 'started' ? true : null" (click)="onRecycle()">
-                <i class="fa fa-refresh color-active"></i><span class="hidden-xs">Recycle</span>
-            </button>
-            <button title="Start" class="no-border" [attr.disabled]="pool.status != 'stopped' ? true : null" (click)="onStart()">
-                <i class="fa fa-play green"></i><span class="hidden-xs">Start</span>
-            </button>
-            <button title="Stop" class="no-border" [attr.disabled]="pool.status != 'started' ? true : null" (click)="onStop()">
-                <i class="fa fa-stop red"></i><span class="hidden-xs">Stop</span>
-            </button>
-            <button title="Delete" class="no-border" (click)="onDelete()">
-                <i class="fa fa-trash-o red"></i><span class="hidden-xs">Delete</span>
-            </button>
+            <span class="status right" *ngIf="pool.status == 'stopped'">({{pool.status}})</span>
+            <div class="feature-title">
+                <h1 [ngClass]="pool.status">{{pool.name}}</h1>
+            </div>
         </div>
-    `
+    `,
+    styles: [`
+        .selector-wrapper {
+            position: relative;
+        }
+
+        .feature-title h1:before {
+            content: "\\f085";
+        }
+
+        .status {
+            line-height: 32px;
+            padding-right: 5px;
+        }
+    `]
 })
 export class AppPoolHeaderComponent {
     @Input() pool: ApplicationPool;
+    @ViewChild(Selector) private _selector: Selector;
 
     constructor(@Inject("AppPoolsService") private _service: AppPoolsService,
                 private _router: Router) {
@@ -45,10 +54,12 @@ export class AppPoolHeaderComponent {
 
     onStart() {
         this._service.start(this.pool);
+        this._selector.close();
     }
 
     onStop() {
         this._service.stop(this.pool);
+        this._selector.close();
     }
 
     onDelete() {
@@ -58,9 +69,11 @@ export class AppPoolHeaderComponent {
                     this._router.navigate(["/WebServer"]);
                 });
         }
+        this._selector.close();
     }
 
     onRecycle() {
         this._service.recycle(this.pool);
+        this._selector.close();
     }
 }

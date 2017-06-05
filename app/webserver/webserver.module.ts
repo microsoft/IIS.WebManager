@@ -1,17 +1,18 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
-import {Module as BModel} from '../common/bmodel';
-import {Module as Dynamic} from '../common/dynamic.component';
-import {Module as VTabs} from '../common/vtabs.component';
-import {Module as Loading} from '../notification/loading.component';
+import { Module as BModel } from '../common/bmodel';
+import { Module as Dynamic } from '../common/dynamic.component';
+import { Module as VTabs } from '../common/vtabs.component';
+import { Module as Selector } from '../common/selector';
+import { Module as Loading } from '../notification/loading.component';
 
-import {Routing} from './webserver.routes';
+import { Routing } from './webserver.routes';
 
-import {WebServerGeneralComponent} from './webserver-general.component';
-import {WebServerHeaderComponent} from './webserver-header.component';
-import {WebServerComponent} from './webserver.component';
+import { WebServerGeneralComponent } from './webserver-general.component';
+import { WebServerHeaderComponent } from './webserver-header.component';
+import { WebServerComponent } from './webserver.component';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import {WebServerComponent} from './webserver.component';
         BModel,
         Dynamic,
         VTabs,
+        Selector,
         Loading
     ],
     declarations: [
