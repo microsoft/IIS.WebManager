@@ -24,7 +24,6 @@ import {WebAppsService} from './webapps.service';
                 <li class="webserver"><a [routerLink]="['/webserver']">Web Server</a></li>
                 <li class="website"><a [routerLink]="['/webserver/web-sites']">Web Sites</a></li>
                 <li class="website"><a [routerLink]="['/webserver/websites/', app.website.id]">{{app.website.name}}</a></li>
-                <li class="webapps"><a [routerLink]="['/webserver/websites', app.website.id, 'web-applications']">Web Applications</a></li>
                 <li class="webapps color-active"><a>{{app.path}}</a></li>
                 <hr />
             </ul>
@@ -45,7 +44,7 @@ import {WebAppsService} from './webapps.service';
         .sidebar .webapps::before {content: "\\f121";}
 
         :host >>> .sidebar > vtabs .vtabs > .items {
-            top: 287px;
+            top: 251px;
         }
 
         :host >>> .sidebar.nav > vtabs .vtabs > .content {

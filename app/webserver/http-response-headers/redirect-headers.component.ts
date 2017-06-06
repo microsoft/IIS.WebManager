@@ -31,7 +31,7 @@ import {HttpResponseHeaders, RedirectHeader} from './http-response-headers';
                     </div>
                     <fieldset class="col-xs-12 col-sm-4 col-lg-5">
                         <label class="visible-xs">Name</label>
-                        <label class="hidden-xs editing">Name</label>
+                        <label *ngIf="_editing == i" class="hidden-xs">Name</label>
                         <span *ngIf="_editing != i">{{header.name}}</span>
                         <input *ngIf="_editing == i" [disabled]="locked" class="form-control" type="text" [(ngModel)]="header.name" throttle required />
                         <div *ngIf="_editing !== i">
@@ -40,7 +40,7 @@ import {HttpResponseHeaders, RedirectHeader} from './http-response-headers';
                     </fieldset>
                     <fieldset class="col-xs-12 col-sm-6 col-lg-5">
                         <label class="visible-xs">Value</label>
-                        <label class="hidden-xs editing">Value</label>
+                        <label *ngIf="_editing == i" class="hidden-xs">Value</label>
                         <span *ngIf="_editing != i">{{header.value}}</span>
                         <input *ngIf="_editing == i" [disabled]="locked" class="form-control" type="text" [(ngModel)]="header.value" throttle required />
                     </fieldset>

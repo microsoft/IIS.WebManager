@@ -31,7 +31,7 @@ import { NotificationService } from '../../notification/notification.service';
                 </a>
             </div>
         </div>
-        <div class=' hidden-xs col-xs-4 col-xs-push-1 col-sm-3 col-md-3 valign' *ngIf="allow('browse')">
+        <div class=' hidden-xs col-xs-4 col-xs-push-1 col-sm-3 col-md-3 valign overflow-visible' *ngIf="allow('browse')">
             <navigator [model]="model.bindings" [right]="true"></navigator>
         </div>
         <div class="actions">

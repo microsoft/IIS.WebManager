@@ -36,7 +36,8 @@ import { ApplicationPool, ProcessModelIdentityType } from './app-pool';
                 </button>
                 <selector [right]="true">
                     <ul>
-                        <li><button class="refresh" title="Recycle" *ngIf="allow('recycle')" title="Recycle"  [attr.disabled]="!started() || null" (click)="onRecycle($event)">Recycle</button></li>
+                        <li><button class="edit" title="Edit" *ngIf="allow('edit')" (click)="onEdit($event)">Edit</button></li>
+                        <li><button class="refresh" title="Recycle" *ngIf="allow('recycle')" [attr.disabled]="!started() || null" (click)="onRecycle($event)">Recycle</button></li>
                         <li><button class="start" title="Start" *ngIf="allow('start')" [attr.disabled]="model.status != 'stopped' ? true : null" (click)="onStart($event)">Start</button></li>
                         <li><button class="stop" *ngIf="allow('stop')" title="Stop" [attr.disabled]="!started() || null" (click)="onStop($event)">Stop</button></li>
                         <li><button class="delete" *ngIf="allow('delete')" title="Delete" (click)="onDelete($event)">Delete</button></li>
@@ -112,6 +113,12 @@ export class AppPoolItem {
 
         this._notificationService.confirm("Delete Application Pool", "Are you sure you want to delete Application Pool '" + this.model.name + "'")
             .then(confirmed => confirmed && this._service.delete(this.model));
+    }
+
+    onEdit(e: Event) {
+        e.stopPropagation();
+        this._selector.close();
+        this._router.navigate(['webserver', 'app-pools', this.model.id]);
     }
 
     onStart(e: Event) {
@@ -220,7 +227,7 @@ export class AppPoolItem {
 })
 export class AppPoolList {
     @Input() model: Array<ApplicationPool>;
-    @Input() actions: string = "recycle,start,stop,delete";
+    @Input() actions: string = "edit,recycle,start,stop,delete";
     @Output() itemSelected: EventEmitter<any> = new EventEmitter();
 
     private _orderBy: OrderBy = new OrderBy();

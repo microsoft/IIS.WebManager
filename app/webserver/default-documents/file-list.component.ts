@@ -1,11 +1,10 @@
-import {Component, OnInit, OnDestroy, SimpleChange, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, OnDestroy, SimpleChange, Input, Output, EventEmitter } from '@angular/core';
 
-import {DiffUtil} from '../../utils/diff';
-import {OrderBy} from '../../common/sort.pipe';
+import { DiffUtil } from '../../utils/diff';
+import { OrderBy } from '../../common/sort.pipe';
 
-import {File} from './default-documents';
-import {DefaultDocumentsService} from './default-documents.service';
-
+import { File } from './default-documents';
+import { DefaultDocumentsService } from './default-documents.service';
 
 @Component({
     selector: 'file',
@@ -26,8 +25,8 @@ import {DefaultDocumentsService} from './default-documents.service';
                 </button>
             </div>
             <fieldset class="col-xs-8">
-                <input class="form-control" type="text" [(ngModel)]="model.name" required />
-                <span class="form-control">{{model.name}}</span>
+                <input *ngIf="_editing" class="form-control" type="text" [(ngModel)]="model.name" required />
+                <span *ngIf="!_editing" class="form-control">{{model.name}}</span>
             </fieldset>
         </div>
     `,

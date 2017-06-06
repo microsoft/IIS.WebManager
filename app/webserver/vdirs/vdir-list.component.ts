@@ -44,7 +44,7 @@ import { WebApp } from '../webapps/webapp';
                 <div class="col-xs-12 col-sm-4 v-align">
                     <span>{{model.physical_path}}</span>
                 </div>
-                <div *ngIf="model.website && model.webapp" class='hidden-xs col-sm-2 col-md-3 col-lg-4'>
+                <div *ngIf="model.website && model.webapp" class='hidden-xs col-sm-2 col-md-3 col-lg-4 overflow-visible'>
                     <div class="v-align hidden-xs"></div>
                     <navigator [model]="model.website.bindings" [path]="getNavPath()" [right]="true"></navigator>
                 </div>

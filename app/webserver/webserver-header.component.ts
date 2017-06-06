@@ -24,9 +24,9 @@ import { WebServer } from './webserver';
                     </selector>
                 </div>
             </div>
-            <span class="right status" *ngIf="model.status.startsWith('stop')">({{model.status}})</span>
             <div class="feature-title">
                 <h1 [ngClass]="model.status">Web Server</h1>
+                <span class="status" *ngIf="model.status.startsWith('stop')">{{model.status}}</span>
             </div>
         </div>
     `,
@@ -40,8 +40,8 @@ import { WebServer } from './webserver';
         }
 
         .status {
-            line-height: 32px;
-            padding-right: 5px;
+            display: block;
+            text-align: right;
         }
     `]
 })

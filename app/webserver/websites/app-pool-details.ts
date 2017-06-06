@@ -14,10 +14,10 @@ import { DiffUtil } from '../../utils/diff';
             <span class="status" *ngIf="!started">({{model.status}})</span>
             <div class="actions">
                 <div class="selector-wrapper">
-                    <button (click)="openSelector()" [class.background-active]="(_selector && _selector.opened) || false"><i class="fa fa-caret-down"></i></button>
+                    <button title="Actions" (click)="openSelector()" [class.background-active]="(_selector && _selector.opened) || false"><i class="fa fa-caret-down"></i></button>
                     <selector [right]="true">
                         <ul>
-                            <li><a class="bttn edit" [routerLink]="['/webserver/app-pools', model.id]">Edit</a></li>
+                            <li><a class="bttn edit" title="Edit" [routerLink]="['/webserver/app-pools', model.id]">Edit</a></li>
                             <li><button class="refresh" title="Recycle" [attr.disabled]="!started || null" (click)="onRecycle()">Recycle</button></li>
                             <li><button class="start" title="Start" [attr.disabled]="model.status != 'stopped' ? true : null" (click)="onStart()">Start</button></li>
                             <li><button class="stop" title="Stop" [attr.disabled]="!started || null" (click)="onStop()">Stop</button></li>

@@ -23,9 +23,9 @@ import { AppPoolsService } from './app-pools.service';
                     </selector>
                 </div>
             </div>
-            <span class="status right" *ngIf="pool.status == 'stopped'">({{pool.status}})</span>
             <div class="feature-title">
                 <h1 [ngClass]="pool.status">{{pool.name}}</h1>
+                <span class="status" *ngIf="pool.status == 'stopped'">{{pool.status}}</span>
             </div>
         </div>
     `,
@@ -39,8 +39,8 @@ import { AppPoolsService } from './app-pools.service';
         }
 
         .status {
-            line-height: 32px;
-            padding-right: 5px;
+            display: block;
+            text-align: right;
         }
     `]
 })

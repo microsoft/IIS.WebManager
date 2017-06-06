@@ -15,7 +15,7 @@ import { WebSitesService } from '../websites/websites.service';
                     <button title="Actions" (click)="_selector.toggle()" [class.background-active]="(_selector && _selector.opened) || false"><i class="fa fa-caret-down"></i></button>
                     <selector [right]="true">
                         <ul>
-                            <li><a class="bttn link" title="Browse" [attr.href]="url">Browse</a></li>
+                            <li><a class="bttn link" title="Browse" [attr.title]="url" [attr.href]="url">Browse</a></li>
                             <li><button class="delete" title="Delete" (click)="onDelete()">Delete</button></li>
                         </ul>
                     </selector>
@@ -49,7 +49,7 @@ export class WebAppHeaderComponent {
         if (confirm("Are you sure you would like to delete '" + this.model.path + "'?")) {
             this._service.delete(this.model)
                 .then(() => {
-                    this._router.navigate(['/WebServer/WebSites/WebSite', { id: this.model.website.id }]);
+                    this._router.navigate(['/webserver/websites/', { id: this.model.website.id }]);
                 });
         }
         this._selector.close();

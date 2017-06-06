@@ -72,13 +72,13 @@ import { Binding } from './site';
                     <input class="form-control" type="number" max="65535" min="1" [(ngModel)]="model.port" required />
                 </fieldset>
 
-                <div class="col-xs-12" *ngIf="isHttp()">   
+                <div class="col-xs-12 overflow-visible" *ngIf="isHttp()">   
                     <fieldset class="inline-block">
                         <label>HTTPS</label>
                         <switch class="block" (modelChange)="model.is_https=$event" [model]="model.is_https" (modelChanged)=onHttps()>{{model.is_https ? "On" : "Off"}}</switch>
                     </fieldset>
                     <fieldset class="inline-block cert bottom" *ngIf="model.is_https">
-                        <button (click)="selectCert()" class="background-normal select-cert" [class.background-active]="!!certSelect && certSelect.opened">
+                        <button (click)="selectCert()" class="background-normal select-cert" [class.background-active]="!!_certSelect.first && _certSelect.first.opened">
                             <span>{{!model.certificate ? 'Select Certificate' : name()}}</span><i class="fa fa-caret-down"></i>
                         </button>
                     </fieldset>
@@ -94,7 +94,6 @@ import { Binding } from './site';
                         <certificate-details [model]="model.certificate"></certificate-details>
                     </fieldset>
                 </div>
-
                 <div class="col-xs-8">
                     <fieldset class="inline-block">
                         <label>Custom Protocol</label>
@@ -124,6 +123,7 @@ import { Binding } from './site';
 
         .selector {
             display: flex;
+            margin-top: -12px;
         }
 
         .cert .name {
@@ -205,7 +205,7 @@ export class BindingItem implements OnInit, OnChanges {
     @Output() editing: EventEmitter<any> = new EventEmitter();
     @Output() cancel: EventEmitter<any> = new EventEmitter();
 
-    @ViewChildren('certSelect') certSelect: QueryList<any>;
+    @ViewChildren('certSelect') _certSelect: QueryList<any>;
     @ViewChildren(NgModel) validators: QueryList<NgModel>;
 
     private _original: Binding;
@@ -251,12 +251,12 @@ export class BindingItem implements OnInit, OnChanges {
     }
 
     selectCert() {
-        this.certSelect.first.toggle();
+        this._certSelect.first.toggle();
     }
 
     private onCertSelected(cert: Certificate) {
         if (cert) {
-            this.certSelect.first.close();
+            this._certSelect.first.close();
 
             if (cert.store && cert.store.name == 'IIS Central Certificate Store') {
                 this.model.require_sni = true;
@@ -280,8 +280,8 @@ export class BindingItem implements OnInit, OnChanges {
             this.model.protocol = "https";
 
             if (!this.model.certificate) {
-                this.certSelect.changes.first().subscribe(c => {
-                    this.certSelect.first.open();
+                this._certSelect.changes.first().subscribe(c => {
+                    this._certSelect.first.open();
                 })
             }
         }
