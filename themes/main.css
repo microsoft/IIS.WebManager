@@ -780,12 +780,16 @@ a.link:before {
 }
 
 .sidebar-nav-content,
-.sidebar.nav .content {
-    left: 215px;
+.sidebar .content {
     right: 0;
     position: absolute;
     padding-right: 15px;
     padding-left: 15px;
+}
+
+.sidebar-nav-content,
+.sidebar.nav .content {
+    left: 215px;
 }
 
 .sidebar-nav-content {
