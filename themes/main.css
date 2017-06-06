@@ -194,6 +194,19 @@ button:not(:empty)::after {
     display: inline-block;
 }
 
+.ico::before,
+.ico::after {
+    font-family: FontAwesome;
+}
+
+.ico::before {
+    padding-right: 5px;
+}
+
+.ico::after {
+    padding-left: 5px;
+}
+
 .inactive {
     pointer-events: none;
 }
@@ -398,6 +411,9 @@ button.select {
 
 .grid-list .grid-item [class*="col-"] {
     display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .grid-item span, 
@@ -442,39 +458,10 @@ button.select {
     display: inline-flex;
 }
 
-/* Adder */
-
-.adder input {
-    border-right:none;
-    border-radius: 0px;
-}
-
-/* Override bootstrap class to display button text */
-.adder .input-group-btn {
-    font-size: inherit;
-}
-
-.adder .input-group-btn button {
-    height: 34px;
-    font-size: inherit;
-}
-
-.adder > ul {
-    width: 100%;
-}
-
-.adder > ul > li {
-    padding: 10px 0 10px 10px;
-    margin-top: 1px;
-    border: 1px solid transparent;
-    position: relative;  
-}
-
-.adder .actions {
-    vertical-align: middle;
-    position:absolute;
-    right: 0px;
-    top: 0px;
+.grid-list .grid-item .overflow-visible{
+    overflow: visible;
+    text-overflow: inherit;
+    white-space: inherit;
 }
 
 /* Disabled */
@@ -508,58 +495,6 @@ select[enabled]:not(.inactive) {
     padding-right: 15px;
 }
 
-/* 
-    Feature Header 
-.feature-header {
-    padding-top: 20px;
-    padding-bottom: 10px;
-    display: block;
-    width:100%;
-    white-space:nowrap;
-    text-overflow: ellipsis;
-}
-
-.feature-header .subject {
-    display: inline-block
-}
-
-.feature-header span {
-  display: inline-block;
-  vertical-align: middle;
-  line-height: normal;     
-}
-
-.feature-header h1 {
-    padding: 3px;
-    font-size: 25px;
-}
-
-.feature-header .heading {
-    font-size: 14px;
-    margin-left: 45px;
-    text-transform:uppercase;
-    font-weight: bold;
-    margin-bottom: -3px;
-}
-
-.feature-title {
-    display: inline;
-}
-
-.feature-title a, .feature-title a:hover {
-    color: inherit;
-}
-
-.feature-title:before {
-    font-family: FontAwesome;
-    padding-right: 10px;
-    display:inline-block;
-    line-height: 32px;
-    opacity: .7;
-    vertical-align: bottom;
-}
-*/
-
 .feature-header {
     margin: 0;
     margin-bottom: 20px;
@@ -587,7 +522,6 @@ select[enabled]:not(.inactive) {
     padding-right: 10px;
     display:inline-block;
     line-height: 32px;
-    opacity: .7;
     vertical-align: bottom;
 }
 

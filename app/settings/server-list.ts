@@ -18,7 +18,7 @@ import { ApiConnection } from '../connect/api-connection';
         <div class="container-fluid hidden-xs">
             <div class="border-active grid-list-header row">
                 <label class="col-xs-4" [ngClass]="_orderBy.css('displayName')" (click)="sort('displayName')">Display Name</label>
-                <label class="col-xs-4" [ngClass]="_orderBy.css('url')" (click)="sort('url')">Server Url</label>
+                <label class="col-sm-6" [ngClass]="_orderBy.css('url')" (click)="sort('url')">Server Url</label>
             </div>
         </div>
         <ul class="container-fluid grid-list" *ngIf="_servers">

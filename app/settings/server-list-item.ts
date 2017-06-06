@@ -30,10 +30,10 @@ import { NotificationService } from '../notification/notification.service';
                 <button class="no-border cancel" title="Cancel" (click)="onCancel()"></button>
             </div>
             <div *ngIf="!_editing">
-                <div class="col-xs-9 col-sm-4 v-align">
-                    <a title="Connect" href="#" class="color-normal hover-color-active" (click)="onConnect($event)">{{connName()}}<span class="status started" *ngIf="_active == model"> (Active)</span></a>
+                <div class="col-xs-10 col-sm-4 v-align">
+                    <a title="Connect" href="#" class="color-normal hover-color-active" [class.active]="_active === model" (click)="onConnect($event)">{{connName()}}</a>
                 </div>     
-                <div class="col-xs-9 col-sm-4 v-align">
+                <div class="hidden-xs col-sm-6 v-align">
                     {{model.url}}
                 </div>
             </div>
@@ -107,6 +107,10 @@ import { NotificationService } from '../notification/notification.service';
 
         tooltip {
             margin-left: 5px;
+        }
+
+        a.active {
+            font-weight: bold;            
         }
     `]
 })

@@ -14,7 +14,7 @@ import { Selector } from '../common/selector';
         <selector #settingsMenu class="color-normal" [right]="true">
             <ul>
                 <li class="hover-editing">
-                    <a class="color-normal server" [routerLink]="['/settings']" (click)="_settingsMenu.close()">Add or Remove Servers</a>
+                    <a class="color-normal server" [routerLink]="['/settings/servers']" (click)="_settingsMenu.close()">Add or Remove Servers</a>
                 </li>
                 <li class="hover-editing">
                     <a class="color-normal download" [routerLink]="['/get']" (click)="_settingsMenu.close()">Download Microsoft IIS Administration</a>
