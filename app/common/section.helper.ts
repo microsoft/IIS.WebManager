@@ -47,7 +47,7 @@ export class SectionHelper implements IDisposable {
             }));
         }
 
-        this.section = defaultSection;
+        this.section = defaultSection || "";
 
         // Automatically navigate to first section if no default provided
         if (!this.section && sections.length > 0) {
