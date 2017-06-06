@@ -47,7 +47,12 @@ export class SectionHelper implements IDisposable {
             }));
         }
 
-        this.section = defaultSection || "";
+        this.section = defaultSection;
+
+        // Automatically navigate to first section if no default provided
+        if (!this.section && sections.length > 0) {
+            this.navigateSection(sections[0]);
+        }
     }
 
     public dispose() {
@@ -97,12 +102,7 @@ export class SectionHelper implements IDisposable {
         }
 
         if (this._markLocation) {
-            if (!name || SectionHelper.normalize(name) == SectionHelper.normalize(this._sections[0])) {
-                this.setSection("", replaceState || !this.section);
-            }
-            else {
-                this.setSection(name, replaceState);
-            }
+            this.setSection(name, replaceState);
         }
     }
 
