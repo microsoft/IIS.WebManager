@@ -1,10 +1,9 @@
+import { Component, OnInit, Input, Output, EventEmitter, Inject, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
-import {Component, OnInit, Input, Output, EventEmitter, Inject} from '@angular/core';
-import {Router} from '@angular/router';
-
-import {WebApp} from './webapp'
-import {WebAppsService} from './webapps.service';
-
+import { Selector } from '../../common/selector';
+import { WebApp } from './webapp'
+import { WebAppsService } from './webapps.service';
 
 @Component({
     selector: 'webapp-item',
@@ -13,7 +12,7 @@ import {WebAppsService} from './webapps.service';
         <div>
             <div class='col-xs-8 col-sm-4'>
                 <div class='name'>
-                    <span>{{model.path}}</span>
+                    <a class="color-normal hover-color-active" [routerLink]="['/webserver/webapps', model.id]">{{model.path}}</a>
                     <div>
                         <div *ngIf="field('app-pool')">
                             <small class='physical-path'>{{model.physical_path}}</small>
@@ -35,17 +34,22 @@ import {WebAppsService} from './webapps.service';
                     <span class="block">{{model.website.name}}<span class="status" *ngIf="model.website.status != 'started'">  ({{model.website.status}})</span></span>
                 </div>
             </div>
-            <div class='col-xs-4 col-xs-push-1 valign'>
+            <div class='hidden-xs col-sm-4 valign overflow-visible'>
                 <navigator [model]="model.website.bindings" [path]="model.path" [right]="true"></navigator>
             </div>
         <div>
-        <div class="actions">
-            <button *ngIf="action('edit')" title="Edit" (click)="onEdit($event)">
-                <i class="fa fa-pencil color-active"></i>
-            </button>
-            <button class="hidden-xs" *ngIf="action('delete')" title="Delete" (click)="onDelete($event)">
-                <i class="fa fa-trash-o red"></i>
-            </button>
+        <div class="actions" *ngIf="actions">
+            <div class="selector-wrapper">
+                <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="(_selector && _selector.opened) || false">
+                    <i class="fa fa-ellipsis-h"></i>
+                </button>
+                <selector [right]="true">
+                    <ul>
+                        <li><button *ngIf="action('edit')" class="edit" title="Edit" (click)="onEdit($event)">Edit</button></li>
+                        <li><button *ngIf="action('delete')" class="delete" title="Delete" (click)="onDelete($event)">Delete</button></li>
+                    </ul>
+                </selector>
+            </div>
         </div>
     </div>
     `,
@@ -68,10 +72,6 @@ import {WebAppsService} from './webapps.service';
             max-width: 100%;
         }
 
-        .name:first-child {
-            display: block;
-        }
-
         .name small {
             font-size: 12px;
         }
@@ -91,29 +91,55 @@ import {WebAppsService} from './webapps.service';
         .actions {
             padding-top: 4px;
         }
+
+        a {
+            background: transparent;
+            display: inline;
+        }
+
+        .selector-wrapper {
+            position: relative;
+        }
+
+        .v-align {
+            padding-top: 6px;
+        }
+
+        selector {
+            position:absolute;
+            right:0;
+            top: 32px;
+        }
+
+        selector button {
+            min-width: 125px;
+            width: 100%;
+        }
     `]
 })
 export class WebAppItem {
     @Input() model: WebApp;
     @Input() actions: string = "";
     @Input() fields: string = "";
-
+    @ViewChild(Selector) private _selector: Selector;
 
     constructor(private _router: Router,
-                @Inject("WebAppsService") private _service: WebAppsService) {
-    }
-
-    private onEdit(e: Event) {
-        e.stopPropagation();
-        this._router.navigate(['/WebServer/WebApps/WebApp', { id: this.model.id }]);
+        @Inject("WebAppsService") private _service: WebAppsService) {
     }
 
     private onDelete(e: Event) {
         e.preventDefault();
+        this._selector.close();
 
         if (confirm("Are you sure you want to delete '" + this.model.location + "'?")) {
             this._service.delete(this.model);
         }
+    }
+
+    private onEdit(e: Event) {
+        e.stopPropagation();
+        this._selector.close();
+        this._router.navigate(['webserver', 'webapps', this.model.id]);
     }
 
     private action(action: string): boolean {
@@ -123,8 +149,16 @@ export class WebAppItem {
     private field(f: string): boolean {
         return this.fields.indexOf(f) >= 0;
     }
-}
 
+    private prevent(e: Event) {
+        e.preventDefault();
+    }
+
+    private openSelector(e: Event) {
+        e.preventDefault();
+        this._selector.toggle();
+    }
+}
 
 
 @Component({
@@ -139,16 +173,12 @@ export class WebAppItem {
             
             <ul class="grid-list">
                 <li *ngFor="let app of model | orderby: _orderBy: _orderByAsc" class="border-color hover-editing" (click)="onItemClicked($event, app)">
-                    <webapp-item [model]="app" [actions]="actions" [fields]="fields"></webapp-item>
+                    <webapp-item [model]="app" [actions]="actions" (dblclick)="onDblClick($event, app)" [fields]="fields"></webapp-item>
                 </li>
             </ul>
         </div>
     `,
     styles: [`
-        li:hover {
-            cursor: pointer;
-        }
-
         .grid-list-header [class*="col-"] {
             padding-left: 0;
         }
@@ -163,7 +193,7 @@ export class WebAppItem {
 export class WebAppList {
     @Input() model: Array<WebApp>;
     @Input() fields: string = "path,site,app-pool";
-    @Input() actions: string = "browse,delete";
+    @Input() actions: string = "edit,browse,delete";
     @Output() itemSelected: EventEmitter<any> = new EventEmitter();
 
     private _orderBy: string;
@@ -182,9 +212,14 @@ export class WebAppList {
         if (this.itemSelected.observers.length > 0) {
             this.itemSelected.emit(app);
         }
-        else {
-            this._router.navigate(['webserver', 'webapps', app.id]);
+    }
+
+    private onDblClick(e: Event, app: WebApp) {
+        if (e.defaultPrevented) {
+            return;
         }
+
+        this._router.navigate(['webserver', 'webapps', app.id]);
     }
 
     private field(f: string): boolean {

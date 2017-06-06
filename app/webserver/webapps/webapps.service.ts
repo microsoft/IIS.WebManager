@@ -117,7 +117,7 @@ export class WebAppsService {
             return Promise.resolve(result);
         }
 
-        return this._http.get("/webserver/webapps?fields=path,physical_path,application_pool," + WebAppsService._webSiteFields + "&website.id=" + website.id)
+        return this._http.get("/webserver/webapps?fields=path,physical_path,application_pool,location," + WebAppsService._webSiteFields + "&website.id=" + website.id)
             .then(res => {
                 (<Array<WebApp>>res.webapps).forEach(app => this._data.set(app.id, this.fromJson(app)));
                 this._loadedWebSites.add(website.id);
