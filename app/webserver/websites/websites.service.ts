@@ -15,12 +15,14 @@ import { WebServerService } from '../webserver.service';
 import { AppPoolsService } from '../app-pools/app-pools.service';
 import { ApplicationPool } from '../app-pools/app-pool';
 
-import { ApiError } from '../../error/api-error';
+import { ApiError, ApiErrorType } from '../../error/api-error';
 import { NotificationService } from '../../notification/notification.service';
 
 
 @Injectable()
 export class WebSitesService implements OnDestroy {
+    public error: ApiError;
+
     private static _appPoolFields: string = "application_pool.name,application_pool.auto_start,application_pool.status,application_pool.identity,application_pool.pipeline_mode,application_pool.managed_runtime_version";
 
     private _all: boolean;
@@ -29,6 +31,7 @@ export class WebSitesService implements OnDestroy {
     private _data: Map<string, WebSite> = new Map<string, WebSite>();
     private _webSites: BehaviorSubject<Map<string, WebSite>> = new BehaviorSubject<Map<string, WebSite>>(this._data);
     private _appPools: Map<string, ApplicationPool> = new Map<string, ApplicationPool>();
+    private _installStatus: Status = Status.Unknown;
 
     private _subscriptions: Array<Subscription> = [];
 
@@ -78,6 +81,10 @@ export class WebSitesService implements OnDestroy {
         return this._webSites.asObservable();
     }
 
+    public get installStatus(): Status {
+        return this._installStatus;
+    }
+
     getAll(): Promise<Map<string, WebSite>> {
         if (this._all) {
             return Promise.resolve(this._data);
@@ -91,6 +98,10 @@ export class WebSitesService implements OnDestroy {
 
                 this._webSites.next(this._data);
                 return this._data;
+            })
+            .catch((e: ApiError) => {
+                this.handleError(e, null);
+                throw e;
             });
     }
 
@@ -117,6 +128,10 @@ export class WebSitesService implements OnDestroy {
 
                 this._webSites.next(this._data);
                 return this.getByAppPool(appPool);
+            })
+            .catch((e: ApiError) => {
+                this.handleError(e, null);
+                throw e;
             });
     }
 
@@ -137,6 +152,10 @@ export class WebSitesService implements OnDestroy {
                 }
 
                 return this._data.get(s.id);
+            })
+            .catch((e: ApiError) => {
+                this.handleError(e, null);
+                throw e;
             });
     }
 
@@ -318,6 +337,10 @@ export class WebSitesService implements OnDestroy {
     }
 
     private handleError(e: ApiError, site: WebSite) {
+        this.error = e;
+        if (e.type && e.type == ApiErrorType.FeatureNotInstalled) {
+            this._installStatus = Status.Stopped;
+        }
         if (e.title && e.title.toLowerCase() == 'forbidden' && e.name == 'physical_path') {
             this._notificationService.warn("Access denied\n\n" + site.physical_path);
         }

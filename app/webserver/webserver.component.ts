@@ -11,7 +11,14 @@ import { WebServerService } from './webserver.service';
 
 
 @Component({
-    template: `    
+    template: `
+        <div *ngIf="_service.installStatus == 'stopped'" class="not-installed">
+            <p>
+                Web Server (IIS) is not installed on the machine
+                <br/>
+                <a href="https://docs.microsoft.com/en-us/iis/install/installing-iis-85/installing-iis-85-on-windows-server-2012-r2" >Learn more</a>
+            </p>
+        </div>
         <div *ngIf="webServer">
             <loading *ngIf="!webServer"></loading>
             <webserver-header [model]="webServer" [class.sidebar-nav-content]="_options.active"></webserver-header>
@@ -42,6 +49,11 @@ import { WebServerService } from './webserver.service';
 
         :host >>> .sidebar > vtabs .vtabs > .content {
             top: 82px;
+        }
+
+        .not-installed {
+            text-align: center;
+            margin-top: 50px;
         }
     `]
 })

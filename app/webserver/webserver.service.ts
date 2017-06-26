@@ -8,13 +8,17 @@ import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Status } from '../common/status';
 import { HttpClient } from '../common/httpclient';
 import { NotificationService } from '../notification/notification.service';
+import { ApiError, ApiErrorType } from '../error/api-error';
 
 import { WebServer } from './webserver';
 
 @Injectable()
 export class WebServerService {
+    public error: ApiError;
+
     private _server: WebServer;
     private _statusChanged: BehaviorSubject<Status> = new BehaviorSubject<Status>(Status.Unknown);
+    private _installStatus: Status = Status.Unknown;
 
     constructor(private _http: HttpClient,
                 private _notificationService: NotificationService) {
@@ -22,6 +26,10 @@ export class WebServerService {
 
     get status(): Observable<Status> {
         return this._statusChanged.asObservable();
+    }
+
+    public get installStatus(): Status {
+        return this._installStatus;
     }
 
     get server(): Promise<WebServer> {
@@ -88,6 +96,7 @@ export class WebServerService {
     }
 
     private get(): Promise<WebServer> {
+        console.log("A");
         return this._http.get("/webserver").then(ws => {
 
             this._server = new WebServer();
@@ -110,6 +119,13 @@ export class WebServerService {
 
                 return this._server;
             });
+        })
+        .catch(e => {
+            this.error = e;
+
+            if (e.type && e.type == ApiErrorType.FeatureNotInstalled) {
+                this._installStatus = Status.Stopped;
+            }
         });
     }
 
