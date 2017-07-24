@@ -158,5 +158,13 @@
         "module": "app/webserver/static-content/static-content.module#StaticContentModule",
         "api_name": "static_content",
         "api_path": "/api/webserver/static-content/{id}"
+    },
+    {
+        "name": "Url Rewrite",
+        "ico": "fa fa-arrows-h",
+        "component_name": "UrlRewriteComponent",
+        "module": "app/webserver/url-rewrite/url-rewrite.module#UrlRewriteModule",
+        "api_name": "url_rewrite",
+        "api_path": "/api/webserver/url-rewrite/{id}"
     }
 ]

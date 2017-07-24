@@ -73,6 +73,11 @@ span.form-control {
     float: right;
 }
 
+.anchor-right {
+    float: right;
+    height: 34px;
+}
+
 .clear {
     clear: both;
 }
@@ -533,11 +538,20 @@ select[enabled]:not(.inactive) {
     margin-bottom: 40px;
 }
 
+.collapse.inner,
+.collapsing.inner {
+    padding-left: 15px;
+}
+
 .collapse-heading {
     cursor: pointer;
     border-bottom-style: dotted;
     border-bottom-width: 1px;
     margin-bottom: 10px;
+}
+
+.collapse-heading.no-border {
+    border: none;
 }
 
 .collapse-heading h2:before,
