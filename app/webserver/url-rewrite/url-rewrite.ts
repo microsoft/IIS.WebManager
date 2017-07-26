@@ -52,6 +52,10 @@ export class RewriteMapsSection {
 }
 
 export class InboundRule {
+    constructor() {
+        this.action = new Action();
+    }
+
     public name: string;
     public id: string;
     public pattern: string;
@@ -60,7 +64,7 @@ export class InboundRule {
     public negate: boolean;
     public stop_processing: boolean;
     public response_cache_directive: ResponseCacheDirective;
-    public condition_match_contstraints: ConditionMatchConstraints;
+    public condition_match_constraints: ConditionMatchConstraints;
     public track_all_captures: boolean;
     public action: Action;
     public server_variables: Array<ServerVariableAssignment>;
@@ -127,7 +131,7 @@ export class RewriteMap {
     public _links: any;
 }
 
-class Action {
+export class Action {
     public type: ActionType;
     public url: string;
     public append_query_string: boolean;
@@ -139,13 +143,13 @@ class Action {
     public reason: string;
 }
 
-class ServerVariableAssignment {
+export class ServerVariableAssignment {
     public name: string;
     public value: string;
     public replace: boolean;
 }
 
-class Condition {
+export class Condition {
     public input: string;
     public pattern: string;
     public negate: boolean;
@@ -153,7 +157,7 @@ class Condition {
     public match_type: MatchType;
 }
 
-class OutboundTags {
+export class OutboundTags {
     public a: boolean;
     public area: boolean;
     public base: boolean;
@@ -168,17 +172,17 @@ class OutboundTags {
     public custom: CustomTags;
 }
 
-class CustomTag {
+export class CustomTag {
     public name: string;
     public attribute: string;
 }
 
-class ProviderSetting {
+export class ProviderSetting {
     public name: string;
     public value: string;
 }
 
-class RewriteMapping {
+export class RewriteMapping {
     public name: string;
     public value: string;
 }

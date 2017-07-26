@@ -9,7 +9,7 @@ import { NotificationService } from '../../notification/notification.service';
 @Component({
     template: `
         <div>
-            <rule-wizard></rule-wizard>
+            <inbound-rule-edit></inbound-rule-edit>
         </div>
     `
 })

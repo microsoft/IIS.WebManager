@@ -5,16 +5,20 @@ import { RouterModule } from '@angular/router';
 
 import { Module as BModel } from '../../common/bmodel';
 import { Module as Switch } from '../../common/switch.component';
+import { Module as Checkbox } from '../../common/checkbox.component';
 import { Module as Loading } from '../../notification/loading.component';
 import { Module as OverrideMode } from '../../common/override-mode.component';
 import { Module as Enum } from '../../common/enum.component';
 import { Module as ErrorComponent } from '../../error/error.component';
+import { Module as Tabs } from '../../common/tabs.component';
+import { Module as Selector } from '../../common/selector';
 
 import { UrlRewriteComponent } from './url-rewrite.component';
-import { RuleWizardComponent } from './rule-wizard/rule-wizard';
-import { NameSlideComponent } from './rule-wizard/name-slide';
-import { PatternSlideComponent } from './rule-wizard/pattern-slide';
-import { ActionSlideComponent } from './rule-wizard/action-slide';
+import { InboundRuleEditComponent } from './inbound-rule/inbound-rule-edit';
+import { InboundRuleSettingsComponent } from './inbound-rule/inbound-rule-settings';
+import { InboundRuleActionComponent } from './inbound-rule/inbound-rule-action';
+import { InboundRuleConditionsComponent, InboundRuleConditionComponent, ConditionEditComponent  } from './inbound-rule/inbound-rule-conditions';
+import { InboundRuleVariablesComponent, InboundRuleVariableComponent } from './inbound-rule/inbound-rule-variables';
 
 @NgModule({
     imports: [
@@ -23,17 +27,24 @@ import { ActionSlideComponent } from './rule-wizard/action-slide';
         RouterModule,
         BModel,
         Switch,
+        Checkbox,
         Loading,
         OverrideMode,
         Enum,
-        ErrorComponent
+        ErrorComponent,
+        Tabs,
+        Selector
     ],
     declarations: [
         UrlRewriteComponent,
-        RuleWizardComponent,
-        NameSlideComponent,
-        PatternSlideComponent,
-        ActionSlideComponent
+        InboundRuleEditComponent,
+        InboundRuleSettingsComponent,
+        InboundRuleActionComponent,
+        InboundRuleConditionsComponent,
+        InboundRuleConditionComponent,
+        ConditionEditComponent,
+        InboundRuleVariablesComponent,
+        InboundRuleVariableComponent
     ]
 })
 export class UrlRewriteModule { }

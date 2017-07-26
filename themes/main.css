@@ -50,6 +50,12 @@ fieldset > label {
     display: block;
 }
 
+label.field {
+    padding-top: 5px;
+    display: block;
+    margin-bottom: 10px;
+}
+
 fieldset .checkbox {
     margin: 0;
 }
@@ -438,15 +444,11 @@ button.select {
     padding-top: 8px;
 }
 
-.grid-list .grid-item select,
-.grid-list .grid-item input,
 .grid-list .grid-item .editing, 
 .grid-list .grid-item.background-editing .no-editing {
     display: none;
 }
 
-.grid-list .grid-item.background-editing select,
-.grid-list .grid-item.background-editing input,
 .grid-list .grid-item.background-editing .editing {
     display: inline-block;
 }
@@ -467,6 +469,24 @@ button.select {
     overflow: visible;
     text-overflow: inherit;
     white-space: inherit;
+}
+
+/* Action Selector */
+
+
+.action-selector {
+    position: relative;
+}
+
+.action-selectorselector {
+    position:absolute;
+    right:0;
+    top: 32px;
+}
+
+.action-selector selector button {
+    min-width: 125px;
+    width: 100%;
 }
 
 /* Disabled */
