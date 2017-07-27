@@ -71,6 +71,7 @@ export class InboundRule {
     public conditions: Array<Condition>;
     public url_rewrite: UrlRewrite;
     public _links: any;
+
 }
 
 export class OutboundRule {
@@ -242,4 +243,23 @@ export type MatchConstraint = "all" | "any";
 export const MatchConstraint = {
     All: "all" as MatchConstraint,
     Any: "any" as MatchConstraint,
+}
+
+export class ActionTypeHelper {
+    public static toFriendlyActionType(actionType: ActionType): string {
+        switch (actionType) {
+            case ActionType.AbortRequest:
+                return "Abort";
+            case ActionType.CustomResponse:
+                return "Custom Response";
+            case ActionType.Rewrite:
+                return "Rewrite";
+            case ActionType.Redirect:
+                return "Redirect";
+            case ActionType.None:
+                return "None";
+            default:
+                throw new Error("Invalid action type");
+        }
+    }
 }

@@ -12,13 +12,21 @@ import { Module as Enum } from '../../common/enum.component';
 import { Module as ErrorComponent } from '../../error/error.component';
 import { Module as Tabs } from '../../common/tabs.component';
 import { Module as Selector } from '../../common/selector';
+import { Module as TextCheckbox } from '../../common/text-toggle.component';
 
 import { UrlRewriteComponent } from './url-rewrite.component';
+
+//
+// Inbound Rule Components
+import { InboundRulesComponent } from './inbound-rule/inbound-rules.component';
+import { InboundRuleComponent } from './inbound-rule/inbound-rule.component';
 import { InboundRuleEditComponent } from './inbound-rule/inbound-rule-edit';
 import { InboundRuleSettingsComponent } from './inbound-rule/inbound-rule-settings';
 import { InboundRuleActionComponent } from './inbound-rule/inbound-rule-action';
 import { InboundRuleConditionsComponent, InboundRuleConditionComponent, ConditionEditComponent  } from './inbound-rule/inbound-rule-conditions';
-import { InboundRuleVariablesComponent, InboundRuleVariableComponent } from './inbound-rule/inbound-rule-variables';
+import { InboundRuleVariablesComponent, InboundRuleVariableComponent, VariableEditComponent } from './inbound-rule/inbound-rule-variables';
+
+import { UrlRewriteService } from './url-rewrite.service';
 
 @NgModule({
     imports: [
@@ -33,10 +41,13 @@ import { InboundRuleVariablesComponent, InboundRuleVariableComponent } from './i
         Enum,
         ErrorComponent,
         Tabs,
-        Selector
+        Selector,
+        TextCheckbox
     ],
     declarations: [
         UrlRewriteComponent,
+        InboundRulesComponent,
+        InboundRuleComponent,
         InboundRuleEditComponent,
         InboundRuleSettingsComponent,
         InboundRuleActionComponent,
@@ -44,7 +55,11 @@ import { InboundRuleVariablesComponent, InboundRuleVariableComponent } from './i
         InboundRuleConditionComponent,
         ConditionEditComponent,
         InboundRuleVariablesComponent,
-        InboundRuleVariableComponent
+        InboundRuleVariableComponent,
+        VariableEditComponent
+    ],
+    providers: [
+        UrlRewriteService
     ]
 })
 export class UrlRewriteModule { }

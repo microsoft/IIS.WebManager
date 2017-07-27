@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
     selector: 'enum',
     template: `
         <ul [attr.disabled]="disabled ? true : null">
-            <li *ngFor="let field of fields" [class.background-active]="'' + model == field.value" [hidden]="field.hidden" (click)="select(field)">
+            <li *ngFor="let field of fields" [class.background-active]="'' + model == field.value" [attr.title]="field.title || null" [hidden]="field.hidden" (click)="select(field)">
                 {{field.name}}
             </li>
         </ul>
@@ -63,9 +63,10 @@ export class EnumComponent {
 `
 })
 export class FieldComponent {
-    @Input() name: string;
-    @Input() value: string;
-    @Input() hidden: boolean = false;
+    @Input() public name: string;
+    @Input() public value: string;
+    @Input() public hidden: boolean = false;
+    @Input() public title: string;
 
     constructor(parent: EnumComponent) {
         parent.add(this);

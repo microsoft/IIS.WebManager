@@ -10,20 +10,41 @@ import { InboundRule } from '../url-rewrite';
                 <div class="col-xs-12 col-lg-6">
                     <fieldset>
                         <label>Name</label>
-                        <input type="text" class="form-control" [ngModel]="rule.name" />
+                        <input type="text" class="form-control" [(ngModel)]="rule.name" />
                     </fieldset>
                     <fieldset>
-                        <label>Url Pattern</label>
+                        <div>
+                            <label class="inline-block">Url Pattern</label>
+                            <text-toggle onText="Matches" offText="Doesn't Match" [on]="false" [off]="true" [(model)]="rule.negate"></text-toggle>
+                        </div>
                         <input type="text" class="form-control" [(ngModel)]="rule.pattern" (modelChanged)="testRegex()" />
                     </fieldset>
                     <fieldset>
                         <label>Test URL</label>
                         <input placeholder="default.aspx?c=hiking&p=boots" type="text" class="form-control" [(ngModel)]="_testUrl" (modelChanged)="testRegex()" />
                     </fieldset>
-                    <fieldset>
+                    <fieldset *ngIf="rule.action.type == 'rewrite' || rule.action.type == 'redirect'">
                         <label>Substitution URL</label>
                         <input type="text" class="form-control" [(ngModel)]="rule.action.url" (modelChanged)="testRegex()" />
                     </fieldset>
+                    <div *ngIf="rule.action.type == 'custom_response'">
+                        <fieldset>
+                            <label>Status Code</label>
+                            <input type="text" class="form-control" [(ngModel)]="rule.action.status_code" />
+                        </fieldset>
+                        <fieldset>
+                            <label>Substatus Code</label>
+                            <input type="text" class="form-control" [(ngModel)]="rule.action.sub_status_code" />
+                        </fieldset>
+                        <fieldset>
+                            <label>Reason</label>
+                            <input type="text" class="form-control" [(ngModel)]="rule.action.reason" />
+                        </fieldset>
+                        <fieldset>
+                            <label>Error Description</label>
+                            <input type="text" class="form-control" [(ngModel)]="rule.action.description" />
+                        </fieldset>
+                    </div>
                     <fieldset>
                         <span>{{_result}}</span>
                     </fieldset>
@@ -61,6 +82,10 @@ import { InboundRule } from '../url-rewrite';
 
         .back-ref {
             width: 200px;
+        }
+
+        .inline-block {
+            margin-right: 20px;
         }
     `]
 })

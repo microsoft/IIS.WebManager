@@ -1,58 +1,56 @@
-﻿import { Component } from '@angular/core';
+﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { Subscription } from 'rxjs/Subscription';
-
+import { UrlRewriteService } from '../url-rewrite.service';
 import { InboundRule, Condition, ActionType, MatchType, ConditionMatchConstraints, ServerVariableAssignment } from '../url-rewrite';
 
 @Component({
     selector: 'inbound-rule-edit',
     template: `
         <div>
-            <h2>Create Rule</h2>
             <tabs>
                 <tab [name]="'Settings'">
-                    <inbound-rule-settings [rule]="_rule"></inbound-rule-settings>
+                    <inbound-rule-settings [rule]="rule"></inbound-rule-settings>
                 </tab>
                 <tab [name]="'Action'">
-                    <inbound-rule-action [rule]="_rule"></inbound-rule-action>
+                    <inbound-rule-action [rule]="rule"></inbound-rule-action>
                 </tab>
                 <tab [name]="'Conditions'">
-                    <inbound-rule-conditions [rule]="_rule"></inbound-rule-conditions>
+                    <inbound-rule-conditions [rule]="rule"></inbound-rule-conditions>
                 </tab>
                 <tab [name]="'Server Variables'">
-                    <inbound-rule-variables [rule]="_rule"></inbound-rule-variables>
+                    <inbound-rule-variables [rule]="rule"></inbound-rule-variables>
                 </tab>
             </tabs>
+            <p class="pull-right">
+                <button (click)="onOk()"><i title="Create" class="fa fa-check color-active"></i> Ok</button>
+                <button (click)="onDiscard()"><i class="fa fa-times red"></i> Cancel</button>
+            </p>
         </div>
-    `
+    `,
+    styles: [`
+        p {
+            margin: 20px 0;
+        }
+    `]
 })
 export class InboundRuleEditComponent {
-    private _rule: InboundRule;
+    @Input() public rule: InboundRule;
 
-    constructor() {
-        this._rule = new InboundRule();
-        this._rule.action.type = ActionType.Rewrite;
-        this._rule.condition_match_constraints = ConditionMatchConstraints.MatchAll
+    @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
+    @Output() save: EventEmitter<any> = new EventEmitter<any>();
 
-        //
-        // condition
-        this._rule.conditions = [];
-        let condition = new Condition();
-        condition.input = "{HTTPS}";
-        condition.pattern = "off";
-        condition.negate = false;
-        condition.ignore_case = true;
-        condition.match_type = MatchType.Pattern;
-        this._rule.conditions.push(condition);
+    constructor(private _svc: UrlRewriteService) {
+    }
 
-        //
-        // server variable
-        this._rule.server_variables = [];
-        let variable = new ServerVariableAssignment();
-        variable.name = "{RESPONSE_OUT_HEADER}";
-        variable.value = "Some Value";
-        variable.replace = true;
-        this._rule.server_variables.push(variable);
+    private isValid(): boolean {
+        return !!this.rule.name && !!this.rule.pattern;
+    }
+
+    private onDiscard() {
+        this.cancel.emit();
+    }
+
+    private onOk() {
+        this.save.emit(this.rule);
     }
 }
-

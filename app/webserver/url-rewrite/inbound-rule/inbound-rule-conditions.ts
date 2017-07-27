@@ -1,6 +1,5 @@
 ﻿import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 
-import { Selector } from '../../../common/selector';
 import { InboundRule, Condition, MatchType } from '../url-rewrite';
 
 @Component({
@@ -14,6 +13,12 @@ import { InboundRule, Condition, MatchType } from '../url-rewrite';
                     <field name="Any" value="match_any"></field>
                 </enum>
             </fieldset>
+            <fieldset>
+                <label>Keep Capture Groups</label>
+                <switch [(model)]="rule.track_all_captures">
+                    {{rule.track_all_captures ? 'Yes' : 'No'}}
+                </switch>
+            </fieldset>
 
             <button (click)="add()" class="create"><span>Add</span></button>
             <div class="container-fluid">
@@ -26,17 +31,17 @@ import { InboundRule, Condition, MatchType } from '../url-rewrite';
 
             <ul class="grid-list container-fluid">
                 <li *ngIf="_newCondition">
-                    <condition-edit [condition]="_newCondition" (save)="addNew($event)" (cancel)="discardNew()"></condition-edit>
+                    <condition-edit [condition]="_newCondition" (save)="saveNew($event)" (cancel)="discardNew()"></condition-edit>
                 </li>
                 <li *ngFor="let condition of rule.conditions; let i = index;">
-                    <inbound-rule-condition [condition]="condition"></inbound-rule-condition>
+                    <inbound-rule-condition [condition]="condition" (delete)="onDelete(i)"></inbound-rule-condition>
                 </li>
             </ul>
         </div>
     `,
     styles: [`
-        fieldset {
-            margin-bottom: 50px;
+        .create {
+            margin-top: 50px;
         }
     `]
 })
@@ -55,7 +60,7 @@ export class InboundRuleConditionsComponent {
         this._newCondition = con;
     }
 
-    private addNew(condition: Condition) {
+    private saveNew(condition: Condition) {
         this.rule.conditions.push(condition);
         this._newCondition = null;
     }
@@ -63,12 +68,16 @@ export class InboundRuleConditionsComponent {
     private discardNew() {
         this._newCondition = null;
     }
+
+    private onDelete(index: number) {
+        this.rule.conditions.splice(index, 1);
+    }
 }
 
 @Component({
     selector: 'inbound-rule-condition',
     template: `
-        <div *ngIf="condition" class="grid-item row">
+        <div *ngIf="condition && !_editing" class="grid-item row">
             <div class="col-sm-3 col-lg-2 valign">
                 {{condition.input}}
             </div>
@@ -80,45 +89,60 @@ export class InboundRuleConditionsComponent {
             </div>
             <div class="actions">
                 <div class="action-selector">
-                    <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="(_selector && _selector.opened) || false">
+                    <button title="More" (click)="selector.toggle()" (dblclick)="$event.preventDefault()" [class.background-active]="(selector && selector.opened) || false">
                         <i class="fa fa-ellipsis-h"></i>
                     </button>
-                    <selector [right]="true">
+                    <selector #selector [right]="true">
                         <ul>
-                            <li><button class="edit" title="Edit">Edit</button></li>
-                            <li><button class="delete" title="Delete">Delete</button></li>
+                            <li><button #menuButton class="edit" title="Edit" (click)="edit()">Edit</button></li>
+                            <li><button #menuButton class="delete" title="Delete" (click)="delete()">Delete</button></li>
                         </ul>
                     </selector>
                 </div>
             </div>
         </div>
+        <condition-edit
+            *ngIf="_editing"
+            [condition]="condition"
+            (save)="onSave()"
+            (cancel)="onCancel()"></condition-edit>
     `
 })
 export class InboundRuleConditionComponent {
     @Input() public condition: Condition;
+    @Output('delete') deleteEvent: EventEmitter<any> = new EventEmitter<any>();
 
-    @ViewChild(Selector) private _selector: Selector;
+    private _editing: boolean;
 
-    private prevent(e: Event) {
-        e.preventDefault();
+    private edit() {
+        this._editing = true;
     }
 
-    private openSelector(e: Event) {
-        this._selector.toggle();
+    private onSave() {
+        this._editing = false;
+    }
+
+    private onCancel() {
+        this._editing = false;
+    }
+
+    private delete() {
+        this.deleteEvent.next();
     }
 }
 
 @Component({
     selector: 'condition-edit',
     template: `
-        <div *ngIf="condition" class="grid-item row">
+        <div *ngIf="condition" class="grid-item row background-editing">
             <div class="actions">
                 <button class="no-border ok" [disabled]="!isValid()" title="Ok" (click)="onOk()"></button>
                 <button class="no-border cancel" title="Cancel" (click)="onDiscard()"></button>
             </div>
-            <div class="col-sm-3 col-lg-2">
-                <input type="text" class="form-control" list="input-list" [(ngModel)]="condition.input" />
-                <datalist id="input-list">
+            <fieldset class="name">
+                <label>Server Variable</label>
+                <input type="text" class="form-control" list="server-vars" [(ngModel)]="condition.input" />
+                <datalist id="server-vars">
                     <option value="{ALL_HTTP}">
                     <option value="{ALL_RAW}">
                     <option value="{APP_POOL_ID}">
@@ -182,21 +206,30 @@ export class InboundRuleConditionComponent {
                     <option value="{URL}">
                     <option value="{URL_PATH_INFO}">
                 </datalist>
-            </div>
-            <div class="col-sm-3 col-md-2">
+            </fieldset>
+            <fieldset>
+                <label>Match Type</label>
                 <enum [(model)]="condition.negate">
                     <field name="Matches" value="false"></field>
                     <field name="Doesn't Match" value="true"></field>
                 </enum>
-            </div>
-            <div class="col-sm-3">
+            </fieldset>
+            <fieldset class="name">
+                <label>Pattern</label>
                 <input type="text" class="form-control" [(ngModel)]="condition.pattern" />
-            </div>
-            <div class="col-sm-3 col-md-2">
+            </fieldset>
+            <fieldset>
+                <label>Ignore Case</label>
                 <checkbox2 [(model)]="condition.ignore_case">Ignore Case</checkbox2>
-            </div>
+            </fieldset>
         </div>
-    `
+    `,
+    styles: [`
+        fieldset {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+    `]
 })
 export class ConditionEditComponent {
     @Input() public condition: Condition;

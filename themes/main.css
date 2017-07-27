@@ -688,6 +688,10 @@ button.edit:before,
     content: "\f040";
 }
 
+button.copy:before {
+    content: "\f0c5";
+}
+
 button.refresh:before {
     content: "\f021";
 }

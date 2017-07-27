@@ -113,6 +113,7 @@
     <TypeScriptCompile Include="app\certificates\certificate.ts" />
     <TypeScriptCompile Include="app\common\focus.ts" />
     <TypeScriptCompile Include="app\common\file-selector.ts" />
+    <TypeScriptCompile Include="app\common\text-toggle.component.ts" />
     <TypeScriptCompile Include="app\common\tooltip.component.ts" />
     <TypeScriptCompile Include="app\common\idisposable.ts" />
     <TypeScriptCompile Include="app\common\location-hash.ts" />
@@ -295,9 +296,8 @@
     <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rule\inbound-rule-conditions.ts" />
     <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rule\inbound-rule-settings.ts" />
     <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rule\inbound-rule-variables.ts" />
-    <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rule\pattern-slide.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rule\inbound-rules.component.ts" />
     <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rule\inbound-rule-edit.ts" />
-    <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rule\WizardContext.ts" />
     <TypeScriptCompile Include="app\webserver\url-rewrite\url-rewrite.component.ts" />
     <TypeScriptCompile Include="app\webserver\url-rewrite\url-rewrite.module.ts" />
     <TypeScriptCompile Include="app\webserver\url-rewrite\url-rewrite.service.ts" />
