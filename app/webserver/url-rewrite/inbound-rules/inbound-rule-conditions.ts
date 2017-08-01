@@ -1,6 +1,6 @@
 ﻿import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 
-import { InboundRule, Condition, MatchType } from '../url-rewrite';
+import { InboundRule, Condition, MatchType, IIS_SERVER_VARIABLES } from '../url-rewrite';
 
 @Component({
     selector: 'inbound-rule-conditions',
@@ -77,7 +77,7 @@ export class InboundRuleConditionsComponent {
 @Component({
     selector: 'inbound-rule-condition',
     template: `
-        <div *ngIf="condition && !_editing" class="grid-item row">
+        <div *ngIf="condition && !_editing" class="grid-item row" (dblclick)="edit()">
             <div class="col-sm-3 col-lg-2 valign">
                 {{condition.input}}
             </div>
@@ -143,79 +143,14 @@ export class InboundRuleConditionComponent {
                 <label>Server Variable</label>
                 <input type="text" class="form-control" list="server-vars" [(ngModel)]="condition.input" />
                 <datalist id="server-vars">
-                    <option value="{ALL_HTTP}">
-                    <option value="{ALL_RAW}">
-                    <option value="{APP_POOL_ID}">
-                    <option value="{APPL_MD_PATH}">
-                    <option value="{APPL_PHYSICAL_PATH}">
-                    <option value="{AUTH_PASSWORD}">
-                    <option value="{AUTH_TYPE}">
-                    <option value="{AUTH_USER}">
-                    <option value="{CACHE_URL}">
-                    <option value="{CERT_COOKIE}">
-                    <option value="{CERT_FLAGS}">
-                    <option value="{CERT_ISSUER}">
-                    <option value="{CERT_KEYSIZE}">
-                    <option value="{CERT_SECRETKEYSIZE}">
-                    <option value="{CERT_SERIALNUMBER}">
-                    <option value="{CERT_SERVER_ISSUER}">
-                    <option value="{CERT_SERVER_SUBJECT}">
-                    <option value="{CERT_SUBJECT}">
-                    <option value="{CONTENT_LENGTH}">
-                    <option value="{CONTENT_TYPE}">
-                    <option value="{GATEWAY_INTERFACE}">
-                    <option value="{HTTP_ACCEPT}">
-                    <option value="{HTTP_ACCEPT_ENCODING}">
-                    <option value="{HTTP_ACCEPT_LANGUAGE}">
-                    <option value="{HTTP_CONNECTION}">
-                    <option value="{HTTP_COOKIE}">
-                    <option value="{HTTP_COOKIE}">
-                    <option value="{HTTP_HOST}">
-                    <option value="{HTTP_METHOD}">
-                    <option value="{HTTP_REFERER}">
-                    <option value="{HTTP_URL}">
-                    <option value="{HTTP_USER_AGENT}">
-                    <option value="{HTTP_VERSION}">
-                    <option value="{HTTPS}">
-                    <option value="{HTTPS_KEYSIZE}">
-                    <option value="{HTTPS_SECRETKEYSIZE}">
-                    <option value="{HTTP_SERVER_ISSUER}">
-                    <option value="{HTTPS_SERVER_SUBJECT}">
-                    <option value="{INSTANCE_ID}">
-                    <option value="{INSTANCE_META_PATH}">
-                    <option value="{LOCAL_ADDR}">
-                    <option value="{LOGON_USER}">
-                    <option value="{PATH_INFO}">
-                    <option value="{PATH_TRANSLATE}">
-                    <option value="{QUERY_STRING}">
-                    <option value="{REMOTE_ADDR}">
-                    <option value="{REMOTE_HOST}">
-                    <option value="{REMOTE_PORT}">
-                    <option value="{REMOTE_USER}">
-                    <option value="{REQUEST_METHOD}">
-                    <option value="{SCRIPT_NAME}">
-                    <option value="{SCRIPT_TRANSLATED}">
-                    <option value="{SERVER_NAME}">
-                    <option value="{SERVER_PORT}">
-                    <option value="{SERVER_PORT_SECURE}">
-                    <option value="{SERVER_PROTOCOL}">
-                    <option value="{SERVER_SOFTWARE}">
-                    <option value="{SSI_EXEC_DISABLED}">
-                    <option value="{UNENCODED_URL}">
-                    <option value="{UNMAPPED_REMOTE_USER}">
-                    <option value="{URL}">
-                    <option value="{URL_PATH_INFO}">
+                    <option *ngFor="let variable of _serverVariables" value="{{'{' + variable + '}'}}">
                 </datalist>
             </fieldset>
-            <fieldset>
-                <label>Match Type</label>
-                <enum [(model)]="condition.negate">
-                    <field name="Matches" value="false"></field>
-                    <field name="Doesn't Match" value="true"></field>
-                </enum>
-            </fieldset>
             <fieldset class="name">
-                <label>Pattern</label>
+                <div>
+                    <label class="inline-block">Pattern</label>
+                    <text-toggle onText="Matches" offText="Doesn't Match" [on]="false" [off]="true" [(model)]="condition.negate"></text-toggle>
+                </div>
                 <input type="text" class="form-control" [(ngModel)]="condition.pattern" />
             </fieldset>
             <fieldset>
@@ -229,6 +164,10 @@ export class InboundRuleConditionComponent {
             padding-left: 15px;
             padding-right: 15px;
         }
+
+        .inline-block {
+            margin-right: 20px;
+        }
     `]
 })
 export class ConditionEditComponent {
@@ -236,6 +175,8 @@ export class ConditionEditComponent {
 
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
     @Output() save: EventEmitter<any> = new EventEmitter<any>();
+
+    private _serverVariables: Array<string> = IIS_SERVER_VARIABLES;
 
     private isValid(): boolean {
         return !!this.condition.input && !!this.condition.pattern;

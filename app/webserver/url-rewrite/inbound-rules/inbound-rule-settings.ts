@@ -20,11 +20,11 @@ import { InboundRule } from '../url-rewrite';
                         <input type="text" class="form-control" [(ngModel)]="rule.pattern" (modelChanged)="testRegex()" />
                     </fieldset>
                     <fieldset>
-                        <label>Test URL</label>
+                        <label>Test Url</label>
                         <input placeholder="default.aspx?c=hiking&p=boots" type="text" class="form-control" [(ngModel)]="_testUrl" (modelChanged)="testRegex()" />
                     </fieldset>
                     <fieldset *ngIf="rule.action.type == 'rewrite' || rule.action.type == 'redirect'">
-                        <label>Substitution URL</label>
+                        <label>Substitution Url</label>
                         <input type="text" class="form-control" [(ngModel)]="rule.action.url" (modelChanged)="testRegex()" />
                     </fieldset>
                     <div *ngIf="rule.action.type == 'custom_response'">
@@ -45,8 +45,12 @@ import { InboundRule } from '../url-rewrite';
                             <input type="text" class="form-control" [(ngModel)]="rule.action.description" />
                         </fieldset>
                     </div>
-                    <fieldset>
+                    <fieldset *ngIf="_result">
                         <span>{{_result}}</span>
+                    </fieldset>
+                    <fieldset>
+                        <label>Ignore Case</label>
+                        <switch [(model)]="rule.ignore_case" (modelChanged)="testRegex()">{{rule.ignore_case ? "Yes": "No"}}</switch>
                     </fieldset>
                 </div>
                 <div class="col-xs-12 col-lg-6" *ngIf="_matches.length > 0">
@@ -107,7 +111,8 @@ export class InboundRuleSettingsComponent {
         let regex: RegExp;
 
         try {
-            regex = new RegExp(this.rule.pattern, 'g');
+            let ignoreCase = + this.rule.ignore_case ? 'i' : '';
+            regex = new RegExp(this.rule.pattern, 'g' + ignoreCase);
         }
         catch (e) {
             this._matches = [];

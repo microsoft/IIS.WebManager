@@ -13,18 +13,45 @@ import { Module as ErrorComponent } from '../../error/error.component';
 import { Module as Tabs } from '../../common/tabs.component';
 import { Module as Selector } from '../../common/selector';
 import { Module as TextCheckbox } from '../../common/text-toggle.component';
+import { Module as StringList } from '../../common/string-list.component';
 
 import { UrlRewriteComponent } from './url-rewrite.component';
 
 //
-// Inbound Rule Components
-import { InboundRulesComponent } from './inbound-rule/inbound-rules.component';
-import { InboundRuleComponent } from './inbound-rule/inbound-rule.component';
-import { InboundRuleEditComponent } from './inbound-rule/inbound-rule-edit';
-import { InboundRuleSettingsComponent } from './inbound-rule/inbound-rule-settings';
-import { InboundRuleActionComponent } from './inbound-rule/inbound-rule-action';
-import { InboundRuleConditionsComponent, InboundRuleConditionComponent, ConditionEditComponent  } from './inbound-rule/inbound-rule-conditions';
-import { InboundRuleVariablesComponent, InboundRuleVariableComponent, VariableEditComponent } from './inbound-rule/inbound-rule-variables';
+// Inbound Rules
+import { InboundRulesComponent } from './inbound-rules/inbound-rules.component';
+import { InboundRuleComponent } from './inbound-rules/inbound-rule.component';
+import { InboundRuleEditComponent } from './inbound-rules/inbound-rule-edit';
+import { InboundRuleSettingsComponent } from './inbound-rules/inbound-rule-settings';
+import { InboundRuleActionComponent } from './inbound-rules/inbound-rule-action';
+import { InboundRuleConditionsComponent, InboundRuleConditionComponent, ConditionEditComponent  } from './inbound-rules/inbound-rule-conditions';
+import { InboundRuleVariablesComponent, InboundRuleVariableComponent, VariableEditComponent } from './inbound-rules/inbound-rule-variables';
+
+//
+// Server Variables
+import { ServerVariablesComponent } from './server-variables/server-variables.component';
+
+//
+// Outbound Rules
+import { OutboundRuleComponent } from './outbound-rules/outbound-rule.component';
+import { OutboundRulesComponent } from './outbound-rules/outbound-rules.component';
+import { OutboundRuleEditComponent } from './outbound-rules/outbound-rule-edit';
+import { OutboundRuleSettingsComponent } from './outbound-rules/outbound-rule-settings';
+import { OutboundRuleTypeComponent } from './outbound-rules/outbound-rule-type';
+
+//
+// Rewrite Maps
+import { RewriteMapsComponent } from './rewrite-maps/rewrite-maps.component';
+import { RewriteMapComponent } from './rewrite-maps/rewrite-map.component';
+import { RewriteMapEditComponent } from './rewrite-maps/rewrite-map-edit';
+import { MappingComponent, MappingEditComponent } from './rewrite-maps/mapping.component';
+
+//
+// Providers
+import { ProvidersComponent } from './providers/providers.component';
+import { ProviderComponent } from './providers/provider.component';
+import { ProviderEditComponent } from './providers/provider-edit';
+import { SettingComponent, SettingEditComponent } from './providers/setting.component';
 
 import { UrlRewriteService } from './url-rewrite.service';
 
@@ -42,7 +69,8 @@ import { UrlRewriteService } from './url-rewrite.service';
         ErrorComponent,
         Tabs,
         Selector,
-        TextCheckbox
+        TextCheckbox,
+        StringList
     ],
     declarations: [
         UrlRewriteComponent,
@@ -56,7 +84,23 @@ import { UrlRewriteService } from './url-rewrite.service';
         ConditionEditComponent,
         InboundRuleVariablesComponent,
         InboundRuleVariableComponent,
-        VariableEditComponent
+        VariableEditComponent,
+        ServerVariablesComponent,
+        OutboundRuleEditComponent,
+        OutboundRuleSettingsComponent,
+        OutboundRuleTypeComponent,
+        OutboundRuleComponent,
+        OutboundRulesComponent,
+        RewriteMapsComponent,
+        RewriteMapComponent,
+        RewriteMapEditComponent,
+        MappingComponent,
+        MappingEditComponent,
+        ProvidersComponent,
+        ProviderComponent,
+        ProviderEditComponent,
+        SettingComponent,
+        SettingEditComponent
     ],
     providers: [
         UrlRewriteService

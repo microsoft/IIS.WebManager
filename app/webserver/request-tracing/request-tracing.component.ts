@@ -70,11 +70,6 @@ import { RequestTracing, RequestTracingRule, Trace, EventSeverity, Verbosity } f
             clear: both;
         }
 
-        .install {
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-
         section {
             margin-bottom: 15px;
         }

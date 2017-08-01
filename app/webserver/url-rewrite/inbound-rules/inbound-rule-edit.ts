@@ -22,7 +22,7 @@ import { InboundRule, Condition, ActionType, MatchType, ConditionMatchConstraint
                 </tab>
             </tabs>
             <p class="pull-right">
-                <button (click)="onOk()"><i title="Create" class="fa fa-check color-active"></i> Ok</button>
+                <button [disabled]="!isValid()" (click)="onOk()"><i title="Create" class="fa fa-check color-active"></i> Ok</button>
                 <button (click)="onDiscard()"><i class="fa fa-times red"></i> Cancel</button>
             </p>
         </div>

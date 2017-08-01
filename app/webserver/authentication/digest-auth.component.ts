@@ -32,17 +32,7 @@ import { NotificationService } from '../../notification/notification.service';
                 <input class="form-control path" type="text" [disabled]="_locked" [(ngModel)]="_model.realm" throttle (modelChanged)="onModelChanged()" />
             </fieldset>
         </div>
-    `,
-    styles: [`
-        .clear {
-            clear: both;
-        }
-
-        .install {
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-    `]
+    `
 })
 export class DigestAuthenticationComponent implements OnDestroy {
     private _model: DigestAuthentication;

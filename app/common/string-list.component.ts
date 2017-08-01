@@ -1,9 +1,8 @@
-
-import {NgModule, Component, OnInit, OnChanges, Input, Output, EventEmitter, SimpleChange, QueryList, ViewChildren} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-import {Module as Validators} from './validators';
-
+import { NgModule, Component, OnInit, OnChanges, Input, Output, EventEmitter, SimpleChange, QueryList, ViewChildren, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Module as AutoFocus } from './focus';
+import { Module as Validators } from './validators';
 
 @Component({
     selector: 'string-list',
@@ -16,7 +15,7 @@ import {Module as Validators} from './validators';
                 <li *ngFor="let item of list; let i = index" class="row border-color grid-item" [class.background-editing]="i === _editing">
                     <div class="col-xs-12">
                         <div class="actions">
-                            <button [disabled]="!val.valid || validator && validator(list[i].value)" *ngIf="_editing == i" title="Ok" (click)="save(i)">
+                            <button [disabled]="shouldDisable(i)" *ngIf="_editing == i" title="Ok" (click)="save(i)">
                                 <i class="fa fa-check color-active"></i>
                             </button>
                             <button *ngIf="_editing == i" title="Cancel" (click)="cancel(i)">
@@ -32,8 +31,8 @@ import {Module as Validators} from './validators';
                         <div>
                             <span class="form-control" *ngIf="_editing != i">{{item.value}}</span>
                         </div>
-                        <div [hidden]="_editing != i">
-                            <input  #val='ngModel' [(ngModel)]="list[i].value" class="form-control" type="text" required [lateBindValidator]="validator" [attr.title]="!title ? null : title" />
+                        <div *ngIf="_editing == i">
+                            <input  #val='ngModel' autofocus [(ngModel)]="list[i].value" class="form-control" type="text" required [lateBindValidator]="validator" (keyup.enter)="save(i)" [attr.title]="!title ? null : title" />
                         </div>
                     </div>
                 </li>
@@ -71,9 +70,10 @@ export class StringListComponent implements OnInit, OnChanges {
     @Output() edit: EventEmitter<any> = new EventEmitter();
     @Output() modelChange: EventEmitter<any> = new EventEmitter();
     @Output() modelChanged: EventEmitter<any> = new EventEmitter();
+    @ViewChild('val') private _editModel;
 
     list: Array<any>;
-    
+
     private _editing: number = -1;
 
     ngOnInit() {
@@ -173,13 +173,18 @@ export class StringListComponent implements OnInit, OnChanges {
         }
         return -1;
     }
+
+    private shouldDisable(index: number): boolean {
+        return !this._editModel || !this._editModel.valid || this.validator && this.validator(this.list[index].value);
+    }
 }
 
 @NgModule({
     imports: [
         FormsModule,
         CommonModule,
-        Validators
+        Validators,
+        AutoFocus
     ],
     exports: [
         StringListComponent

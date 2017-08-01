@@ -1,6 +1,6 @@
 ﻿import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 
-import { InboundRule, ServerVariableAssignment, MatchType } from '../url-rewrite';
+import { InboundRule, ServerVariableAssignment, MatchType, IIS_SERVER_VARIABLES } from '../url-rewrite';
 
 @Component({
     selector: 'inbound-rule-variables',
@@ -56,7 +56,7 @@ export class InboundRuleVariablesComponent {
 @Component({
     selector: 'inbound-rule-variable',
     template: `
-        <div *ngIf="variable && !_editing" class="grid-item row">
+        <div *ngIf="variable && !_editing" class="grid-item row" (dblclick)="edit()">
             <div class="col-sm-3 col-lg-2 valign">
                 {{variable.name}}
             </div>
@@ -120,7 +120,10 @@ export class InboundRuleVariableComponent {
             </div>
             <fieldset class="name">
                 <label>Name</label>
-                <input type="text" class="form-control" [(ngModel)]="variable.name" />
+                <input type="text" class="form-control" list="server-vars" [(ngModel)]="variable.name" />
+                <datalist id="server-vars">
+                    <option *ngFor="let variable of _serverVariables" value="{{variable}}">
+                </datalist>
             </fieldset>
             <fieldset class="name">
                 <label>Value</label>
@@ -144,6 +147,8 @@ export class VariableEditComponent {
 
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
     @Output() save: EventEmitter<any> = new EventEmitter<any>();
+
+    private _serverVariables: Array<string> = IIS_SERVER_VARIABLES;
 
     private isValid(): boolean {
         return !!this.variable.name && !!this.variable.value;

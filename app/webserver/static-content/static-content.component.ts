@@ -25,13 +25,7 @@ import { NotificationService } from '../../notification/notification.service';
         <div *ngIf="staticContent">
             <client-cache [model]="staticContent.client_cache" [locked]="_locked" (modelChange)="onModelChanged()"></client-cache>
         </div>
-    `,
-    styles: [`
-        .install {
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-    `]
+    `
 })
 export class StaticContentComponent implements OnInit, OnDestroy {
     id: string;

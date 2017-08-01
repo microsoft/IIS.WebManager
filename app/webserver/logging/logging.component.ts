@@ -68,11 +68,6 @@ import { NotificationService } from '../../notification/notification.service';
         fieldset {
             padding-left: 0;
         }
-
-        .install {
-            display: inline-block;
-            margin-bottom: 15px;
-        }
     `]
 })
 export class LoggingComponent implements OnInit, OnDestroy {

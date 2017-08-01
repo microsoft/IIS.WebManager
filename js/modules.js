@@ -161,7 +161,7 @@
     },
     {
         "name": "Url Rewrite",
-        "ico": "fa fa-arrows-h",
+        "ico": "fa fa-exchange",
         "component_name": "UrlRewriteComponent",
         "module": "app/webserver/url-rewrite/url-rewrite.module#UrlRewriteModule",
         "api_name": "url_rewrite",

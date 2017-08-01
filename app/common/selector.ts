@@ -39,6 +39,10 @@ import { WindowService } from '../main/window.service';
             min-width: 125px;
             width: 100%;
         }
+
+        :host.container-fluid {
+            padding: 0;
+        }
     `
     ],
     host: {

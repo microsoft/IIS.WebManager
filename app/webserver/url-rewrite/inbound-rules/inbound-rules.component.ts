@@ -10,16 +10,20 @@ import { InboundSection, InboundRule, PatternSyntax, ActionType, ConditionMatchC
     selector: 'inbound-rules',
     template: `
         <error [error]="_service.inboundError"></error>
-        <div *ngIf="!_service.inboundError">
-            <override-mode class="pull-right" 
-                *ngIf="_settings" 
+        <div *ngIf="!_service.inboundError && _settings">
+            <override-mode class="pull-right"
                 [metadata]="_settings.metadata"
                 [scope]="_settings.scope"
                 (revert)="onRevert()" 
                 (modelChanged)="onModelChanged()"></override-mode>
             <div>
-                <button [class.background-active]="newRule.opened" (click)="toggleNew()">Create Inbound Rule <i class="fa fa-caret-down"></i></button>
-                <selector #newRule class="container-fluid">
+                <fieldset>
+                    <label>Use Original URL Encoding</label>
+                    <switch *ngIf="_settings.use_original_url_encoding !== undefined" [(model)]="_settings.use_original_url_encoding" (modelChanged)="onModelChanged()">{{_settings.use_original_url_encoding ? "On" : "Off"}}</switch>
+                </fieldset>
+                
+                <button class="create" [class.background-active]="newRule.opened" (click)="toggleNew()">Create Inbound Rule <i class="fa fa-caret-down"></i></button>
+                <selector #newRule class="container-fluid create">
                     <inbound-rule-edit [rule]="_newRule" (save)="saveNew($event)" (cancel)="closeNew()"></inbound-rule-edit>
                 </selector>
             </div>
@@ -41,7 +45,12 @@ import { InboundSection, InboundRule, PatternSyntax, ActionType, ConditionMatchC
                 </ul>
             </div>
         </div>
-    `
+    `,
+    styles: [`
+        button.create {
+            margin: 30px 0 0 0;
+        }
+    `]
 })
 export class InboundRulesComponent implements OnDestroy {
     private _settings: InboundSection;
@@ -52,7 +61,10 @@ export class InboundRulesComponent implements OnDestroy {
 
     constructor(private _service: UrlRewriteService) {
         this._subscriptions.push(this._service.inboundSettings.subscribe(settings => this._settings = settings));
-        this._subscriptions.push(this._service.inboundRules.subscribe(r => this._rules = r));
+        this._subscriptions.push(this._service.inboundRules.subscribe(r => {
+            this._rules = r;
+            this.initializeNewRule();
+        }));
         this.initializeNewRule();
     }
 
@@ -78,22 +90,10 @@ export class InboundRulesComponent implements OnDestroy {
         //
         // condition
         this._newRule.conditions = [];
-        let condition = new Condition();
-        condition.input = "{HTTPS}";
-        condition.pattern = "off";
-        condition.negate = false;
-        condition.ignore_case = true;
-        condition.match_type = MatchType.Pattern;
-        this._newRule.conditions.push(condition);
 
         //
         // server variable
         this._newRule.server_variables = [];
-        let variable = new ServerVariableAssignment();
-        variable.name = "{RESPONSE_OUT_HEADER}";
-        variable.value = "Some Value";
-        variable.replace = true;
-        this._newRule.server_variables.push(variable);
 
         //
         // action

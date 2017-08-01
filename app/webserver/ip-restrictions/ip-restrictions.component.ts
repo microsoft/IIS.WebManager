@@ -46,11 +46,6 @@ import { NotificationService } from '../../notification/notification.service';
             width: 100%;
         }
 
-        .install {
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-
         tabs {
             margin-top: 10px;
             display: block;

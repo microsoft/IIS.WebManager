@@ -292,12 +292,27 @@
     <TypeScriptCompile Include="app\webserver\static-content\static-content.module.ts" />
     <TypeScriptCompile Include="app\webserver\static-content\static-content.service.ts" />
     <TypeScriptCompile Include="app\webserver\static-content\static-content.ts" />
-    <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rule\inbound-rule-action.ts" />
-    <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rule\inbound-rule-conditions.ts" />
-    <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rule\inbound-rule-settings.ts" />
-    <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rule\inbound-rule-variables.ts" />
-    <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rule\inbound-rules.component.ts" />
-    <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rule\inbound-rule-edit.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rules\inbound-rule-action.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rules\inbound-rule-conditions.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rules\inbound-rule-settings.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rules\inbound-rule-variables.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rules\inbound-rule.component.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rules\inbound-rules.component.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\inbound-rules\inbound-rule-edit.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\outbound-rules\outbound-rule.component.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\outbound-rules\outbound-rules.component.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\outbound-rules\outbound-rule-edit.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\outbound-rules\outbound-rule-settings.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\outbound-rules\outbound-rule-type.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\providers\provider-edit.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\providers\provider.component.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\providers\providers.component.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\providers\setting.component.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\rewrite-maps\mapping.component.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\rewrite-maps\rewrite-map-edit.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\rewrite-maps\rewrite-map.component.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\rewrite-maps\rewrite-maps.component.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\server-variables\server-variables.component.ts" />
     <TypeScriptCompile Include="app\webserver\url-rewrite\url-rewrite.component.ts" />
     <TypeScriptCompile Include="app\webserver\url-rewrite\url-rewrite.module.ts" />
     <TypeScriptCompile Include="app\webserver\url-rewrite\url-rewrite.service.ts" />
@@ -378,6 +393,7 @@
     <Content Include="js\modules.js" />
     <Content Include="package.json" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
   </PropertyGroup>

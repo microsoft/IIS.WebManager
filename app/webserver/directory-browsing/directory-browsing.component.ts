@@ -56,11 +56,6 @@ import { NotificationService } from '../../notification/notification.service';
             padding-left: 0px;
             position:relative;
         }
-
-        .install {
-            display: inline-block;
-            margin-bottom: 15px;
-        }
     `]
 })
 export class DirectoryBrowsingComponent implements OnInit, OnDestroy {

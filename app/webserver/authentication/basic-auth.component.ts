@@ -38,17 +38,7 @@ import { NotificationService } from '../../notification/notification.service';
                 </fieldset>
             </div>
         </div>
-    `,
-    styles: [`
-        .clear {
-            clear: both;
-        }
-
-        .install {
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-    `]
+    `
 })
 export class BasicAuthenticationComponent implements OnDestroy {
     private _model: BasicAuthentication;

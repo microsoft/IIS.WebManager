@@ -54,13 +54,7 @@ import { NotificationService } from '../../notification/notification.service';
                 </div>
             </div>
         </div>
-    `,
-    styles: [`
-        .install {
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-    `]
+    `
 })
 export class CompressionComponent implements OnInit, OnDestroy {
     public id: string;

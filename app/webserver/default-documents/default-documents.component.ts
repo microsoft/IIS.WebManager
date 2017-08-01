@@ -39,11 +39,6 @@ import { NotificationService } from '../../notification/notification.service';
             display: block;
             margin-top: 23px;
         }
-
-        .install {
-            display: inline-block;
-            margin-bottom: 15px;
-        }
     `]
 })
 export class DefaultDocumentsComponent implements OnInit, OnDestroy {

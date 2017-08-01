@@ -5,23 +5,17 @@ import { Subscription } from 'rxjs/Subscription';
 import { NotificationService } from '../../../notification/notification.service';
 import { Selector } from '../../../common/selector';
 import { UrlRewriteService } from '../url-rewrite.service';
-import { InboundRule, ActionTypeHelper } from '../url-rewrite';
+import { Provider } from '../url-rewrite';
 
 @Component({
-    selector: 'inbound-rule',
+    selector: 'provider',
     template: `
-        <div *ngIf="rule" class="grid-item row" [class.background-selected]="_editing" (dblclick)="edit()">
-            <div class="col-sm-2 valign">
-                {{rule.name}}
+        <div *ngIf="provider" class="grid-item row" [class.background-selected]="_editing" (dblclick)="edit()">
+            <div class="col-sm-3 valign">
+                {{provider.name}}
             </div>
-            <div class="col-sm-3 col-lg-2 valign">
-                {{rule.pattern}}
-            </div>
-            <div class="col-sm-3 col-lg-2 valign">
-                <span *ngIf="rule.action.type == 'redirect' || rule.action.type == 'rewrite'">{{rule.action.url}}</span>
-            </div>
-            <div class="visible-lg col-lg-2 valign">
-                {{toFriendlyActionType(rule.action.type)}}
+            <div class="col-sm-3 valign">
+                {{provider.type}}
             </div>
             <div class="actions">
                 <div class="action-selector">
@@ -39,18 +33,12 @@ import { InboundRule, ActionTypeHelper } from '../url-rewrite';
             </div>
         </div>
         <selector #editSelector [opened]="true" *ngIf="_editing" class="container-fluid">
-            <inbound-rule-edit [rule]="rule" (save)="save($event)" (cancel)="discard()"></inbound-rule-edit>
+           <provider-edit [provider]="provider" (save)="save($event)" (cancel)="discard()"></provider-edit>
         </selector>
-    `,
-    styles: [`
-        selector.container-fluid {
-            padding-left: 0;
-            padding-right: 0;
-        }
-    `]
+    `
 })
-export class InboundRuleComponent implements AfterViewInit, OnChanges, OnDestroy {
-    @Input() public rule: InboundRule;
+export class ProviderComponent implements AfterViewInit, OnChanges, OnDestroy {
+    @Input() public provider: Provider;
     @Output('delete') deleteEvent: EventEmitter<any> = new EventEmitter<any>();
 
     private _editing: boolean = false;
@@ -58,15 +46,14 @@ export class InboundRuleComponent implements AfterViewInit, OnChanges, OnDestroy
     // Use ViewChildren to listen for when the edit dialog appears
     @ViewChildren('editSelector') private _editSelector: QueryList<Selector>;
     private _subscriptions: Array<Subscription> = [];
-    private toFriendlyActionType: Function = ActionTypeHelper.toFriendlyActionType;
-    private _original: InboundRule;
+    private _original: Provider;
 
     constructor(private _service: UrlRewriteService, private _notificationService: NotificationService) {
     }
 
     ngOnChanges(changes: { [key: string]: SimpleChange; }): any {
-        if (changes["rule"]) {
-            this._original = JSON.parse(JSON.stringify(changes["rule"].currentValue));
+        if (changes["provider"]) {
+            this._original = JSON.parse(JSON.stringify(changes["provider"].currentValue));
         }
     }
 
@@ -90,22 +77,22 @@ export class InboundRuleComponent implements AfterViewInit, OnChanges, OnDestroy
     }
 
     private delete() {
-        this._notificationService.confirm("Delete Inbound Rule", "Are you sure you want to delete '" + this.rule.name + "'?")
-            .then(confirmed => confirmed && this._service.deleteInboundRule(this.rule));
+        this._notificationService.confirm("Delete Provider", "Are you sure you want to delete '" + this.provider.name + "'?")
+            .then(confirmed => confirmed && this._service.deleteProvider(this.provider));
     }
 
     private save() {
-        this._service.saveInboundRule(this.rule)
-            .then(() => this._original = JSON.parse(JSON.stringify(this.rule)));
+        this._service.saveProvider(this.provider)
+            .then(() => this._original = JSON.parse(JSON.stringify(this.provider)));
         this._editing = false;
     }
 
     private discard() {
-        this.rule = JSON.parse(JSON.stringify(this._original));
+        this.provider = JSON.parse(JSON.stringify(this._original));
         this._editing = false;
     }
 
     private copy() {
-        this._service.copyInboundRule(this.rule);
+        this._service.copyProvider(this.provider);
     }
 }

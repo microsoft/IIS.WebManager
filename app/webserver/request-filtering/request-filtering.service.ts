@@ -77,9 +77,9 @@ export class RequestFilteringService {
     public install(): Promise<any> {
         this._status = Status.Starting;
         return this._http.post(RequestFilteringService.URL, "")
-            .then(doc => {
+            .then(feature => {
                 this._status = Status.Started;
-                this._requestFiltering.next(doc);
+                this._requestFiltering.next(feature);
             })
             .catch(e => {
                 this.error = e;

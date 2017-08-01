@@ -86,9 +86,10 @@ export class OutboundRule {
     public ignore_case: boolean;
     public negate: boolean;
     public stop_processing: boolean;
+    public rewrite: boolean;
     public rewrite_value: string;
     public replace_server_variable: true;
-    public condition_match_contstraints: ConditionMatchConstraints;
+    public condition_match_constraints: ConditionMatchConstraints;
     public track_all_captures: boolean;
     public conditions: Array<Condition>;
     public url_rewrite: UrlRewrite;
@@ -263,3 +264,81 @@ export class ActionTypeHelper {
         }
     }
 }
+
+export class OutboundMatchTypeHelper {
+    public static display(matchType: OutboundMatchType): string {
+        switch (matchType) {
+            case OutboundMatchType.Tags:
+                return "Tags";
+            case OutboundMatchType.ServerVariable:
+                return "Server Variable";
+            default:
+                throw new Error("Invalid match type");
+        }
+    }
+}
+
+export const IIS_SERVER_VARIABLES = [
+    "ALL_HTTP",
+    "ALL_RAW",
+    "APP_POOL_ID",
+    "APPL_MD_PATH",
+    "APPL_PHYSICAL_PATH",
+    "AUTH_PASSWORD",
+    "AUTH_TYPE",
+    "AUTH_USER",
+    "CACHE_URL",
+    "CERT_COOKIE",
+    "CERT_FLAGS",
+    "CERT_ISSUER",
+    "CERT_KEYSIZE",
+    "CERT_SECRETKEYSIZE",
+    "CERT_SERIALNUMBER",
+    "CERT_SERVER_ISSUER",
+    "CERT_SERVER_SUBJECT",
+    "CERT_SUBJECT",
+    "CONTENT_LENGTH",
+    "CONTENT_TYPE",
+    "GATEWAY_INTERFACE",
+    "HTTP_ACCEPT",
+    "HTTP_ACCEPT_ENCODING",
+    "HTTP_ACCEPT_LANGUAGE",
+    "HTTP_CONNECTION",
+    "HTTP_COOKIE",
+    "HTTP_COOKIE",
+    "HTTP_HOST",
+    "HTTP_METHOD",
+    "HTTP_REFERER",
+    "HTTP_URL",
+    "HTTP_USER_AGENT",
+    "HTTP_VERSION",
+    "HTTPS",
+    "HTTPS_KEYSIZE",
+    "HTTPS_SECRETKEYSIZE",
+    "HTTP_SERVER_ISSUER",
+    "HTTPS_SERVER_SUBJECT",
+    "INSTANCE_ID",
+    "INSTANCE_META_PATH",
+    "LOCAL_ADDR",
+    "LOGON_USER",
+    "PATH_INFO",
+    "PATH_TRANSLATE",
+    "QUERY_STRING",
+    "REMOTE_ADDR",
+    "REMOTE_HOST",
+    "REMOTE_PORT",
+    "REMOTE_USER",
+    "REQUEST_METHOD",
+    "SCRIPT_NAME",
+    "SCRIPT_TRANSLATED",
+    "SERVER_NAME",
+    "SERVER_PORT",
+    "SERVER_PORT_SECURE",
+    "SERVER_PROTOCOL",
+    "SERVER_SOFTWARE",
+    "SSI_EXEC_DISABLED",
+    "UNENCODED_URL",
+    "UNMAPPED_REMOTE_USER",
+    "URL",
+    "URL_PATH_INFO"
+]

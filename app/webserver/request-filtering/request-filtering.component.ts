@@ -76,7 +76,6 @@ import { RequestFilteringSettings, RequestFilteringChildType, RequestFiltering }
         }
 
         .install {
-            display: inline-block;
             margin-bottom: 45px;
         }
     `]
