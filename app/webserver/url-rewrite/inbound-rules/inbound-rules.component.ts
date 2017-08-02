@@ -18,11 +18,11 @@ import { InboundSection, InboundRule, PatternSyntax, ActionType, ConditionMatchC
                 (modelChanged)="onModelChanged()"></override-mode>
             <div>
                 <fieldset>
-                    <label>Use Original URL Encoding</label>
-                    <switch *ngIf="_settings.use_original_url_encoding !== undefined" [(model)]="_settings.use_original_url_encoding" (modelChanged)="onModelChanged()">{{_settings.use_original_url_encoding ? "On" : "Off"}}</switch>
+                    <label>Original Url Encoding</label>
+                    <switch *ngIf="_settings.use_original_url_encoding !== undefined" [(model)]="_settings.use_original_url_encoding" (modelChanged)="onModelChanged()">{{_settings.use_original_url_encoding ? "Yes" : "No"}}</switch>
                 </fieldset>
                 
-                <button class="create" [class.background-active]="newRule.opened" (click)="toggleNew()">Create Inbound Rule <i class="fa fa-caret-down"></i></button>
+                <button class="create" [class.background-active]="newRule.opened" (click)="toggleNew()">Create Rule <i class="fa fa-caret-down"></i></button>
                 <selector #newRule class="container-fluid create">
                     <inbound-rule-edit [rule]="_newRule" (save)="saveNew($event)" (cancel)="closeNew()"></inbound-rule-edit>
                 </selector>
@@ -31,10 +31,10 @@ import { InboundSection, InboundRule, PatternSyntax, ActionType, ConditionMatchC
             <div>
                 <div class="container-fluid">
                     <div class="row hidden-xs border-active grid-list-header">
-                        <label class="col-sm-2">Name</label>
-                        <label class="col-sm-3 col-lg-2">Url Pattern</label>
-                        <label class="col-sm-3 col-lg-2">Substitution Url</label>
+                        <label class="col-sm-3">Name</label>
                         <label class="visible-lg col-lg-2">Action Type</label>
+                        <label class="col-sm-3 col-lg-2">Url Pattern</label>
+                        <label class="col-sm-4">Substitution Url</label>
                     </div>
                 </div>
 
@@ -83,6 +83,7 @@ export class InboundRulesComponent implements OnDestroy {
 
         this._newRule.pattern = "(.*)";
         this._newRule.pattern_syntax = PatternSyntax.RegularExpression;
+        this._newRule.ignore_case = true;
         this._newRule.negate = false;
         this._newRule.action.type = ActionType.Rewrite;
         this._newRule.condition_match_constraints = ConditionMatchConstraints.MatchAll

@@ -279,7 +279,8 @@ fieldset.inline-block {
     width: auto;
     overflow: hidden;
 }
-        
+
+button.input,        
 button.select {
     height: 34px;
 }
@@ -699,6 +700,14 @@ button.copy:before {
 
 button.refresh:before {
     content: "\f021";
+}
+
+button.up:before {
+    content: "\f176";
+}
+
+button.down:before {
+    content: "\f175";
 }
 
 button.download:before {

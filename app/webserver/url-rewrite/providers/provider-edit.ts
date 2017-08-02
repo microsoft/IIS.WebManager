@@ -34,8 +34,8 @@ import { Provider, ProviderSetting } from '../url-rewrite';
             </ul>
 
             <p class="pull-right">
-                <button [disabled]="!isValid()" (click)="onOk()"><i title="Create" class="fa fa-check color-active"></i> Ok</button>
-                <button (click)="onDiscard()"><i class="fa fa-times red"></i> Cancel</button>
+                <button [disabled]="!isValid()" (click)="onOk()" class="ok">OK</button>
+                <button (click)="onDiscard()" class="cancel">Cancel</button>
             </p>
         </div>
     `,

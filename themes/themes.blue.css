@@ -14,18 +14,12 @@ button.cancel:not([disabled]):not(:hover):not(:active)::before {
     color: #a94442;
 }
 
-button.ok:not([disabled]):not(:hover):not(:active)::before {
-    color: #0093fe;
-}
-
+button.ok:not([disabled]):not(:hover):not(:active)::before,
+button.refresh:not([disabled]):not(:hover):not(:active)::before,
 button.save:not([disabled]):not(:hover):not(:active)::before,
 button.edit:not([disabled]):not(:hover):not(:active)::before,
 button.go:not([disabled]):not(:hover):not(:active)::before,
 .bttn.edit:not([disabled]):not(:hover):not(:active)::before {
-    color: #0093fe;
-}
-
-button.refresh:not([disabled]):not(:hover):not(:active)::before {
     color: #0093fe;
 }
 

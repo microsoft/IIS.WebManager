@@ -11,17 +11,17 @@ import { OutboundRule, OutboundMatchTypeHelper } from '../url-rewrite';
     selector: 'outbound-rule',
     template: `
         <div *ngIf="rule" class="grid-item row" [class.background-selected]="_editing" (dblclick)="edit()">
-            <div class="col-sm-2 valign">
+            <div class="col-xs-8 col-sm-3 valign">
                 {{rule.name}}
-            </div>
-            <div class="col-sm-3 col-lg-2 valign">
-                {{rule.pattern}}
-            </div>
-            <div class="col-sm-3 col-lg-2 valign">
-                {{rule.rewrite_value}}
             </div>
             <div class="visible-lg col-lg-2 valign">
                 {{toFriendlyMatchType(rule.match_type)}}
+            </div>
+            <div class="hidden-xs col-sm-3 col-lg-2 valign">
+                {{rule.pattern}}
+            </div>
+            <div class="hidden-xs col-sm-4 valign">
+                {{rule.rewrite_value}}
             </div>
             <div class="actions">
                 <div class="action-selector">
@@ -31,8 +31,10 @@ import { OutboundRule, OutboundMatchTypeHelper } from '../url-rewrite';
                     <selector #selector [right]="true">
                         <ul>
                             <li><button #menuButton class="edit" title="Edit" (click)="edit()">Edit</button></li>
+                            <li><button #menuButton class="copy" title="Copy" (click)="_service.copyOutboundRule(rule)">Copy</button></li>
+                            <li><button #menuButton class="up" title="Up" (click)="_service.moveOutboundUp(rule)">Move Up</button></li>
+                            <li><button #menuButton class="down" title="Down" (click)="_service.moveOutboundDown(rule)">Move Down</button></li>
                             <li><button #menuButton class="delete" title="Delete" (click)="delete()">Delete</button></li>
-                            <li><button #menuButton class="copy" title="Copy" (click)="copy()">Copy</button></li>
                         </ul>
                     </selector>
                 </div>
@@ -97,9 +99,5 @@ export class OutboundRuleComponent implements AfterViewInit, OnChanges, OnDestro
     private discard() {
         this.rule = JSON.parse(JSON.stringify(this._original));
         this._editing = false;
-    }
-
-    private copy() {
-        this._service.copyOutboundRule(this.rule);
     }
 }

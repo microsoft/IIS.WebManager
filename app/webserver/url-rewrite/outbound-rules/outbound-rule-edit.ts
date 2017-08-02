@@ -19,8 +19,8 @@ import { OutboundRule, OutboundMatchType } from '../url-rewrite';
                 </tab>
             </tabs>
             <p class="pull-right">
-                <button [disabled]="!isValid()" (click)="onOk()"><i title="Create" class="fa fa-check color-active"></i> Ok</button>
-                <button (click)="onDiscard()"><i class="fa fa-times red"></i> Cancel</button>
+                <button [disabled]="!isValid()" class="ok" (click)="onOk()">OK</button>
+                <button (click)="onDiscard()" class="cancel">Cancel</button>
             </p>
         </div>
     `,

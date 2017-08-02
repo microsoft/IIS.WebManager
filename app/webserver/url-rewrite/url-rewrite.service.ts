@@ -265,6 +265,7 @@ export class UrlRewriteService {
         this._http.delete(rule._links.self.href.replace('/api', ''))
             .then(() => {
                 let rules = this._inboundRules.getValue();
+                rules.forEach((r, i) => { if (i > rule.priority) r.priority--; });
                 rules = rules.filter(r => r != rule);
                 this._inboundRules.next(rules);
             });
@@ -275,11 +276,53 @@ export class UrlRewriteService {
 
         let i = 2;
         copy.name = rule.name + " - Copy";
+        copy.priority = null;
         while (this._inboundRules.getValue().find(r => r.name.toLocaleLowerCase() == copy.name.toLocaleLowerCase()) != null) {
             copy.name = rule.name + " - Copy (" + (i++) + ")";
         }
 
         return this.addInboundRule(copy);
+    }
+
+    public moveInboundUp(rule: InboundRule) {
+        if (rule.priority == 0) {
+            return;
+        }
+
+        let oldPriority = rule.priority;
+        rule.priority = oldPriority - 1;
+
+        this.saveInboundRule(rule).then(r => {
+            let rules = this._inboundRules.getValue();
+
+            //
+            // Move the rule in the client view of rules list
+            rules.splice(oldPriority, 1);
+
+            //
+            // Update the index of the rule which got pushed down
+            rules[rule.priority].priority++;
+            rules.splice(rule.priority, 0, rule);
+            this._inboundRules.next(rules);
+        });
+    }
+
+    public moveInboundDown(rule: InboundRule) {
+        let oldPriority = rule.priority;
+
+        if (oldPriority + 1 == this._inboundRules.getValue().length) {
+            return;
+        }
+
+        rule.priority = oldPriority + 1;
+
+        this.saveInboundRule(rule).then(r => {
+            let rules = this._inboundRules.getValue();
+            rules.splice(oldPriority, 1);
+            rules[oldPriority].priority--;
+            rules.splice(rule.priority, 0, rule);
+            this._inboundRules.next(rules);
+        });
     }
 
     //
@@ -360,11 +403,53 @@ export class UrlRewriteService {
 
         let i = 2;
         copy.name = rule.name + " - Copy";
+        copy.priority = null;
         while (this._outboundRules.getValue().find(r => r.name.toLocaleLowerCase() == copy.name.toLocaleLowerCase()) != null) {
             copy.name = rule.name + " - Copy (" + (i++) + ")";
         }
 
         return this.addOutboundRule(copy);
+    }
+
+    public moveOutboundUp(rule: OutboundRule) {
+        if (rule.priority == 0) {
+            return;
+        }
+
+        let oldPriority = rule.priority;
+        rule.priority = oldPriority - 1;
+
+        this.saveOutboundRule(rule).then(r => {
+            let rules = this._outboundRules.getValue();
+
+            //
+            // Move the rule in the client view of rules list
+            rules.splice(oldPriority, 1);
+
+            //
+            // Update the index of the rule which got pushed down
+            rules[rule.priority].priority++;
+            rules.splice(rule.priority, 0, rule);
+            this._outboundRules.next(rules);
+        });
+    }
+
+    public moveOutboundDown(rule: OutboundRule) {
+        let oldPriority = rule.priority;
+
+        if (oldPriority + 1 == this._outboundRules.getValue().length) {
+            return;
+        }
+
+        rule.priority = oldPriority + 1;
+
+        this.saveOutboundRule(rule).then(r => {
+            let rules = this._outboundRules.getValue();
+            rules.splice(oldPriority, 1);
+            rules[oldPriority].priority--;
+            rules.splice(rule.priority, 0, rule);
+            this._outboundRules.next(rules);
+        });
     }
 
     //

@@ -58,6 +58,7 @@ export class InboundRule {
 
     public name: string;
     public id: string;
+    public priority: number;
     public pattern: string;
     public pattern_syntax: PatternSyntax;
     public ignore_case: boolean;
@@ -77,6 +78,7 @@ export class InboundRule {
 export class OutboundRule {
     public name: string;
     public id: string;
+    public priority: number;
     public precondition: PreCondition;
     public match_type: OutboundMatchType;
     public server_variable: string;

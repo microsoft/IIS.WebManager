@@ -1,4 +1,4 @@
-import { NgModule, Component, OnInit, OnChanges, Input, Output, EventEmitter, SimpleChange, QueryList, ViewChildren, ViewChild } from '@angular/core';
+import { NgModule, Component, OnInit, OnChanges, Input, Output, EventEmitter, SimpleChange, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Module as AutoFocus } from './focus';
@@ -12,7 +12,7 @@ import { Module as Validators } from './validators';
         </fieldset>
         <div *ngIf='list.length > 0'>
             <ul class="grid-list container-fluid">
-                <li *ngFor="let item of list; let i = index" class="row border-color grid-item" [class.background-editing]="i === _editing">
+                <li *ngFor="let item of list; let i = index" class="row border-color grid-item" (dblclick)="onEdit(i)" [class.background-editing]="i === _editing">
                     <div class="col-xs-12">
                         <div class="actions">
                             <button [disabled]="shouldDisable(i)" *ngIf="_editing == i" title="Ok" (click)="save(i)">
@@ -46,6 +46,7 @@ import { Module as Validators } from './validators';
 
         .col-xs-12 {
             padding: 0px;
+            padding-left: 5px;
         }
 
         .col-xs-12 > div {

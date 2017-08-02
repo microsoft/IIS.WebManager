@@ -11,17 +11,17 @@ import { InboundRule, ActionTypeHelper } from '../url-rewrite';
     selector: 'inbound-rule',
     template: `
         <div *ngIf="rule" class="grid-item row" [class.background-selected]="_editing" (dblclick)="edit()">
-            <div class="col-sm-2 valign">
+            <div class="col-xs-8 col-sm-3 valign">
                 {{rule.name}}
-            </div>
-            <div class="col-sm-3 col-lg-2 valign">
-                {{rule.pattern}}
-            </div>
-            <div class="col-sm-3 col-lg-2 valign">
-                <span *ngIf="rule.action.type == 'redirect' || rule.action.type == 'rewrite'">{{rule.action.url}}</span>
             </div>
             <div class="visible-lg col-lg-2 valign">
                 {{toFriendlyActionType(rule.action.type)}}
+            </div>
+            <div class="hidden-xs col-sm-3 col-lg-2 valign">
+                {{rule.pattern}}
+            </div>
+            <div class="hidden-xs col-sm-4 valign">
+                <span *ngIf="rule.action.type == 'redirect' || rule.action.type == 'rewrite'">{{rule.action.url}}</span>
             </div>
             <div class="actions">
                 <div class="action-selector">
@@ -31,8 +31,10 @@ import { InboundRule, ActionTypeHelper } from '../url-rewrite';
                     <selector #selector [right]="true">
                         <ul>
                             <li><button #menuButton class="edit" title="Edit" (click)="edit()">Edit</button></li>
+                            <li><button #menuButton class="up" title="Up" (click)="_service.moveInboundUp(rule)">Move Up</button></li>
+                            <li><button #menuButton class="down" title="Down" (click)="_service.moveInboundDown(rule)">Move Down</button></li>
+                            <li><button #menuButton class="copy" title="Copy" (click)="_service.copyInboundRule(rule)">Clone</button></li>
                             <li><button #menuButton class="delete" title="Delete" (click)="delete()">Delete</button></li>
-                            <li><button #menuButton class="copy" title="Copy" (click)="copy()">Copy</button></li>
                         </ul>
                     </selector>
                 </div>
@@ -97,9 +99,5 @@ export class InboundRuleComponent implements AfterViewInit, OnChanges, OnDestroy
     private discard() {
         this.rule = JSON.parse(JSON.stringify(this._original));
         this._editing = false;
-    }
-
-    private copy() {
-        this._service.copyInboundRule(this.rule);
     }
 }

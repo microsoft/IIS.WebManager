@@ -1,52 +1,52 @@
 ﻿import { Component, Inject, Input } from '@angular/core';
 
-import { OutboundRule } from '../url-rewrite';
+import { OutboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
 
 @Component({
     selector: 'outbound-rule-settings',
     template: `
-        <div class="container-fluid" *ngIf="rule">
-            <div class="row">
-                <div class="col-xs-12 col-lg-6">
-                    <fieldset>
-                        <label>Name</label>
-                        <input type="text" class="form-control" [(ngModel)]="rule.name" />
-                    </fieldset>
-                    <fieldset>
-                        <div>
-                            <label class="inline-block">Pattern</label>
-                            <text-toggle onText="Matches" offText="Doesn't Match" [on]="false" [off]="true" [(model)]="rule.negate"></text-toggle>
-                        </div>
-                        <input type="text" class="form-control" [(ngModel)]="rule.pattern" (modelChanged)="testRegex()" />
-                    </fieldset>
-                    <fieldset>
-                        <label>Test Value</label>
-                        <input placeholder="default.aspx?c=hiking&p=boots" type="text" class="form-control" [(ngModel)]="_testUrl" (modelChanged)="testRegex()" />
-                    </fieldset>
-                    <fieldset>
-                        <label>Substitution Value</label>
-                        <input type="text" class="form-control" [(ngModel)]="rule.rewrite_value" (modelChanged)="testRegex()" />
-                    </fieldset>
-                    <fieldset *ngIf="_result">
-                        <span>{{_result}}</span>
-                    </fieldset>
-                    <fieldset>
-                        <label>Ignore Case</label>
-                        <switch [(model)]="rule.ignore_case" (modelChanged)="testRegex()">{{rule.ignore_case ? "Yes": "No"}}</switch>
-                    </fieldset>
-                </div>
-                <div class="col-xs-12 col-lg-6" *ngIf="_matches.length > 0">
-                    <label class="field">Captures</label>
-                    <div class="table-scroll">
-                        <table>
-                            <tr *ngFor="let match of _matches; let i = index;" (dblclick)="addMatch(i)" (click)="select(i)" class="hover-editing" [class.background-selected]="_selected == i">
-                                <td class="back-ref border-color">{{'{'}}R:{{i}}{{'}'}}</td>
-                                <td class="border-color">{{match}}</td>
-                            </tr>
-                        </table>
+        <div class="row" *ngIf="rule">
+            <div class="col-xs-12 col-lg-6">
+                <fieldset>
+                    <label>Name</label>
+                    <input type="text" class="form-control" [(ngModel)]="rule.name" />
+                </fieldset>
+                <fieldset>
+                    <div>
+                        <label class="inline-block">Pattern</label>
+                        <text-toggle onText="Matches" offText="Doesn't Match" [on]="false" [off]="true" [(model)]="rule.negate" (modelChanged)="testRegex()"></text-toggle>
+                        <text-toggle onText="Case Insensitive" offText="Case Sensitive" [(model)]="rule.ignore_case" (modelChanged)="testRegex()"></text-toggle>
                     </div>
-                    <button class="right" [attr.disabled]="_selected == -1 || null" (click)="addMatch(_selected)">Add</button>
-                </div>
+                    <input type="text" class="form-control" [(ngModel)]="rule.pattern" (modelChanged)="testRegex()" />
+                </fieldset>
+                <fieldset>
+                    <label>Test Value</label>
+                    <input placeholder="default.aspx?c=hiking&p=boots" type="text" class="form-control" [(ngModel)]="_testUrl" (modelChanged)="testRegex()" />
+                </fieldset>
+                <fieldset>
+                    <label>Substitution Value</label>
+                    <button class="right input" (click)="macros.toggle()" [class.background-active]="(macros && macros.opened) || false">Macros</button>
+                    <div class="fill">
+                        <input type="text" class="form-control" [(ngModel)]="rule.rewrite_value" (modelChanged)="testRegex()" />
+                    </div>
+                    <selector class="stretch" #macros>
+                        <div class="table-scroll">
+                            <table>
+                                <tr *ngFor="let match of _matches; let i = index;" (dblclick)="addMatch(i)" (click)="select(i)" class="hover-editing" [class.background-selected]="_selected == i">
+                                    <td class="back-ref border-color">{{ '{R:' + i + '}' }}</td>
+                                    <td class="border-color">{{match}}</td>
+                                </tr>
+                                <tr *ngFor="let variable of _serverVariables; let i = index;" (dblclick)="addVariable(i)" (click)="select(i + _matches.length)" class="hover-editing" [class.background-selected]="_selected == (i + _matches.length)">
+                                    <td class="back-ref border-color">{{ '{' + variable + '}' }}</td>
+                                    <td class="border-color"></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <p class="pull-right">
+                            <button [attr.disabled]="_selected == -1 || null" (click)="addSelected()">Insert</button>
+                        </p>
+                    </selector>
+                </fieldset>
             </div>
         </div>
     `,
@@ -59,18 +59,24 @@ import { OutboundRule } from '../url-rewrite';
             max-height: 295px;
             overflow-y: auto;
         }
+
+        p {
+            margin: 10px;
+        }
     
         td {
             border-style: solid;
             border-width: 1px;
             padding: 5px;
+            border-top: none;
         }
 
         .back-ref {
             width: 200px;
         }
 
-        .inline-block {
+        .inline-block,
+        text-toggle {
             margin-right: 20px;
         }
     `]
@@ -82,6 +88,8 @@ export class OutboundRuleSettingsComponent {
     private _testUrl: string = "";
     private _matches: Array<any> = [];
     private _selected: number = -1;
+
+    private _serverVariables: Array<string> = IIS_SERVER_VARIABLES;
 
     private testRegex(): void {
         this.reset();
@@ -102,6 +110,10 @@ export class OutboundRuleSettingsComponent {
         }
 
         this._matches = regex.exec(this._testUrl) || [];
+
+        if (!this.isMatchingRule) {
+            return;
+        }
 
         let result = this.rule.rewrite_value || "";
 
@@ -126,7 +138,30 @@ export class OutboundRuleSettingsComponent {
         this.testRegex();
     }
 
+    private addVariable(i: number): void {
+        if (!this.rule.rewrite_value) {
+            this.rule.rewrite_value = "";
+        }
+
+        this.rule.rewrite_value += '{' + this._serverVariables[i] + '}';
+        this.testRegex();
+    }
+
+    private addSelected() {
+        if (this._selected < this._matches.length) {
+            this.addMatch(this._selected);
+        }
+        else {
+            this.addVariable(this._selected - this._matches.length);
+        }
+    }
+
     private select(i: number) {
         this._selected = i;
+    }
+
+    private get isMatchingRule(): boolean {
+        return (this._matches.length > 0 && !this.rule.negate) ||
+            (this._matches.length == 0 && this.rule.negate);
     }
 }

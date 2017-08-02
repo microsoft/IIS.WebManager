@@ -26,8 +26,8 @@ import { ProvidersSection, Provider, ProviderSetting } from '../url-rewrite';
             <div>
                 <div class="container-fluid">
                     <div class="row hidden-xs border-active grid-list-header">
-                        <label class="col-sm-3">Type</label>
-                        <label class="col-sm-3">Type</label>
+                        <label class="col-xs-8 col-sm-5">Name</label>
+                        <label class="col-sm-5">Type</label>
                     </div>
                 </div>
 

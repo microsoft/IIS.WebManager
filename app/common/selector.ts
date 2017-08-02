@@ -7,7 +7,7 @@ import { WindowService } from '../main/window.service';
 @Component({
     selector: 'selector',
     template: `
-        <div [hidden]="!opened || false" class="wrapper border-active background-normal shadow" [class.align-right]="right" [class.container-fluid] = '_fluid'>
+        <div [hidden]="!opened || false" class="wrapper border-active background-normal shadow" [class.align-right]="right" [class.container-fluid]='_fluid' [class.stretch]='_stretch'>
             <ng-content></ng-content>
         </div>
     `,
@@ -21,9 +21,13 @@ import { WindowService } from '../main/window.service';
         }
 
         .wrapper.container-fluid {
+            padding-top: 20px;
+        }
+
+        .wrapper.stretch,
+        .wrapper.container-fluid {
             left:15px;
             right:15px;
-            padding-top: 20px;
         }
 
         .align-right {
@@ -63,6 +67,7 @@ export class Selector implements OnInit, AfterViewInit, OnDestroy {
     private _menuButtonDestructors: Array<Function> = [];
     private static _selectorId: number = 0;
     private _fluid: boolean;
+    private _stretch: boolean;
     private _pending: boolean;
     private _id: number;
 
@@ -70,6 +75,7 @@ export class Selector implements OnInit, AfterViewInit, OnDestroy {
         private _windowService: WindowService,
         private _renderer: Renderer) {
         this._fluid = this._elem.nativeElement.classList.contains('container-fluid');
+        this._stretch = this._elem.nativeElement.classList.contains('stretch');
         this._id = Selector.getId();
 
         this._subscriptions.push(this.show.subscribe(e => {

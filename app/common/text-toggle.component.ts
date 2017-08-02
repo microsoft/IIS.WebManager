@@ -9,7 +9,6 @@ import { FormsModule } from '@angular/forms';
 	        position: relative;
 	        display: inline-block;
 	        vertical-align: top;
-	        min-width: 94px;
 	        height: 34px;
 	        cursor: pointer;
             font-weight: normal;

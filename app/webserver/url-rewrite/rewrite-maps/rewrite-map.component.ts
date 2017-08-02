@@ -11,10 +11,10 @@ import { RewriteMap } from '../url-rewrite';
     selector: 'rewrite-map',
     template: `
         <div *ngIf="map" class="grid-item row" [class.background-selected]="_editing" (dblclick)="edit()">
-            <div class="col-xs-4 valign">
+            <div class="col-xs-8 col-sm-6 valign">
                 {{map.name}}
             </div>
-            <div class="col-xs-4 valign">
+            <div class="hidden-xs col-sm-2 valign">
                 {{map.mappings.length}}
             </div>
             <div class="actions">

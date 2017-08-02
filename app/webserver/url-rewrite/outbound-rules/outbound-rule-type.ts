@@ -7,8 +7,8 @@ import { OutboundRule, OutboundMatchType, OutboundTags, IIS_SERVER_VARIABLES } f
     template: `
         <div *ngIf="rule">
             <fieldset>
-                <label>Perform Rewrite</label>
-                <switch [(model)]="rule.rewrite">{{rule.rewrite ? "Yes": "No"}}</switch>
+                <label>Active</label>
+                <switch [(model)]="rule.enabled">{{rule.enabled ? "Yes": "No"}}</switch>
             </fieldset>
 
             <fieldset>

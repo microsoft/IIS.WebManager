@@ -11,10 +11,10 @@ import { Provider } from '../url-rewrite';
     selector: 'provider',
     template: `
         <div *ngIf="provider" class="grid-item row" [class.background-selected]="_editing" (dblclick)="edit()">
-            <div class="col-sm-3 valign">
+            <div class="col-xs-8 col-sm-5 valign">
                 {{provider.name}}
             </div>
-            <div class="col-sm-3 valign">
+            <div class="hidden-xs col-sm-5 valign">
                 {{provider.type}}
             </div>
             <div class="actions">

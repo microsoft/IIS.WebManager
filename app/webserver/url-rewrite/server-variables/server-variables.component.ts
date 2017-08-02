@@ -15,10 +15,11 @@ import { AllowedServerVariablesSection } from '../url-rewrite';
                 [scope]="_settings.scope"
                 (revert)="onRevert()" 
                 (modelChanged)="onModelChanged()"></override-mode>
-
-                <fieldset [disabled]="_settings.metadata.is_locked || null" class="clear col-xs-12 col-sm-10 col-md-8 col-lg-6">
-                    <string-list useAddButton="true" #fileExtensions="stringList" [(model)]="_settings.entries" (modelChanged)="onModelChanged()"></string-list>
-                </fieldset>
+                <div class="row">
+                    <fieldset [disabled]="_settings.metadata.is_locked || null" class="clear col-xs-12 col-sm-10 col-md-8 col-lg-6">
+                        <string-list useAddButton="true" #fileExtensions="stringList" [(model)]="_settings.entries" (modelChanged)="onModelChanged()"></string-list>
+                    </fieldset>
+                </div>
         </div>
     `
 })

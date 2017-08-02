@@ -26,8 +26,8 @@ import { RewriteMapsSection, RewriteMap, RewriteMapping } from '../url-rewrite';
             <div>
                 <div class="container-fluid">
                     <div class="row hidden-xs border-active grid-list-header">
-                        <label class="col-xs-4">Name</label>
-                        <label class="col-xs-4">Count</label>
+                        <label class="col-xs-6">Name</label>
+                        <label class="col-xs-2">Count</label>
                     </div>
                 </div>
 
