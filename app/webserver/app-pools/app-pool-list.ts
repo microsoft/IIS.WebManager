@@ -67,7 +67,6 @@ import { ApplicationPool, ProcessModelIdentityType } from './app-pool';
         }
 
         [class*="col-"] {
-            padding-left: 0;
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
@@ -214,10 +213,6 @@ export class AppPoolItem {
         </div>
     `,
     styles: [`
-        [class*="col-"] {
-            padding-left: 0;
-        }
-
         .container-fluid,
         .row {
             margin: 0;

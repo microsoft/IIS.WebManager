@@ -92,10 +92,6 @@ import { NotificationService } from '../../notification/notification.service';
             margin: 0;
         }
 
-        [class*="col-"] {
-            padding-left: 0;
-        }
-
         .actions {
             padding-top: 4px;
         }
@@ -214,10 +210,6 @@ export class WebSiteItem {
         </div>
     `,
     styles: [`
-        .grid-list-header [class*="col-"] {
-            padding-left: 0;
-        }
-
         .container-fluid,
         .row {
             margin: 0;

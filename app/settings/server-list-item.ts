@@ -219,6 +219,11 @@ export class ServerListItem implements OnInit, OnDestroy {
 
     private setUrl(url: string) {
         this.model.url = "";
+
+        if (this.model.displayName == 'Local IIS') {
+            this.model.displayName = url;
+        }
+
         setTimeout(_ => {
             this.model.url = url;
         });
