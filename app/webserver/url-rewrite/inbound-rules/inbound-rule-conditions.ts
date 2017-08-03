@@ -20,7 +20,7 @@ import { InboundRule, Condition, MatchType, IIS_SERVER_VARIABLES } from '../url-
                 </switch>
             </fieldset>
 
-            <button (click)="add()" class="create"><span>Add</span></button>
+            <button (click)="add()" class="create"><span>Add Condition</span></button>
             <div class="container-fluid">
                 <div class="row hidden-xs border-active grid-list-header">
                     <label class="col-sm-3 col-lg-2">Server Variable</label>
@@ -56,7 +56,7 @@ export class InboundRuleConditionsComponent {
         con.match_type = MatchType.Pattern;
         con.negate = false;
         con.input = "";
-        con.pattern = ""
+        con.pattern = "(.*)"
         this._newCondition = con;
     }
 
@@ -141,7 +141,7 @@ export class InboundRuleConditionComponent {
             </div>
             <fieldset class="name">
                 <label>Server Variable</label>
-                <input type="text" class="form-control" list="server-vars" [(ngModel)]="condition.input" />
+                <input type="text" required class="form-control" list="server-vars" [(ngModel)]="condition.input" />
                 <datalist id="server-vars">
                     <option *ngFor="let variable of _serverVariables" value="{{'{' + variable + '}'}}">
                 </datalist>
@@ -150,12 +150,9 @@ export class InboundRuleConditionComponent {
                 <div>
                     <label class="inline-block">Pattern</label>
                     <text-toggle onText="Matches" offText="Doesn't Match" [on]="false" [off]="true" [(model)]="condition.negate"></text-toggle>
+                    <text-toggle onText="Case Insensitive" offText="Case Sensitive" [(model)]="condition.ignore_case"></text-toggle>
                 </div>
-                <input type="text" class="form-control" [(ngModel)]="condition.pattern" />
-            </fieldset>
-            <fieldset>
-                <label>Ignore Case</label>
-                <checkbox2 [(model)]="condition.ignore_case">Ignore Case</checkbox2>
+                <input type="text" required class="form-control" [(ngModel)]="condition.pattern" />
             </fieldset>
         </div>
     `,
@@ -165,7 +162,8 @@ export class InboundRuleConditionComponent {
             padding-right: 15px;
         }
 
-        .inline-block {
+        .inline-block,
+        text-toggle {
             margin-right: 20px;
         }
     `]

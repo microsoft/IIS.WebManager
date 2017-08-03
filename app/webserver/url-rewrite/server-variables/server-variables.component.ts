@@ -2,7 +2,7 @@
 
 import { Subscription } from 'rxjs/Subscription';
 
-import { UrlRewriteService } from '../url-rewrite.service';
+import { UrlRewriteService } from '../service/url-rewrite.service';
 import { AllowedServerVariablesSection } from '../url-rewrite';
 
 @Component({

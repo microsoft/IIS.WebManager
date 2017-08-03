@@ -3,7 +3,7 @@
 import { Subscription } from 'rxjs/Subscription';
 
 import { Selector } from '../../../common/selector';
-import { UrlRewriteService } from '../url-rewrite.service';
+import { UrlRewriteService } from '../service/url-rewrite.service';
 import { ProvidersSection, Provider, ProviderSetting } from '../url-rewrite';
 
 @Component({

@@ -39,7 +39,7 @@ import { OutboundRule, OutboundMatchType, OutboundTags, IIS_SERVER_VARIABLES } f
 
             <fieldset *ngIf="rule.match_type == 'server_variable'">
                 <label>Server Variable</label>
-                <input type="text" class="form-control name" list="server-vars" [(ngModel)]="rule.server_variable" />
+                <input type="text" required class="form-control name" list="server-vars" [(ngModel)]="rule.server_variable" />
                 <datalist id="server-vars">
                     <option *ngFor="let variable of _serverVariables" value="{{variable}}">
                 </datalist>

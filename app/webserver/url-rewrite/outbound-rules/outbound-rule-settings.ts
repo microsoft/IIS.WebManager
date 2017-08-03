@@ -9,7 +9,7 @@ import { OutboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
             <div class="col-xs-12 col-lg-6">
                 <fieldset>
                     <label>Name</label>
-                    <input type="text" class="form-control" [(ngModel)]="rule.name" />
+                    <input type="text" required class="form-control" [(ngModel)]="rule.name" />
                 </fieldset>
                 <fieldset>
                     <div>
@@ -17,7 +17,7 @@ import { OutboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
                         <text-toggle onText="Matches" offText="Doesn't Match" [on]="false" [off]="true" [(model)]="rule.negate" (modelChanged)="testRegex()"></text-toggle>
                         <text-toggle onText="Case Insensitive" offText="Case Sensitive" [(model)]="rule.ignore_case" (modelChanged)="testRegex()"></text-toggle>
                     </div>
-                    <input type="text" class="form-control" [(ngModel)]="rule.pattern" (modelChanged)="testRegex()" />
+                    <input type="text" required class="form-control" [(ngModel)]="rule.pattern" (modelChanged)="testRegex()" />
                 </fieldset>
                 <fieldset>
                     <label>Test Value</label>
@@ -27,7 +27,7 @@ import { OutboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
                     <label>Substitution Value</label>
                     <button class="right input" (click)="macros.toggle()" [class.background-active]="(macros && macros.opened) || false">Macros</button>
                     <div class="fill">
-                        <input type="text" class="form-control" [(ngModel)]="rule.rewrite_value" (modelChanged)="testRegex()" />
+                        <input type="text" required [title]="_result" class="form-control" [(ngModel)]="rule.rewrite_value" (modelChanged)="testRegex()" />
                     </div>
                     <selector class="stretch" #macros>
                         <div class="table-scroll">
@@ -111,8 +111,8 @@ export class OutboundRuleSettingsComponent {
 
         this._matches = regex.exec(this._testUrl) || [];
 
-        if (!this.isMatchingRule) {
-            return;
+        if (this.rule.negate) {
+            this._matches.splice(0, this._matches.length);
         }
 
         let result = this.rule.rewrite_value || "";
@@ -158,10 +158,5 @@ export class OutboundRuleSettingsComponent {
 
     private select(i: number) {
         this._selected = i;
-    }
-
-    private get isMatchingRule(): boolean {
-        return (this._matches.length > 0 && !this.rule.negate) ||
-            (this._matches.length == 0 && this.rule.negate);
     }
 }

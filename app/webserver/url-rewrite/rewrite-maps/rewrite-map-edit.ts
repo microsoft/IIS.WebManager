@@ -1,6 +1,6 @@
 ﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { UrlRewriteService } from '../url-rewrite.service';
+import { UrlRewriteService } from '../service/url-rewrite.service';
 import { RewriteMap, RewriteMapping } from '../url-rewrite';
 
 @Component({
@@ -9,7 +9,7 @@ import { RewriteMap, RewriteMapping } from '../url-rewrite';
         <div *ngIf="map">
             <fieldset>
                 <label>Name</label>
-                <input type="text" class="form-control name" [(ngModel)]="map.name" />
+                <input type="text" required class="form-control name" [(ngModel)]="map.name" />
             </fieldset>
             <fieldset>
                 <label>Default Value</label>
@@ -19,8 +19,8 @@ import { RewriteMap, RewriteMapping } from '../url-rewrite';
                 <label>Ignore Case</label>
                 <switch [(model)]="map.ignore_case">{{map.ignore_case ? "Yes" : "No"}}</switch>
             </fieldset>
-
-            <button (click)="add()" class="create"><span>Add</span></button>
+            
+            <button (click)="add()" class="create"><span>Add Mapping</span></button>
             <div class="container-fluid">
                 <div class="row hidden-xs border-active grid-list-header">
                     <label class="col-xs-6 col-sm-4">Name</label>

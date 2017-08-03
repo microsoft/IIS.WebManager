@@ -1,6 +1,6 @@
 ﻿import { Component, Input, Output, EventEmitter, OnChanges, SimpleChange } from '@angular/core';
 
-import { UrlRewriteService } from '../url-rewrite.service';
+import { UrlRewriteService } from '../service/url-rewrite.service';
 import { RewriteMap, RewriteMapping } from '../url-rewrite';
 
 @Component({
@@ -77,11 +77,11 @@ export class MappingComponent implements OnChanges {
             </div>
             <fieldset>
                 <label>Name</label>
-                <input type="text" class="form-control name" [(ngModel)]="mapping.name" />
+                <input type="text" required class="form-control name" [(ngModel)]="mapping.name" />
             </fieldset>
             <fieldset>
                 <label>Value</label>
-                <input type="text" class="form-control name" [(ngModel)]="mapping.value" />
+                <input type="text" required class="form-control name" [(ngModel)]="mapping.value" />
             </fieldset>
         </div>
     `,

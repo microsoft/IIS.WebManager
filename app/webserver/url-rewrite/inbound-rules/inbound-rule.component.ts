@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { NotificationService } from '../../../notification/notification.service';
 import { Selector } from '../../../common/selector';
-import { UrlRewriteService } from '../url-rewrite.service';
+import { UrlRewriteService } from '../service/url-rewrite.service';
 import { InboundRule, ActionTypeHelper } from '../url-rewrite';
 
 @Component({
@@ -12,7 +12,7 @@ import { InboundRule, ActionTypeHelper } from '../url-rewrite';
     template: `
         <div *ngIf="rule" class="grid-item row" [class.background-selected]="_editing" (dblclick)="edit()">
             <div class="col-xs-8 col-sm-3 valign">
-                {{rule.name}}
+                <span class="pointer" (click)="edit()">{{rule.name}}</span>
             </div>
             <div class="visible-lg col-lg-2 valign">
                 {{toFriendlyActionType(rule.action.type)}}

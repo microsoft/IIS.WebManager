@@ -2,7 +2,7 @@
 
 import { Status } from '../../common/status';
 import { NotificationService } from '../../notification/notification.service';
-import { UrlRewriteService } from './url-rewrite.service';
+import { UrlRewriteService } from './service/url-rewrite.service';
 
 @Component({
     template: `

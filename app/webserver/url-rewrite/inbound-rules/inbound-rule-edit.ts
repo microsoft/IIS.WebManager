@@ -1,6 +1,6 @@
 ﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { UrlRewriteService } from '../url-rewrite.service';
+import { UrlRewriteService } from '../service/url-rewrite.service';
 import { InboundRule, Condition, ActionType, MatchType, ConditionMatchConstraints, ServerVariableAssignment } from '../url-rewrite';
 
 @Component({
@@ -39,11 +39,9 @@ export class InboundRuleEditComponent {
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
     @Output() save: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private _svc: UrlRewriteService) {
-    }
-
     private isValid(): boolean {
-        return !!this.rule.name && !!this.rule.pattern;
+        return !!this.rule.name && !!this.rule.pattern &&
+            (this.rule.action.type != ActionType.CustomResponse || (<any>this.rule.action.status_code !== "" && <any>this.rule.action.sub_status_code !== ""));
     }
 
     private onDiscard() {

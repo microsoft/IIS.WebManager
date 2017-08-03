@@ -1,6 +1,6 @@
 ﻿import { Component, Input, Output, EventEmitter, OnChanges, SimpleChange } from '@angular/core';
 
-import { UrlRewriteService } from '../url-rewrite.service';
+import { UrlRewriteService } from '../service/url-rewrite.service';
 import { ProviderSetting } from '../url-rewrite';
 
 @Component({
@@ -77,11 +77,11 @@ export class SettingComponent implements OnChanges {
             </div>
             <fieldset>
                 <label>Name</label>
-                <input type="text" class="form-control name" [(ngModel)]="setting.name" />
+                <input type="text" required class="form-control name" [(ngModel)]="setting.name" />
             </fieldset>
             <fieldset>
                 <label>Value</label>
-                <input type="text" class="form-control name" [(ngModel)]="setting.value" />
+                <input type="text" required class="form-control name" [(ngModel)]="setting.value" />
             </fieldset>
         </div>
     `,

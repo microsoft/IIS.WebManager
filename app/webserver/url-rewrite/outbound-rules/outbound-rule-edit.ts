@@ -1,6 +1,6 @@
 ﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { UrlRewriteService } from '../url-rewrite.service';
+import { UrlRewriteService } from '../service/url-rewrite.service';
 import { OutboundRule, OutboundMatchType } from '../url-rewrite';
 
 @Component({
@@ -42,7 +42,7 @@ export class OutboundRuleEditComponent {
     private isValid(): boolean {
         return !!this.rule.name &&
             !!this.rule.pattern &&
-            (this.rule.match_type != OutboundMatchType.ServerVariable || !!this.rule.server_variable)
+            (this.rule.match_type != OutboundMatchType.ServerVariable || !!this.rule.server_variable);
     }
 
     private onDiscard() {

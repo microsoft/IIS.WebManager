@@ -1,6 +1,6 @@
 ﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
 
-import { UrlRewriteService } from '../url-rewrite.service';
+import { UrlRewriteService } from '../service/url-rewrite.service';
 import { Provider, ProviderSetting } from '../url-rewrite';
 
 @Component({
@@ -9,14 +9,14 @@ import { Provider, ProviderSetting } from '../url-rewrite';
         <div *ngIf="provider">
             <fieldset>
                 <label>Name</label>
-                <input type="text" class="form-control name" [(ngModel)]="provider.name" />
+                <input type="text" required class="form-control name" [(ngModel)]="provider.name" />
             </fieldset>
             <fieldset>
                 <label>Type</label>
-                <input type="text" class="form-control name" [(ngModel)]="provider.type" />
+                <input type="text" required class="form-control name" [(ngModel)]="provider.type" />
             </fieldset>
 
-            <button (click)="add()" class="create"><span>Add</span></button>
+            <button (click)="add()" class="create"><span>Add Setting</span></button>
             <div class="container-fluid">
                 <div class="row hidden-xs border-active grid-list-header">
                     <label class="col-xs-6 col-sm-4">Name</label>

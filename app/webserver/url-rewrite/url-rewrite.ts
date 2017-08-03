@@ -16,6 +16,16 @@ export class AllowedServerVariablesSection {
     public _links: any;
 }
 
+export class GlobalSection {
+    public id: string;
+    public scope: string;
+    // Added in 2.1
+    public use_original_url_encoding: boolean;
+    public metadata: Metadata;
+    public url_rewrite: UrlRewrite;
+    public _links: any;
+}
+
 export class InboundSection {
     public id: string;
     public scope: string;
@@ -306,7 +316,6 @@ export const IIS_SERVER_VARIABLES = [
     "HTTP_ACCEPT_ENCODING",
     "HTTP_ACCEPT_LANGUAGE",
     "HTTP_CONNECTION",
-    "HTTP_COOKIE",
     "HTTP_COOKIE",
     "HTTP_HOST",
     "HTTP_METHOD",

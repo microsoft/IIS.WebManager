@@ -53,7 +53,7 @@ import { ProviderComponent } from './providers/provider.component';
 import { ProviderEditComponent } from './providers/provider-edit';
 import { SettingComponent, SettingEditComponent } from './providers/setting.component';
 
-import { UrlRewriteService } from './url-rewrite.service';
+import { UrlRewriteService } from './service/url-rewrite.service';
 
 @NgModule({
     imports: [

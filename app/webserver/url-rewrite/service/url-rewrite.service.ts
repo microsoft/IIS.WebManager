@@ -4,12 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { NotificationService } from '../../notification/notification.service';
-import { Status } from '../../common/status';
-import { ApiError, ApiErrorType } from '../../error/api-error';
-import { HttpClient } from '../../common/httpclient';
+import { NotificationService } from '../../../notification/notification.service';
+import { Status } from '../../../common/status';
+import { ApiError, ApiErrorType } from '../../../error/api-error';
+import { HttpClient } from '../../../common/httpclient';
 import {
     UrlRewrite,
+    GlobalSection,
     InboundSection,
     InboundRule,
     OutboundSection,
@@ -25,12 +26,14 @@ import {
     RewriteMap,
     Provider,
     ProvidersSection
-} from './url-rewrite';
+} from '../url-rewrite';
+
+import { GlobalService } from './global.service';
+import { InboundService } from './inbound.service';
 
 @Injectable()
 export class UrlRewriteService {
     public error: ApiError;
-    public inboundError: ApiError;
     public outboundError: ApiError;
     public rewriteMapsError: ApiError;
     public providersError: ApiError;
@@ -40,8 +43,6 @@ export class UrlRewriteService {
     private _webserverScope: boolean;
     private _status: Status = Status.Unknown;
     private _urlRewrite: BehaviorSubject<UrlRewrite> = new BehaviorSubject<UrlRewrite>(null);
-    private _inboundSettings: BehaviorSubject<InboundSection> = new BehaviorSubject<InboundSection>(null);
-    private _inboundRules: BehaviorSubject<Array<InboundRule>> = new BehaviorSubject<Array<InboundRule>>([]);
     private _outboundSettings: BehaviorSubject<OutboundSection> = new BehaviorSubject<OutboundSection>(null);
     private _outboundRules: BehaviorSubject<Array<OutboundRule>> = new BehaviorSubject<Array<OutboundRule>>([]);
     private _rewriteMapSettings: BehaviorSubject<RewriteMapsSection> = new BehaviorSubject<RewriteMapsSection>(null);
@@ -49,9 +50,22 @@ export class UrlRewriteService {
     private _providersSettings: BehaviorSubject<ProvidersSection> = new BehaviorSubject<ProvidersSection>(null);
     private _providers: BehaviorSubject<Array<Provider>> = new BehaviorSubject<Array<Provider>>([]);
     private _serverVariablesSettings: BehaviorSubject<AllowedServerVariablesSection> = new BehaviorSubject<AllowedServerVariablesSection>(null);
+    private _inboundService: InboundService;
+    private _globalService: GlobalService;
 
     constructor(private _http: HttpClient, private _notificationService: NotificationService, route: ActivatedRoute) {
         this._webserverScope = route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver';
+
+        this._inboundService = new InboundService(this._http, this._notificationService);
+        this._globalService = new GlobalService(this._http, this._notificationService);
+    }
+
+    public get inboundError(): ApiError {
+        return this.inboundService.error;
+    }
+
+    public get globalError(): ApiError {
+        return this.globalService.error;
     }
 
     public get status(): Status {
@@ -67,11 +81,15 @@ export class UrlRewriteService {
     }
 
     public get inboundSettings(): Observable<InboundSection> {
-        return this._inboundSettings.asObservable();
+        return this.webserverScope ?
+            this.globalService.settings :
+            this._inboundService.settings;
     }
 
     public get inboundRules(): Observable<Array<InboundRule>> {
-        return this._inboundRules.asObservable();
+        return this.webserverScope ?
+            this.globalService.rules :
+            this._inboundService.rules;
     }
 
     public get outboundSettings(): Observable<OutboundSection> {
@@ -100,6 +118,14 @@ export class UrlRewriteService {
 
     public get serverVariablesSettings(): Observable<AllowedServerVariablesSection> {
         return this._serverVariablesSettings.asObservable();
+    }
+
+    public get inboundService(): InboundService {
+        return this._inboundService;
+    }
+
+    public get globalService(): GlobalService {
+        return this._globalService;
     }
 
     public revert() {
@@ -138,7 +164,14 @@ export class UrlRewriteService {
 
             //
             // Inbound rules
-            this.loadInboundSettings().then(set => this.loadInboundRules());
+            if (!feature.scope) {
+                //
+                // Global rules exposed at webserver
+                this.globalService.initialize(feature);
+            }
+            else {
+                this.inboundService.initialize(feature);
+            }
 
             //
             // Outbound rules
@@ -179,150 +212,46 @@ export class UrlRewriteService {
 
     //
     // Inbound
-    private loadInboundSettings(): Promise<InboundSection> {
-
-        let feature = this._urlRewrite.getValue();
-        let inboundLink: string = feature._links.inbound.href;
-
-        return this._http.get(inboundLink.replace('/api', ''))
-            .then(settings => {
-                this._inboundSettings.next(settings);
-                return settings;
-            })
-            .catch(e => {
-                this.inboundError = e;
-                throw e;
-            });
-    }
-
-    private loadInboundRules(): Promise<Array<InboundRule>> {
-
-        let settings = this._inboundSettings.getValue();
-        let rulesLink: string = settings._links.rules.href;
-
-        return this._http.get(rulesLink.replace('/api', '') + "&fields=*")
-            .then(rulesObj => {
-                let rules = rulesObj.rules;
-
-                this._inboundRules.next(rules);
-                return rules;
-            });
-    }
-
     public saveInbound(settings: InboundSection): Promise<InboundSection> {
-        return this._http.patch(settings._links.self.href.replace('/api', ''), JSON.stringify(settings))
-            .then((s: InboundSection) => {
-                Object.assign(settings, s);
-                this.loadInboundRules();
-                return settings;
-            });
+        return this.webserverScope ?
+            this.globalService.saveSettings(settings) :
+            this.inboundService.saveSettings(settings);
     }
 
     public addInboundRule(rule: InboundRule): Promise<InboundRule> {
-
-        let settings = this._inboundSettings.getValue();
-        let rulesLink: string = settings._links.rules.href;
-        rule.url_rewrite = this._urlRewrite.getValue();
-
-        return this._http.post(rulesLink.replace('/api', ''), JSON.stringify(rule))
-            .then((newRule: InboundRule) => {
-                let rules = this._inboundRules.getValue();
-                rules.push(newRule);
-                this._inboundRules.next(rules);
-                return newRule;
-            })
-            .catch((e: ApiError) => {
-
-                //
-                // Caused by adding unallowed server variables
-                if (e.type == ApiErrorType.SectionLocked && e.name == "system.webServer/rewrite/allowedServerVariables") {
-                    this._notificationService.warn("The specified server variables could not be added");
-                }
-
-                throw e;
-            });
+        return this.webserverScope ?
+            this.globalService.addRule(rule) :
+            this.inboundService.addRule(rule);
     }
 
     public saveInboundRule(rule: InboundRule): Promise<InboundRule> {
-        return this._http.patch(rule._links.self.href.replace('/api', ''), JSON.stringify(rule))
-            .then((r: InboundRule) => {
-                Object.assign(rule, r);
-                return rule;
-            })
-            .catch((e: ApiError) => {
-
-                //
-                // Caused by adding unallowed server variables
-                if (e.type == ApiErrorType.SectionLocked && e.name == "system.webServer/rewrite/allowedServerVariables") {
-                    this._notificationService.warn("The specified server variables could not be added");
-                }
-
-                throw e;
-            });
+        return this.webserverScope ?
+            this.globalService.saveRule(rule) :
+            this.inboundService.saveRule(rule);
     }
 
     public deleteInboundRule(rule: InboundRule): void {
-        this._http.delete(rule._links.self.href.replace('/api', ''))
-            .then(() => {
-                let rules = this._inboundRules.getValue();
-                rules.forEach((r, i) => { if (i > rule.priority) r.priority--; });
-                rules = rules.filter(r => r != rule);
-                this._inboundRules.next(rules);
-            });
+        this.webserverScope ?
+            this.globalService.deleteRule(rule) :
+            this.inboundService.deleteRule(rule);
     }
 
     public copyInboundRule(rule: InboundRule): Promise<InboundRule> {
-        let copy: InboundRule = JSON.parse(JSON.stringify(rule));
-
-        let i = 2;
-        copy.name = rule.name + " - Copy";
-        copy.priority = null;
-        while (this._inboundRules.getValue().find(r => r.name.toLocaleLowerCase() == copy.name.toLocaleLowerCase()) != null) {
-            copy.name = rule.name + " - Copy (" + (i++) + ")";
-        }
-
-        return this.addInboundRule(copy);
+        return this.webserverScope ?
+            this.globalService.copyRule(rule) :
+            this.inboundService.copyRule(rule);
     }
 
     public moveInboundUp(rule: InboundRule) {
-        if (rule.priority == 0) {
-            return;
-        }
-
-        let oldPriority = rule.priority;
-        rule.priority = oldPriority - 1;
-
-        this.saveInboundRule(rule).then(r => {
-            let rules = this._inboundRules.getValue();
-
-            //
-            // Move the rule in the client view of rules list
-            rules.splice(oldPriority, 1);
-
-            //
-            // Update the index of the rule which got pushed down
-            rules[rule.priority].priority++;
-            rules.splice(rule.priority, 0, rule);
-            this._inboundRules.next(rules);
-        });
+        this.webserverScope ?
+            this.globalService.moveUp(rule) :
+            this.inboundService.moveUp(rule);
     }
 
     public moveInboundDown(rule: InboundRule) {
-        let oldPriority = rule.priority;
-
-        if (oldPriority + 1 == this._inboundRules.getValue().length) {
-            return;
-        }
-
-        rule.priority = oldPriority + 1;
-
-        this.saveInboundRule(rule).then(r => {
-            let rules = this._inboundRules.getValue();
-            rules.splice(oldPriority, 1);
-            rules[oldPriority].priority--;
-            rules.splice(rule.priority, 0, rule);
-            this._inboundRules.next(rules);
-        });
+        this.webserverScope ?
+            this.globalService.moveDown(rule) :
+            this.inboundService.moveDown(rule);
     }
 
     //
@@ -648,3 +577,4 @@ export class UrlRewriteService {
             });
     }
 }
+

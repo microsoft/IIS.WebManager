@@ -9,7 +9,7 @@ import { InboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
             <div class="col-xs-12 col-lg-6">
                 <fieldset>
                     <label>Name</label>
-                    <input type="text" class="form-control" [(ngModel)]="rule.name" />
+                    <input type="text" class="form-control" required [(ngModel)]="rule.name" />
                 </fieldset>
                 <fieldset>
                     <div>
@@ -17,7 +17,7 @@ import { InboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
                         <text-toggle onText="Match" offText="No Match" [on]="false" [off]="true" [(model)]="rule.negate" (modelChanged)="testRegex()"></text-toggle>
                         <text-toggle onText="Case Insensitive" offText="Case Sensitive" [(model)]="rule.ignore_case" (modelChanged)="testRegex()"></text-toggle>
                     </div>
-                    <input type="text" class="form-control" [(ngModel)]="rule.pattern" (modelChanged)="testRegex()" />
+                    <input type="text" class="form-control" required [(ngModel)]="rule.pattern" (modelChanged)="testRegex()" />
                 </fieldset>
                 <fieldset>
                     <label class="inline-block">Test Url</label>
@@ -27,7 +27,7 @@ import { InboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
                     <label>Substitution Url</label>
                     <button class="right input" (click)="macros.toggle()" [class.background-active]="(macros && macros.opened) || false">Macros</button>
                     <div class="fill">
-                        <input type="text" class="form-control" [(ngModel)]="rule.action.url" (modelChanged)="testRegex()" />
+                        <input type="text" required [title]="_result" class="form-control" [(ngModel)]="rule.action.url" (modelChanged)="testRegex()" />
                     </div>
                     <selector class="stretch" #macros>
                         <div class="table-scroll">
@@ -47,24 +47,6 @@ import { InboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
                         </p>
                     </selector>
                 </fieldset>
-                <div *ngIf="rule.action.type == 'custom_response'">
-                    <fieldset>
-                        <label>Status Code</label>
-                        <input type="text" class="form-control" [(ngModel)]="rule.action.status_code" />
-                    </fieldset>
-                    <fieldset>
-                        <label>Substatus Code</label>
-                        <input type="text" class="form-control" [(ngModel)]="rule.action.sub_status_code" />
-                    </fieldset>
-                    <fieldset>
-                        <label>Reason</label>
-                        <input type="text" class="form-control" [(ngModel)]="rule.action.reason" />
-                    </fieldset>
-                    <fieldset>
-                        <label>Error Description</label>
-                        <input type="text" class="form-control" [(ngModel)]="rule.action.description" />
-                    </fieldset>
-                </div>
             </div>
         </div>
     `,
@@ -129,8 +111,8 @@ export class InboundRuleSettingsComponent {
 
         this._matches = regex.exec(this._testUrl) || [];
 
-        if (!this.isMatchingRule) {
-            return;
+        if (this.rule.negate) {
+            this._matches.splice(0, this._matches.length);
         }
 
         let result = this.rule.action.url || "";

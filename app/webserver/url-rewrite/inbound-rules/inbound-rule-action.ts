@@ -42,6 +42,33 @@ import { InboundRule, ActionType, RedirectType } from '../url-rewrite';
                     {{rule.stop_processing ? "On" : "Off"}}
                 </switch>
             </fieldset>
+            <fieldset *ngIf="rule.response_cache_directive !== undefined">
+                <label>Cache Directive</label>
+                <enum [(model)]="rule.response_cache_directive">
+                    <field name="Auto" value="auto"></field>
+                    <field name="Always" value="always"></field>
+                    <field name="Never" value="never"></field>
+                    <field name="Not On Match" value="not_if_rule_matched"></field>
+                </enum>
+            </fieldset>
+            <div *ngIf="rule.action.type == 'custom_response'">
+                <fieldset>
+                    <label>Status Code</label>
+                    <input type="text" required class="form-control" [(ngModel)]="rule.action.status_code" />
+                </fieldset>
+                <fieldset>
+                    <label>Substatus Code</label>
+                    <input type="text" required class="form-control" [(ngModel)]="rule.action.sub_status_code" />
+                </fieldset>
+                <fieldset>
+                    <label>Reason</label>
+                    <input type="text" class="form-control" [(ngModel)]="rule.action.reason" />
+                </fieldset>
+                <fieldset>
+                    <label>Error Description</label>
+                    <input type="text" class="form-control" [(ngModel)]="rule.action.description" />
+                </fieldset>
+            </div>
         </div>
     `
 })
@@ -51,6 +78,22 @@ export class InboundRuleActionComponent {
     private onActionType() {
         if (this.rule.action.type == ActionType.Redirect && !this.rule.action.redirect_type) {
             this.rule.action.redirect_type = RedirectType.Permanent;
+        }
+        else if (this.rule.action.type == ActionType.CustomResponse) {
+            //
+            // Setup custom response action type
+            if (!this.rule.action.status_code) {
+                this.rule.action.status_code = 403;
+            }
+            if (!this.rule.action.sub_status_code) {
+                this.rule.action.sub_status_code = 0;
+            }
+            if (!this.rule.action.reason) {
+                this.rule.action.reason = "Forbidden: Access is denied.";
+            }
+            if (!this.rule.action.description) {
+                this.rule.action.description = "You do not have permission to view this directory or page using the credentials that you supplied";
+            }
         }
     }
 }

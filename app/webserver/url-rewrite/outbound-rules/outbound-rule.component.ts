@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { NotificationService } from '../../../notification/notification.service';
 import { Selector } from '../../../common/selector';
-import { UrlRewriteService } from '../url-rewrite.service';
+import { UrlRewriteService } from '../service/url-rewrite.service';
 import { OutboundRule, OutboundMatchTypeHelper } from '../url-rewrite';
 
 @Component({
@@ -12,7 +12,7 @@ import { OutboundRule, OutboundMatchTypeHelper } from '../url-rewrite';
     template: `
         <div *ngIf="rule" class="grid-item row" [class.background-selected]="_editing" (dblclick)="edit()">
             <div class="col-xs-8 col-sm-3 valign">
-                {{rule.name}}
+                <span class="pointer" (click)="edit()">{{rule.name}}</span>
             </div>
             <div class="visible-lg col-lg-2 valign">
                 {{toFriendlyMatchType(rule.match_type)}}
@@ -31,7 +31,7 @@ import { OutboundRule, OutboundMatchTypeHelper } from '../url-rewrite';
                     <selector #selector [right]="true">
                         <ul>
                             <li><button #menuButton class="edit" title="Edit" (click)="edit()">Edit</button></li>
-                            <li><button #menuButton class="copy" title="Copy" (click)="_service.copyOutboundRule(rule)">Copy</button></li>
+                            <li><button #menuButton class="copy" title="Copy" (click)="_service.copyOutboundRule(rule)">Clone</button></li>
                             <li><button #menuButton class="up" title="Up" (click)="_service.moveOutboundUp(rule)">Move Up</button></li>
                             <li><button #menuButton class="down" title="Down" (click)="_service.moveOutboundDown(rule)">Move Down</button></li>
                             <li><button #menuButton class="delete" title="Delete" (click)="delete()">Delete</button></li>

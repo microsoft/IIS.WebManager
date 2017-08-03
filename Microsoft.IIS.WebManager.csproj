@@ -313,9 +313,11 @@
     <TypeScriptCompile Include="app\webserver\url-rewrite\rewrite-maps\rewrite-map.component.ts" />
     <TypeScriptCompile Include="app\webserver\url-rewrite\rewrite-maps\rewrite-maps.component.ts" />
     <TypeScriptCompile Include="app\webserver\url-rewrite\server-variables\server-variables.component.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\service\global.service.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\service\inbound.service.ts" />
     <TypeScriptCompile Include="app\webserver\url-rewrite\url-rewrite.component.ts" />
     <TypeScriptCompile Include="app\webserver\url-rewrite\url-rewrite.module.ts" />
-    <TypeScriptCompile Include="app\webserver\url-rewrite\url-rewrite.service.ts" />
+    <TypeScriptCompile Include="app\webserver\url-rewrite\service\url-rewrite.service.ts" />
     <TypeScriptCompile Include="app\webserver\url-rewrite\url-rewrite.ts" />
     <TypeScriptCompile Include="app\webserver\vdirs\vdir-list.component.ts" />
     <TypeScriptCompile Include="app\webserver\vdirs\vdir.ts" />

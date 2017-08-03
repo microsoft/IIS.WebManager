@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { NotificationService } from '../../../notification/notification.service';
 import { Selector } from '../../../common/selector';
-import { UrlRewriteService } from '../url-rewrite.service';
+import { UrlRewriteService } from '../service/url-rewrite.service';
 import { Provider } from '../url-rewrite';
 
 @Component({
@@ -12,7 +12,7 @@ import { Provider } from '../url-rewrite';
     template: `
         <div *ngIf="provider" class="grid-item row" [class.background-selected]="_editing" (dblclick)="edit()">
             <div class="col-xs-8 col-sm-5 valign">
-                {{provider.name}}
+                <span class="pointer" (click)="edit()">{{provider.name}}</span>
             </div>
             <div class="hidden-xs col-sm-5 valign">
                 {{provider.type}}
@@ -26,7 +26,7 @@ import { Provider } from '../url-rewrite';
                         <ul>
                             <li><button #menuButton class="edit" title="Edit" (click)="edit()">Edit</button></li>
                             <li><button #menuButton class="delete" title="Delete" (click)="delete()">Delete</button></li>
-                            <li><button #menuButton class="copy" title="Copy" (click)="copy()">Copy</button></li>
+                            <li><button #menuButton class="copy" title="Copy" (click)="copy()">Clone</button></li>
                         </ul>
                     </selector>
                 </div>

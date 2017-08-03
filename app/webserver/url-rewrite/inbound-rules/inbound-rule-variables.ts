@@ -6,7 +6,7 @@ import { InboundRule, ServerVariableAssignment, MatchType, IIS_SERVER_VARIABLES 
     selector: 'inbound-rule-variables',
     template: `
         <div *ngIf="rule">
-            <button (click)="add()" class="create"><span>Add</span></button>
+            <button (click)="add()" class="create"><span>Add Server Variable</span></button>
             <div class="container-fluid">
                 <div class="row hidden-xs border-active grid-list-header">
                     <label class="col-sm-3 col-lg-2">Name</label>
@@ -35,7 +35,7 @@ export class InboundRuleVariablesComponent {
         let variable = new ServerVariableAssignment();
         variable.name = "";
         variable.value = "";
-        variable.replace = false;
+        variable.replace = true;
         this._newServerVariable = variable;
     }
 
@@ -120,14 +120,14 @@ export class InboundRuleVariableComponent {
             </div>
             <fieldset class="name">
                 <label>Name</label>
-                <input type="text" class="form-control" list="server-vars" [(ngModel)]="variable.name" />
+                <input type="text" required class="form-control" list="server-vars" [(ngModel)]="variable.name" />
                 <datalist id="server-vars">
                     <option *ngFor="let variable of _serverVariables" value="{{variable}}">
                 </datalist>
             </fieldset>
             <fieldset class="name">
                 <label>Value</label>
-                <input type="text" class="form-control" [(ngModel)]="variable.value" />
+                <input type="text" required class="form-control" [(ngModel)]="variable.value" />
             </fieldset>
             <fieldset>
                 <label>Replace</label>
