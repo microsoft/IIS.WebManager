@@ -29,6 +29,13 @@ export class InboundService {
         return this._rules.asObservable();
     }
 
+    public revert(): void {
+        this._http.delete(this._settings.getValue()._links.self.href.replace("/api", ""))
+            .then(_ => {
+                this.loadSettings().then(set => this.loadRules());
+            });
+    }
+
     public initialize(urlRewrite: UrlRewrite) {
         this._urlRewrite = urlRewrite;
         this.loadSettings()

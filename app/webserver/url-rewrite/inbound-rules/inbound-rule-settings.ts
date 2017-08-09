@@ -14,6 +14,10 @@ import { InboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
                 <fieldset>
                     <div>
                         <label class="inline-block">Url Pattern</label>
+                        <tooltip>
+                            This pattern is compared to the URL of the incoming request to determine if the rule matches.
+                            <a href="https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/url-rewrite-module-configuration-reference" class="link"></a>
+                        </tooltip>
                         <text-toggle onText="Match" offText="No Match" [on]="false" [off]="true" [(model)]="rule.negate" (modelChanged)="testRegex()"></text-toggle>
                         <text-toggle onText="Case Insensitive" offText="Case Sensitive" [(model)]="rule.ignore_case" (modelChanged)="testRegex()"></text-toggle>
                     </div>
@@ -21,10 +25,20 @@ import { InboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
                 </fieldset>
                 <fieldset>
                     <label class="inline-block">Test Url</label>
-                    <input placeholder="default.aspx?c=hiking&p=boots" type="text" class="form-control" [(ngModel)]="_testUrl" (modelChanged)="testRegex()" />
+                    <tooltip>
+                        This field can be used to test the matching behavior of the Url Pattern.
+                    </tooltip>
+                    <span class="units" *ngIf="_testUrl && !_isMatching">(Doesn't Match)</span>
+                    <input type="text" class="form-control" [(ngModel)]="_testUrl" (modelChanged)="testRegex()" />
                 </fieldset>
                 <fieldset *ngIf="rule.action.type == 'rewrite' || rule.action.type == 'redirect'">
-                    <label>Substitution Url</label>
+                    <div>
+                        <label class="inline-block">Substitution Url</label>
+                        <tooltip>
+                            This is the substitution string to use when rewriting the request URL. The substitution URL can include back-references to conditions and the URL pattern as well as server variables.
+                            <a href="https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/url-rewrite-module-configuration-reference" class="link"></a>
+                        </tooltip>
+                    </div>
                     <button class="right input" (click)="macros.toggle()" [class.background-active]="(macros && macros.opened) || false">Macros</button>
                     <div class="fill">
                         <input type="text" required [title]="_result" class="form-control" [(ngModel)]="rule.action.url" (modelChanged)="testRegex()" />
@@ -75,8 +89,8 @@ import { InboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
             width: 200px;
         }
 
-        .inline-block,
-        text-toggle {
+        text-toggle,
+        tooltip {
             margin-right: 20px;
         }
     `]
@@ -88,6 +102,7 @@ export class InboundRuleSettingsComponent {
     private _testUrl: string = "";
     private _matches: Array<any> = [];
     private _selected: number = -1;
+    private _isMatching: boolean;
 
     private _serverVariables: Array<string> = IIS_SERVER_VARIABLES;
 
@@ -110,6 +125,9 @@ export class InboundRuleSettingsComponent {
         }
 
         this._matches = regex.exec(this._testUrl) || [];
+
+        this._isMatching = (this._matches.length > 0 && !this.rule.negate) ||
+            (this._matches.length == 0 && this.rule.negate);
 
         if (this.rule.negate) {
             this._matches.splice(0, this._matches.length);
@@ -158,10 +176,5 @@ export class InboundRuleSettingsComponent {
         else {
             this.addVariable(this._selected - this._matches.length);
         }
-    }
-
-    private get isMatchingRule(): boolean {
-        return (this._matches.length > 0 && !this.rule.negate) ||
-            (this._matches.length == 0 && this.rule.negate);
     }
 }

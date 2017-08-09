@@ -128,8 +128,38 @@ export class UrlRewriteService {
         return this._globalService;
     }
 
-    public revert() {
-        throw "Not implemented";
+    public revertInbound(): void {
+        this.webserverScope ?
+            this.globalService.revert() :
+            this._inboundService.revert();
+    }
+
+    public revertOutbound(): void {
+        this._http.delete(this._outboundSettings.getValue()._links.self.href.replace("/api", ""))
+            .then(_ => {
+                this.loadOutboundSettings().then(set => this.loadOutboundRules());
+            });
+    }
+
+    public revertServerVariables(): void {
+        this._http.delete(this._serverVariablesSettings.getValue()._links.self.href.replace("/api", ""))
+            .then(_ => {
+                this.loadServerVariableSettings();
+            });
+    }
+
+    public revertRewriteMaps(): void {
+        this._http.delete(this._rewriteMapSettings.getValue()._links.self.href.replace("/api", ""))
+            .then(_ => {
+                this.loadRewriteMapSection().then(set => this.loadRewriteMaps());
+            });
+    }
+
+    public revertProviders(): void {
+        this._http.delete(this._providersSettings.getValue()._links.self.href.replace("/api", ""))
+            .then(_ => {
+                this.loadProvidersSettings().then(set => this.loadProviders());
+            });
     }
 
     public install(): Promise<any> {

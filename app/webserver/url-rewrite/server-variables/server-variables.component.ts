@@ -40,6 +40,6 @@ export class ServerVariablesComponent implements OnDestroy {
     }
 
     private onRevert(): void {
-        throw "Not implemented";
+        this._service.revertServerVariables();
     }
 }

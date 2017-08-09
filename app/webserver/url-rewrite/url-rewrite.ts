@@ -92,13 +92,13 @@ export class OutboundRule {
     public precondition: PreCondition;
     public match_type: OutboundMatchType;
     public server_variable: string;
-    public tags: OutboundTags;
+    public tag_filters: OutboundTags;
     public pattern: string;
     public pattern_syntax: PatternSyntax;
     public ignore_case: boolean;
     public negate: boolean;
     public stop_processing: boolean;
-    public rewrite: boolean;
+    public enabled: boolean;
     public rewrite_value: string;
     public replace_server_variable: true;
     public condition_match_constraints: ConditionMatchConstraints;
@@ -246,10 +246,10 @@ export const MatchType = {
     IsDirectory: "is_directory" as MatchType
 }
 
-export type OutboundMatchType = "server_variable" | "tags";
+export type OutboundMatchType = "server_variable" | "response";
 export const OutboundMatchType = {
     ServerVariable: "server_variable" as OutboundMatchType,
-    Tags: "tags" as OutboundMatchType
+    Response: "response" as OutboundMatchType
 }
 
 export type MatchConstraint = "all" | "any";
@@ -280,8 +280,8 @@ export class ActionTypeHelper {
 export class OutboundMatchTypeHelper {
     public static display(matchType: OutboundMatchType): string {
         switch (matchType) {
-            case OutboundMatchType.Tags:
-                return "Tags";
+            case OutboundMatchType.Response:
+                return "Response";
             case OutboundMatchType.ServerVariable:
                 return "Server Variable";
             default:

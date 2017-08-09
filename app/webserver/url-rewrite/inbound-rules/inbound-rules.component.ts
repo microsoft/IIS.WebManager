@@ -129,6 +129,6 @@ export class InboundRulesComponent implements OnDestroy {
     }
 
     private onRevert() {
-        this._service.revert();
+        this._service.revertInbound();
     }
 }

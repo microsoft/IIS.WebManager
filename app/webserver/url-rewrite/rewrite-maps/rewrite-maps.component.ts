@@ -94,6 +94,6 @@ export class RewriteMapsComponent implements OnDestroy {
     }
 
     private onRevert() {
-        this._service.revert();
+        this._service.revertRewriteMaps();
     }
 }

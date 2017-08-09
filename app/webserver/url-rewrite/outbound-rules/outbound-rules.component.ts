@@ -83,7 +83,7 @@ export class OutboundRulesComponent implements OnDestroy {
 
         this._newRule.pattern = "(.*)";
         this._newRule.pattern_syntax = PatternSyntax.RegularExpression;
-        this._newRule.rewrite = true;
+        this._newRule.enabled = true;
         this._newRule.ignore_case = true;
         this._newRule.negate = false;
         this._newRule.condition_match_constraints = ConditionMatchConstraints.MatchAll
@@ -95,9 +95,9 @@ export class OutboundRulesComponent implements OnDestroy {
         //
         // action
         this._newRule.rewrite_value = "{R:1}";
-        this._newRule.match_type = OutboundMatchType.Tags;
+        this._newRule.match_type = OutboundMatchType.Response;
         this._newRule.server_variable = "";
-        this._newRule.tags = new OutboundTags();
+        this._newRule.tag_filters = new OutboundTags();
     }
 
     private saveNew() {
@@ -123,6 +123,6 @@ export class OutboundRulesComponent implements OnDestroy {
     }
 
     private onRevert() {
-        this._service.revert();
+        this._service.revertOutbound();
     }
 }

@@ -92,6 +92,6 @@ export class ProvidersComponent implements OnDestroy {
     }
 
     private onRevert() {
-        this._service.revert();
+        this._service.revertProviders();
     }
 }

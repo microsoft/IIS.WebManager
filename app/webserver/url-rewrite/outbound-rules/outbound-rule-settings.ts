@@ -14,17 +14,30 @@ import { OutboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
                 <fieldset>
                     <div>
                         <label class="inline-block">Pattern</label>
+                        <tooltip>
+                            This pattern is compared to either the response body or a server variable to determine if the rule matches.
+                            <a href="https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/creating-outbound-rules-for-url-rewrite-module" class="link"></a>
+                        </tooltip>
                         <text-toggle onText="Matches" offText="Doesn't Match" [on]="false" [off]="true" [(model)]="rule.negate" (modelChanged)="testRegex()"></text-toggle>
                         <text-toggle onText="Case Insensitive" offText="Case Sensitive" [(model)]="rule.ignore_case" (modelChanged)="testRegex()"></text-toggle>
                     </div>
                     <input type="text" required class="form-control" [(ngModel)]="rule.pattern" (modelChanged)="testRegex()" />
                 </fieldset>
                 <fieldset>
-                    <label>Test Value</label>
-                    <input placeholder="default.aspx?c=hiking&p=boots" type="text" class="form-control" [(ngModel)]="_testUrl" (modelChanged)="testRegex()" />
+                    <label class="inline-block">Test Value</label>
+                    <tooltip>
+                        This field can be used to test the matching behavior of the rule pattern.
+                    </tooltip>
+                    <input type="text" class="form-control" [(ngModel)]="_testUrl" (modelChanged)="testRegex()" />
                 </fieldset>
                 <fieldset>
-                    <label>Substitution Value</label>
+                    <div>
+                        <label>Substitution Value</label>
+                        <tooltip>
+                            This is the substitution string to use when rewriting the response. The substitution value can include back-references to conditions and the rule pattern as well as server variables.
+                            <a href="https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/creating-outbound-rules-for-url-rewrite-module" class="link"></a>
+                        </tooltip>
+                    </div>
                     <button class="right input" (click)="macros.toggle()" [class.background-active]="(macros && macros.opened) || false">Macros</button>
                     <div class="fill">
                         <input type="text" required [title]="_result" class="form-control" [(ngModel)]="rule.rewrite_value" (modelChanged)="testRegex()" />
@@ -75,8 +88,8 @@ import { OutboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
             width: 200px;
         }
 
-        .inline-block,
-        text-toggle {
+        text-toggle,
+        tooltip {
             margin-right: 20px;
         }
     `]
@@ -88,6 +101,7 @@ export class OutboundRuleSettingsComponent {
     private _testUrl: string = "";
     private _matches: Array<any> = [];
     private _selected: number = -1;
+    private _isMatching: boolean;
 
     private _serverVariables: Array<string> = IIS_SERVER_VARIABLES;
 
@@ -110,6 +124,9 @@ export class OutboundRuleSettingsComponent {
         }
 
         this._matches = regex.exec(this._testUrl) || [];
+
+        this._isMatching = (this._matches.length > 0 && !this.rule.negate) ||
+            (this._matches.length == 0 && this.rule.negate);
 
         if (this.rule.negate) {
             this._matches.splice(0, this._matches.length);

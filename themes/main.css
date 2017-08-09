@@ -351,6 +351,10 @@ button.select {
     text-align: center;
 }
 
+tooltip {
+    margin-left: 5px;
+}
+
 .flags checkbox2 {
     display: block;
     margin-top: 4px;
