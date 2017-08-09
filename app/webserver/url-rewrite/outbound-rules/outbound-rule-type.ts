@@ -7,12 +7,21 @@ import { OutboundRule, OutboundMatchType, OutboundTags, IIS_SERVER_VARIABLES } f
     template: `
         <div *ngIf="rule">
             <fieldset>
-                <label>Active</label>
+                <div>
+                    <label class="inline-block">Active</label>
+                    <tooltip>
+                        An inactive outbound rule will not perform any rewriting of the response.
+                    </tooltip>
+                </div>
                 <switch [(model)]="rule.enabled">{{rule.enabled ? "Yes": "No"}}</switch>
             </fieldset>
 
             <fieldset>
-                <label>Match</label>
+                <label class="inline-block">Match</label>
+                <tooltip>
+                    An outbound rule can operate on the response body content or the content of an HTTP header (via server variable).
+                    <a class="link" href="https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/creating-outbound-rules-for-url-rewrite-module#create-an-outbound-rewrite-rule"></a>
+                </tooltip>
                 <enum [(model)]="rule.match_type" (modelChanged)="onMatchType()">
                     <field name="Response" value="response"></field>
                     <field name="Server Variable" value="server_variable"></field>
@@ -20,7 +29,13 @@ import { OutboundRule, OutboundMatchType, OutboundTags, IIS_SERVER_VARIABLES } f
             </fieldset>
 
             <fieldset class="flags" *ngIf="rule.match_type == 'response'">
-                <label>Filter By</label>
+                <div>
+                    <label class="inline-block">Filter By</label>
+                    <tooltip>
+                        Tag filters are used to scope the pattern matching to a certain HTML elements only, instead of evaluating the entire response against the rule's pattern.
+                        <a class="link" href="https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/creating-outbound-rules-for-url-rewrite-module#create-an-outbound-rewrite-rule"></a>
+                    </tooltip>
+                </div>
                 <div class="inline-block">
                     <checkbox2 [(model)]="rule.tag_filters.a">a</checkbox2>
                     <checkbox2 [(model)]="rule.tag_filters.area">area</checkbox2>
@@ -39,7 +54,11 @@ import { OutboundRule, OutboundMatchType, OutboundTags, IIS_SERVER_VARIABLES } f
             </fieldset>
 
             <fieldset *ngIf="rule.match_type == 'server_variable'">
-                <label>Server Variable</label>
+                <label class="inline-block">Server Variable</label>
+                <tooltip>
+                    Server variables can be used to rewrite HTTP headers.
+                    <a class="link" href="https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/modifying-http-response-headers#creating-an-outbound-rule-to-modify-the-http-response-header"></a>
+                </tooltip>
                 <input type="text" required class="form-control name" list="server-vars" [(ngModel)]="rule.server_variable" />
                 <datalist id="server-vars">
                     <option *ngFor="let variable of _serverVariables" value="{{variable}}">
@@ -48,7 +67,7 @@ import { OutboundRule, OutboundMatchType, OutboundTags, IIS_SERVER_VARIABLES } f
         </div>
     `,
     styles: [`
-        .inline-block {
+        div.inline-block {
             margin-right: 140px;
             vertical-align: top;
         }

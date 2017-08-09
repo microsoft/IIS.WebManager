@@ -28,23 +28,25 @@ import { InboundRule, ActionType, RedirectType } from '../url-rewrite';
                     <field name="307" title="307 (Temporary Redirect)" value="temporary"></field>
                 </enum>
             </fieldset>
-            <div *ngIf="rule.action.type == 'custom_response'">
-                <fieldset>
-                    <label>Status Code</label>
-                    <input type="text" required class="form-control" [(ngModel)]="rule.action.status_code" />
-                </fieldset>
-                <fieldset>
-                    <label>Substatus Code</label>
-                    <input type="text" required class="form-control" [(ngModel)]="rule.action.sub_status_code" />
-                </fieldset>
-                <fieldset>
-                    <label>Reason</label>
-                    <input type="text" class="form-control" [(ngModel)]="rule.action.reason" />
-                </fieldset>
-                <fieldset>
-                    <label>Error Description</label>
-                    <input type="text" class="form-control" [(ngModel)]="rule.action.description" />
-                </fieldset>
+            <div *ngIf="rule.action.type == 'custom_response'" class="row">
+                <div class="col-xs-12 col-lg-6">
+                    <fieldset>
+                        <label>Status Code</label>
+                        <input type="text" required class="form-control" [(ngModel)]="rule.action.status_code" />
+                    </fieldset>
+                    <fieldset>
+                        <label>Substatus Code</label>
+                        <input type="text" required class="form-control" [(ngModel)]="rule.action.sub_status_code" />
+                    </fieldset>
+                    <fieldset>
+                        <label>Reason</label>
+                        <input type="text" class="form-control" [(ngModel)]="rule.action.reason" />
+                    </fieldset>
+                    <fieldset>
+                        <label>Error Description</label>
+                        <input type="text" class="form-control" [(ngModel)]="rule.action.description" />
+                    </fieldset>
+                </div>
             </div>
             <fieldset>
                 <div>

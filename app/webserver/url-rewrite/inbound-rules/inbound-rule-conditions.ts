@@ -9,12 +9,17 @@ import { InboundRule, Condition, MatchType, IIS_SERVER_VARIABLES } from '../url-
             <fieldset>
                 <label>Match</label>
                 <enum [(model)]="rule.condition_match_constraints">
-                    <field name="All" value="match_all"></field>
-                    <field name="Any" value="match_any"></field>
+                    <field name="All" value="match_all" title="All conditions must match for the rule to match"></field>
+                    <field name="Any" value="match_any" title="Atleast one condition must match for the rule to match"></field>
                 </enum>
             </fieldset>
             <fieldset>
-                <label>Keep Capture Groups</label>
+                <div>
+                    <label class="inline-block">Keep All Back References</label>
+                    <tooltip>
+                        Specifies whether to keep back references for all matching conditions or only the last condition evaulated.
+                    </tooltip>
+                </div>
                 <switch [(model)]="rule.track_all_captures">
                     {{rule.track_all_captures ? 'Yes' : 'No'}}
                 </switch>

@@ -96,7 +96,6 @@ export class WebServerService {
     }
 
     private get(): Promise<WebServer> {
-        console.log("A");
         return this._http.get("/webserver").then(ws => {
 
             this._server = new WebServer();
