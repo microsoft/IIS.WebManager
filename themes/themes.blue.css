@@ -56,6 +56,11 @@ a.link:not([disabled]):not(:hover):not(:active)::before {
     color: #444;
 }
 
+.hover-color-normal:hover,
+button.hover-color-normal:hover::before {
+    color: #444;
+}
+
 .bttn,
 .form-control {
     background-color: white;
@@ -165,7 +170,8 @@ border-antiactive {
     background-color: #E7F5FE;
 }
 
-.hover-editing:hover {
+.hover-editing:hover,
+button.hover-editing:hover::before {
     background-color: #E7F5FE;
 }
 

@@ -24,6 +24,11 @@
     background-color: black;
 }
 
+.hover-color-normal:hover,
+button.hover-color-normal:hover::before {
+    color: #D7D7B5;
+}
+
 a:hover,
 a:focus {
     color: inherit;
@@ -114,7 +119,8 @@ border-antiactive {
     background-color: #291d35;
 }
 
-.hover-editing:hover {
+.hover-editing:hover,
+button.hover-editing:hover::before {
     background-color: #291d35;
 }
 

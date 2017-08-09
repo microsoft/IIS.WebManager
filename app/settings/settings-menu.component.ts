@@ -19,6 +19,9 @@ import { Selector } from '../common/selector';
                 <li class="hover-editing">
                     <a class="color-normal download" [routerLink]="['/get']" (click)="_settingsMenu.close()">Download Microsoft IIS Administration</a>
                 </li>
+                <li *ngIf="_window.usabilla_live" class="hover-editing">
+                    <button class="no-border hover-editing hover-color-normal comment" (click)="provideFeedback()">Provide Feedback</button>
+                </li>
                 <li class="hover-editing">
                     <a class="color-normal dev" href="https://github.com/microsoft/iis.administration">Developers</a>
                 </li>
@@ -54,17 +57,23 @@ import { Selector } from '../common/selector';
             white-space: nowrap;
         }
 
-        a {
+        a, button {
             padding: 7px 5px;
             display: block;
         }
 
-        a:before {
+        a:before,
+        button:before {
             font-family: FontAwesome;
             font-size: 120%;
             line-height: 22px;
             width: 25px;
             display: inline-block;
+        }
+
+        li button {
+            text-align: left;
+            font-size: 14px;
         }
 
         .server:before {
@@ -84,6 +93,7 @@ export class SettingsMenuComponent implements OnDestroy {
     @ViewChild('settingsMenu')
     private _settingsMenu: Selector;
     private _subscriptions: Array<Subscription> = [];
+    private _window: Window = window;
 
     constructor(private _router: Router) {
         this._subscriptions.push(this._router.events.subscribe(e => {
@@ -99,5 +109,11 @@ export class SettingsMenuComponent implements OnDestroy {
 
     private onClickSettings(): void {
         this._settingsMenu.toggle();
+    }
+
+    private provideFeedback(): void {
+        // usabilla API
+        (<any>window).usabilla_live("click");
+        this._settingsMenu.close();
     }
 }

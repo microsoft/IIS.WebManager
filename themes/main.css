@@ -706,6 +706,10 @@ button.refresh:before {
     content: "\f021";
 }
 
+button.comment:before {
+    content: "\f0e5";
+}
+
 button.up:before {
     content: "\f176";
 }
