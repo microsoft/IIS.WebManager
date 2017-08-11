@@ -101,7 +101,7 @@ import { UrlUtil } from '../utils/url';
         .menu-btn {
           display: inline-block;
           position: absolute;
-          top: 0;
+          top: 1px;
           right: 0;
           cursor: pointer;
           z-index: 9;
@@ -116,7 +116,7 @@ import { UrlUtil } from '../utils/url';
 
         .menu {
           position: absolute;
-          top: 30px;
+          top: 28px;
           right:0;
           max-width: 300px;
           z-index: 11;

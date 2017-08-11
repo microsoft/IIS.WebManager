@@ -1,7 +1,8 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, Optional } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { LoadingService } from '../notification/loading.service';
 import { OptionsService } from '../main/options.service';
+import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-ga';
 
 @Component({
     selector: 'header',
@@ -18,6 +19,9 @@ import { OptionsService } from '../main/options.service';
             <modal class="color-normal"></modal>
             
             <div class="abs-right background-active">
+                <div class="hover-primary2 hidden-sm hidden-xs nav-button" title="Provide Feedback" *ngIf="_window.usabilla_live" (click)="provideFeedback()">
+                    <i class="fa fa-comment-o"></i>
+                </div>
                 <notification-indicator></notification-indicator>
                 <settings></settings>
             </div>
@@ -96,14 +100,30 @@ import { OptionsService } from '../main/options.service';
             height: 55px;
             display: table-cell;
         }
+
+        >>> .nav-button {
+            display: inline-block;
+            vertical-align: middle;
+            min-width: 25px;
+            cursor: pointer;
+            height: 55px;
+            padding: 0 15px;
+        }
+
+        >>> .nav-button i {
+            line-height: 55px;
+        }
     `]
 })
 export class HeaderComponent implements OnDestroy {
     private _subs = [];
     private _inProgress: boolean;
     private _timeout: number;
+    private _window: Window = window;
 
-    constructor(loadingSvc: LoadingService, private _options: OptionsService) {
+    constructor(loadingSvc: LoadingService,
+        private _options: OptionsService,
+        @Optional() private _angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
         this._subs.push(loadingSvc.active.subscribe(active => {
             if (active) {
                 this._timeout = setTimeout(_ => {
@@ -122,5 +142,17 @@ export class HeaderComponent implements OnDestroy {
 
     public ngOnDestroy() {
         this._subs.forEach(s => s.unsubscribe());
+    }
+
+    private provideFeedback(): void {
+        if (this._angulartics2GoogleAnalytics) {
+            this._angulartics2GoogleAnalytics.eventTrack('OpenFeedback', {
+                category: 'Feedback',
+                label: 'Feedback from header button'
+            });
+        }
+
+        // usabilla API
+        (<any>window).usabilla_live("click");
     }
 }

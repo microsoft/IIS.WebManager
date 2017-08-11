@@ -1,6 +1,7 @@
-﻿import { Component, Input, ViewChild, OnDestroy } from '@angular/core';
+﻿import { Component, Input, ViewChild, OnDestroy, Optional } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 
+import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-ga';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Selector } from '../common/selector';
@@ -95,7 +96,8 @@ export class SettingsMenuComponent implements OnDestroy {
     private _subscriptions: Array<Subscription> = [];
     private _window: Window = window;
 
-    constructor(private _router: Router) {
+    constructor(private _router: Router,
+        @Optional() private _angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
         this._subscriptions.push(this._router.events.subscribe(e => {
             if (e instanceof NavigationStart) {
                 this._settingsMenu.close();
@@ -112,6 +114,13 @@ export class SettingsMenuComponent implements OnDestroy {
     }
 
     private provideFeedback(): void {
+        if (this._angulartics2GoogleAnalytics) {
+            this._angulartics2GoogleAnalytics.eventTrack('OpenFeedback', {
+                category: 'Feedback',
+                label: 'Feedback from the settings menu'
+            });
+        }
+
         // usabilla API
         (<any>window).usabilla_live("click");
         this._settingsMenu.close();
