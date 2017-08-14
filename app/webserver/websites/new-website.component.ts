@@ -29,30 +29,24 @@ import { ApplicationPool } from '../app-pools/app-pool';
                     </div>
                     <server-file-selector #fileSelector [types]="['directory']" (selected)="onSelectPath($event)"></server-file-selector>
                 </fieldset>
-
-                <section>
-                    <div class="collapse-heading" data-toggle="collapse" data-target="#applicationPool">
-                        <h2>Application Pool</h2>
-                    </div>
-                    <div id="applicationPool" class="collapse in">
-                        <fieldset>
-                            <label>Create Own Application Pool</label>
-                            <switch class="block" [(model)]="_createAppPool" (modelChange)="onNewAppPool($event)">{{_createAppPool ? "Yes" : "No"}}</switch>
-                        </fieldset>
-                        <div *ngIf="!_createAppPool">
-                            <fieldset>
-                                <app-pool-item [model]="site.application_pool" [actions]="'view,recycle,start,stop'"></app-pool-item>
-                            </fieldset>
-                            <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Select <i class="fa fa-caret-down"></i></button>
-                            <selector #poolSelect class="container-fluid">
-                                <app-pools #appPools [actions]="'view'" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
-                            </selector>
-                        </div>
-                    </div>
-                </section>
             </tab>
             <tab [name]="'Bindings'">
                 <binding-list #bindingList [(model)]="site.bindings"></binding-list>
+            </tab>
+            <tab [name]="'Application Pool'">
+                <fieldset>
+                    <label>Create Own Application Pool</label>
+                    <switch class="block" [(model)]="_createAppPool" (modelChange)="onNewAppPool($event)">{{_createAppPool ? "Yes" : "No"}}</switch>
+                </fieldset>
+                <div *ngIf="!_createAppPool">
+                    <fieldset>
+                        <app-pool-item [model]="site.application_pool" [actions]="'view,recycle,start,stop'"></app-pool-item>
+                    </fieldset>
+                    <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Select <i class="fa fa-caret-down"></i></button>
+                    <selector #poolSelect class="container-fluid">
+                        <app-pools #appPools [actions]="'view'" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
+                    </selector>
+                </div>
             </tab>
         </tabs>
         <p class="pull-right">
@@ -72,6 +66,10 @@ import { ApplicationPool } from '../app-pools/app-pool';
 
         ul {
             margin-bottom: 32px;
+        }
+
+        p {
+            margin: 10px 0;
         }
     `]
 })
@@ -150,6 +148,7 @@ export class NewWebSiteComponent {
     private onNewAppPool(value: boolean) {
         if (!value) {
             this.site.application_pool = null;
+            setTimeout(() => this.selectAppPool(), 10);
         }
     }
 

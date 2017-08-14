@@ -36,10 +36,10 @@ import { RequestTracingService } from './request-tracing.service';
             <fieldset class="hidden-xs col-sm-3 col-md-3 col-lg-2" *ngIf="!_isEditing">
                 <span>{{model.status_codes.join(", ")}}</span>
             </fieldset>
-            <fieldset class="hidden-xs hidden-sm col-md-3 col-lg-2">
+            <fieldset class="hidden-xs hidden-sm col-md-3 col-lg-2" *ngIf="!_isEditing">
                 <span *ngIf="hasMinReqExecutionTime()">{{model.min_request_execution_time}}</span>
             </fieldset>
-            <fieldset class="hidden-xs hidden-sm hidden-md col-lg-2">
+            <fieldset class="hidden-xs hidden-sm hidden-md col-lg-2" *ngIf="!_isEditing">
                 <span *ngIf="model.event_severity != 'ignore'">{{friendlyEventSeverity(model.event_severity)}}</span>
             </fieldset>
             <div *ngIf="_isEditing" id="statusCodes" class="col-xs-12">

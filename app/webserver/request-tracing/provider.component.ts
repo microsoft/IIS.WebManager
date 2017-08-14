@@ -28,7 +28,7 @@ import {RequestTracingService} from './request-tracing.service';
             </div>
             <fieldset>
                 <label [hidden]="!_isEditing">Name</label>
-                <input class="form-control name" type="text" [(ngModel)]="model.name" required throttle/>
+                <input class="form-control name" *ngIf="_isEditing" type="text" [(ngModel)]="model.name" required throttle/>
                 <span>{{model.name}}</span>
             </fieldset>
             <fieldset class="name" *ngIf="_isEditing">

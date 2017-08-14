@@ -32,7 +32,9 @@ import { DefaultDocumentsService } from './default-documents.service';
     `,
     styles: [`
         .grid-item fieldset {
-            padding: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-right: 0;
         }
     `]
 })

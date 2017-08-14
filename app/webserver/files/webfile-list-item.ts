@@ -18,7 +18,7 @@ import { WebFileType, WebFile } from './webfile';
                 </div>
                 <div *ngIf="_editing">
                     <i></i>
-                    <input class="form-control" type="text" 
+                    <input class="form-control inline-block" type="text" 
                            [ngModel]="model.name"
                            (ngModelChange)="rename($event)"
                            (keyup.esc)="onCancel($event)"

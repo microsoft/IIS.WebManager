@@ -51,7 +51,7 @@ import { AppPoolsService } from '../app-pools/app-pools.service';
             </tab>
             <tab [name]="'Application Pool'">
                 <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Change Application Pool <i class="fa fa-caret-down"></i></button>
-                <selector #poolSelect class="container-fluid">
+                <selector #poolSelect class="container-fluid create">
                     <app-pools #appPools [actions]="'view'" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
                 </selector>
                 <app-pool-details [model]="site.application_pool"></app-pool-details>

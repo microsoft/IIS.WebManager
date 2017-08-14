@@ -13,13 +13,13 @@ import { RequestFilteringService } from './request-filtering.service';
         <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing">
 
             <div class="actions">
-                <button class="no-border no-editing" [class.inactive]="!_editable" title="Edit" (click)="onEdit()">
+                <button class="no-border" *ngIf="!_editing" [class.inactive]="!_editable" title="Edit" (click)="onEdit()">
                     <i class="fa fa-pencil color-active"></i>
                 </button>
-                <button class="no-border editing" [disabled]="!isValid() || locked" title="Ok" (click)="onSave()">
+                <button class="no-border" *ngIf="_editing" [disabled]="!isValid() || locked" title="Ok" (click)="onSave()">
                     <i class="fa fa-check color-active"></i>
                 </button>
-                <button class="no-border editing" title="Cancel" (click)="onDiscard()">
+                <button class="no-border" title="Cancel" *ngIf="_editing" (click)="onDiscard()">
                     <i class="fa fa-times red"></i>
                 </button>
                 <button class="no-border" *ngIf="model.id" [disabled]="locked" title="Delete" [class.inactive]="!_editable" (click)="onDelete()">
@@ -32,7 +32,7 @@ import { RequestFilteringService } from './request-filtering.service';
                 <label class="hidden-xs" [hidden]="!_editing">Extension</label>
                 <i class="fa fa-circle green hidden-xs" *ngIf="model.allow && !_editing"></i>
                 <i class="fa fa-ban red hidden-xs" *ngIf="!model.allow && !_editing"></i>
-                <input class="form-control" type="text" [disabled]="locked" [(ngModel)]="model.extension" throttle required />
+                <input class="form-control" *ngIf="_editing" type="text" [disabled]="locked" [(ngModel)]="model.extension" throttle required />
                 <span *ngIf="!_editing">{{model.extension}}</span>
                 <div *ngIf="!_editing">
                     <br class="visible-xs" />
