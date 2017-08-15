@@ -19,10 +19,10 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
             <modal class="color-normal"></modal>
             
             <div class="abs-right background-active">
+                <notification-indicator></notification-indicator>
                 <div class="hover-primary2 hidden-sm hidden-xs nav-button" title="Provide Feedback" *ngIf="_window.usabilla_live" (click)="provideFeedback()">
                     <i class="fa fa-comment-o"></i>
                 </div>
-                <notification-indicator></notification-indicator>
                 <settings></settings>
             </div>
         </div>
