@@ -1,4 +1,4 @@
-﻿import { Component, AfterViewInit, OnChanges, OnDestroy, EventEmitter, Input, Output, ViewChildren, QueryList, SimpleChange } from '@angular/core';
+﻿import { Component, OnChanges, EventEmitter, Input, Output, SimpleChange } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -40,20 +40,16 @@ import { InboundRule, ActionTypeHelper } from '../url-rewrite';
                 </div>
             </div>
         </div>
-        <selector #editSelector [opened]="true" *ngIf="_editing" class="container-fluid">
+        <selector #editSelector [opened]="true" *ngIf="_editing" class="container-fluid" (hide)="discard()">
             <inbound-rule-edit [rule]="rule" (save)="save($event)" (cancel)="discard()"></inbound-rule-edit>
         </selector>
     `
 })
-export class InboundRuleComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class InboundRuleComponent implements OnChanges {
     @Input() public rule: InboundRule;
     @Output('delete') deleteEvent: EventEmitter<any> = new EventEmitter<any>();
 
     private _editing: boolean = false;
-    //
-    // Use ViewChildren to listen for when the edit dialog appears
-    @ViewChildren('editSelector') private _editSelector: QueryList<Selector>;
-    private _subscriptions: Array<Subscription> = [];
     private toFriendlyActionType: Function = ActionTypeHelper.toFriendlyActionType;
     private _original: InboundRule;
 
@@ -64,21 +60,6 @@ export class InboundRuleComponent implements AfterViewInit, OnChanges, OnDestroy
         if (changes["rule"]) {
             this._original = JSON.parse(JSON.stringify(changes["rule"].currentValue));
         }
-    }
-
-    public ngAfterViewInit() {
-        this._subscriptions.push(this._editSelector.changes.subscribe(sel => {
-
-            //
-            // Setup callback for when edit dialog closes
-            this._editSelector.forEach(selector => {
-                this._subscriptions.push(selector.hide.subscribe(() => this.discard()));
-            });
-        }));
-    }
-
-    public ngOnDestroy() {
-        this._subscriptions.forEach(sub => sub.unsubscribe());
     }
 
     private edit() {

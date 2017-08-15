@@ -18,8 +18,8 @@ import { RewriteMapsSection, RewriteMap, RewriteMapping } from '../url-rewrite';
                 (modelChanged)="onModelChanged()"></override-mode>
             <div>
                 <button [class.background-active]="newMap.opened" (click)="newMap.toggle()">Create Rewrite Map <i class="fa fa-caret-down"></i></button>
-                <selector #newMap class="container-fluid create">
-                    <rewrite-map-edit [map]="_newRewriteMap" (save)="saveNew($event)" (cancel)="closeNew()"></rewrite-map-edit>
+                <selector #newMap class="container-fluid create" (hide)="initializeNewRewriteMap()">
+                    <rewrite-map-edit [map]="_newRewriteMap" (save)="saveNew()" (cancel)="newMap.close()"></rewrite-map-edit>
                 </selector>
             </div>
 
@@ -77,16 +77,7 @@ export class RewriteMapsComponent implements OnDestroy {
 
     private saveNew() {
         this._service.addRewriteMap(this._newRewriteMap)
-            .then(() => this.closeNew());
-    }
-
-    private discardNew() {
-        this._newRewriteMap = null;
-    }
-
-    private closeNew() {
-        this.initializeNewRewriteMap();
-        this._newRewriteMapSelector.close();
+            .then(() => this._newRewriteMapSelector.close());
     }
 
     private onModelChanged() {

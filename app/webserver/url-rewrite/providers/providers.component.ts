@@ -17,9 +17,9 @@ import { ProvidersSection, Provider, ProviderSetting } from '../url-rewrite';
                 (revert)="onRevert()" 
                 (modelChanged)="onModelChanged()"></override-mode>
             <div>
-                <button [class.background-active]="newProvider.opened" (click)="toggleNew()">Create Provider <i class="fa fa-caret-down"></i></button>
-                <selector #newProvider class="container-fluid create">
-                    <provider-edit [provider]="_newProvider" (save)="saveNew()" (cancel)="closeNew()"></provider-edit>
+                <button [class.background-active]="newProvider.opened" (click)="newProvider.toggle()">Create Provider <i class="fa fa-caret-down"></i></button>
+                <selector #newProvider class="container-fluid create" (hide)="initializeNewProvider()">
+                    <provider-edit [provider]="_newProvider" (save)="saveNew()" (cancel)="newProvider.close()"></provider-edit>
                 </selector>
             </div>
 
@@ -75,16 +75,7 @@ export class ProvidersComponent implements OnDestroy {
 
     private saveNew() {
         this._service.addProvider(this._newProvider)
-            .then(() => this.closeNew());
-    }
-
-    private toggleNew() {
-        this._newSelector.toggle();
-    }
-
-    private closeNew() {
-        this.initializeNewProvider();
-        this._newSelector.close();
+            .then(() => this._newSelector.close());
     }
 
     private onModelChanged() {

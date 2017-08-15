@@ -22,9 +22,9 @@ import { InboundSection, InboundRule, PatternSyntax, ActionType, ConditionMatchC
                     <switch *ngIf="_settings.use_original_url_encoding !== undefined" [(model)]="_settings.use_original_url_encoding" (modelChanged)="onModelChanged()">{{_settings.use_original_url_encoding ? "Yes" : "No"}}</switch>
                 </fieldset>
                 
-                <button class="create" [class.background-active]="newRule.opened" (click)="toggleNew()">Create Rule <i class="fa fa-caret-down"></i></button>
-                <selector #newRule class="container-fluid create">
-                    <inbound-rule-edit [rule]="_newRule" (save)="saveNew($event)" (cancel)="closeNew()"></inbound-rule-edit>
+                <button class="create" [class.background-active]="newRule.opened" (click)="newRule.toggle()">Create Rule <i class="fa fa-caret-down"></i></button>
+                <selector #newRule class="container-fluid create" (hide)="initializeNewRule()">
+                    <inbound-rule-edit [rule]="_newRule" (save)="saveNew($event)" (cancel)="newRule.close()"></inbound-rule-edit>
                 </selector>
             </div>
 
@@ -108,20 +108,7 @@ export class InboundRulesComponent implements OnDestroy {
 
     private saveNew(condition: Condition) {
         this._service.addInboundRule(this._newRule)
-            .then(() => this.closeNew());
-    }
-
-    private discardNew() {
-        this._newRule = null;
-    }
-
-    private toggleNew() {
-        this._newRuleSelector.toggle();
-    }
-
-    private closeNew() {
-        this.initializeNewRule();
-        this._newRuleSelector.close();
+            .then(() => this._newRuleSelector.close());
     }
 
     private onModelChanged() {

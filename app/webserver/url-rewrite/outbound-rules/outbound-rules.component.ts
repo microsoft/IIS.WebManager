@@ -22,9 +22,9 @@ import { OutboundSection, OutboundRule, PatternSyntax, OutboundTags, ActionType,
                     <switch *ngIf="_settings.rewrite_before_cache !== undefined" [(model)]="_settings.rewrite_before_cache" (modelChanged)="onModelChanged()">{{_settings.rewrite_before_cache ? "On" : "Off"}}</switch>
                 </fieldset>
                 
-                <button class="create" [class.background-active]="newRule.opened" (click)="toggleNew()">Create Rule <i class="fa fa-caret-down"></i></button>
-                <selector #newRule class="container-fluid create">
-                    <outbound-rule-edit [rule]="_newRule" (save)="saveNew()" (cancel)="closeNew()"></outbound-rule-edit>
+                <button class="create" [class.background-active]="newRule.opened" (click)="newRule.toggle()">Create Rule <i class="fa fa-caret-down"></i></button>
+                <selector #newRule class="container-fluid create" (hide)="initializeNewRule()">
+                    <outbound-rule-edit [rule]="_newRule" (save)="saveNew()" (cancel)="newRule.close()"></outbound-rule-edit>
                 </selector>
             </div>
 
@@ -102,20 +102,7 @@ export class OutboundRulesComponent implements OnDestroy {
 
     private saveNew() {
         this._service.addOutboundRule(this._newRule)
-            .then(() => this.closeNew());
-    }
-
-    private discardNew() {
-        this._newRule = null;
-    }
-
-    private toggleNew() {
-        this._newRuleSelector.toggle();
-    }
-
-    private closeNew() {
-        this.initializeNewRule();
-        this._newRuleSelector.close();
+            .then(() => this._newRuleSelector.close());
     }
 
     private onModelChanged() {
