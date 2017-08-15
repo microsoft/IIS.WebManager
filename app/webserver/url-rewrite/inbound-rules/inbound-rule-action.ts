@@ -60,7 +60,7 @@ import { InboundRule, ActionType, RedirectType } from '../url-rewrite';
                     {{rule.action.append_query_string ? "On" : "Off"}}
                 </switch>
             </fieldset>
-            <fieldset *ngIf="rule.response_cache_directive !== undefined">
+            <fieldset *ngIf="rule.response_cache_directive">
                 <label class="inline-block">Response Caching</label>
                 <tooltip>
                     Specifies whether the response is cachable. The default value 'auto' will allow the URL Rewrite module to decide the best behavior.

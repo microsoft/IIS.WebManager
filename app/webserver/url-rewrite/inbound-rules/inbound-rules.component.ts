@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { Selector } from '../../../common/selector';
 import { UrlRewriteService } from '../service/url-rewrite.service';
-import { InboundSection, InboundRule, PatternSyntax, ActionType, ConditionMatchConstraints, Condition, ServerVariableAssignment, MatchType } from '../url-rewrite';
+import { InboundSection, InboundRule, PatternSyntax, ActionType, ConditionMatchConstraints, Condition, ServerVariableAssignment, MatchType, ResponseCacheDirective } from '../url-rewrite';
 
 @Component({
     selector: 'inbound-rules',
@@ -104,6 +104,13 @@ export class InboundRulesComponent implements OnDestroy {
         this._newRule.action.sub_status_code = 0;
         this._newRule.action.reason = "Forbidden: Access is denied.";
         this._newRule.action.description = "You do not have permission to view this directory or page using the credentials that you supplied";
+        this._newRule.response_cache_directive = undefined;
+
+        //
+        // Both properties added in Url Rewrite 2.1
+        if (this._settings && this._settings.use_original_url_encoding !== undefined) {
+            this._newRule.response_cache_directive = ResponseCacheDirective.Auto;
+        }
     }
 
     private saveNew(condition: Condition) {
