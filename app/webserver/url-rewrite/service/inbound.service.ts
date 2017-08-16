@@ -129,7 +129,7 @@ export class InboundService {
             .then(() => {
                 let rules = this._rules.getValue();
                 rules.forEach((r, i) => { if (i > rule.priority) r.priority--; });
-                rules = rules.filter(r => r != rule);
+                rules = rules.filter(r => r.id != rule.id);
                 this._rules.next(rules);
             });
     }

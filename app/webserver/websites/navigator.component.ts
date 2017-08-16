@@ -26,7 +26,7 @@ import {WebSitesService} from './websites.service';
                     <selector #navigator>
                         <ul class="grid-list">
                             <li *ngFor="let b of model; let i = index" class="grid-item hover-active">
-                                <a [class.cert]="isHttps(i)" href="{{getUrl(i)}}" title="{{getUrl(i)}}"  (click)="onNavigate($event)"><span>{{getFriendlyUrl(i)}}</span></a>
+                                <a [class.cert]="isHttps(i)" href="{{getUrl(i)}}" title="{{getUrl(i)}}" target="_blank" (click)="onNavigate($event)"><span>{{getFriendlyUrl(i)}}</span></a>
                             </li>
                         </ul>
                     </selector>

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Selector } from '../../common/selector';
 import { WebApp } from './webapp'
 import { WebAppsService } from './webapps.service';
+import { WebSitesService } from '../websites/websites.service';
 
 @Component({
     selector: 'webapp-item',
@@ -45,8 +46,9 @@ import { WebAppsService } from './webapps.service';
                 </button>
                 <selector [right]="true">
                     <ul>
-                        <li><button *ngIf="action('edit')" class="edit" title="Edit" (click)="onEdit($event)">Edit</button></li>
-                        <li><button *ngIf="action('delete')" class="delete" title="Delete" (click)="onDelete($event)">Delete</button></li>
+                        <li *ngIf="action('edit')"><button class="edit" title="Edit" (click)="onEdit($event)">Edit</button></li>
+                        <li *ngIf="action('browse')"><a class="bttn link" href={{url}} title={{url}} target="_blank">Browse</a></li>
+                        <li *ngIf="action('delete')"><button class="delete" title="Delete" (click)="onDelete($event)">Delete</button></li>
                     </ul>
                 </selector>
             </div>
@@ -122,9 +124,23 @@ export class WebAppItem {
     @Input() actions: string = "";
     @Input() fields: string = "";
     @ViewChild(Selector) private _selector: Selector;
+    private _url: string;
 
     constructor(private _router: Router,
-        @Inject("WebAppsService") private _service: WebAppsService) {
+        @Inject("WebAppsService") private _service: WebAppsService,
+        @Inject("WebSitesService") private _siteService: WebSitesService) {
+    }
+
+    private get url() {
+        if (!this.model.website || this.model.website.bindings.length == 0) {
+            return "";
+        }
+
+        if (!this._url) {
+            this._url = this._siteService.getUrl(this.model.website.bindings[0]) + this.model.path;
+        }
+
+        return this._url;
     }
 
     private onDelete(e: Event) {

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { Module as BModel } from '../../common/bmodel';
 import { Module as CheckBox } from '../../common/checkbox.component';
@@ -13,12 +14,14 @@ import { Module as Enum } from '../../common/enum.component';
 import { AuthorizationService } from './authorization.service';
 
 import { AuthorizationComponent } from './authorization.component';
+import { RulesComponent } from './rules.component';
 import { RuleComponent } from './rule.component';
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
+        RouterModule,
         BModel,
         CheckBox,
         Switch,
@@ -29,6 +32,7 @@ import { RuleComponent } from './rule.component';
     ],
     declarations: [
         AuthorizationComponent,
+        RulesComponent,
         RuleComponent
     ],
     providers: [

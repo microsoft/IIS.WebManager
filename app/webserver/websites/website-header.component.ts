@@ -15,7 +15,7 @@ import { WebSite } from './site';
                     <button title="Actions" (click)="_selector.toggle()" [class.background-active]="(_selector && _selector.opened) || false"><i class="fa fa-caret-down"></i></button>
                     <selector [right]="true">
                         <ul>
-                            <li><a class="bttn link" title="Browse" [attr.title]="url" [attr.href]="url">Browse</a></li>
+                            <li><a class="bttn link" title="Browse" [attr.title]="url" [attr.href]="url" target="_blank">Browse</a></li>
                             <li><button class="start" title="Start" [attr.disabled]="site.status == 'started' ? true : null" (click)="onStart()">Start</button></li>
                             <li><button class="stop" title="Stop" [attr.disabled]="site.status == 'stopped' ? true : null" (click)="onStop()">Stop</button></li>
                             <li><button class="delete" title="Delete" (click)="onDelete()">Delete</button></li>

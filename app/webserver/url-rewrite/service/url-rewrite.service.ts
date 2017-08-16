@@ -352,7 +352,7 @@ export class UrlRewriteService {
         this._http.delete(rule._links.self.href.replace('/api', ''))
             .then(() => {
                 let rules = this._outboundRules.getValue();
-                rules = rules.filter(r => r != rule);
+                rules = rules.filter(r => r.id != rule.id);
                 this._outboundRules.next(rules);
             });
     }
@@ -479,7 +479,7 @@ export class UrlRewriteService {
         this._http.delete(map._links.self.href.replace('/api', ''))
             .then(() => {
                 let maps = this._rewriteMaps.getValue();
-                maps = maps.filter(r => r != map);
+                maps = maps.filter(r => r.id != map.id);
                 this._rewriteMaps.next(maps);
             });
     }
@@ -564,7 +564,7 @@ export class UrlRewriteService {
         this._http.delete(provider._links.self.href.replace('/api', ''))
             .then(() => {
                 let providers = this._providers.getValue();
-                providers = providers.filter(r => r != provider);
+                providers = providers.filter(r => r.id != provider.id);
                 this._providers.next(providers);
             });
     }

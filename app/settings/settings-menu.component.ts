@@ -24,7 +24,7 @@ import { Selector } from '../common/selector';
                     <button class="no-border hover-editing hover-color-normal comment" (click)="provideFeedback()">Provide Feedback</button>
                 </li>
                 <li class="hover-editing">
-                    <a class="color-normal dev" href="https://github.com/microsoft/iis.administration">Developers</a>
+                    <a class="color-normal dev" href="https://github.com/microsoft/iis.administration" target="_blank">Developers</a>
                 </li>
             </ul>
         </selector>

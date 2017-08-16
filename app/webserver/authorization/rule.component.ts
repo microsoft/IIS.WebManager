@@ -1,12 +1,13 @@
+import { Component, Input, Output, EventEmitter, ViewChild, OnInit, OnChanges, SimpleChange } from '@angular/core';
 
-import {Component, Input, Output, EventEmitter, ViewChild, OnInit} from '@angular/core';
-
-import {AuthRule, AccessType} from './authorization'
+import { NotificationService } from '../../notification/notification.service';
+import { AuthRule, AccessType } from './authorization'
+import { AuthorizationService } from './authorization.service';
 
 @Component({
     selector: 'rule',
     template: `
-        <div *ngIf="rule">    
+        <div *ngIf="rule" (dblclick)="onDblClick()">    
             <div class="row grid-item" [class.background-editing]="_editing">                
                 <div class="actions">
                     <button class="no-border" title="Ok" *ngIf="_editing" [disabled]="locked || !isValid() || null" (click)="onOk()">
@@ -102,53 +103,44 @@ import {AuthRule, AccessType} from './authorization'
         }
     `]
 })
-export class RuleComponent implements OnInit {    
+export class RuleComponent implements OnInit, OnChanges {
     @Input() rule: AuthRule;
     @Input() locked: boolean;
-
-    @ViewChild('roles') roles;
-
     @Output() modelChanged: EventEmitter<any> = new EventEmitter();
-    @Output() add: EventEmitter<any> = new EventEmitter();
-    @Output() delete: EventEmitter<any> = new EventEmitter();
-    @Output() edit: EventEmitter<any> = new EventEmitter();
     @Output() discard: EventEmitter<any> = new EventEmitter();
+    @ViewChild('roles') roles;
 
     private _target: string;
     private _editing: boolean;
     private _initializing: boolean;
     private _editable: boolean = true;
     private _allVerbs: boolean;
+    private _original: AuthRule;
+
+    constructor(private _service: AuthorizationService, private _notificationService: NotificationService) {
+    }
+
+    ngOnChanges(changes: { [key: string]: SimpleChange; }): any {
+        if (changes["rule"]) {
+            this._original = JSON.parse(JSON.stringify(changes["rule"].currentValue));
+        }
+    }
 
     public ngOnInit() {
         this._initializing = !("id" in this.rule) || (this.rule.id == "");
         this._editing = this._initializing;
         this._allVerbs = (this.rule.verbs == "");
-
-        if (!this._initializing) {
-            if (this.rule.users == "*" || this.rule.users == "?") {
-                this._target = this.rule.users;
-                this.rule.users = "";
-            }
-            else if (this.rule.roles) {
-                this._target = "roles";
-            }
-            else {
-                this._target = "users";
-            }
-        }
-        else {
-            this._target = "*";
-        }
+        this.setupTarget();
     }
 
-    public setEditable(val: boolean) {
-        this._editable = val;
+    private onDblClick() {
+        if (!this._editing) {
+            this.onEdit();
+        }
     }
 
     private onEdit() {
         this._editing = true;
-        this.edit.emit(null);
     }
 
     private onOk() {
@@ -184,23 +176,39 @@ export class RuleComponent implements OnInit {
             return;
         }
 
-        if (this._initializing) {
-            this._initializing = false;
-            this.add.emit(null);
-        }
-        else {
-            this.modelChanged.emit(null);
-        }         
+        this.modelChanged.emit(null);
 
         this._editing = false;
     }
 
     private onDiscard() {
+        this.rule = JSON.parse(JSON.stringify(this._original));
+        this.setupTarget();
+        this._editing = false;
         this.discard.emit(null);
     }
 
     private onDelete() {
-        this.delete.emit(null);
+        this._notificationService.confirm("Delete Rule", "Are you sure you want to delete this authorization rule?")
+            .then(confirmed => confirmed && this._service.deleteRule(this.rule));
+    }
+
+    private setupTarget() {
+        if (!this._initializing) {
+            if (this.rule.users == "*" || this.rule.users == "?") {
+                this._target = this.rule.users;
+                this.rule.users = "";
+            }
+            else if (this.rule.roles) {
+                this._target = "roles";
+            }
+            else {
+                this._target = "users";
+            }
+        }
+        else {
+            this._target = "*";
+        }
     }
 
     private targetName() {
@@ -218,8 +226,8 @@ export class RuleComponent implements OnInit {
 
     private isValid() {
         return (this._target == "*") ||
-               (this._target == "?") ||
-               (this._target == "users" && this.rule.users != null && this.rule.users != "") ||
-               (this._target == "roles" && this.rule.roles != null && this.rule.roles != "");
+            (this._target == "?") ||
+            (this._target == "users" && this.rule.users != null && this.rule.users != "") ||
+            (this._target == "roles" && this.rule.roles != null && this.rule.roles != "");
     }
 }
