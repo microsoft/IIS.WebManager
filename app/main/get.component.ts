@@ -1,7 +1,9 @@
 declare var SETTINGS: any;
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Http } from '@angular/http';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/toPromise';
 
 import { ApiConnection } from '../connect/api-connection'
@@ -85,7 +87,7 @@ import { ConnectService } from '../connect/connect.service';
         }
     `]
 })
-export class GetComponent {
+export class GetComponent implements OnDestroy {
     private DOWNLOAD_URL: string = SETTINGS.api_download_url;
     private SETUP_VERSION: string = SETTINGS.api_setup_version;
     private static STATUS_MSG: string[] = [
@@ -100,19 +102,31 @@ export class GetComponent {
     private _pingTimeoutId: number;
     private _client: HttpConnection;
     private _status: string;
+    private _activeConnection: ApiConnection;
+    private _subscriptions: Array<Subscription> = [];
 
     constructor(private _http: Http,
-                private _service: ConnectService) {
+                private _service: ConnectService,
+                private _router: Router) {
 
         this._client = new HttpConnection(_http);
+
+        this._subscriptions.push(this._service.active.subscribe(connection => this._activeConnection = connection));
     }
 
-    private download(e: Event): boolean {
-        this._inProgress = true;
-        this._status = GetComponent.STATUS_MSG[0];
-        this.ping();
+    public ngOnDestroy(): void {
+        this._subscriptions.forEach(sub => sub.unsubscribe());
+    }
 
-        return true;
+    private download(e: Event): void {
+        if (this._activeConnection) {
+            this._router.navigate(["/"]);
+        }
+        else {
+            this._inProgress = true;
+            this._status = GetComponent.STATUS_MSG[0];
+            this.ping();
+        }
     }
 
     private skip() {
