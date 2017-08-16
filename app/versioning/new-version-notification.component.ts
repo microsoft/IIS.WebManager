@@ -1,5 +1,5 @@
-
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
+import { NotificationService } from '../notification/notification.service';
 
 @Component({
     selector: 'new-version',
@@ -20,10 +20,17 @@ import {Component} from '@angular/core';
     `],
     template: `
         <div>
-            <span>Version {{version}} is now available. <br/> <a [routerLink]="['/get']">Click here</a> to get it.</span>
+            <span>Version {{version}} is now available. <br/> <a [routerLink]="['/get']" (click)="onNavigate()">Click here</a> to get it.</span>
         </div>
     `
 })
 export class NewVersionNotificationComponent {
     version: string;
+
+    constructor(private _notificationService: NotificationService) {
+    }
+
+    private onNavigate(): void {
+        this._notificationService.remove(this._notificationService.getNotifications().find(n => n.componentName == 'NewVersionNotificationComponent'));
+    }
 }
