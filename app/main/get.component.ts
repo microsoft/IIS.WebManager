@@ -121,15 +121,20 @@ export class GetComponent implements OnDestroy {
     private download(e: Event): void {
         if (this._activeConnection) {
             this._router.navigate(["/"]);
+            return;
         }
-        else {
-            this._inProgress = true;
-            this._status = GetComponent.STATUS_MSG[0];
-            this.ping();
-        }
+
+        this._inProgress = true;
+        this._status = GetComponent.STATUS_MSG[0];
+        this.ping();
     }
 
     private skip() {
+        if (this._activeConnection) {
+            this._router.navigate(["/"]);
+            return;
+        }
+
         this._status = GetComponent.STATUS_MSG[0];
         this.finish();
     }
