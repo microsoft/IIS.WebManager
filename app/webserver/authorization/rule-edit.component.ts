@@ -25,10 +25,10 @@ import { AuthorizationService } from './authorization.service';
             </fieldset>
             <fieldset class="no-label" *ngIf="_target == 'roles' || _target == 'users'">   
                 <div *ngIf="_target == 'roles'">
-                    <input placeholder="ex: Administrators, Power Users" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="rule.roles" />
+                    <input placeholder="ex: Administrators, Power Users" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="_roles" />
                 </div>
                 <div *ngIf="_target == 'users'">
-                    <input placeholder="ex: Administrator, Guest" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="rule.users" />
+                    <input placeholder="ex: Administrator, Guest" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="_users" />
                 </div>
             </fieldset>
             <fieldset>
@@ -89,6 +89,8 @@ export class RuleEditComponent implements OnInit {
     private _target: string;
     private _allVerbs: boolean;
     private _initializing: boolean;
+    private _users: string = "";
+    private _roles: string = "";
 
     constructor(private _service: AuthorizationService) {
     }
@@ -101,8 +103,8 @@ export class RuleEditComponent implements OnInit {
     private isValid() {
         return (this._target == "*") ||
             (this._target == "?") ||
-            (this._target == "users" && this.rule.users != null && this.rule.users != "") ||
-            (this._target == "roles" && this.rule.roles != null && this.rule.roles != "");
+            (this._target == "users" && this._users != null && this._users != "") ||
+            (this._target == "roles" && this._roles != null && this._roles != "");
     }
 
     private onOk() {
@@ -115,9 +117,11 @@ export class RuleEditComponent implements OnInit {
                 break;
             case "users":
                 this.rule.roles = "";
+                this.rule.users = this._users;
                 break;
             case "roles":
                 this.rule.users = "";
+                this.rule.roles = this._roles;
                 break;
             default:
                 break;
@@ -138,19 +142,22 @@ export class RuleEditComponent implements OnInit {
     }
 
     private onDiscard() {
+        this._users = null;
+        this._roles = null;
         this.cancel.emit();
     }
 
     private setupTarget() {
         if (this.rule.users == "*" || this.rule.users == "?") {
             this._target = this.rule.users;
-            this.rule.users = "";
         }
         else if (this.rule.roles) {
             this._target = "roles";
+            this._roles = this.rule.roles;
         }
         else {
             this._target = "users";
+            this._users = this.rule.users;
         }
     }
 
