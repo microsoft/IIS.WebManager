@@ -184,6 +184,7 @@
     <TypeScriptCompile Include="app\utils\url.ts" />
     <TypeScriptCompile Include="app\main\get.component.ts" />
     <TypeScriptCompile Include="app\versioning\new-version-notification.component.ts" />
+    <TypeScriptCompile Include="app\webserver\server-analytic.service.ts" />
     <TypeScriptCompile Include="app\versioning\version.service.ts" />
     <TypeScriptCompile Include="app\webserver\app-pools\app-pool-general.component.ts" />
     <TypeScriptCompile Include="app\webserver\app-pools\app-pool-list.ts" />
@@ -340,7 +341,6 @@
     <TypeScriptCompile Include="app\utils\diff.ts" />
     <Content Include="js\feedback.js" />
     <Content Include="js\main.js" />
-    <Content Include="js\analytics.js" />
     <TypeScriptCompile Include="app\files\filesystem.d.ts" />
     <Content Include="app\files\file-icons.css" />
     <Content Include="themes\main.css" />

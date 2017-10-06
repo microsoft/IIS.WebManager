@@ -10,6 +10,7 @@ import { ConnectService } from '../connect/connect.service';
 import { LoadingService } from '../notification/loading.service';
 import { WindowService } from './window.service';
 import { VersionService } from '../versioning/version.service';
+import { ServerAnalyticService } from '../webserver/server-analytic.service';
 
 
 @Component({
@@ -70,6 +71,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 private _loadingSvc: LoadingService,
                 private _windowService: WindowService,
                 private _versionService: VersionService,
+                private _serverAnalyticService: ServerAnalyticService,
                 private _renderer: Renderer,
                 angulartics2: Angulartics2,
                 angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
