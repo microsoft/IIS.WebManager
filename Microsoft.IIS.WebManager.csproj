@@ -397,6 +397,9 @@
     <Content Include="js\modules.js" />
     <Content Include="package.json" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="node_modules\**\*.*" Exclude="**\tsconfig.json" />
+  </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
