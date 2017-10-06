@@ -208,6 +208,7 @@
     <TypeScriptCompile Include="app\webserver\authorization\authorization.service.ts" />
     <TypeScriptCompile Include="app\webserver\authorization\authorization.component.ts" />
     <TypeScriptCompile Include="app\webserver\authorization\authorization.ts" />
+    <TypeScriptCompile Include="app\webserver\authorization\rule-edit.component.ts" />
     <TypeScriptCompile Include="app\webserver\authorization\rule.component.ts" />
     <TypeScriptCompile Include="app\webserver\authorization\rules.component.ts" />
     <TypeScriptCompile Include="app\webserver\central-certificates\central-certificate.component.ts" />

@@ -1,18 +1,22 @@
-﻿import { Component, OnDestroy } from '@angular/core';
+﻿import { Component, OnDestroy, ViewChild } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 
-import { DiffUtil } from '../../utils/diff';
+import { Selector } from '../../common/selector';
 import { NotificationService } from '../../notification/notification.service';
 import { AuthorizationService } from './authorization.service';
-import { RuleComponent } from './rule.component';
 import { Authorization, AuthRule } from './authorization'
 
 @Component({
     selector: 'auth-rules',
     template: `
         <div *ngIf="_rules">
-            <button class="create" (click)="createRule()" [disabled]="_locked"><i class="fa fa-plus blue"></i><span>Add</span></button>
+
+            <button [disabled]="_locked" [class.background-active]="newRule.opened" (click)="newRule.toggle()">Create Rule <i class="fa fa-caret-down"></i></button>
+            <selector #newRule class="container-fluid create" (hide)="initializeNewRule()">
+                <edit-rule *ngIf="newRule.opened" [rule]="_newRule" (save)="saveNew($event)" (cancel)="newRule.close()"></edit-rule>
+            </selector>
+
             <div class="container-fluid">
                 <div class="row hidden-xs hidden-sm border-active grid-list-header" [hidden]="_rules.length == 0">
                     <label class="col-md-2">Access Type</label>
@@ -21,9 +25,6 @@ import { Authorization, AuthRule } from './authorization'
                 </div>
             </div>
             <ul class="grid-list container-fluid">
-                <li *ngIf="_newRule">
-                    <rule [rule]="_newRule" (modelChanged)="saveNew()" (discard)="_newRule=null"></rule>
-                </li>
                 <li *ngFor="let rule of _rules; let i = index;">
                     <rule [rule]="rule" (modelChanged)="saveRule(rule)" [locked]="_locked"></rule>
                 </li>
@@ -38,10 +39,12 @@ export class RulesComponent implements OnDestroy {
     private _newRule: AuthRule;
     private _error: any;
     private _subscriptions: Array<Subscription> = [];
+    @ViewChild(Selector) private _newRuleSelector: Selector;
 
     constructor(private _service: AuthorizationService,
         private _notificationService: NotificationService) {
         this._subscriptions.push(this._service.rules.subscribe(rules => this._rules = rules));
+        this.initializeNewRule();
     }
 
     public ngOnDestroy(): void {
@@ -52,14 +55,10 @@ export class RulesComponent implements OnDestroy {
         this._service.saveRule(rule);
     }
 
-    createRule() {
-        if (this._newRule) {
-            return;
-        }
-
+    initializeNewRule() {
         let newRule = new AuthRule();
 
-        newRule.users = "";
+        newRule.users = "*";
         newRule.roles = "";
         newRule.verbs = "";
         newRule.access_type = "deny";
@@ -68,7 +67,7 @@ export class RulesComponent implements OnDestroy {
     }
 
     saveNew() {
-        this._service.addRule(this._newRule);
-        this._newRule = null;
+        this._service.addRule(this._newRule)
+            .then(() => this._newRuleSelector.close());
     }
 }
