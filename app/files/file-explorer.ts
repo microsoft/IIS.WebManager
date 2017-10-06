@@ -22,7 +22,7 @@ import { FileNavService } from './file-nav.service';
             (onNewFolder)="createDirectory()"
             (onNewFile)="createFile()"
             (onUpload)="fileSelector.open()"
-            (onDelete)="deleteFiles(_selected)"></toolbar>
+            (onDelete)="deleteFiles(selected)"></toolbar>
         <navigation></navigation>
         <file-list *ngIf="isDir(_current)" [types]="types"></file-list>
     `,
