@@ -46,9 +46,7 @@ export class ServerAnalyticService implements OnDestroy {
         else {
             this._httpClient.get("/webserver").then(res => {
 
-                clientId = this.ToHash(res.id);
-
-                (<any>connection)._hostId = clientId;
+                (<any>connection)._hostId = res.id;
 
                 this.setupAnalytics(clientId);
             })
@@ -56,26 +54,6 @@ export class ServerAnalyticService implements OnDestroy {
                 // NoOp
             });
         }
-    }
-
-    private ToHash(str: string): string {
-
-        let hash = 0;
-
-        if (str.length == 0) {
-            return hash.toString();
-        }
-
-        for (let i = 0; i < str.length; i++) {
-
-            let char = str.charCodeAt(i);
-
-            hash = ((hash << 5) - hash) + char;
-
-            hash = hash & hash;
-        }
-
-        return hash.toString();
     }
 
     private setupAnalytics(clientId: string): void {
