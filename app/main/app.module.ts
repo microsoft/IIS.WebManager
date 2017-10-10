@@ -20,6 +20,7 @@ import { HttpClient } from '../common/httpclient';
 import { NotificationService } from '../notification/notification.service';
 import { LoadingService } from '../notification/loading.service';
 import { VersionService } from '../versioning/version.service';
+import { ServerAnalyticService } from '../webserver/server-analytic.service';
 import { ConnectService } from '../connect/connect.service';
 import { Logger } from '../common/logger';
 import { OptionsService } from './options.service';
@@ -85,6 +86,7 @@ import { WindowService } from './window.service';
         LoadingService,
         WindowService,
         VersionService,
+        ServerAnalyticService,
         ConnectService,
         Logger,
         OptionsService,

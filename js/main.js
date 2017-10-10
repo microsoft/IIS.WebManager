@@ -32,7 +32,7 @@
                 defaultExtension: 'v' + SETTINGS.version + '.js'
             }
         }
-});
+    });
 
     // Activate loading indicator
     $(document).ready(function () {
@@ -41,6 +41,10 @@
         }, 1)
     });
 
+    //
+    // angulartics
+    window.ga = null;
+    window._gaq = null;
 
     System.import('app/main/main').catch(function (err) {
         console.error(err);
