@@ -58,6 +58,6 @@ export class ComponentUtil {
             scrollTo = thisOffset.top;
         }
 
-        mainContainer.scrollTop = scrollTo + mainContainer.scrollTop - HEADER_HEIGHT; //ay
+        mainContainer.scrollTop = scrollTo + mainContainer.scrollTop - HEADER_HEIGHT;
     }
 }
