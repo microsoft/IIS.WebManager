@@ -395,11 +395,10 @@
     <TypeScriptCompile Include="app\webserver\websites\websites.service.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="js\modules.js" />
     <Content Include="package.json" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="node_modules\**\*.*" Exclude="**\tsconfig.json" >
+    <Content Include="node_modules\**\*.*" Exclude="**\tsconfig.json">
       <Visible>false</Visible>
     </Content>
   </ItemGroup>
