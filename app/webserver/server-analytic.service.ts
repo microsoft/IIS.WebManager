@@ -46,7 +46,9 @@ export class ServerAnalyticService implements OnDestroy {
         else {
             this._httpClient.get("/webserver").then(res => {
 
-                (<any>connection)._hostId = res.id;
+                clientId = res.id;
+
+                (<any>connection)._hostId = clientId;
 
                 this.setupAnalytics(clientId);
             })
