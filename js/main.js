@@ -37,6 +37,10 @@
                 '@angular/forms': 'node_modules/@angular/forms/bundles/forms.umd.v' + ver('@angular/forms') + '.js',
                 '@angular/upgrade': 'node_modules/@angular/upgrade/bundles/upgrade.umd.v' + ver('@angular/upgrade') + '.js',
 
+
+                'chart.js': 'node_modules/chart.js/dist/chart.min.v' + ver('@angular/upgrade') + '.js',
+                'ng2-charts': 'node_modules/ng2-charts/charts/charts.v' + ver('@angular/upgrade') + '.js',
+
                 // other libraries
                 'angulartics2': 'node_modules/angulartics2',
                 'rxjs': 'node_modules/rxjs',

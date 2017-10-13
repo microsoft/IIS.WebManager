@@ -34,6 +34,9 @@ import { OptionsService } from './options.service';
                     <item [name]="'Files'" [ico]="'fa fa-files-o'">
                         <dynamic [name]="'FilesComponent'" [module]="'app/files/files.module#FilesModule'"></dynamic>
                     </item>
+                    <item [name]="'Monitoring'" [ico]="'fa fa-medkit'">
+                        <dynamic [name]="'MonitoringComponent'" [module]="'app/webserver/monitoring/monitoring.module#MonitoringModule'"></dynamic>
+                    </item>
                 </vtabs>
             </div>
         </div>
