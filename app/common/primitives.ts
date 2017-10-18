@@ -86,6 +86,21 @@ export class Humanizer {
         return groups.join(",").trim();
     }
 
+    public static memory(val: number) {
+
+        const units = ['B', 'KB', 'MB', 'GB'];
+
+        let i = 0;
+
+
+        while (val > 1024) {
+            val /= 1024;
+            i++;
+        }
+
+        return Math.floor(val) + ' ' + units[i];
+    }
+
     public static date(date: Date): string {
         return date ? Humanizer._dateFormatter.format(date) : "";
     }

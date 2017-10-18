@@ -12,12 +12,20 @@ import { ServerSnapshot } from './server-snapshot';
 
 @Injectable()
 export class MonitoringService {
-    public error: ApiError;
+    public apiInstalled: boolean = true;
+
 
     constructor(private _http: HttpClient) {
     }
 
     public getSnapshot(): Promise<ServerSnapshot> {
-        return this._http.get("/webserver/monitoring");
+        return this._http.get("/webserver/monitoring", null, false)
+            .catch(e => {
+                if (e.status == 404) {
+                    this.apiInstalled = false;
+                }
+
+                throw e;
+        });
     }
 }

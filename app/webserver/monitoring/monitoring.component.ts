@@ -6,165 +6,173 @@ import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 
 import { BaseChartDirective } from 'ng2-charts';
 
+import { Humanizer } from '../../common/primitives';
 import { MonitoringService } from './monitoring.service';
 import { ServerSnapshot } from './server-snapshot';
 
 @Component({
     template: `
+        <div *ngIf="!_svc.apiInstalled">
+            The monitoring component has not been installed. Update to the <a [routerLink]="['/get']">latest version</a> to begin using this feature.
+        </div>
+        
+        <div *ngIf="_svc.apiInstalled">
+            <div class="row">
+                <div class="col-lg-5">
+                    <h2>
+                        Requests
+                    </h2>
+                    <div class="row" *ngIf="_snapshot">
+                        <div class="col-xs-4">
+                            <label class="block">
+                                Total Requests
+                            </label>
+                            {{_snapshot.requests.total}}
+                        </div>
+                        <div class="col-xs-4">
+                            <label class="block">
+                                Active Requests
+                            </label>
+                            {{_snapshot.requests.active}}
+                        </div>
+                        <div class="col-xs-4">
+                            <label class="block">
+                                Average Requests / sec
+                            </label>
+                            {{_avgRps}}
+                        </div>
+                        <div class="clearfix visible-xs-block"></div>
+                    </div>
+                    <div class="block">
+                        <canvas #rpsChart='base-chart' baseChart width="600" height="200"
+                                    [datasets]="_rpsData"
+                                    [labels]="_emptyLabels"
+                                    [options]="_zeroedChartOptions"
+                                    [colors]="lineChartColors"
+                                    [legend]="true"
+                                    [chartType]="'line'"></canvas>
+                    </div>
+
+                </div>
+                <div class="col-lg-1 visible-lg">
+                </div>
+                <div class="col-lg-5">
+
+                    <h2>
+                        Network
+                    </h2>
+                    <div class="row" *ngIf="_snapshot">
+                        <div class="col-xs-4">
+                            <label class="block">
+                                Total Bytes Sent
+                            </label>
+                            {{_snapshot.network.total_bytes_sent}}
+                        </div>
+                        <div class="col-xs-4">
+                            <label class="block">
+                                Total Bytes Recv
+                            </label>
+                            {{_snapshot.network.total_bytes_recv}}
+                        </div>
+                        <div class="col-xs-4">
+                            <label class="block">
+                                Active Connections
+                            </label>
+                            {{_snapshot.network.current_connections}}
+                        </div>
+                        <div class="clearfix visible-xs-block"></div>
+                    </div>
+                    <div class="block">
+                        <canvas #networkChart='base-chart' baseChart width="600" height="200"
+                                    [datasets]="_networkData"
+                                    [labels]="_emptyLabels"
+                                    [options]="_zeroedChartOptions"
+                                    [colors]="lineChartColors"
+                                    [legend]="true"
+                                    [chartType]="'line'"></canvas>
+                    </div>
+
+                </div>
+            </div>
+
+
         <div>
 
-            <h2>
-                Requests
-            </h2>
-            <div class="row" *ngIf="_snapshot">
-                <div class="col-lg-2 col-md-3 col-xs-4">
-                    <label class="block">
-                        Total Requests
-                    </label>
-                    {{_snapshot.requests.total}}
-                </div>
-                <div class="col-lg-2 col-md-3 col-xs-4">
-                    <label class="block">
-                        Active Requests
-                    </label>
-                    {{_snapshot.requests.active}}
-                </div>
-                <div class="col-lg-2 col-md-3 col-xs-4">
-                    <label class="block">
-                        Average Requests / sec
-                    </label>
-                    {{_avgRps}}
-                </div>
-                <div class="clearfix visible-xs-block"></div>
-            </div>
-
             <div class="row">
-              <div class="col-md-6">
-                <div style="display: block;">
-                    <canvas #rpsChart='base-chart' baseChart width="600" height="200"
-                                [datasets]="_rpsData"
-                                [labels]="_emptyLabels"
-                                [options]="_zeroedChartOptions"
-                                [colors]="lineChartColors"
-                                [legend]="true"
-                                [chartType]="'line'"></canvas>
-                </div>
-              </div>
-            </div>
+                <div class="col-lg-5">
 
-            <h2>
-                Memory
-            </h2>
-            <div class="row" *ngIf="_snapshot">
-                <div class="col-lg-2 col-md-3 col-xs-4">
-                    <label class="block">
-                        Available
-                    </label>
-                    {{humanizeMemory(_snapshot.memory.installed - _snapshot.memory.system_in_use)}}
-                </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div style="display: block;">
-                    <canvas #memChart='base-chart' baseChart width="600" height="200"
-                                [datasets]="_memData"
-                                [labels]="_emptyLabels"
-                                [options]="_memoryChartOptions"
-                                [colors]="lineChartColors"
-                                [legend]="true"
-                                [chartType]="'line'"></canvas>
-                </div>
-              </div>
-            </div>
+                    <h2>
+                        Memory
+                    </h2>
+                    <div class="row" *ngIf="_snapshot">
+                        <div class="col-xs-4">
+                            <label class="block">
+                                Available
+                            </label>
+                            {{humanizeMemory(_snapshot.memory.installed - _snapshot.memory.system_in_use)}}
+                        </div>
+                    </div>
+                    <div class="block">
+                        <canvas #memChart='base-chart' baseChart width="600" height="200"
+                                    [datasets]="_memData"
+                                    [labels]="_emptyLabels"
+                                    [options]="_memoryChartOptions"
+                                    [colors]="lineChartColors"
+                                    [legend]="true"
+                                    [chartType]="'line'"></canvas>
+                    </div>
 
-            <h2>
-                CPU
-            </h2>
-            <div class="row" *ngIf="_snapshot">
-                <div class="col-lg-2 col-md-3 col-xs-4">
-                    <label class="block">
-                        Process Count
-                    </label>
-                    {{_snapshot.cpu.processes}}
                 </div>
-                <div class="col-lg-2 col-md-3 col-xs-4">
-                    <label class="block">
-                        Thread Count
-                    </label>
-                    {{_snapshot.cpu.threads}}
+                <div class="col-lg-1 visible-lg">
                 </div>
-                <div class="col-lg-2 col-md-3 col-xs-4">
-                    <label class="block">
-                        Average CPU Usage
-                    </label>
-                    {{_avgCpu}} %
-                </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div style="display: block;">
-                    <canvas #cpuChart='base-chart' baseChart width="600" height="200"
-                                [datasets]="_cpuData"
-                                [labels]="_emptyLabels"
-                                [options]="_cpuChartOptions"
-                                [colors]="lineChartColors"
-                                [legend]="true"
-                                [chartType]="'line'"></canvas>
-                </div>
-              </div>
-            </div>
+                <div class="col-lg-5">
 
-            <h2>
-                Network
-            </h2>
-            <div class="row" *ngIf="_snapshot">
-                <div class="col-lg-2 col-md-3 col-xs-4">
-                    <label class="block">
-                        Total Bytes Sent
-                    </label>
-                    {{_snapshot.network.total_bytes_sent}}
+                    <h2>
+                        CPU
+                    </h2>
+                    <div class="row" *ngIf="_snapshot">
+                        <div class="col-xs-4">
+                            <label class="block">
+                                Process Count
+                            </label>
+                            {{_snapshot.cpu.processes}}
+                        </div>
+                        <div class="col-xs-4">
+                            <label class="block">
+                                Thread Count
+                            </label>
+                            {{_snapshot.cpu.threads}}
+                        </div>
+                        <div class="col-xs-4">
+                            <label class="block">
+                                Average CPU Usage
+                            </label>
+                            {{_avgCpu}} %
+                        </div>
+                    </div>
+                    <div class="block">
+                        <canvas #cpuChart='base-chart' baseChart width="600" height="200"
+                                    [datasets]="_cpuData"
+                                    [labels]="_emptyLabels"
+                                    [options]="_cpuChartOptions"
+                                    [colors]="lineChartColors"
+                                    [legend]="true"
+                                    [chartType]="'line'"></canvas>
+                    </div>
+
                 </div>
-                <div class="col-lg-2 col-md-3 col-xs-4">
-                    <label class="block">
-                        Total Bytes Recv
-                    </label>
-                    {{_snapshot.network.total_bytes_recv}}
-                </div>
-                <div class="col-lg-2 col-md-3 col-xs-4">
-                    <label class="block">
-                        Active Connections
-                    </label>
-                    {{_snapshot.network.current_connections}}
-                </div>
-                <div class="clearfix visible-xs-block"></div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div style="display: block;">
-                    <canvas #networkChart='base-chart' baseChart width="600" height="200"
-                                [datasets]="_networkData"
-                                [labels]="_emptyLabels"
-                                [options]="_zeroedChartOptions"
-                                [colors]="lineChartColors"
-                                [legend]="true"
-                                [chartType]="'line'"></canvas>
-                </div>
-              </div>
             </div>
 
         </div>
     `,
     styles: [`
-        th,
-        td {
-            margin-right: 15px;
-        }
     `]
 })
 export class MonitoringComponent implements OnDestroy {
 
     private _subscriptions: Array<Subscription> = [];
     private _snapshot: ServerSnapshot;
+    private humanizeMemory = Humanizer.memory;
 
     private _chartLength = 20;
     private _requestInterval = 1000;
@@ -252,6 +260,18 @@ export class MonitoringComponent implements OnDestroy {
     @ViewChild('cpuChart') private _cpuChart: BaseChartDirective;
     @ViewChild('networkChart') private _networkChart: BaseChartDirective;
 
+    private lineChartColors: Array<any> = [
+        {
+            // Gray
+            backgroundColor: 'rgba(148,159,177,0.2)',
+            borderColor: 'rgba(148,159,177,1)',
+            pointBackgroundColor: 'rgba(148,159,177,1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+        },
+    ];
+
     private _rpsData: Array<any> = [
         { data: this._rpsValues, label: 'Requests / sec' },
         { data: this._avgRpsValues, label: 'Avg Requests / sec', hidden: true }
@@ -270,39 +290,65 @@ export class MonitoringComponent implements OnDestroy {
     ];
 
     constructor(private _svc: MonitoringService) {
+        this.activate();
+    }
+
+    public activate() {
+
+        let emptyLabels = [];
+
         for (let i = 0; i < this._chartLength; i++) {
-            this._emptyLabels.push('');
+            emptyLabels.push('');
         }
 
-        this._subscriptions.push(IntervalObservable.create(this._requestInterval).subscribe(() => {
-            this._svc.getSnapshot()
-                .then(snapshot => {
-                    this.consumeSnapshot(snapshot);
-                });
-        }));
+        this._emptyLabels = emptyLabels;
+
+        if (this._subscriptions.length == 0) {
+            this.subscribe();
+        }
+
+    }
+
+    public deactivate() {
+        this._subscriptions.forEach(sub => sub.unsubscribe());
+        this._subscriptions.splice(0, this._subscriptions.length);
     }
 
     public ngOnDestroy() {
-        this._subscriptions.forEach(sub => sub.unsubscribe());
-
-        console.log("Destroyed monitoring component.");
+        this.deactivate();
     }
 
-    // lineChart
+    private subscribe() {
 
-    public lineChartColors: Array<any> = [
-        { // grey
-            backgroundColor: 'rgba(148,159,177,0.2)',
-            borderColor: 'rgba(148,159,177,1)',
-            pointBackgroundColor: 'rgba(148,159,177,1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-        },
-    ];
+        let requesting = false;
 
-    private _initialized = false;
-    private _f = null;
+        this._subscriptions.push(IntervalObservable.create(this._requestInterval).subscribe(() => {
+
+            if (!this._svc.apiInstalled) {
+                return;
+            }
+
+            if (!requesting) {
+
+                requesting = true;
+
+                this._svc.getSnapshot()
+                    .then(snapshot => {
+
+                        requesting = false;
+                        this.consumeSnapshot(snapshot);
+
+                    })
+                    .catch(e => {
+
+                        requesting = false;
+                        throw e;
+
+                    });
+            }
+        }));
+    }
+
     private consumeSnapshot(snapshot: ServerSnapshot) {
         this._snapshot = snapshot;
 
@@ -397,20 +443,5 @@ export class MonitoringComponent implements OnDestroy {
         if (this._networkChart && this._networkChart.chart) {
             this._networkChart.chart.update();
         }
-    }
-
-    private humanizeMemory(val: number) {
-
-        const units = ['B', 'KB', 'MB', 'GB'];
-
-        let i = 0;
-
-
-        while (val > 1024) {
-            val /= 1024;
-            i++;
-        }
-
-        return Math.floor(val) + ' ' + units[i];
     }
 }

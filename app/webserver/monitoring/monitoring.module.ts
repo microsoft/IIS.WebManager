@@ -1,6 +1,7 @@
 ﻿import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { ChartsModule } from 'ng2-charts';
 
@@ -13,6 +14,7 @@ import { MonitoringService } from './monitoring.service';
     imports: [
         CommonModule,
         FormsModule,
+        RouterModule,
         BModel,
         ChartsModule
     ],
