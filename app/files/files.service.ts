@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { RequestMethod, RequestOptionsArgs, Headers, Response } from '@angular/http';
 
@@ -14,11 +13,10 @@ import { Progress } from './progress';
 import { IDisposable } from '../common/idisposable';
 
 import { ApiFile, ApiFileType, FileChangeEvent, ChangeType, MimeTypes } from './file';
+import { Location } from './location';
 import { ParallelExecutor } from './parallel-executor';
 
-
 declare var unescape: any;
-
 
 @Injectable()
 export class FilesService implements IDisposable {
@@ -83,7 +81,7 @@ export class FilesService implements IDisposable {
     }
 
     public getRoots(): Promise<Array<ApiFile>> {
-        return this._http.get("/files?fields=" + this._fields)
+        return this._http.get("/files?fields=" + this._fields + ",claims")
             .then(res => {
                 return (<Array<any>>res.files).map(f => ApiFile.fromObj(f));
             })
@@ -91,6 +89,14 @@ export class FilesService implements IDisposable {
                 this.handleError(e, "/");
                 throw e;
             });
+    }
+
+    public createLocation(location: Location): void {
+        this.createLocationInternal(location);
+    }
+
+    public deleteLocations(locations: Array<ApiFile>): void {
+        this.deleteLocationsInternal(locations);
     }
 
     public create(file: ApiFile, parent: ApiFile): void {
@@ -331,6 +337,53 @@ export class FilesService implements IDisposable {
     //
     //
     //
+    private createLocationInternal(location: Location): Promise<ApiFile> {
+        return this._http.post("/files/locations", JSON.stringify(location))
+            .then(location => {
+
+                return this.get(location.id)
+                    .then(f => {
+
+                        this._change.next(FileChangeEvent.created(f));
+                        return f;
+                    });
+            })
+            .catch(e => {
+                this.handleError(e);
+                throw e;
+            });
+    }
+
+    private deleteLocationsInternal(locations: Array<ApiFile>, index: number = 0): Promise<any> {
+
+        if (index == 0) {
+            locations = locations.filter(() => true);
+        }
+
+
+        if (index > locations.length - 1) {
+            return;
+        }
+
+
+        return this._http.delete("/files/locations/" + locations[index].id)
+            .then(() => {
+
+                this._change.next(FileChangeEvent.deleted(locations[index]));
+
+                index++;
+
+                return this.deleteLocationsInternal(locations, index);
+            })
+            .catch(e => {
+                this.handleError(e);
+                throw e;
+            });
+    }
+
+    //
+    //
+    //
     private createInternal(file: ApiFile, parent: ApiFile): Promise<ApiFile> {
         return this._creator.execute(() => {
             file.parent = parent;
@@ -374,6 +427,7 @@ export class FilesService implements IDisposable {
         }
 
         let promises = [];
+
         for (let file of files) {
             promises.push(this._http.delete("/files?id=" + file.id)
                 .then(_ => {

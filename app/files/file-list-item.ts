@@ -44,7 +44,8 @@ import { ApiFile, ApiFileType } from './file';
                         <ul>
                             <li><button class="edit" title="Rename" (click)="onRename($event)">Rename</button></li>
                             <li><button class="download" title="Download" *ngIf="model.type=='file'" (click)="onDownload($event)">Download</button></li>
-                            <li><button class="delete" title="Delete" (click)="onDelete($event)">Delete</button></li>
+                            <li><button *ngIf="!isRoot" class="delete" title="Delete" (click)="onDelete($event)">Delete</button></li>
+                            <li><button *ngIf="isRoot" class="delete" title="Delete" (click)="onDelete($event)">Remove</button></li>
                         </ul>
                     </selector>
                 </div>
@@ -111,6 +112,10 @@ export class FileComponent {
                 private _nav: FileNavService) {
     }
 
+    private get isRoot(): boolean {
+        return !this.model.parent;
+    }
+
     private get href() {
         return window.location.pathname + "#" + this.model.physical_path;
     }
@@ -151,7 +156,13 @@ export class FileComponent {
         this.selector.close();
 
         if (confirm("Are you sure you want to delete " + this.model.name)) {
-            this._svc.delete([this.model]);
+
+            if (this.model.parent) {
+                this._svc.delete([this.model]);
+            }
+            else {
+                this._svc.deleteLocations([this.model]);
+            }
         }
     }
 

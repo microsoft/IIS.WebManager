@@ -23,6 +23,7 @@ import { FilesComponent } from './files.component';
 import { FileExplorer } from './file-explorer';
 import { FileEditor } from './file-editor';
 import { NewFileComponent } from './new-file.component';
+import { LocationEditComponent } from './edit-location.component';
 import { FileSelectorComponent } from './file-selector.component';
 
 @NgModule({
@@ -49,6 +50,7 @@ import { FileSelectorComponent } from './file-selector.component';
         FileListComponent,
         FilesComponent,
         NewFileComponent,
+        LocationEditComponent,
         FileSelectorComponent,
         FileExplorer
     ],

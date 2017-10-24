@@ -10,6 +10,7 @@ import { FilterPipe } from '../common/filter.pipe';
 import { Range } from '../common/virtual-list.component';
 
 import { ApiFile, ApiFileType, MimeTypes } from './file';
+import { Location } from './location';
 import { FilesService } from './files.service';
 import { FileNavService } from './file-nav.service';
 
@@ -46,6 +47,9 @@ import { FileNavService } from './file-nav.service';
                     <label class="col-md-2 visible-lg visible-md" [ngClass]="_orderBy.css('description')" (click)="sort('description')">Type</label>
                     <label class="col-md-1 visible-lg visible-md text-right" [ngClass]="_orderBy.css('size')" (click)="sort('size')">Size</label>
                 </div>
+            </div>
+            <div class="grid-list container-fluid" *ngIf="_newLocation">
+                <edit-location [model]="_newLocation" (cancel)="_newLocation=null" (save)="onSaveNewLocation()"></edit-location>
             </div>
             <div class="grid-list container-fluid" *ngIf="_newDir">
                 <new-file [model]="_newDir" (cancel)="_newDir=null" (save)="onSaveNewDir()"></new-file>
@@ -101,6 +105,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     private _current: ApiFile;
     private _filter: string = "";
     private _newDir: ApiFile = null;
+    private _newLocation: Location = null;
     private _ignoreDragLeave: boolean;
     private _orderBy: OrderBy = new OrderBy();
     private _sortPipe: SortPipe = new SortPipe();
@@ -161,6 +166,23 @@ export class FileListComponent implements OnInit, OnDestroy {
         this._navSvc.load(this._current.physical_path);
     }
 
+    public createLocation() {
+        this.clearSelection();
+
+        let location = new Location();
+
+        location.alias = "sites";
+        location.path = "%systemdrive%\\sites";
+
+        location.claims = [
+            "read"
+        ];
+
+        this._active = null;
+
+        this._newLocation = location;
+    }
+
     public createDirectory() {
         this.clearSelection();
 
@@ -186,8 +208,13 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     public deleteFiles(files: Array<ApiFile>) {
+
         if (files && files.length < 1) {
             return;
+        }
+
+        if (this.atRoot()) {
+            return this.deleteLocations(files);
         }
 
         let msg = files.length == 1 ? "Are you sure you want to delete '" + files[0].name + "'?" :
@@ -195,6 +222,18 @@ export class FileListComponent implements OnInit, OnDestroy {
         if (confirm(msg)) {
             this._svc.delete(files);
         }
+        this.clearSelection();
+    }
+
+    private deleteLocations(files: Array<ApiFile>) {
+
+        let msg = files.length == 1 ? "Are you sure you want to remove the root folder '" + files[0].name + "'?" :
+            "Are you sure you want to remove " + files.length + " root folders?";
+
+        if (confirm(msg)) {
+            this._svc.deleteLocations(files);
+        }
+
         this.clearSelection();
     }
 
@@ -262,6 +301,16 @@ export class FileListComponent implements OnInit, OnDestroy {
         }
 
         this._newDir = null;
+    }
+
+    private onSaveNewLocation() {
+        let existing = this._items.find(f => f.name == this._newLocation.alias);
+
+        if (!existing) {
+            this._svc.createLocation(this._newLocation);
+        }
+
+        this._newLocation = null;
     }
 
     private clearSelection(file: ApiFile = null) {
@@ -383,5 +432,9 @@ export class FileListComponent implements OnInit, OnDestroy {
         if (e.clipboardData && this._current.id) {
             this._svc.clipboardPaste(e, this._current);
         }
+    }
+
+    private atRoot(): boolean {
+        return !!(this._current && !this._current.physical_path);
     }
 }
