@@ -363,6 +363,16 @@ export class FilesService implements IDisposable {
 
     private deleteInternal(files: Array<ApiFile>): Promise<any> {
 
+        let root = files.find(file => !file.parent);
+
+        if (root) {
+            let message = "Root folders cannot be deleted: '" + root.name + "'";
+
+            this._notificationService.warn(message);
+
+            return Promise.reject(message);
+        }
+
         let promises = [];
         for (let file of files) {
             promises.push(this._http.delete("/files?id=" + file.id)

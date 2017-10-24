@@ -37,7 +37,7 @@ export class FileNavService implements IDisposable {
         // File system changes
         this._subscriptions.push(_svc.change.subscribe(e => {
             let dir = this._current.getValue();
-            if (!dir || !ApiFile.equal(e.target.parent, dir)) {
+            if (!dir || (e.target.parent != null && !ApiFile.equal(e.target.parent, dir))) {
                 return;
             }
             let files = this._files.getValue();
