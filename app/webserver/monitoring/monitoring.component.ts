@@ -24,15 +24,25 @@ import { ServerSnapshot } from './server-snapshot';
                     </h2>
                     <div class="row" *ngIf="_snapshot">
                         <div class="col-xs-4">
-                            <label class="block">
-                                Total Requests
-                            </label>
+                            <div>
+                                <label>
+                                    Total Requests
+                                </label>
+                                <tooltip>
+                                    Total number of HTTP requests served since the web server started.
+                                </tooltip>
+                            </div>
                             {{_snapshot.requests.total}}
                         </div>
                         <div class="col-xs-4">
-                            <label class="block">
-                                Active Requests
-                            </label>
+                            <div>
+                                <label>
+                                    Active Requests
+                                </label>
+                                <tooltip>
+                                    Total number of requests that are currently being processed.
+                                </tooltip>
+                            </div>
                             {{_snapshot.requests.active}}
                         </div>
                         <div class="col-xs-4">
@@ -70,14 +80,19 @@ import { ServerSnapshot } from './server-snapshot';
                         </div>
                         <div class="col-xs-4">
                             <label class="block">
-                                Total Bytes Recv
+                                Total Bytes Received
                             </label>
                             {{_snapshot.network.total_bytes_recv}}
                         </div>
                         <div class="col-xs-4">
-                            <label class="block">
-                                Active Connections
-                            </label>
+                            <div>
+                                <label>
+                                    Active Connections
+                                </label>
+                                <tooltip>
+                                    Total number of current network connections that are open on the web server.
+                                </tooltip>
+                            </div>
                             {{_snapshot.network.current_connections}}
                         </div>
                         <div class="clearfix visible-xs-block"></div>
@@ -106,9 +121,14 @@ import { ServerSnapshot } from './server-snapshot';
                     </h2>
                     <div class="row" *ngIf="_snapshot">
                         <div class="col-xs-4">
-                            <label class="block">
-                                Available
-                            </label>
+                            <div>
+                                <label>
+                                    Available
+                                </label>
+                                <tooltip>
+                                    The amount of memory available for the web server to begin using.
+                                </tooltip>
+                            </div>
                             {{humanizeMemory(_snapshot.memory.installed - _snapshot.memory.system_in_use)}}
                         </div>
                     </div>
@@ -132,21 +152,36 @@ import { ServerSnapshot } from './server-snapshot';
                     </h2>
                     <div class="row" *ngIf="_snapshot">
                         <div class="col-xs-4">
-                            <label class="block">
-                                Process Count
-                            </label>
+                            <div>
+                                <label>
+                                    Process Count
+                                </label>
+                                <tooltip>
+                                    Total number of all web server worker processes being used to serve requests.
+                                </tooltip>
+                            </div>
                             {{_snapshot.cpu.processes}}
                         </div>
                         <div class="col-xs-4">
-                            <label class="block">
-                                Thread Count
-                            </label>
+                            <div>
+                                <label>
+                                    Thread Count
+                                </label>
+                                <tooltip>
+                                    Total number of active threads that have been created by web server processes.
+                                </tooltip>
+                            </div>
                             {{_snapshot.cpu.threads}}
                         </div>
                         <div class="col-xs-4">
-                            <label class="block">
-                                Average CPU Usage
-                            </label>
+                            <div>
+                                <label>
+                                    Average CPU Usage
+                                </label>
+                                <tooltip>
+                                    Average CPU usage by the web server's process. Other processes CPU utilization is ignored.
+                                </tooltip>
+                            </div>
                             {{_avgCpu}} %
                         </div>
                     </div>

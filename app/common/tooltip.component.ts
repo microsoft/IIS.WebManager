@@ -39,6 +39,7 @@ import { WindowService } from '../main/window.service';
             padding: 5px 10px;
             margin: 0;
             display: inline-block;
+            z-index: 1;
         }
 
         .help-container:hover .help-content {

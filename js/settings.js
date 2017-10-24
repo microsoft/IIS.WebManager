@@ -120,6 +120,14 @@ var GLOBAL_MODULES = [
         "api_path": "/api/webserver/static-content/{id}"
     },
     {
+        "name": "Monitoring",
+        "ico": "fa fa-medkit",
+        "component_name": "MonitoringComponent",
+        "module": "app/webserver/monitoring/monitoring.module#MonitoringModule",
+        "api_name": "monitoring",
+        "api_path": "/api/webserver/monitoring/{id}"
+    },
+    {
         "name": "Modules",
         "ico": "fa fa-th",
         "component_name": "ModulesComponent",

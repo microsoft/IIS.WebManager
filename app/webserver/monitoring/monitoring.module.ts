@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { ChartsModule } from 'ng2-charts';
 
 import { Module as BModel } from '../../common/bmodel';
+import { Module as Tooltip } from '../../common/tooltip.component';
 
 import { MonitoringComponent } from './monitoring.component';
 import { MonitoringService } from './monitoring.service';
@@ -16,6 +17,7 @@ import { MonitoringService } from './monitoring.service';
         FormsModule,
         RouterModule,
         BModel,
+        Tooltip,
         ChartsModule
     ],
     declarations: [
