@@ -69,7 +69,7 @@
                                        },
                          "chart.js":  {
                                           "version":  "2.7.0",
-                                          "from":  "https://registry.npmjs.org/chart.js/-/chart.js-2.7.0.tgz",
+                                          "from":  "chart.js@2.7.0",
                                           "resolved":  "https://registry.npmjs.org/chart.js/-/chart.js-2.7.0.tgz",
                                           "Hash":  "700AC20CBC44BD7851AA5A5A064743D88675C9FEB2EFBF2796AED492359B838B"
                                       },
@@ -141,7 +141,7 @@
                                            },
                          "ng2-charts":  {
                                             "version":  "1.6.0",
-                                            "from":  "ng2-charts@latest",
+                                            "from":  "ng2-charts@1.6.0",
                                             "resolved":  "https://registry.npmjs.org/ng2-charts/-/ng2-charts-1.6.0.tgz",
                                             "Hash":  "AF5072B537B83AED056ED51A180F1F65EB13DDE7764F1B13B0D64D582B48A08D"
                                         },
