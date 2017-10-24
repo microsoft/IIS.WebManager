@@ -184,9 +184,13 @@
     <TypeScriptCompile Include="app\utils\url.ts" />
     <TypeScriptCompile Include="app\main\get.component.ts" />
     <TypeScriptCompile Include="app\versioning\new-version-notification.component.ts" />
+    <TypeScriptCompile Include="app\webserver\monitoring\cpu-chart.ts" />
+    <TypeScriptCompile Include="app\webserver\monitoring\memory-chart.ts" />
     <TypeScriptCompile Include="app\webserver\monitoring\monitoring.component.ts" />
     <TypeScriptCompile Include="app\webserver\monitoring\monitoring.module.ts" />
     <TypeScriptCompile Include="app\webserver\monitoring\monitoring.service.ts" />
+    <TypeScriptCompile Include="app\webserver\monitoring\network-chart.ts" />
+    <TypeScriptCompile Include="app\webserver\monitoring\requests-chart.ts" />
     <TypeScriptCompile Include="app\webserver\monitoring\server-snapshot.ts" />
     <TypeScriptCompile Include="app\webserver\server-analytic.service.ts" />
     <TypeScriptCompile Include="app\versioning\version.service.ts" />

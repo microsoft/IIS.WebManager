@@ -9,6 +9,10 @@ import { Module as BModel } from '../../common/bmodel';
 import { Module as Tooltip } from '../../common/tooltip.component';
 
 import { MonitoringComponent } from './monitoring.component';
+import { RequestsChart } from './requests-chart';
+import { NetworkChart } from './network-chart';
+import { MemoryChart } from './memory-chart';
+import { CpuChart } from './cpu-chart';
 import { MonitoringService } from './monitoring.service';
 
 @NgModule({
@@ -22,6 +26,10 @@ import { MonitoringService } from './monitoring.service';
     ],
     declarations: [
         MonitoringComponent,
+        RequestsChart,
+        NetworkChart,
+        MemoryChart,
+        CpuChart
     ],
     providers: [
         MonitoringService
