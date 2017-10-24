@@ -67,6 +67,36 @@
                                            "resolved":  "https://registry.npmjs.org/bootstrap/-/bootstrap-3.3.7.tgz",
                                            "Hash":  "6A5E17A69ADA3DFF645735129A614A5B2DEA23C519E5DD24ECB3A429BDE896EF"
                                        },
+                         "chart.js":  {
+                                          "version":  "2.7.0",
+                                          "from":  "https://registry.npmjs.org/chart.js/-/chart.js-2.7.0.tgz",
+                                          "resolved":  "https://registry.npmjs.org/chart.js/-/chart.js-2.7.0.tgz",
+                                          "Hash":  "700AC20CBC44BD7851AA5A5A064743D88675C9FEB2EFBF2796AED492359B838B"
+                                      },
+                         "chartjs-color":  {
+                                               "version":  "2.2.0",
+                                               "from":  "chartjs-color@\u003e=2.2.0 \u003c2.3.0",
+                                               "resolved":  "https://registry.npmjs.org/chartjs-color/-/chartjs-color-2.2.0.tgz",
+                                               "Hash":  "F21DCCA907CAFBA283420214866310190B2688E4D74FC33A38D9D3FAD1CBD932"
+                                           },
+                         "chartjs-color-string":  {
+                                                      "version":  "0.5.0",
+                                                      "from":  "chartjs-color-string@\u003e=0.5.0 \u003c0.6.0",
+                                                      "resolved":  "https://registry.npmjs.org/chartjs-color-string/-/chartjs-color-string-0.5.0.tgz",
+                                                      "Hash":  "B5F44552AD22A5489E6E6FD3ABD14AC9906328949328B4AB812C4EB55E90DBCD"
+                                                  },
+                         "color-convert":  {
+                                               "version":  "0.5.3",
+                                               "from":  "color-convert@\u003e=0.5.3 \u003c0.6.0",
+                                               "resolved":  "https://registry.npmjs.org/color-convert/-/color-convert-0.5.3.tgz",
+                                               "Hash":  "90D6F6838931452F344F3848CA92D6AAC97794B34D8134750B14C4F0AD4322D7"
+                                           },
+                         "color-name":  {
+                                            "version":  "1.1.3",
+                                            "from":  "color-name@\u003e=1.0.0 \u003c2.0.0",
+                                            "resolved":  "https://registry.npmjs.org/color-name/-/color-name-1.1.3.tgz",
+                                            "Hash":  "DA135C19417D45F153B96BD4D8E571F15791F1A90D1172A2DD07658C4550B7F5"
+                                        },
                          "core-js":  {
                                          "version":  "2.4.1",
                                          "from":  "core-js@2.4.1",
@@ -97,12 +127,24 @@
                                         "resolved":  "https://registry.npmjs.org/jquery/-/jquery-3.2.0.tgz",
                                         "Hash":  "CE2F836F59B0FD23413C293CDD4C808E6711B569B4945763BA7C6FAA483F9089"
                                     },
+                         "moment":  {
+                                        "version":  "2.18.1",
+                                        "from":  "moment@\u003e=2.18.0 \u003c2.19.0",
+                                        "resolved":  "https://registry.npmjs.org/moment/-/moment-2.18.1.tgz",
+                                        "Hash":  "46CBB9B019755DC726C649994CBACA16A7F4AE720F41A1C63F0E99056A88C06D"
+                                    },
                          "monaco-editor":  {
                                                "version":  "0.8.1",
                                                "from":  "monaco-editor@0.8.1",
                                                "resolved":  "https://registry.npmjs.org/monaco-editor/-/monaco-editor-0.8.1.tgz",
                                                "Hash":  "E56AA9112FFF4317D51FF6DFACBC08DACC35EC41B458E585AC2E2B595585536C"
                                            },
+                         "ng2-charts":  {
+                                            "version":  "1.6.0",
+                                            "from":  "ng2-charts@latest",
+                                            "resolved":  "https://registry.npmjs.org/ng2-charts/-/ng2-charts-1.6.0.tgz",
+                                            "Hash":  "AF5072B537B83AED056ED51A180F1F65EB13DDE7764F1B13B0D64D582B48A08D"
+                                        },
                          "reflect-metadata":  {
                                                   "version":  "0.1.10",
                                                   "from":  "reflect-metadata@0.1.10",

@@ -336,6 +336,7 @@ export class MonitoringComponent implements OnDestroy {
                     .then(snapshot => {
 
                         requesting = false;
+
                         this.consumeSnapshot(snapshot);
 
                     })
