@@ -13,10 +13,10 @@ import { FileNavService } from './file-nav.service';
         <file-selector #fileSelector class="right" (selected)="upload($event)" [multiple]="true">
         </file-selector>
         <toolbar
-            [newLocation]="atRoot() || null"
             [refresh]="true"
             [newFile]="!atRoot()"
-            [newFolder]="!atRoot()"
+            [newLocation]="atRoot() || null"
+            [newFolder]="!atRoot() || null"
             [upload]="!atRoot()"
             [delete]="selected && selected.length > 0"
             (onNewLocation)="createLocation()"

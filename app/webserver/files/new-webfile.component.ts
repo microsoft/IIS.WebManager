@@ -23,7 +23,7 @@ import {WebFileType, WebFile} from './webfile';
     `,
     styles: [`
         .col-left {
-            padding-left: 0;
+            padding-right: 40px;
         }
 
         .row {

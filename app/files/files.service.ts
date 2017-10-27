@@ -83,8 +83,23 @@ export class FilesService implements IDisposable {
     public getRoots(): Promise<Array<ApiFile>> {
         return this._http.get("/files?fields=" + this._fields + ",claims")
             .then(res => {
-                return (<Array<any>>res.files).map(f => ApiFile.fromObj(f));
+                return (<Array<any>>res.files).map(f => {
+
+                    let apiFile = ApiFile.fromObj(f);
+
+                    apiFile.isLocation = true;
+
+                    return apiFile;
+                });
             })
+            .catch(e => {
+                this.handleError(e, "/");
+                throw e;
+            });
+    }
+
+    public getLocation(id: string): Promise<Location> {
+        return this._http.get("/files/locations/" + id)
             .catch(e => {
                 this.handleError(e, "/");
                 throw e;
@@ -97,6 +112,10 @@ export class FilesService implements IDisposable {
 
     public deleteLocations(locations: Array<ApiFile>): void {
         this.deleteLocationsInternal(locations);
+    }
+
+    public updateLocation(location: Location, data: any) {
+        return this.updateLocationInternal(location, data);
     }
 
     public create(file: ApiFile, parent: ApiFile): void {
@@ -344,8 +363,13 @@ export class FilesService implements IDisposable {
                 return this.get(location.id)
                     .then(f => {
 
-                        this._change.next(FileChangeEvent.created(f));
-                        return f;
+                        let file = ApiFile.fromObj(f);
+
+                        file.isLocation = true;
+
+                        this._change.next(FileChangeEvent.created(file));
+
+                        return file;
                     });
             })
             .catch(e => {
@@ -379,6 +403,45 @@ export class FilesService implements IDisposable {
                 this.handleError(e);
                 throw e;
             });
+    }
+
+    private updateLocationInternal(location: Location, data: any): Promise<any> {
+
+        return this.get(location.id)
+            .then(existingDir => {
+
+                existingDir.isLocation = true;
+
+                return this._http.patch("/files/locations?id=" + location.id, JSON.stringify(data))
+                    .then(l => {
+
+                        Object.assign(location, l);
+
+                        return this.get(location.id)
+                            .then(d => {
+
+                                this._change.next(FileChangeEvent.deleted(existingDir));
+
+                                let newDir = ApiFile.fromObj(d);
+
+                                newDir.isLocation = true;
+
+                                this._change.next(FileChangeEvent.created(newDir));
+
+                                return location;
+                            });
+
+                    });
+
+            })
+            .catch(e => {
+
+                this.handleError(e, location.path);
+
+                throw e;
+
+            });;
+
     }
 
     //

@@ -37,7 +37,7 @@ export class FileNavService implements IDisposable {
         // File system changes
         this._subscriptions.push(_svc.change.subscribe(e => {
             let dir = this._current.getValue();
-            if (!dir || (e.target.parent != null && !ApiFile.equal(e.target.parent, dir))) {
+            if (!dir || (!e.target.isLocation && e.target.parent != null && !ApiFile.equal(e.target.parent, dir))) {
                 return;
             }
             let files = this._files.getValue();
@@ -45,9 +45,18 @@ export class FileNavService implements IDisposable {
             // Create
             if (e.type == ChangeType.Created) {
                 this._svc.getByPhysicalPath(e.target.physical_path).then(f => {
-                    files.unshift(f);
+                    Object.assign(e.target, f);
+                    files.unshift(e.target);
                     this._files.next(files);
+
                 });
+
+                //
+                // Location
+                if (e.target.isLocation) {
+                    this._roots.unshift(e.target);
+                }
+
                 return;
             }
 
@@ -58,6 +67,16 @@ export class FileNavService implements IDisposable {
                     files.splice(i, 1);
                     this._files.next(files);
                 };
+
+                //
+                // Location
+                if (e.target.isLocation) {
+                    let i = this._roots.findIndex(f => f.id == e.target.id);
+                    if (i >= 0) {
+                        this._roots.splice(i, 1);
+                    };
+                }
+
                 return;
             }
 
@@ -208,7 +227,7 @@ export class FileNavService implements IDisposable {
         let dir = this._current.getValue();
         let files = this._files.getValue();
 
-        (!dir.physical_path ? this._svc.getRoots() : this._svc.getChildren(dir))
+        (!dir.physical_path ? this._svc.getRoots().then(roots => this._roots = roots) : this._svc.getChildren(dir))
             .then(fs => {
                 //
                 // Make sure the files returned are for the directory we are in

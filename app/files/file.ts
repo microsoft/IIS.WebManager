@@ -7,6 +7,7 @@ export const ApiFileType = {
 export class ApiFile {
     public name: string;
     public alias: string;
+    public isLocation: boolean;
     public id: string;
     public type: ApiFileType;
     public physical_path: string;

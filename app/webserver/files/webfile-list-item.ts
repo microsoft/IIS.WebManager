@@ -67,10 +67,6 @@ import { WebFileType, WebFile } from './webfile';
             width: 90%;
         }
 
-        .fi {
-            padding-left: 0;
-        }
-
         .row {
             margin: 0px;
         }

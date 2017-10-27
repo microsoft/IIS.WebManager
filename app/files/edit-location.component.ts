@@ -1,6 +1,4 @@
-﻿import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-
-import { NotificationService } from '../notification/notification.service';
+﻿import { Component, OnInit, Inject, Input, Output, EventEmitter } from '@angular/core';
 
 import { FilesService } from './files.service';
 import { Location } from './location';
@@ -46,6 +44,9 @@ export class LocationEditComponent implements OnInit {
     @Output() public cancel: EventEmitter<any> = new EventEmitter<any>();
     @Output() public save: EventEmitter<any> = new EventEmitter<any>();
 
+    constructor(@Inject("FilesService") private _svc: FilesService) {
+    }
+
     public ngOnInit() {
         this._read = !!(this.model.claims && this.model.claims.find(c => c == "read"));
         this._write = !!(this.model.claims && this.model.claims.find(c => c == "write"));
@@ -63,6 +64,10 @@ export class LocationEditComponent implements OnInit {
 
             if (this._write) {
                 this.model.claims.push("write");
+            }
+
+            if (this.model.id) {
+                this._svc.updateLocation(this.model, this.model);
             }
 
             this.save.next();
