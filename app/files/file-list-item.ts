@@ -153,6 +153,13 @@ export class FileComponent {
             })
     }
 
+    private onCancel(e: Event) {
+        e.preventDefault();
+        this.selector.close();
+
+        this.cancel();
+    }
+
     private onDelete(e: Event) {
         e.preventDefault();
         this.selector.close();

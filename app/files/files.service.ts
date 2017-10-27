@@ -373,7 +373,20 @@ export class FilesService implements IDisposable {
                     });
             })
             .catch(e => {
-                this.handleError(e);
+
+                if (e && e.status == 400 && e.name == "parent") {
+                    //
+                    // Location API not installed. Api is trying to create a directory is being created
+
+                    e.message = "Ability to create root folders is not available. Please install the latest version."
+
+                    this._notificationService.apiError(e);
+                }
+                else {
+
+                    this.handleError(e);
+                }
+
                 throw e;
             });
     }
