@@ -4,12 +4,13 @@ import { BaseChartDirective } from 'ng2-charts';
 
 import { Humanizer } from '../../common/primitives';
 import { MonitoringService } from './monitoring.service';
+import { MonitoringComponent } from './monitoring.component';
 import { ServerSnapshot } from './server-snapshot';
 
 @Component({
     selector: 'memory-chart',
     template: `
-        <div class="row" *ngIf="_snapshot">
+        <div class="row chart-info" *ngIf="_snapshot">
             <div class="col-xs-4">
                 <div>
                     <label>
@@ -22,7 +23,7 @@ import { ServerSnapshot } from './server-snapshot';
                 {{humanizeMemory(_snapshot.memory.installed - _snapshot.memory.system_in_use)}}
             </div>
         </div>
-        <div *ngIf="_svc.apiInstalled" class="block">
+        <div class="block">
             <canvas #chart='base-chart' baseChart width="600" height="200"
                         [datasets]="_data"
                         [labels]="_labels"
@@ -32,6 +33,9 @@ import { ServerSnapshot } from './server-snapshot';
                         [chartType]="'line'"></canvas>
         </div>
     `,
+    styleUrls: [
+        'app/webserver/monitoring/monitoring.css'
+    ]
 })
 export class MemoryChart implements OnDestroy {
 
@@ -42,6 +46,9 @@ export class MemoryChart implements OnDestroy {
 
     private _options: any = {
         responsive: true,
+        legend: {
+            position: 'bottom'
+        },
         scales: {
             yAxes: [
                 {
@@ -61,21 +68,21 @@ export class MemoryChart implements OnDestroy {
                 }
             ],
             xAxes: [
+                {
+                    gridLines: {
+                        display: false
+                    }
+                }
             ]
+        },
+        elements: {
+            line: {
+                tension: 0,
+            }
         }
     }
 
-    private _colors: Array<any> = [
-        {
-            // Gray
-            backgroundColor: 'rgba(148,159,177,0.2)',
-            borderColor: 'rgba(148,159,177,1)',
-            pointBackgroundColor: 'rgba(148,159,177,1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-        },
-    ];
+    private _colors: Array<any> = this.colors;
 
     private _labels: Array<string> = [];
     private _serverMemValues: Array<number> = [];
@@ -84,8 +91,8 @@ export class MemoryChart implements OnDestroy {
     @ViewChild('chart') private _memChart: BaseChartDirective;
 
     private _data: Array<any> = [
-        { data: this._systemMemValues, label: 'System' },
-        { data: this._serverMemValues, label: 'Web Server' }
+        { data: this._serverMemValues, label: 'Web Server' },
+        { data: this._systemMemValues, label: 'System' }
     ];
 
     constructor(private _svc: MonitoringService) {
@@ -139,5 +146,13 @@ export class MemoryChart implements OnDestroy {
             this._memChart.chart.options.scales.yAxes[0].ticks.stepSize = snapshot.memory.installed
             this._memChart.chart.update();
         }
+    }
+
+    private get colors() {
+        let colors = MonitoringComponent.DefaultColors;
+
+        colors[0].backgroundColor = 'rgba(0,0,0,.1)';
+
+        return colors;
     }
 }

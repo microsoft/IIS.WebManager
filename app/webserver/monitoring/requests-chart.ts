@@ -3,12 +3,13 @@
 import { BaseChartDirective } from 'ng2-charts';
 
 import { MonitoringService } from './monitoring.service';
+import { MonitoringComponent } from './monitoring.component';
 import { ServerSnapshot } from './server-snapshot';
 
 @Component({
     selector: 'requests-chart',
     template: `
-        <div class="row" *ngIf="_snapshot">
+        <div class="row chart-info" *ngIf="_snapshot">
             <div class="col-xs-4">
                 <div>
                     <label>
@@ -39,7 +40,7 @@ import { ServerSnapshot } from './server-snapshot';
             </div>
             <div class="clearfix visible-xs-block"></div>
         </div>
-        <div *ngIf="_svc.apiInstalled" class="block">
+        <div class="block">
             <canvas #chart='base-chart' baseChart width="600" height="200"
                         [datasets]="_data"
                         [labels]="_labels"
@@ -49,6 +50,9 @@ import { ServerSnapshot } from './server-snapshot';
                         [chartType]="'line'"></canvas>
         </div>
     `,
+    styleUrls: [
+        'app/webserver/monitoring/monitoring.css'
+    ]
 })
 export class RequestsChart implements OnDestroy {
 
@@ -58,6 +62,9 @@ export class RequestsChart implements OnDestroy {
 
     private _options: any = {
         responsive: true,
+        legend: {
+            position: 'bottom'
+        },
         scales: {
             yAxes: [
                 {
@@ -67,21 +74,22 @@ export class RequestsChart implements OnDestroy {
                 }
             ],
             xAxes: [
+                {
+                    gridLines: {
+                        display: false
+                    }
+                }
             ]
+        },
+        elements: {
+            line: {
+                tension: 0,
+                fill: false
+            }
         }
     };
 
-    private _colors: Array<any> = [
-        {
-            // Gray
-            backgroundColor: 'rgba(148,159,177,0.2)',
-            borderColor: 'rgba(148,159,177,1)',
-            pointBackgroundColor: 'rgba(148,159,177,1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-        },
-    ];
+    private _colors: Array<any> = MonitoringComponent.DefaultColors;
 
     private _rpsValues: Array<number> = [];
     private _avgRpsValues: Array<number> = [];

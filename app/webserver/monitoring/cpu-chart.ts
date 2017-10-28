@@ -3,19 +3,20 @@
 import { BaseChartDirective } from 'ng2-charts';
 
 import { MonitoringService } from './monitoring.service';
+import { MonitoringComponent } from './monitoring.component';
 import { ServerSnapshot } from './server-snapshot';
 
 @Component({
     selector: 'cpu-chart',
     template: `
-        <div class="row" *ngIf="_snapshot">
+        <div class="row chart-info" *ngIf="_snapshot">
             <div class="col-xs-4">
                 <div>
                     <label>
-                        Process Count
+                        Processes
                     </label>
                     <tooltip>
-                        Total number of all web server worker processes being used to serve requests.
+                        Total number of web server processes.
                     </tooltip>
                 </div>
                 {{_snapshot.cpu.processes}}
@@ -23,10 +24,10 @@ import { ServerSnapshot } from './server-snapshot';
             <div class="col-xs-4">
                 <div>
                     <label>
-                        Thread Count
+                        Threads
                     </label>
                     <tooltip>
-                        Total number of active threads that have been created by web server processes.
+                        Total number of threads in web server processes.
                     </tooltip>
                 </div>
                 {{_snapshot.cpu.threads}}
@@ -34,16 +35,16 @@ import { ServerSnapshot } from './server-snapshot';
             <div class="col-xs-4">
                 <div>
                     <label>
-                        Average CPU Usage
+                        Average CPU
                     </label>
                     <tooltip>
-                        Average CPU usage by the web server's process. Other processes CPU utilization is ignored.
+                        Total average CPU usage by web server processes. CPU utilization from other processes is ignored.
                     </tooltip>
                 </div>
                 {{_avgCpu}} %
             </div>
         </div>
-        <div *ngIf="_svc.apiInstalled" class="block">
+        <div class="block">
             <canvas #chart='base-chart' baseChart width="600" height="200"
                         [datasets]="_data"
                         [labels]="_labels"
@@ -53,6 +54,9 @@ import { ServerSnapshot } from './server-snapshot';
                         [chartType]="'line'"></canvas>
         </div>
     `,
+    styleUrls: [
+        'app/webserver/monitoring/monitoring.css'
+    ]
 })
 export class CpuChart implements OnDestroy {
 
@@ -62,6 +66,9 @@ export class CpuChart implements OnDestroy {
 
     private _options: any = {
         responsive: true,
+        legend: {
+            position: 'bottom'
+        },
         scales: {
             yAxes: [
                 {
@@ -75,21 +82,21 @@ export class CpuChart implements OnDestroy {
                 }
             ],
             xAxes: [
+                {
+                    gridLines: {
+                        display: false
+                    }
+                }
             ]
+        },
+        elements: {
+            line: {
+                tension: 0,
+            }
         }
     }
 
-    private _colors: Array<any> = [
-        {
-            // Gray
-            backgroundColor: 'rgba(148,159,177,0.2)',
-            borderColor: 'rgba(148,159,177,1)',
-            pointBackgroundColor: 'rgba(148,159,177,1)',
-            pointBorderColor: '#fff',
-            pointHoverBackgroundColor: '#fff',
-            pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-        },
-    ];
+    private _colors: Array<any> = this.colors
 
     private _labels: Array<string> = [];
     private _serverCpuValues: Array<number> = [];
@@ -99,8 +106,8 @@ export class CpuChart implements OnDestroy {
     @ViewChild('chart') private _chart: BaseChartDirective;
 
     private _data: Array<any> = [
-        { data: this._systemCpuValues, label: 'System' },
-        { data: this._serverCpuValues, label: 'Web Server' }
+        { data: this._serverCpuValues, label: 'Web Server' },
+        { data: this._systemCpuValues, label: 'System' }
     ];
 
     constructor(private _svc: MonitoringService) {
@@ -153,5 +160,13 @@ export class CpuChart implements OnDestroy {
         if (this._chart && this._chart.chart) {
             this._chart.chart.update();
         }
+    }
+
+    private get colors() {
+        let colors = MonitoringComponent.DefaultColors;
+
+        colors[0].backgroundColor = 'rgba(0,0,0,.1)';
+
+        return colors;
     }
 }
