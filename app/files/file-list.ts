@@ -175,7 +175,8 @@ export class FileListComponent implements OnInit, OnDestroy {
         location.path = "%systemdrive%\\sites";
 
         location.claims = [
-            "read"
+            "read",
+            "write"
         ];
 
         this._active = null;

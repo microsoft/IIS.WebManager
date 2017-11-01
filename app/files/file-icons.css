@@ -43,6 +43,13 @@
 .fi.location i::after {
     content: "\f061";
     font-size: 8px;
+    left: 3px;
+    top: 66%;
+}
+
+.fi.location.text-center i::after {
+    left: 6px;
+    top: 66%;
 }
 
 
