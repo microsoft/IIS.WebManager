@@ -184,6 +184,14 @@
     <TypeScriptCompile Include="app\utils\url.ts" />
     <TypeScriptCompile Include="app\main\get.component.ts" />
     <TypeScriptCompile Include="app\versioning\new-version-notification.component.ts" />
+    <TypeScriptCompile Include="app\webserver\monitoring\cpu-chart.ts" />
+    <TypeScriptCompile Include="app\webserver\monitoring\memory-chart.ts" />
+    <TypeScriptCompile Include="app\webserver\monitoring\monitoring.component.ts" />
+    <TypeScriptCompile Include="app\webserver\monitoring\monitoring.module.ts" />
+    <TypeScriptCompile Include="app\webserver\monitoring\monitoring.service.ts" />
+    <TypeScriptCompile Include="app\webserver\monitoring\network-chart.ts" />
+    <TypeScriptCompile Include="app\webserver\monitoring\requests-chart.ts" />
+    <TypeScriptCompile Include="app\webserver\monitoring\server-snapshot.ts" />
     <TypeScriptCompile Include="app\webserver\server-analytic.service.ts" />
     <TypeScriptCompile Include="app\versioning\version.service.ts" />
     <TypeScriptCompile Include="app\webserver\app-pools\app-pool-general.component.ts" />
@@ -340,6 +348,7 @@
     <TypeScriptCompile Include="app\webserver\websites\navigator.component.ts" />
     <TypeScriptCompile Include="app\webserver\websites\site.ts" />
     <TypeScriptCompile Include="app\utils\diff.ts" />
+    <Content Include="app\webserver\monitoring\monitoring.css" />
     <Content Include="js\feedback.js" />
     <Content Include="js\main.js" />
     <TypeScriptCompile Include="app\files\filesystem.d.ts" />

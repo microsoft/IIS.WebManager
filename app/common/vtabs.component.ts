@@ -1,4 +1,4 @@
-import { NgModule, Component, Input, Output, ViewChild, ViewChildren, ContentChildren, QueryList, OnInit, ElementRef, Renderer, OnDestroy, EventEmitter } from '@angular/core';
+import { NgModule, Component, Input, Output, ViewChild, ViewChildren, forwardRef, ContentChildren, QueryList, OnInit, ElementRef, Renderer, OnDestroy, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -48,6 +48,7 @@ export class VTabsComponent implements OnDestroy {
     private _sectionHelper: SectionHelper;
     private _subscriptions: Array<Subscription> = [];
     @ViewChildren('item') private _tabList: QueryList<ElementRef>;
+    @ContentChildren(forwardRef(() => Item)) its: QueryList<Item>;
 
     constructor(private _elem: ElementRef,
         private _renderer: Renderer,
@@ -61,7 +62,17 @@ export class VTabsComponent implements OnDestroy {
 
     public ngAfterViewInit() {
         this._sectionHelper = new SectionHelper(this.tabs.map(t => t.name), this._default, this.markLocation, this._location, this._activatedRoute, this._router);
+
         this._subscriptions.push(this._sectionHelper.active.subscribe(sec => this.onSectionChange(sec)));
+
+        this._subscriptions.push(this.its.changes.subscribe(change => {
+            let arr: Array<Item> = change.toArray();
+            arr.forEach(item => {
+                if (!this.tabs.find(t => t == item)) {
+                    this.addTab(item);
+                }
+            });
+        }));
 
         this._tabsItems = this._tabList.toArray();
         window.setTimeout(() => {
@@ -84,6 +95,10 @@ export class VTabsComponent implements OnDestroy {
         if (this._selectedIndex === -1 && (this.tabs.length === 0 && !this._default || SectionHelper.normalize(tab.name) == this._default)) {
             tab.activate();
             this._selectedIndex = this.tabs.length;
+        }
+
+        if (this._sectionHelper) {
+            this._sectionHelper.addSection(tab.name);
         }
 
         this.tabs.push(tab);

@@ -16,7 +16,7 @@ export class SectionHelper implements IDisposable {
     private _router: Router;
     private _location: Location;
     private _route: ActivatedRoute;
-    private _sections: Array<string>;
+    private _sections: Array<string> = [];
     private _hashCache: Array<string> = [];
     private _subscriptions: Array<Subscription> = [];
     private _active: BehaviorSubject<string> = new BehaviorSubject<string>("");
@@ -63,6 +63,12 @@ export class SectionHelper implements IDisposable {
 
     public static normalize(val: string) {
         return val.toLocaleLowerCase().replace(/ /g, "-");
+    }
+
+    public addSection(section: string) {
+        if (!this._sections.find(s => SectionHelper.normalize(s) == SectionHelper.normalize(section))) {
+            this._sections.push(section);
+        }
     }
 
     private get section(): string {

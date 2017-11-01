@@ -36,6 +36,7 @@ if ([System.IO.File]::Exists("$($Folder.FullName)\npm-shrinkwrap.json")) {
 $o = @{}
 
 try {
+
     Push-Location $Folder
 
     npm shrinkwrap
@@ -51,7 +52,10 @@ try {
         HashDependency $module "$($Folder.FullName)/node_modules/$module" $dependencies
     }
 
-    ConvertTo-Json $ShrinkWrap -Depth 100 | Out-File .\npm-shrinkwrap.json -Encoding utf8
+    $text = ConvertTo-Json $ShrinkWrap -Depth 100
+
+    [System.IO.File]::WriteAllText("$($Folder.FullName)\npm-shrinkwrap.json", $text)
+
 }
 finally {
     Pop-Location 
