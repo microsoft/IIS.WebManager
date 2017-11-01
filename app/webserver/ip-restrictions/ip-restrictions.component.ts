@@ -31,7 +31,7 @@ import { NotificationService } from '../../notification/notification.service';
                 <tabs>
                     <tab [name]="'General'">
                             <ip-addresses [model]="ipRestrictions" (modelChanged)="onModelChanged()"></ip-addresses>
-                            <dynamic-restrictions [model]="ipRestrictions" (modelChange)="onModelChanged()"></dynamic-restrictions>
+                            <dynamic-restrictions *ngIf="ipRestrictions && ipRestrictions.deny_by_request_rate" [model]="ipRestrictions" (modelChange)="onModelChanged()"></dynamic-restrictions>
                     </tab>
                     <tab [name]="'IP/Domain Rules'">
                             <restriction-rules [ipRestrictions]="ipRestrictions" (modelChange)="onModelChanged()"></restriction-rules>
