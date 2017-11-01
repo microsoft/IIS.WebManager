@@ -153,6 +153,7 @@ export class SelectableListItem implements OnInit, OnDestroy {
         '(keydown.shift)': "_multiSelect=true",
         '(keyup.shift)': "_multiSelect=false",
         '(keydown.control.a)': "selectAll($event)",
+        '(keydown.esc)': "onBlur($event)",
         '[attr.tabindex]': "-1",
         '[class.noselect]': "_multiSelect",
         '(blur)': 'onBlur($event)'

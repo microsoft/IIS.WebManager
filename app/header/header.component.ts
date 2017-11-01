@@ -9,7 +9,7 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
     template: `
         <div class="nav background-active">
             <button class="fa fa-bars nav-item nav-options hover-primary2" [attr.title]="this._options.active ? 'Hide Sidebar' : 'Show Sidebar'" (click)="this._options.toggle()" [class.background-primary2]="this._options.active"></button>
-            <a [routerLink]="['/']" class="nav-brand nav-item background-active">
+            <a [routerLink]="['/']" title="Home" class="nav-brand nav-item background-active">
                 <span class="v-center"><span class="hidden-xs">Microsoft</span> IIS</span>
             </a>
             <div class="separator"></div>

@@ -9,25 +9,27 @@ import { ApiFile, ApiFileType } from './file';
     selector: 'new-file',
     template: `
         <div class="grid-item row background-editing">
-            <div class="col-xs-8 col-sm-5 col-md-5 col-lg-4 col-left">
-                <input [(ngModel)]="model.name" class="form-control" type="text" (keyup.enter)="onOk()" (blur)="cancel.next()" (keyup.esc)="cancel.next()" autofocus>
+            <div class="col-xs-8 col-sm-5 col-md-5 col-lg-4 col-left fi" [ngClass]="type || (model && model.type)">
+                <i></i>
+                <input [(ngModel)]="model.name" class="form-control inline-block" type="text" (keyup.enter)="onOk()" (keyup.esc)="cancel.next()" autofocus>
             </div>
             <div class="actions">
-                <button title="Cancel" (click)="cancel.next()">
-                    <i class="fa fa-times red"></i>
-                </button>
+                <button title="Cancel" class="cancel" (click)="cancel.next()"></button>
             </div>
         </div>
     `,
     styles: [`
         .col-left {
-            padding-left: 0;
+            padding-right: 40px;
         }
 
         .row {
             margin: 0px;
         }
-    `]
+    `],
+    styleUrls: [
+        'app/files/file-icons.css'
+    ]
 })
 export class NewFileComponent {
     @Input() model: ApiFile;
@@ -37,21 +39,9 @@ export class NewFileComponent {
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
     @Output() save: EventEmitter<any> = new EventEmitter<any>();
 
-
     private onOk() {
         if (this.model.name) {
             this.save.next();
         }
-    }
-
-    private getIcon() {
-        return {
-            "fa-file-o": this.type == ApiFileType.File,
-            "fa-folder-o": this.type == ApiFileType.Directory
-        };
-    }
-
-    private getDisplayDate(date: string) {
-        return date ? new Date(date).toLocaleString() : null;
     }
 }

@@ -4,6 +4,7 @@
     display: inline-block;
     font-style: normal;
     font-size: 20px;
+    position: relative;
 }
 
 .fi i::before {
@@ -16,6 +17,11 @@
     top: 50%;
     left: 9px;
     transform: translate(-50%, -50%);
+}
+
+.fi.text-center i::after {
+    text-align: center;
+    left: 13px;
 }
 
 .fi.file i::before {
@@ -32,6 +38,18 @@
 .fi.directory i::before {
     content: "\f07b";
     color: #FFE68E;
+}
+
+.fi.location i::after {
+    content: "\f061";
+    font-size: 8px;
+    left: 3px;
+    top: 66%;
+}
+
+.fi.location.text-center i::after {
+    left: 6px;
+    top: 66%;
 }
 
 

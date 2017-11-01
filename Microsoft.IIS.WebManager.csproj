@@ -123,6 +123,8 @@
     <TypeScriptCompile Include="app\common\sort.pipe.ts" />
     <TypeScriptCompile Include="app\common\vtabs.component.ts" />
     <TypeScriptCompile Include="app\common\virtual-list.component.ts" />
+    <TypeScriptCompile Include="app\files\location.ts" />
+    <TypeScriptCompile Include="app\files\edit-location.component.ts" />
     <TypeScriptCompile Include="app\settings\settings.routes.ts" />
     <TypeScriptCompile Include="app\connect\constants.ts" />
     <TypeScriptCompile Include="app\connect\connection-type.ts" />

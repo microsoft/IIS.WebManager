@@ -13,6 +13,7 @@ import { WebSite } from '../websites/site';
         <file-selector #fileSelector class="right" (selected)="upload($event)" [multiple]="true">
         </file-selector>
         <toolbar
+            [newLocation]="null"
             [refresh]="true"
             [newFile]="!_newDir"
             [newFolder]="!_newDir"

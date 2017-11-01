@@ -15,9 +15,11 @@ import { FileNavService } from './file-nav.service';
         <toolbar
             [refresh]="true"
             [newFile]="!atRoot()"
-            [newFolder]="!_newDir && !atRoot()"
+            [newLocation]="atRoot() || null"
+            [newFolder]="!atRoot() || null"
             [upload]="!atRoot()"
             [delete]="selected && selected.length > 0"
+            (onNewLocation)="createLocation()"
             (onRefresh)="refresh()"
             (onNewFolder)="createDirectory()"
             (onNewFile)="createFile()"
@@ -57,6 +59,10 @@ export class FileExplorer implements OnDestroy {
 
     private refresh() {
         this._list.refresh();
+    }
+
+    private createLocation() {
+        this._list.createLocation();
     }
 
     private createDirectory() {

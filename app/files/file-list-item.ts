@@ -11,8 +11,8 @@ import { ApiFile, ApiFileType } from './file';
 @Component({
     selector: 'file',
     template: `
-        <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing" (keyup.f2)="onRename($event)" tabindex="-1">
-            <div class="col-xs-9 col-sm-5 col-lg-4 fi" [ngClass]="[model.type, model.extension]">
+        <div *ngIf="model && !(_editing && _location)" class="grid-item row" [class.background-editing]="_editing" (keyup.f2)="onRename($event)" tabindex="-1">
+            <div class="col-xs-9 col-sm-5 col-lg-4 fi" [ngClass]="[model.type, model.extension, (isRoot ? 'location' : '')]">
                 <div *ngIf="!_editing">
                     <a class="color-normal hover-color-active" [href]="href" nofocus (click)="onClickName($event)"><i></i>{{model.alias || model.name}}</a>
                 </div>
@@ -42,14 +42,17 @@ import { ApiFile, ApiFileType } from './file';
                     </button>
                     <selector [right]="true">
                         <ul>
-                            <li><button class="edit" title="Rename" (click)="onRename($event)">Rename</button></li>
+                            <li><button *ngIf="!isRoot" class="edit" title="Rename" (click)="onRename($event)">Rename</button></li>
+                            <li><button *ngIf="isRoot" class="edit" title="Edit" (click)="onEdit($event)">Edit</button></li>
                             <li><button class="download" title="Download" *ngIf="model.type=='file'" (click)="onDownload($event)">Download</button></li>
-                            <li><button class="delete" title="Delete" (click)="onDelete($event)">Delete</button></li>
+                            <li><button *ngIf="!isRoot" class="delete" title="Delete" (click)="onDelete($event)">Delete</button></li>
+                            <li><button *ngIf="isRoot" class="delete" title="Delete" (click)="onDelete($event)">Remove</button></li>
                         </ul>
                     </selector>
                 </div>
             </div>
         </div>
+        <edit-location *ngIf="_location && _editing" [model]="_location" (cancel)="cancel()" (dblclick)="prevent($event)"></edit-location>
     `,
     styles: [`
         a {
@@ -69,10 +72,6 @@ import { ApiFile, ApiFileType } from './file';
 
         .form-control {
             width: 90%;
-        }
-
-        .fi {
-            padding-left: 0;
         }
 
         .row {
@@ -102,6 +101,7 @@ export class FileComponent {
     @Input() model: ApiFile;
     @Output() modelChanged: EventEmitter<any> = new EventEmitter();
     private _date = null;
+    private _location = null;
 
     @ViewChild(Selector) selector: Selector;
 
@@ -109,6 +109,10 @@ export class FileComponent {
 
     constructor(@Inject("FilesService") private _svc: FilesService,
                 private _nav: FileNavService) {
+    }
+
+    private get isRoot(): boolean {
+        return this.model.isLocation;
     }
 
     private get href() {
@@ -132,13 +136,6 @@ export class FileComponent {
         this._editing = false;
     }
 
-    private onCancel(e: Event) {
-        e.preventDefault();
-        this.selector.close();
-
-        this.cancel();
-    }
-
     private onRename(e: Event) {
         e.preventDefault();
         this.selector.close();
@@ -146,12 +143,38 @@ export class FileComponent {
         this._editing = true;
     }
 
+    private onEdit(e: Event) {
+        e.preventDefault();
+
+        this._svc.getLocation(this.model.id)
+            .then(loc => {
+                this._location = loc;
+                this._editing = true;
+            })
+    }
+
+    private onCancel(e: Event) {
+        e.preventDefault();
+        this.selector.close();
+
+        this.cancel();
+    }
+
     private onDelete(e: Event) {
         e.preventDefault();
         this.selector.close();
 
-        if (confirm("Are you sure you want to delete " + this.model.name)) {
-            this._svc.delete([this.model]);
+        let msg = this.model.isLocation ? "Are you sure you want to remove the root folder '" + this.model.name + "'?" :
+            "Are you sure you want to delete '" + this.model.name + "'?";
+
+        if (confirm(msg)) {
+
+            if (!this.model.isLocation) {
+                this._svc.delete([this.model]);
+            }
+            else {
+                this._svc.deleteLocations([this.model]);
+            }
         }
     }
 
@@ -167,8 +190,12 @@ export class FileComponent {
     }
 
     private cancel() {
-        this.selector.close();
+        if (this.selector) {
+            this.selector.close();
+        }
+
         this._editing = false;
+        this._location = false;
     }
 
     private openSelector(e: Event) {

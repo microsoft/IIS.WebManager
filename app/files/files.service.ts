@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { RequestMethod, RequestOptionsArgs, Headers, Response } from '@angular/http';
 
@@ -14,11 +13,10 @@ import { Progress } from './progress';
 import { IDisposable } from '../common/idisposable';
 
 import { ApiFile, ApiFileType, FileChangeEvent, ChangeType, MimeTypes } from './file';
+import { Location } from './location';
 import { ParallelExecutor } from './parallel-executor';
 
-
 declare var unescape: any;
-
 
 @Injectable()
 export class FilesService implements IDisposable {
@@ -83,14 +81,41 @@ export class FilesService implements IDisposable {
     }
 
     public getRoots(): Promise<Array<ApiFile>> {
-        return this._http.get("/files?fields=" + this._fields)
+        return this._http.get("/files?fields=" + this._fields + ",claims")
             .then(res => {
-                return (<Array<any>>res.files).map(f => ApiFile.fromObj(f));
+                return (<Array<any>>res.files).map(f => {
+
+                    let apiFile = ApiFile.fromObj(f);
+
+                    apiFile.isLocation = true;
+
+                    return apiFile;
+                });
             })
             .catch(e => {
                 this.handleError(e, "/");
                 throw e;
             });
+    }
+
+    public getLocation(id: string): Promise<Location> {
+        return this._http.get("/files/locations/" + id)
+            .catch(e => {
+                this.handleError(e, "/");
+                throw e;
+            });
+    }
+
+    public createLocation(location: Location): void {
+        this.createLocationInternal(location);
+    }
+
+    public deleteLocations(locations: Array<ApiFile>): void {
+        this.deleteLocationsInternal(locations);
+    }
+
+    public updateLocation(location: Location, data: any) {
+        return this.updateLocationInternal(location, data);
     }
 
     public create(file: ApiFile, parent: ApiFile): void {
@@ -331,6 +356,110 @@ export class FilesService implements IDisposable {
     //
     //
     //
+    private createLocationInternal(location: Location): Promise<ApiFile> {
+        return this._http.post("/files/locations", JSON.stringify(location))
+            .then(location => {
+
+                return this.get(location.id)
+                    .then(f => {
+
+                        let file = ApiFile.fromObj(f);
+
+                        file.isLocation = true;
+
+                        this._change.next(FileChangeEvent.created(file));
+
+                        return file;
+                    });
+            })
+            .catch(e => {
+
+                if (e && e.status == 400 && e.name == "parent") {
+                    //
+                    // Location API not installed. Api is trying to create a directory is being created
+
+                    e.message = "Ability to create root folders is not available. Please install the latest version."
+
+                    this._notificationService.apiError(e);
+                }
+                else {
+
+                    this.handleError(e);
+                }
+
+                throw e;
+            });
+    }
+
+    private deleteLocationsInternal(locations: Array<ApiFile>, index: number = 0): Promise<any> {
+
+        if (index == 0) {
+            locations = locations.filter(() => true);
+        }
+
+
+        if (index > locations.length - 1) {
+            return;
+        }
+
+
+        return this._http.delete("/files/locations/" + locations[index].id)
+            .then(() => {
+
+                this._change.next(FileChangeEvent.deleted(locations[index]));
+
+                index++;
+
+                return this.deleteLocationsInternal(locations, index);
+            })
+            .catch(e => {
+                this.handleError(e);
+                throw e;
+            });
+    }
+
+    private updateLocationInternal(location: Location, data: any): Promise<any> {
+
+        return this.get(location.id)
+            .then(existingDir => {
+
+                existingDir.isLocation = true;
+
+                return this._http.patch("/files/locations?id=" + location.id, JSON.stringify(data))
+                    .then(l => {
+
+                        Object.assign(location, l);
+
+                        return this.get(location.id)
+                            .then(d => {
+
+                                this._change.next(FileChangeEvent.deleted(existingDir));
+
+                                let newDir = ApiFile.fromObj(d);
+
+                                newDir.isLocation = true;
+
+                                this._change.next(FileChangeEvent.created(newDir));
+
+                                return location;
+                            });
+
+                    });
+
+            })
+            .catch(e => {
+
+                this.handleError(e, location.path);
+
+                throw e;
+
+            });;
+
+    }
+
+    //
+    //
+    //
     private createInternal(file: ApiFile, parent: ApiFile): Promise<ApiFile> {
         return this._creator.execute(() => {
             file.parent = parent;
@@ -363,7 +492,18 @@ export class FilesService implements IDisposable {
 
     private deleteInternal(files: Array<ApiFile>): Promise<any> {
 
+        let root = files.find(file => !file.parent);
+
+        if (root) {
+            let message = "Root folders cannot be deleted: '" + root.name + "'";
+
+            this._notificationService.warn(message);
+
+            return Promise.reject(message);
+        }
+
         let promises = [];
+
         for (let file of files) {
             promises.push(this._http.delete("/files?id=" + file.id)
                 .then(_ => {
