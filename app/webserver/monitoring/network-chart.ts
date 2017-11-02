@@ -2,6 +2,7 @@
 
 import { BaseChartDirective } from 'ng2-charts';
 
+import { Humanizer } from '../../common/primitives';
 import { MonitoringService } from './monitoring.service';
 import { MonitoringComponent } from './monitoring.component';
 import { ServerSnapshot } from './server-snapshot';
@@ -14,13 +15,13 @@ import { ServerSnapshot } from './server-snapshot';
                 <label class="block">
                     Total Bytes Sent
                 </label>
-                {{_snapshot.network.total_bytes_sent}}
+                {{formatNumber(_snapshot.network.total_bytes_sent)}}
             </div>
             <div class="col-xs-4">
                 <label class="block">
                     Total Bytes Received
                 </label>
-                {{_snapshot.network.total_bytes_recv}}
+                {{formatNumber(_snapshot.network.total_bytes_recv)}}
             </div>
             <div class="col-xs-4">
                 <div>
@@ -31,7 +32,7 @@ import { ServerSnapshot } from './server-snapshot';
                         Total number of current network connections that are open on the web server.
                     </tooltip>
                 </div>
-                {{_snapshot.network.current_connections}}
+                {{formatNumber(_snapshot.network.current_connections)}}
             </div>
             <div class="clearfix visible-xs-block"></div>
         </div>
@@ -54,6 +55,7 @@ export class NetworkChart implements OnDestroy {
     private _subscriptionId: number = null;
     private _length = 20;
     private _snapshot: ServerSnapshot = null;
+    private formatNumber = Humanizer.number;
 
     private _options: any = {
         responsive: true,

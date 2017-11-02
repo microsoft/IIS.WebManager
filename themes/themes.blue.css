@@ -115,21 +115,21 @@ button,
 
 .color-accent,
 h2 {
-    color: #AA9255;
+    color: #907c48;
 }
 
 .background-accent {
-    background-color: #AA9255;
+    background-color: #907c48;
 }
 
 .hover-accent:hover {
-    color: #AA9255;
+    color: #907c48;
 }
 
 .border-accent,
 .collapse-heading,
 hr {
-    border-color: #AA9255;
+    border-color: #907c48;
 }
 
 .hover-warning:hover {
