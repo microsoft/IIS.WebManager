@@ -2,6 +2,7 @@
 
 import { BaseChartDirective } from 'ng2-charts';
 
+import { Humanizer } from '../../common/primitives';
 import { MonitoringService } from './monitoring.service';
 import { MonitoringComponent } from './monitoring.component';
 import { ServerSnapshot } from './server-snapshot';
@@ -19,7 +20,7 @@ import { ServerSnapshot } from './server-snapshot';
                         Total number of HTTP requests served since the web server started.
                     </tooltip>
                 </div>
-                {{_snapshot.requests.total}}
+                {{formatNumber(_snapshot.requests.total)}}
             </div>
             <div class="col-xs-4">
                 <div>
@@ -30,13 +31,13 @@ import { ServerSnapshot } from './server-snapshot';
                         Total number of requests that are currently being processed.
                     </tooltip>
                 </div>
-                {{_snapshot.requests.active}}
+                {{formatNumber(_snapshot.requests.active)}}
             </div>
             <div class="col-xs-4">
                 <label class="block">
                     Average Requests / sec
                 </label>
-                {{_avgRps}}
+                {{formatNumber(_avgRps)}}
             </div>
             <div class="clearfix visible-xs-block"></div>
         </div>
@@ -59,6 +60,7 @@ export class RequestsChart implements OnDestroy {
     private _subscriptionId: number = null;
     private _length = 20;
     private _snapshot: ServerSnapshot = null;
+    private formatNumber = Humanizer.number;
 
     private _options: any = {
         responsive: true,
@@ -100,7 +102,7 @@ export class RequestsChart implements OnDestroy {
 
     private _data: Array<any> = [
         { data: this._rpsValues, label: 'Requests / sec' },
-        { data: this._avgRpsValues, label: 'Avg Requests / sec', hidden: true }
+        { data: this._avgRpsValues, label: 'Avg Requests / sec' }
     ];
 
     constructor(private _svc: MonitoringService) {
