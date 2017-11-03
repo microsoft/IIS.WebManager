@@ -75,25 +75,25 @@
                                       },
                          "chartjs-color":  {
                                                "version":  "2.2.0",
-                                               "from":  "chartjs-color@\u003e=2.2.0 \u003c2.3.0",
+                                               "from":  "chartjs-color@\u003e=2.2.0-0 \u003c2.3.0-0",
                                                "resolved":  "https://registry.npmjs.org/chartjs-color/-/chartjs-color-2.2.0.tgz",
                                                "Hash":  "F21DCCA907CAFBA283420214866310190B2688E4D74FC33A38D9D3FAD1CBD932"
                                            },
                          "chartjs-color-string":  {
                                                       "version":  "0.5.0",
-                                                      "from":  "chartjs-color-string@\u003e=0.5.0 \u003c0.6.0",
+                                                      "from":  "chartjs-color-string@\u003e=0.5.0-0 \u003c0.6.0-0",
                                                       "resolved":  "https://registry.npmjs.org/chartjs-color-string/-/chartjs-color-string-0.5.0.tgz",
                                                       "Hash":  "B5F44552AD22A5489E6E6FD3ABD14AC9906328949328B4AB812C4EB55E90DBCD"
                                                   },
                          "color-convert":  {
                                                "version":  "0.5.3",
-                                               "from":  "color-convert@\u003e=0.5.3 \u003c0.6.0",
+                                               "from":  "color-convert@\u003e=0.5.3-0 \u003c0.6.0-0",
                                                "resolved":  "https://registry.npmjs.org/color-convert/-/color-convert-0.5.3.tgz",
                                                "Hash":  "90D6F6838931452F344F3848CA92D6AAC97794B34D8134750B14C4F0AD4322D7"
                                            },
                          "color-name":  {
                                             "version":  "1.1.3",
-                                            "from":  "color-name@\u003e=1.0.0 \u003c2.0.0",
+                                            "from":  "color-name@\u003e=1.0.0-0 \u003c2.0.0-0",
                                             "resolved":  "https://registry.npmjs.org/color-name/-/color-name-1.1.3.tgz",
                                             "Hash":  "DA135C19417D45F153B96BD4D8E571F15791F1A90D1172A2DD07658C4550B7F5"
                                         },
@@ -129,7 +129,7 @@
                                     },
                          "moment":  {
                                         "version":  "2.18.1",
-                                        "from":  "moment@\u003e=2.18.0 \u003c2.19.0",
+                                        "from":  "moment@\u003e=2.18.0-0 \u003c2.19.0-0",
                                         "resolved":  "https://registry.npmjs.org/moment/-/moment-2.18.1.tgz",
                                         "Hash":  "46CBB9B019755DC726C649994CBACA16A7F4AE720F41A1C63F0E99056A88C06D"
                                     },
@@ -152,14 +152,14 @@
                                                   "Hash":  "C7B1AA496B28E7BA438382ADF047F3FEA8D933C9665FB34AD81305934D268FA8"
                                               },
                          "rxjs":  {
-                                      "version":  "5.0.1",
-                                      "from":  "rxjs@5.0.1",
-                                      "resolved":  "https://registry.npmjs.org/rxjs/-/rxjs-5.0.1.tgz",
-                                      "Hash":  "5E620D7735F754A02AD5DC4FC0593C28D523153E19A7FE329B7C4BB99E067764"
+                                      "version":  "5.4.3",
+                                      "from":  "rxjs@5.4.3",
+                                      "resolved":  "https://registry.npmjs.org/rxjs/-/rxjs-5.4.3.tgz",
+                                      "Hash":  "D52C6D5443FAF757CB9D4A5CCAE9456661166D2F8869E71EF19D556E39DBC930"
                                   },
                          "symbol-observable":  {
                                                    "version":  "1.0.4",
-                                                   "from":  "symbol-observable@\u003e=1.0.1 \u003c2.0.0",
+                                                   "from":  "symbol-observable@\u003e=1.0.1-0 \u003c2.0.0-0",
                                                    "resolved":  "https://registry.npmjs.org/symbol-observable/-/symbol-observable-1.0.4.tgz",
                                                    "Hash":  "D2C4E95F4B3005CB9331502C71C7D411CDEE49DB0BBB01562C276D563D7E7D75"
                                                },
@@ -171,7 +171,7 @@
                                       },
                          "when":  {
                                       "version":  "3.7.8",
-                                      "from":  "when@\u003e=3.7.5 \u003c4.0.0",
+                                      "from":  "when@\u003e=3.7.5-0 \u003c4.0.0-0",
                                       "resolved":  "https://registry.npmjs.org/when/-/when-3.7.8.tgz",
                                       "Hash":  "E071B1118428E1EFE8FE3794CC990B1C07409F4D917D9E65FC521F01E0B5C39F"
                                   },

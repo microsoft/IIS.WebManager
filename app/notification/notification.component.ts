@@ -1,6 +1,6 @@
 import { Component, OnDestroy, ViewChildren, QueryList } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
-import { Subscription } from 'rxjs/src/subscription';
+import { Subscription } from 'rxjs/subscription';
 import { NotificationService } from './notification.service';
 import { Notification, NotificationType } from './notification';
 
