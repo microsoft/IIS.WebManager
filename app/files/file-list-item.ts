@@ -52,7 +52,7 @@ import { ApiFile, ApiFileType } from './file';
                 </div>
             </div>
         </div>
-        <edit-location *ngIf="_location && _editing" [model]="_location" (cancel)="cancel()" (dblclick)="prevent($event)"></edit-location>
+        <edit-location *ngIf="_location && _editing" [model]="_location" (cancel)="cancel()" (dblclick)="prevent($event)" (keyup.delete)="prevent($event)"></edit-location>
     `,
     styles: [`
         a {

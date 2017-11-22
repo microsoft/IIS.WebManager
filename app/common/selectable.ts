@@ -192,6 +192,15 @@ export class Selectable implements OnInit {
     }
 
     private selectAll(event: Event) {
+
+        //
+        // Prevent selecting all when prevent is requested
+        // Or when the user is trying to select all text in an input
+
+        if (event.defaultPrevented || (<HTMLElement>event.target).tagName == "INPUT") {
+            return;
+        }
+
         this._svc.selectAll(event);
         this._changeDetectorRef.markForCheck();
     }

@@ -29,7 +29,7 @@ import { FileNavService } from './file-nav.service';
             [selected]="_selected"
 
             (blur)="onBlur($event)"
-            (keyup.delete)="deleteFiles(_selected)"
+            (keyup.delete)="deleteFiles($event, _selected)"
 
             (drop)="drop($event)"
             (dragover)="dragOver($event)"
@@ -169,10 +169,24 @@ export class FileListComponent implements OnInit, OnDestroy {
     public createLocation() {
         this.clearSelection();
 
+        let alias = "sites"
+        let index = 0;
+
+        //
+        // Avoid new name collision
+
+        while (this._items.length > 0 && 
+                (this._items.find(item => item.isLocation && item.name.toLowerCase() == alias) != null ||
+                 this._items.find(item => item.isLocation && item.alias && item.alias.toLowerCase() == alias) != null))
+        {
+            index++;
+            alias = "sites (" + index + ")";
+        }
+
         let location = new Location();
 
-        location.alias = "sites";
-        location.path = "%systemdrive%\\sites";
+        location.alias = alias;
+        location.path = "%systemdrive%\\" + alias;
 
         location.claims = [
             "read",
@@ -208,7 +222,10 @@ export class FileListComponent implements OnInit, OnDestroy {
         this._newDir = file;
     }
 
-    public deleteFiles(files: Array<ApiFile>) {
+    public deleteFiles(e: Event, files: Array<ApiFile>) {
+        if (e.defaultPrevented) {
+            return;
+        }
 
         if (files && files.length < 1) {
             return;
