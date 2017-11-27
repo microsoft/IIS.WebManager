@@ -6,11 +6,7 @@ import { Location } from './location';
 @Component({
     selector: 'edit-location',
     template: `
-        <div class="background-editing">
-            <div class="actions">
-                <button title="OK" class="ok" (click)="onOk()"></button>
-                <button title="Cancel" class="cancel" (click)="cancel.next()"></button>
-            </div>
+        <div>
             <fieldset class="name">
                 <label>Alias</label>
                 <input [(ngModel)]="model.alias" class="form-control" type="text" autofocus>
@@ -26,13 +22,12 @@ import { Location } from './location';
                     <checkbox2 [(model)]="_write">Write</checkbox2>
                 </div>
             </fieldset>
+            <p class="pull-right">
+                <button class="ok" (click)="onOk()">{{model.id ? 'OK' : 'Create'}}</button>
+                <button class="cancel" (click)="cancel.next()">Cancel</button>
+            </p>
         </div>
-    `,
-    styles: [`
-        .background-editing {
-            padding: 5px 15px;
-        }
-    `]
+    `
 })
 export class LocationEditComponent implements OnInit {
 

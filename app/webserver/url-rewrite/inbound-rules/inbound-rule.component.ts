@@ -3,7 +3,6 @@
 import { Subscription } from 'rxjs/Subscription';
 
 import { NotificationService } from '../../../notification/notification.service';
-import { Selector } from '../../../common/selector';
 import { UrlRewriteService } from '../service/url-rewrite.service';
 import { InboundRule, ActionTypeHelper } from '../url-rewrite';
 

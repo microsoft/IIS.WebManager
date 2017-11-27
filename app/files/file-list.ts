@@ -48,9 +48,9 @@ import { FileNavService } from './file-nav.service';
                     <label class="col-md-1 visible-lg visible-md text-right" [ngClass]="_orderBy.css('size')" (click)="sort('size')">Size</label>
                 </div>
             </div>
-            <div class="grid-list container-fluid" *ngIf="_newLocation">
+            <selector #editSelector [opened]="true" *ngIf="_newLocation" class="container-fluid" (hide)="_newLocation=null">
                 <edit-location [model]="_newLocation" (cancel)="_newLocation=null" (save)="onSaveNewLocation()"></edit-location>
-            </div>
+            </selector>
             <div class="grid-list container-fluid" *ngIf="_newDir">
                 <new-file [model]="_newDir" (cancel)="_newDir=null" (save)="onSaveNewDir()"></new-file>
             </div>

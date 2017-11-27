@@ -24,7 +24,7 @@ import { FileNavService } from './file-nav.service';
             (onNewFolder)="createDirectory()"
             (onNewFile)="createFile()"
             (onUpload)="fileSelector.open()"
-            (onDelete)="deleteFiles(selected)"></toolbar>
+            (onDelete)="deleteFiles($event, selected)"></toolbar>
         <navigation></navigation>
         <file-list *ngIf="isDir(_current)" [types]="types"></file-list>
     `,
@@ -73,8 +73,8 @@ export class FileExplorer implements OnDestroy {
         this._list.createFile();
     }
 
-    private deleteFiles(files: Array<ApiFile>) {
-        this._list.deleteFiles(files);
+    private deleteFiles(event: Event, files: Array<ApiFile>) {
+        this._list.deleteFiles(event, files);
     }
 
     private upload(files: Array<File>) {

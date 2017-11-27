@@ -75,12 +75,21 @@ class SelectableService {
 })
 export class ItemMarker {
     private _model: any;
+    private _isAttached: any = null;
 
     constructor(@Optional() private _svc: SelectableService) {
     }
 
     public setModel(model: any) {
         this._model = model;
+    }
+
+    public get isAttached(): any {
+        return this._isAttached;
+    }
+
+    public set isAttached(value: any) {
+        this._isAttached = value;
     }
 
     public get isSelected(): boolean {
@@ -100,6 +109,7 @@ export class SelectableListItem implements OnInit, OnDestroy {
     @Input() public model: any;
 
     private _tearDown: Function;
+    private _isAttached: boolean;
 
     constructor(private _host: ElementRef,
                 private _renderer: Renderer,
@@ -112,7 +122,18 @@ export class SelectableListItem implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this.setModel(this.model);
+
+        if (this._listItem && !this._listItem.isAttached) {
+
+            //
+            // Prevent binding to children [model] directives after initial binding
+
+            this._isAttached = true;
+
+            this._listItem.isAttached = true;
+
+            this.setModel(this.model);
+        }
     }
 
     public ngOnChanges(changes: { [key: string]: SimpleChange; }): any {
@@ -122,13 +143,15 @@ export class SelectableListItem implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy() {
+        this._listItem = null;
+
         if (this._tearDown) {
             this._tearDown();
         }
     }
 
     private setModel(model: any) {
-        if (this._listItem) {
+        if (this._listItem && this._isAttached) {
             this._listItem.setModel(model);
         }
     }
