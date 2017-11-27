@@ -20,8 +20,10 @@ import { ApiFile, ApiFileType } from './file';
                     <input class="form-control inline-block" type="text" 
                            [ngModel]="model.name"
                            (ngModelChange)="rename($event)"
+                           (keyup.enter)="_editing=false"
                            (keyup.esc)="onCancel($event)"
                            (keyup.delete)="$event.stopImmediatePropagation()"
+                           (dblclick)="prevent($event)"
                            required throttle autofocus/>
                 </div>
             </div>
@@ -88,7 +90,6 @@ export class FileComponent {
     @Output() modelChanged: EventEmitter<any> = new EventEmitter();
     private _date = null;
     private _location = null;
-
     private _editing = false;
 
     constructor(@Inject("FilesService") private _svc: FilesService,
@@ -112,7 +113,7 @@ export class FileComponent {
     }
 
     private rename(name: string) {
-        if (this._editing && name) {
+        if (name) {
             this._svc.rename(this.model, name);
             this.modelChanged.emit(this.model);
         }
