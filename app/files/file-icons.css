@@ -37,6 +37,9 @@
 
 .fi.directory i::before {
     content: "\f07b";
+}
+
+.fi.directory:not([disabled]) i::before {
     color: #FFE68E;
 }
 

@@ -125,6 +125,10 @@ export class FileListComponent implements OnInit, OnDestroy {
                 private _navSvc: FileNavService) {
     }
 
+    public get creating(): boolean {
+        return !!this._newDir || !!this._newLocation;
+    }
+
     public get selected(): Array<ApiFile> {
         return this._selected;
     }
@@ -201,8 +205,17 @@ export class FileListComponent implements OnInit, OnDestroy {
     public createDirectory() {
         this.clearSelection();
 
+        let name = "New Folder";
+        let index = 0;
+
+        while (this._items.length > 0 && this._items.find(item => item.name.toLocaleLowerCase() == name.toLocaleLowerCase()) != null) {
+            index++;
+            name = "New Folder (" + index + ")";
+        }
+
         let dir = new ApiFile();
 
+        dir.name = name;
         dir.parent = this._current;
         dir.type = ApiFileType.Directory;
 
@@ -213,8 +226,17 @@ export class FileListComponent implements OnInit, OnDestroy {
     public createFile() {
         this.clearSelection();
 
+        let name = "new.html";
+        let index = 0;
+
+        while (this._items.length > 0 && this._items.find(item => item.name.toLocaleLowerCase() == name.toLocaleLowerCase()) != null) {
+            index++;
+            name = "new (" + index + ").html";
+        }
+
         let file = new ApiFile();
 
+        file.name = name;
         file.parent = this._current;
         file.type = ApiFileType.File;
 
@@ -312,6 +334,10 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     private onSaveNewDir() {
+        if (!this._newDir) {
+            return;
+        }
+
         let existing = this._items.find(f => f.name == this._newDir.name);
 
         if (!existing) {
@@ -322,6 +348,10 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     private onSaveNewLocation() {
+        if (!this._newLocation) {
+            return;
+        }
+
         let existing = this._items.find(f => f.name == this._newLocation.alias);
 
         if (!existing) {

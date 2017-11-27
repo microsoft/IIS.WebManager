@@ -117,6 +117,10 @@ export class WebFileListComponent implements OnInit, OnDestroy {
     constructor(private _svc: WebFilesService) {
     }
 
+    public get creating(): boolean {
+        return !!this._newDir;
+    }
+
     public get selected(): Array<WebFile> {
         return this._selected;
     }
@@ -161,8 +165,17 @@ export class WebFileListComponent implements OnInit, OnDestroy {
     public createDirectory() {
         this.clearSelection();
 
+        let name = "New Folder";
+        let index = 0;
+
+        while (this._items.length > 0 && this._items.find(item => item.name.toLocaleLowerCase() == name.toLocaleLowerCase()) != null) {
+            index++;
+            name = "New Folder (" + index + ")";
+        }
+
         let dir = new WebFile();
 
+        dir.name = name;
         dir.parent = this._current;
         dir.type = WebFileType.Directory;
 
@@ -172,9 +185,17 @@ export class WebFileListComponent implements OnInit, OnDestroy {
 
     public createFile() {
         this.clearSelection();
+        let name = "new.html";
+        let index = 0;
+
+        while (this._items.length > 0 && this._items.find(item => item.name.toLocaleLowerCase() == name.toLocaleLowerCase()) != null) {
+            index++;
+            name = "new (" + index + ").html";
+        }
 
         let file = new WebFile();
 
+        file.name = name;
         file.parent = this._current;
         file.type = WebFileType.File;
 
@@ -252,6 +273,10 @@ export class WebFileListComponent implements OnInit, OnDestroy {
     }
 
     private onSaveNewDir() {
+        if (!this._newDir) {
+            return;
+        }
+
         let existing = this._items.find(f => f.name == this._newDir.name);
 
         if (!existing) {

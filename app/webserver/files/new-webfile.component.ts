@@ -12,12 +12,7 @@ import {WebFileType, WebFile} from './webfile';
     template: `
         <div class="grid-item row background-editing">
             <div class="col-xs-8 col-sm-5 col-md-5 col-lg-4 col-left">
-                <input [(ngModel)]="model.name" class="form-control" type="text" (keyup.enter)="onOk()" (blur)="cancel.next()" (keyup.esc)="cancel.next()" autofocus>
-            </div>
-            <div class="actions">
-                <button title="Cancel" (click)="cancel.next()">
-                    <i class="fa fa-times red"></i>
-                </button>
+                <input [(ngModel)]="model.name" class="form-control" type="text" (keyup.enter)="onOk()" (blur)="onOk()" (keyup.esc)="cancel.next()" autofocus>
             </div>
         </div>
     `,

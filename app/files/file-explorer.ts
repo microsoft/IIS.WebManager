@@ -15,8 +15,8 @@ import { FileNavService } from './file-nav.service';
         <toolbar
             [refresh]="true"
             [newFile]="!atRoot()"
-            [newLocation]="atRoot() || null"
-            [newFolder]="!atRoot() || null"
+            [newLocation]="showNewLocation()"
+            [newFolder]="showNewFolder()"
             [upload]="!atRoot()"
             [delete]="selected && selected.length > 0"
             (onNewLocation)="createLocation()"
@@ -87,5 +87,29 @@ export class FileExplorer implements OnDestroy {
 
     private atRoot(): boolean {
         return !!(this._current && !this._current.physical_path);
+    }
+
+    private showNewLocation() {
+
+        //
+        // If the list is being used to create a folder/dir hide the button
+
+        if (!(this._list && !this._list.creating)) {
+            return null;
+        }
+
+        return this.atRoot() || null;
+    }
+
+    private showNewFolder() {
+
+        //
+        // If the list is being used to create a folder/dir disable the button
+
+        if (!(this._list && !this._list.creating)) {
+            return false;
+        }
+
+        return !this.atRoot() || null;
     }
 }

@@ -15,8 +15,8 @@ import { WebSite } from '../websites/site';
         <toolbar
             [newLocation]="null"
             [refresh]="true"
-            [newFile]="!_newDir"
-            [newFolder]="!_newDir"
+            [newFile]="_list && !_list.creating"
+            [newFolder]="_list && !_list.creating"
             [upload]="true"
             [delete]="_list && _list.selected.length > 0"
             (onRefresh)="refresh()"

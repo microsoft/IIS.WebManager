@@ -20,6 +20,7 @@ import { ApiFile, ApiFileType } from './file';
                     <input class="form-control inline-block" type="text" 
                            [ngModel]="model.name"
                            (ngModelChange)="rename($event)"
+                           (blur)="onBlur($event)"
                            (keyup.enter)="_editing=false"
                            (keyup.esc)="onCancel($event)"
                            (keyup.delete)="$event.stopImmediatePropagation()"
@@ -137,6 +138,15 @@ export class FileComponent {
             })
     }
 
+    private onBlur(event: Event) {
+        if (event && event.target && (<HTMLInputElement>event.target).value === this.model.name) {
+
+            //
+            // No change. Force cancel
+            this.cancel();
+        }
+    }
+
     private onCancel(e: Event) {
         e.preventDefault();
 
@@ -172,7 +182,7 @@ export class FileComponent {
 
     private cancel() {
         this._editing = false;
-        this._location = false;
+        this._location = null;
     }
 
     private onClickName(e: Event) {
