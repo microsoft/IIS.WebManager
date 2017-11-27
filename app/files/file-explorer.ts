@@ -2,7 +2,7 @@ import { Component, OnDestroy, Input, Inject, ViewChild } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 
-import { ApiFile, ApiFileType } from './file';
+import { ApiFile, ApiFileType, ExplorerOptions } from './file';
 import { FileListComponent } from './file-list';
 import { FilesService } from './files.service';
 import { FileNavService } from './file-nav.service';
@@ -13,12 +13,12 @@ import { FileNavService } from './file-nav.service';
         <file-selector #fileSelector class="right" (selected)="upload($event)" [multiple]="true">
         </file-selector>
         <toolbar
-            [refresh]="true"
-            [newFile]="!atRoot()"
-            [newLocation]="showNewLocation()"
-            [newFolder]="showNewFolder()"
-            [upload]="!atRoot()"
-            [delete]="selected && selected.length > 0"
+            [refresh]="options.EnableRefresh || null"
+            [newFile]="(options.EnableNewFile || null) && !atRoot()"
+            [newLocation]="(options.EnableNewFolder || null) && showNewLocation()"
+            [newFolder]="(options.EnableNewFolder || null) && showNewFolder()"
+            [upload]="(options.EnableUpload || null) && !atRoot()"
+            [delete]="(options.EnableDelete || null) && selected && selected.length > 0"
             (onNewLocation)="createLocation()"
             (onRefresh)="refresh()"
             (onNewFolder)="createDirectory()"
@@ -40,6 +40,7 @@ export class FileExplorer implements OnDestroy {
     private _subscriptions: Array<Subscription> = [];
     @ViewChild(FileListComponent) private _list: FileListComponent;
 
+    @Input() public options: ExplorerOptions = new ExplorerOptions(true);
     @Input() public types: Array<string> = [];
 
     constructor(@Inject("FilesService") private _svc: FilesService,
