@@ -62,7 +62,7 @@ export class MemoryChart implements OnDestroy {
                             if (value == 0) {
                                 return 0;
                             }
-                            return Math.floor(value / 1024 / 1024 / 1024) + ' GB';
+                            return Humanizer.memory(value);
                         }
                     }
                 }
@@ -91,8 +91,8 @@ export class MemoryChart implements OnDestroy {
     @ViewChild('chart') private _memChart: BaseChartDirective;
 
     private _data: Array<any> = [
-        { data: this._serverMemValues, label: 'Web Server' },
-        { data: this._systemMemValues, label: 'System' }
+        { data: this._serverMemValues, label: 'Web Server Usage' },
+        { data: this._systemMemValues, label: 'Total Usage' }
     ];
 
     constructor(private _svc: MonitoringService) {
@@ -143,7 +143,22 @@ export class MemoryChart implements OnDestroy {
 
         if (this._memChart && this._memChart.chart) {
             this._memChart.chart.options.scales.yAxes[0].ticks.max = snapshot.memory.installed
-            this._memChart.chart.options.scales.yAxes[0].ticks.stepSize = snapshot.memory.installed
+
+            let steps = 3;
+
+            let height = this._memChart.chart.height;
+
+            if (height <= 122)
+            {
+                steps = 1;
+            }
+            else if (height >= 229)
+            {
+                steps = 7;
+            }
+
+            this._memChart.chart.options.scales.yAxes[0].ticks.stepSize = snapshot.memory.installed / steps;
+
             this._memChart.chart.update();
         }
     }

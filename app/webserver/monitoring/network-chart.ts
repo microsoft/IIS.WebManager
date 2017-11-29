@@ -66,7 +66,17 @@ export class NetworkChart implements OnDestroy {
             yAxes: [
                 {
                     ticks: {
-                        min: 0
+                        min: 0,
+                        // Create labels
+                        callback: function (value, index, values) {
+                            if (value == 0) {
+                                return value;
+                            }
+                            else if (value < 1) {
+                                return value.toFixed(1);
+                            }
+                            return Humanizer.memory(value);
+                        }
                     }
                 }
             ],
