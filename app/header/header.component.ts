@@ -9,7 +9,7 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
     template: `
         <div class="nav background-active">
             <button class="fa fa-bars nav-item nav-options hover-primary2" [attr.title]="this._options.active ? 'Hide Sidebar' : 'Show Sidebar'" (click)="this._options.toggle()" [class.background-primary2]="this._options.active"></button>
-            <a [routerLink]="['/']" title="Home" class="nav-brand nav-item background-active">
+            <a [routerLink]="['/']" title="Home" class="nav-brand nav-item background-active hover-primary2 nav-height">
                 <span class="v-center"><span class="hidden-xs">Microsoft</span> IIS</span>
             </a>
             <div class="separator"></div>
@@ -30,7 +30,7 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
     `,
     styles: [`
         .nav {
-            height:55px; 
+            height:35px; 
             position:absolute; 
             top:0px;
             left:0px;
@@ -40,16 +40,24 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
             white-space: nowrap;
         }
 
+        >>> .nav-height {
+            height:35px; 
+        }
+
         .nav-item {
             display: inline-block;
             cursor: pointer;
-            vertical-align: middle;
+            vertical-align: top;
         }
 
         .nav-options {
             padding: 10px;
-            height: 55px;
+            height: 35px;
             border: none;
+        }
+
+        .nav-options::before {
+            line-height: 17px;
         }
 
         .nav-brand {
@@ -63,7 +71,8 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
             display: inline-block;
             vertical-align: middle;
             border-left:1px solid white;
-            height:23px;
+            height:20px;
+            margin-top: 7px;
             margin-right: 2px;
             margin-left: 2px;
         }
@@ -97,21 +106,19 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
 
         .v-center {
             vertical-align: middle;
-            height: 55px;
-            display: table-cell;
+            height: 35px;
         }
 
         >>> .nav-button {
             display: inline-block;
-            vertical-align: middle;
+            vertical-align: top;
             min-width: 25px;
             cursor: pointer;
-            height: 55px;
             padding: 0 15px;
         }
 
         >>> .nav-button i {
-            line-height: 55px;
+            line-height: 35px;
         }
     `]
 })

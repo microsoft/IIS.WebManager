@@ -28,7 +28,7 @@ export class ComponentUtil {
     }
 
     private static goTo(element: HTMLElement) {
-        var HEADER_HEIGHT = 55;
+        var HEADER_HEIGHT = 35;
         let mainContainer = document.getElementById('mainContainer');
 
         var scrollTo = 0;

@@ -19,13 +19,9 @@ import {WebAppsService} from './webapps.service';
         <webapp-header *ngIf="app" [model]="app" [class.sidebar-nav-content]="_options.active"></webapp-header>
 
         <div *ngIf="app" class="sidebar crumb" [class.nav]="_options.active">
-            <ul class="items">
-                <li class="home"><a [routerLink]="['/']">Home</a></li>
-                <li class="webserver"><a [routerLink]="['/webserver']">Web Server</a></li>
-                <li class="website"><a [routerLink]="['/webserver/web-sites']">Web Sites</a></li>
-                <li class="website"><a [routerLink]="['/webserver/websites/', app.website.id]">{{app.website.name}}</a></li>
-                <li class="webapps color-active"><a>{{app.path}}</a></li>
-                <hr />
+            <ul class="crumbs">
+                <li><a [routerLink]="['/webserver']">Web Server</a></li>
+                <li><a [routerLink]="['/webserver/websites/', app.website.id]">{{app.website.name}}</a></li>
             </ul>
             <vtabs [markLocation]="true" (activate)="_options.refresh()">
                 <item [name]="'General'" [ico]="'fa fa-wrench'">
@@ -38,17 +34,12 @@ import {WebAppsService} from './webapps.service';
         </div>
     `,
     styles: [`
-        .sidebar .home::before {content: "\\f015";}
-        .sidebar .webserver::before {content: "\\f233";}
-        .sidebar .website::before {content: "\\f0ac";}
-        .sidebar .webapps::before {content: "\\f121";}
-
         :host >>> .sidebar > vtabs .vtabs > .items {
-            top: 251px;
+            top: 35px;
         }
 
         :host >>> .sidebar > vtabs .vtabs > .content {
-            top: 82px;
+            top: 96px;
         }
     `]
 })

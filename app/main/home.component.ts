@@ -12,20 +12,16 @@ import { OptionsService } from './options.service';
         }
 
         :host >>> .sidebar > vtabs .items {
-            top: 107px;
+            top: 35px;
         }
 
         :host >>> .sidebar > vtabs .content {
-            margin-top: 15px;
+            margin-top: 10px;
         }
     `],
     template: `
         <div>
             <div class="sidebar" [class.nav]="_options.active">
-                <ul class="items">
-                    <li class="home color-active"><a [routerLink]="['/']">Home</a></li>
-                    <hr />
-                </ul>
                 <vtabs [markLocation]="true" (activate)="_options.refresh()">
                     <item [name]="'Web Sites'" [ico]="'fa fa-globe'">
                         <dynamic [name]="'WebSiteListComponent'" [module]="'app/webserver/websites/websites.module#WebSitesModule'"></dynamic>
