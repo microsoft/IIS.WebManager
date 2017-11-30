@@ -86,7 +86,7 @@ export class LogFieldsComponent {
                     <label class="visible-xs">Read From</label>
                     <label *ngIf="i === _editing" class="hidden-xs">Read From</label>
                     <span *ngIf="i !== _editing">{{sourceTypeName(field.source_type)}}</span>
-                    <select [(ngModel)]="field.source_type" class="form-control">
+                    <select *ngIf="i === _editing" [(ngModel)]="field.source_type" class="form-control">
                         <option value="request_header">Request Header</option>
                         <option value="response_header">Response Header</option>
                         <option value="server_variable">Server Variable</option>
@@ -101,7 +101,7 @@ export class LogFieldsComponent {
                     <label class="visible-xs">Field Name</label>
                     <label *ngIf="i === _editing" class="hidden-xs">Field Name</label>
                     <span *ngIf="i !== _editing">{{field.source_name}}</span>
-                    <input [(ngModel)]="field.source_name" throttle class="form-control" type="text" required/>
+                    <input *ngIf="i === _editing" [(ngModel)]="field.source_name" throttle class="form-control" type="text" required/>
                 </fieldset>
                 <div *ngIf="i !== _editing">
                     <br class="visible-xs" />
@@ -112,7 +112,7 @@ export class LogFieldsComponent {
                     <label class="visible-xs">Log As</label>
                     <label *ngIf="i === _editing" class="hidden-xs">Log As</label>
                     <span *ngIf="i !== _editing">{{field.field_name}}</span>
-                    <input required [(ngModel)]="field.field_name" throttle class="form-control" type="text" required/>
+                    <input *ngIf="i === _editing" required [(ngModel)]="field.field_name" throttle class="form-control" type="text" required/>
                 </fieldset>
                 <div *ngIf="i !== _editing">
                     <br class="visible-xs" />
