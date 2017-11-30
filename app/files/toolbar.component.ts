@@ -30,7 +30,7 @@ import { FormsModule } from '@angular/forms';
     ]
 })
 export class ToolbarComponent {
-    @Input() newLocation: boolean;
+    @Input() newLocation: boolean = null;
     @Input() refresh: boolean;
     @Input() newFile: boolean = null;
     @Input() newFolder: boolean = null;
