@@ -859,6 +859,7 @@ a.link:before {
     position: fixed;
     top: 41px;
     left: 230px;
+    white-space: nowrap;
 }
 
 .sidebar .crumbs li {
