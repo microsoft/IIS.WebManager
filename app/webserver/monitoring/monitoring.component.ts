@@ -71,8 +71,8 @@ export class MonitoringComponent implements OnDestroy {
         return [
             {
                 backgroundColor: 'rgba(0,0,0,.02)',
-                borderColor: '#0093fe',
-                pointBackgroundColor: '#0093fe',
+                borderColor: '#0077ce',
+                pointBackgroundColor: '#0077ce',
                 pointBorderColor: '#d4d4d4',
                 pointHoverBackgroundColor: '#fff',
                 pointHoverBorderColor: 'rgba(148,159,177,0.8)'
