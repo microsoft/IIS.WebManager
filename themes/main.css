@@ -886,7 +886,7 @@ a.link:before {
 .sidebar .crumbs li:hover a {
     border-bottom-style: solid;
     border-bottom-width: 2px;
-    border-color: #0093fe; /* themes.blue.css */
+    border-color: #0077ce; /* themes.blue.css */
 }
 
 .sidebar .crumbs li a {
