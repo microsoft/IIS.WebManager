@@ -21,7 +21,7 @@ import { WebServerService } from './webserver.service';
         </div>
         <div *ngIf="webServer">
             <loading *ngIf="!webServer"></loading>
-            <webserver-header [model]="webServer" [class.sidebar-nav-content]="_options.active"></webserver-header>
+            <webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
             <div class="sidebar crumb" [class.nav]="_options.active">
                 <vtabs *ngIf="webServer" [markLocation]="true" (activate)="_options.refresh()">
                     <item [name]="'General'" [ico]="'fa fa-wrench'">

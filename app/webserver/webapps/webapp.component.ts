@@ -16,7 +16,7 @@ import {WebAppsService} from './webapps.service';
     template: `
         <not-found *ngIf="notFound"></not-found>
         <loading *ngIf="!(app || notFound)"></loading>
-        <webapp-header *ngIf="app" [model]="app" [class.sidebar-nav-content]="_options.active"></webapp-header>
+        <webapp-header *ngIf="app" [model]="app" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webapp-header>
 
         <div *ngIf="app" class="sidebar crumb" [class.nav]="_options.active">
             <ul class="crumbs">

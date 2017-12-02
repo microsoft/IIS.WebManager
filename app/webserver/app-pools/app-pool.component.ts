@@ -15,7 +15,7 @@ import {AppPoolsService} from './app-pools.service';
     template: `
         <not-found *ngIf="notFound"></not-found>
         <loading *ngIf="!(pool || notFound)"></loading>
-        <app-pool-header *ngIf="pool" [pool]="pool" [class.sidebar-nav-content]="_options.active"></app-pool-header>
+        <app-pool-header *ngIf="pool" [pool]="pool" class="crumb-content" [class.sidebar-nav-content]="_options.active"></app-pool-header>
 
         <div *ngIf="pool" class="sidebar crumb" [class.nav]="_options.active">
             <ul class="crumbs">
