@@ -7,7 +7,7 @@ import {FormsModule} from '@angular/forms';
     selector: 'palettes',
     template: `
 <div style="background-color:#8b4298;" class="border-antiactive" (click)="changePalette('purple')"></div>
-<div style="background-color:#0093fe;" class="border-antiactive" (click)="changePalette('blue')"></div>
+<div style="background-color:#0077ce;" class="border-antiactive" (click)="changePalette('blue')"></div>
 <div style="background-color:black;" class="border-antiactive" (click)="changePalette('black')"></div>
     `,
     styles: [`

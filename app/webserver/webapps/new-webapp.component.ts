@@ -15,33 +15,38 @@ import { ApplicationPool } from '../app-pools/app-pool';
 @Component({
     selector: 'new-webapp',
     template: `
-        <fieldset>
-            <label>Path</label>
-            <input type="text" class="form-control path" [(ngModel)]="model.path" required />
-        </fieldset>
-        <fieldset class="path">
-            <label>Physical Path</label>
-            <button [class.background-active]="fileSelector.isOpen()" title="Select Folder" class="right select" (click)="fileSelector.toggle()"></button>
-            <div class="fill">
-                <input type="text" class="form-control" [(ngModel)]="model.physical_path" required />
-            </div>
-            <server-file-selector #fileSelector [types]="['directory']" (selected)="onSelectPath($event)"></server-file-selector>
-        </fieldset>
-        <section>
-            <div class="collapse-heading collapsed" data-toggle="collapse" data-target="#applicationPool">
-                <h2>Application Pool</h2>
-            </div>
-            <div id="applicationPool" class="collapse">
+        <tabs>
+            <tab [name]="'Settings'">
                 <fieldset>
-                    <app-pool-item [model]="model.application_pool" [actions]="'view,recycle,start,stop'"></app-pool-item>
+                    <label>Path</label>
+                    <input type="text" class="form-control path" [(ngModel)]="model.path" required />
                 </fieldset>
-                <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Select <i class="fa fa-caret-down"></i></button>
-                <selector #poolSelect class="container-fluid">
-                    <app-pools #appPools [actions]="'view'" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
-                </selector>
-            </div>
-        </section>
-        <p>
+                <fieldset class="path">
+                    <label>Physical Path</label>
+                    <button [class.background-active]="fileSelector.isOpen()" title="Select Folder" class="right select" (click)="fileSelector.toggle()"></button>
+                    <div class="fill">
+                        <input type="text" class="form-control" [(ngModel)]="model.physical_path" required />
+                    </div>
+                    <server-file-selector #fileSelector [types]="['directory']" (selected)="onSelectPath($event)"></server-file-selector>
+                </fieldset>
+            </tab>
+            <tab [name]="'Application Pool'">
+                <fieldset>
+                    <label>Use Custom Application Pool</label>
+                    <switch class="block" [(model)]="_customPool" (modelChange)="onNewAppPool($event)">{{_createAppPool ? "Yes" : "No"}}</switch>
+                </fieldset>
+                <div class="app-pool" *ngIf="_customPool">
+                    <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">{{!model.application_pool ? "Choose Application Pool" : "Change Application Pool" }} <i class="fa fa-caret-down"></i></button>
+                    <selector #poolSelect class="container-fluid create">
+                        <app-pools #appPools [actions]="'view'" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
+                    </selector>
+                    <fieldset>
+                        <app-pool-details *ngIf="model.application_pool" [model]="model.application_pool"></app-pool-details>
+                    </fieldset>
+                </div>
+            </tab>
+        </tabs>
+        <p class="pull-right">
             <button (click)="onSave()" [disabled]="!IsValid()">
                 <i title="Create" class="fa fa-check color-active"></i> Create
             </button>
@@ -71,6 +76,7 @@ export class NewWebAppComponent {
     @ViewChild('appPools') appPools: AppPoolListComponent;
 
     model: WebApp;
+    private _customPool: boolean = false;
 
     constructor(@Inject("WebAppsService") private _service: WebAppsService) {
     }
@@ -90,6 +96,13 @@ export class NewWebAppComponent {
     onCancel() {
         this.reset();
         this.cancel.emit(null);
+    }
+
+    private onNewAppPool(value: boolean) {
+        if (!value) {
+            this.model.application_pool = this.website.application_pool;
+            setTimeout(() => this.selectAppPool(), 10);
+        }
     }
 
     private IsValid(): boolean {

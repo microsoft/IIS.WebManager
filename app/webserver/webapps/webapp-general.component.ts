@@ -11,42 +11,38 @@ import { AppPoolListComponent } from '../app-pools/app-pool-list.component';
 @Component({
     selector: 'webapp-general',
     template: `
-        <fieldset>
-            <label>Path</label>
-            <input class="form-control path" type="text" [(ngModel)]="model.path" (modelChanged)="onModelChanged()" required throttle />
-        </fieldset>
-        <fieldset class="path">
-            <label>Physical Path</label>
-            <button [class.background-active]="fileSelector.isOpen()" title="Select Folder" class="right select" (click)="fileSelector.toggle()"></button>
-            <div class="fill">
-                <input type="text" class="form-control" [(ngModel)]="model.physical_path" (modelChanged)="onModelChanged()" required />
-            </div>
-            <server-file-selector #fileSelector [types]="['directory']" (selected)="onSelectPath($event)"></server-file-selector>
-        </fieldset>
-
-        <fieldset class="inline-block">
-            <label>Custom Protocols</label>
-            <switch class="block" [(model)]="custom_protocols" (modelChange)="useCustomProtocols($event)">{{custom_protocols ? "On" : "Off"}}</switch>
-        </fieldset>
-        <fieldset class="inline-block" *ngIf="custom_protocols">
-            <label>Protocols</label>
-            <input class="form-control" type="text" [(ngModel)]="model.enabled_protocols" (modelChanged)="onModelChanged()" required throttle />
-        </fieldset>
-
-        <section>
-            <div class="collapse-heading" data-toggle="collapse" data-target="#applicationPool">
-                <h2>Application Pool</h2>
-            </div>
-            <div id="applicationPool" class="collapse in">
-                <fieldset class="app-pool">
-                    <app-pool-item [model]="model.application_pool" [actions]="'view,recycle,start,stop'"></app-pool-item>
+        <tabs>
+            <tab [name]="'Settings'">
+                <fieldset>
+                    <label>Path</label>
+                    <input class="form-control path" type="text" [(ngModel)]="model.path" (modelChanged)="onModelChanged()" required throttle />
                 </fieldset>
-                <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Select <i class="fa fa-caret-down"></i></button>
-                <selector #poolSelect class="container-fluid">
+                <fieldset class="path">
+                    <label>Physical Path</label>
+                    <button [class.background-active]="fileSelector.isOpen()" title="Select Folder" class="right select" (click)="fileSelector.toggle()"></button>
+                    <div class="fill">
+                        <input type="text" class="form-control" [(ngModel)]="model.physical_path" (modelChanged)="onModelChanged()" required />
+                    </div>
+                    <server-file-selector #fileSelector [types]="['directory']" (selected)="onSelectPath($event)"></server-file-selector>
+                </fieldset>
+
+                <fieldset class="inline-block">
+                    <label>Custom Protocols</label>
+                    <switch class="block" [(model)]="custom_protocols" (modelChange)="useCustomProtocols($event)">{{custom_protocols ? "On" : "Off"}}</switch>
+                </fieldset>
+                <fieldset class="inline-block" *ngIf="custom_protocols">
+                    <label>Protocols</label>
+                    <input class="form-control" type="text" [(ngModel)]="model.enabled_protocols" (modelChanged)="onModelChanged()" required throttle />
+                </fieldset>
+            </tab>
+            <tab [name]="'Application Pool'">
+                <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Change Application Pool <i class="fa fa-caret-down"></i></button>
+                <selector #poolSelect class="container-fluid create">
                     <app-pools #appPools [actions]="'view'" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
                 </selector>
-            </div>
-        </section>
+                <app-pool-details [model]="model.application_pool"></app-pool-details>
+            </tab>
+        </tabs>
     `
 })
 export class WebAppGeneralComponent {
