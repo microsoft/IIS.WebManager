@@ -33,7 +33,7 @@ import { ApplicationPool } from '../app-pools/app-pool';
             <tab [name]="'Application Pool'">
                 <fieldset>
                     <label>Use Custom Application Pool</label>
-                    <switch class="block" [(model)]="_customPool" (modelChange)="onNewAppPool($event)">{{_createAppPool ? "Yes" : "No"}}</switch>
+                    <switch class="block" [(model)]="_customPool" (modelChange)="onNewAppPool($event)">{{_customPool ? "Yes" : "No"}}</switch>
                 </fieldset>
                 <div class="app-pool" *ngIf="_customPool">
                     <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">{{!model.application_pool ? "Choose Application Pool" : "Change Application Pool" }} <i class="fa fa-caret-down"></i></button>
@@ -101,7 +101,6 @@ export class NewWebAppComponent {
     private onNewAppPool(value: boolean) {
         if (!value) {
             this.model.application_pool = this.website.application_pool;
-            setTimeout(() => this.selectAppPool(), 10);
         }
     }
 

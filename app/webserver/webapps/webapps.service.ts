@@ -183,13 +183,15 @@ export class WebAppsService {
             throw new Error("Invalid WebSite");
         }
 
-        data.website = <WebSite>{ id: data.website.id };
+        let createData = JSON.parse(JSON.stringify(data));
 
-        if (data.application_pool) {
-            data.application_pool = { id: data.application_pool.id };
+        createData.website = <WebSite>{ id: data.website.id };
+
+        if (createData.application_pool) {
+            createData.application_pool = { id: data.application_pool.id };
         }
 
-        return this._http.post("/webserver/webapps?fields=*," + WebAppsService._webSiteFields + "," + WebAppsService._appPoolFields, JSON.stringify(data))
+        return this._http.post("/webserver/webapps?fields=*," + WebAppsService._webSiteFields + "," + WebAppsService._appPoolFields, JSON.stringify(createData))
             .then(a => {
                 this._data.set(a.id, this.fromJson(a));
                 data.id = a.id;

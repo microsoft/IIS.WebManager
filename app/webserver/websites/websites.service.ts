@@ -203,11 +203,14 @@ export class WebSitesService implements OnDestroy {
     }
 
     create(site: WebSite): Promise<WebSite> {
-        if (site.application_pool) {
-            site.application_pool = { id: site.application_pool.id };
+
+        let creationData = JSON.parse(JSON.stringify(site));
+
+        if (creationData.application_pool) {
+            creationData.application_pool = { id: site.application_pool.id };
         }
 
-        return this._http.post("/webserver/websites?fields=*," + WebSitesService._appPoolFields, JSON.stringify(site))
+        return this._http.post("/webserver/websites?fields=*," + WebSitesService._appPoolFields, JSON.stringify(creationData))
             .then(s => {
                 this.add(this.fromJson(s));
                 site.id = s.id;
