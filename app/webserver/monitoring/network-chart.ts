@@ -15,13 +15,13 @@ import { ServerSnapshot } from './server-snapshot';
                 <label class="block">
                     Total Bytes Sent
                 </label>
-                {{formatNumber(_snapshot.network.total_bytes_sent)}}
+                {{formatMemory(_snapshot.network.total_bytes_sent)}}
             </div>
             <div class="col-xs-4">
                 <label class="block">
                     Total Bytes Received
                 </label>
-                {{formatNumber(_snapshot.network.total_bytes_recv)}}
+                {{formatMemory(_snapshot.network.total_bytes_recv)}}
             </div>
             <div class="col-xs-4">
                 <div>
@@ -56,6 +56,7 @@ export class NetworkChart implements OnDestroy {
     private _length = 20;
     private _snapshot: ServerSnapshot = null;
     private formatNumber = Humanizer.number;
+    private formatMemory = Humanizer.memory;
 
     private _options: any = {
         responsive: true,
@@ -66,7 +67,20 @@ export class NetworkChart implements OnDestroy {
             yAxes: [
                 {
                     ticks: {
-                        min: 0
+                        min: 0,
+                        // Create labels
+                        callback: function (value, index, values) {
+                            if (value == 0) {
+                                return value;
+                            }
+                            else if (value < 1) {
+                                return value.toFixed(1);
+                            }
+                            else if (value < 1024) {
+                                return value;
+                            }
+                            return Humanizer.memory(value);
+                        }
                     }
                 }
             ],

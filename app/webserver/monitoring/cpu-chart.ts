@@ -13,6 +13,17 @@ import { ServerSnapshot } from './server-snapshot';
             <div class="col-xs-4">
                 <div>
                     <label>
+                        CPU Utilization
+                    </label>
+                    <tooltip>
+                        Total CPU usage by web server processes. CPU utilization from other processes is ignored.
+                    </tooltip>
+                </div>
+                {{_snapshot.cpu.percent_usage}} %
+            </div>
+            <div class="col-xs-4">
+                <div>
+                    <label>
                         Processes
                     </label>
                     <tooltip>
@@ -31,17 +42,6 @@ import { ServerSnapshot } from './server-snapshot';
                     </tooltip>
                 </div>
                 {{_snapshot.cpu.threads}}
-            </div>
-            <div class="col-xs-4">
-                <div>
-                    <label>
-                        Average CPU
-                    </label>
-                    <tooltip>
-                        Total average CPU usage by web server processes. CPU utilization from other processes is ignored.
-                    </tooltip>
-                </div>
-                {{_avgCpu}} %
             </div>
         </div>
         <div class="block">
@@ -106,8 +106,8 @@ export class CpuChart implements OnDestroy {
     @ViewChild('chart') private _chart: BaseChartDirective;
 
     private _data: Array<any> = [
-        { data: this._serverCpuValues, label: 'Web Server' },
-        { data: this._systemCpuValues, label: 'System' }
+        { data: this._serverCpuValues, label: 'Web Server CPU %' },
+        { data: this._systemCpuValues, label: 'Total CPU %' }
     ];
 
     constructor(private _svc: MonitoringService) {

@@ -23,6 +23,12 @@ import { ServerSnapshot } from './server-snapshot';
                 {{formatNumber(_snapshot.requests.total)}}
             </div>
             <div class="col-xs-4">
+                <label class="block">
+                    Requests / sec
+                </label>
+                {{formatNumber(_snapshot.requests.per_sec)}}
+            </div>
+            <div class="col-xs-4">
                 <div>
                     <label>
                         Active Requests
@@ -32,12 +38,6 @@ import { ServerSnapshot } from './server-snapshot';
                     </tooltip>
                 </div>
                 {{formatNumber(_snapshot.requests.active)}}
-            </div>
-            <div class="col-xs-4">
-                <label class="block">
-                    Average Requests / sec
-                </label>
-                {{formatNumber(_avgRps)}}
             </div>
             <div class="clearfix visible-xs-block"></div>
         </div>
@@ -71,7 +71,16 @@ export class RequestsChart implements OnDestroy {
             yAxes: [
                 {
                     ticks: {
-                        min: 0
+                        min: 0,
+                        // Create labels
+                        callback: function (value, index, values) {
+                            // float values less than five causing y axis scale label clipping https://github.com/chartjs/Chart.js/issues/729
+                            if (value > 0 && values[0] < 6) {
+                                return value.toFixed(1);
+                            }
+
+                            return value;
+                        }
                     }
                 }
             ],
@@ -94,15 +103,14 @@ export class RequestsChart implements OnDestroy {
     private _colors: Array<any> = MonitoringComponent.DefaultColors;
 
     private _rpsValues: Array<number> = [];
-    private _avgRpsValues: Array<number> = [];
+    private _activeRequestsValues: Array<number> = [];
     private _labels: Array<string> = [];
-    private _avgRps = 0;
 
     @ViewChild('chart') private _rpsChart: BaseChartDirective;
 
     private _data: Array<any> = [
         { data: this._rpsValues, label: 'Requests / sec' },
-        { data: this._avgRpsValues, label: 'Avg Requests / sec' }
+        { data: this._activeRequestsValues, label: 'Active Requests' }
     ];
 
     constructor(private _svc: MonitoringService) {
@@ -139,15 +147,11 @@ export class RequestsChart implements OnDestroy {
         }
 
         //
-        // Average Rps
-        this._avgRps = 0;
-        this._rpsValues.forEach(val => this._avgRps += val);
-        this._avgRps = Math.floor(this._avgRps / this._rpsValues.length);
+        // Active Requests
+        this._activeRequestsValues.push(snapshot.requests.active);
 
-        this._avgRpsValues.push(this._avgRps);
-
-        if (this._avgRpsValues.length > this._length) {
-            this._avgRpsValues.shift();
+        if (this._activeRequestsValues.length > this._length) {
+            this._activeRequestsValues.shift();
         }
 
         //
