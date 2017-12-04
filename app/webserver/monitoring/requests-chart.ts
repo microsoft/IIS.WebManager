@@ -71,7 +71,16 @@ export class RequestsChart implements OnDestroy {
             yAxes: [
                 {
                     ticks: {
-                        min: 0
+                        min: 0,
+                        // Create labels
+                        callback: function (value, index, values) {
+                            // float values less than five causing y axis scale label clipping https://github.com/chartjs/Chart.js/issues/729
+                            if (value > 0 && values[0] < 6) {
+                                return value.toFixed(1);
+                            }
+
+                            return value;
+                        }
                     }
                 }
             ],

@@ -13,6 +13,17 @@ import { ServerSnapshot } from './server-snapshot';
             <div class="col-xs-4">
                 <div>
                     <label>
+                        CPU Utilization
+                    </label>
+                    <tooltip>
+                        Total CPU usage by web server processes. CPU utilization from other processes is ignored.
+                    </tooltip>
+                </div>
+                {{_snapshot.cpu.percent_usage}} %
+            </div>
+            <div class="col-xs-4">
+                <div>
+                    <label>
                         Processes
                     </label>
                     <tooltip>
@@ -31,17 +42,6 @@ import { ServerSnapshot } from './server-snapshot';
                     </tooltip>
                 </div>
                 {{_snapshot.cpu.threads}}
-            </div>
-            <div class="col-xs-4">
-                <div>
-                    <label>
-                        CPU Utilization
-                    </label>
-                    <tooltip>
-                        Total CPU usage by web server processes. CPU utilization from other processes is ignored.
-                    </tooltip>
-                </div>
-                {{_snapshot.cpu.percent_usage}} %
             </div>
         </div>
         <div class="block">
