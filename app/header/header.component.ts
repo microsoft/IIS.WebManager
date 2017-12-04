@@ -10,7 +10,8 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
         <div class="nav background-active">
             <button class="fa fa-bars nav-item nav-options hover-primary2" [attr.title]="this._options.active ? 'Hide Sidebar' : 'Show Sidebar'" (click)="this._options.toggle()" [class.background-primary2]="this._options.active"></button>
             <a [routerLink]="['/']" title="Home" class="nav-brand nav-item background-active hover-primary2 nav-height">
-                <span class="v-center"><span class="hidden-xs">Microsoft</span> IIS</span>
+                <span class="v-center hidden-xs">Microsoft IIS</span>
+                <span class="v-center visible-xs">IIS</span>
             </a>
             <div class="separator"></div>
             <connection-picker class="nav-item"></connection-picker>
@@ -62,7 +63,7 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
 
         .nav-brand {
             padding: 0px 5px;
-            font-size: 20px;
+            font-size: 14px;
             padding: 0 10px;
         }
 
@@ -117,8 +118,13 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
             padding: 0 15px;
         }
 
-        >>> .nav-button i {
+        >>> .nav-button i,
+        .nav-brand span {
             line-height: 35px;
+        }
+
+        connection-picker {
+            font-size: 12px;
         }
     `]
 })
