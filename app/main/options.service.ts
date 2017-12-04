@@ -44,6 +44,10 @@ export class OptionsService implements IDisposable {
     }
 
     public refresh() {
+        if (window.innerWidth < OptionsService.BREAK_POINT) {
+            this.set(false);
+        }
+
         this.set(this.active);
     }
 

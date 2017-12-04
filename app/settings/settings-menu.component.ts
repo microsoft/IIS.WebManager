@@ -9,7 +9,7 @@ import { Selector } from '../common/selector';
 @Component({
     selector: 'settings',
     template: `
-        <div title="Options" class="s-container hover-primary2" [class.background-primary2]="settingsMenu && settingsMenu.isOpen()" (click)="onClickSettings()">
+        <div title="Options" class="s-container nav-button hover-primary2" [class.background-primary2]="settingsMenu && settingsMenu.isOpen()" (click)="onClickSettings()">
             <i class="fa fa-cog"></i>
         </div>
         <selector #settingsMenu class="color-normal" [right]="true">
@@ -31,23 +31,13 @@ import { Selector } from '../common/selector';
     `,
     styles: [`
         .s-container {
-            display: inline-block;
-            vertical-align: middle;
-            min-width: 25px;
-            cursor: pointer;
-            padding: 0 15px;
             font-size: 120%;
-            height: 55px;
-        }
-
-        .s-container i {
-            line-height: 55px;
         }
 
         selector {
             position: absolute;
             right: 0;
-            top: 54px;
+            top: 34px;
         }
 
         ul {

@@ -13,16 +13,10 @@ import 'rxjs/add/operator/first';
             vertical-align: middle;
             min-width: 25px;
             cursor: pointer;
-            height: 55px;
-            padding: 0 15px;
-        }
-
-        i {
-            line-height: 55px;
         }
     `],
     template: `
-        <div class="hover-primary2" title="Notifications" *ngIf="_notifications.length > 0" (click)="toggleNotifications()">
+        <div class="hover-primary2 nav-button" title="Notifications" *ngIf="_notifications.length > 0" (click)="toggleNotifications()">
             <i class="fa fa-bell"></i>
             {{_notifications.length}}
         </div>

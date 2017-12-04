@@ -13,14 +13,11 @@ import { OptionsService } from '../../main/options.service';
     template: `
         <not-found *ngIf="notFound"></not-found>
         <loading *ngIf="!(site || notFound)"></loading>
-        <website-header *ngIf="site" [site]="site" [class.sidebar-nav-content]="_options.active"></website-header>
+        <website-header *ngIf="site" [site]="site" class="crumb-content" [class.sidebar-nav-content]="_options.active"></website-header>
         <div *ngIf="site" class="sidebar crumb" [class.nav]="_options.active">
-            <ul class="items">
-                <li class="home"><a [routerLink]="['/']">Home</a></li>
-                <li class="webserver"><a [routerLink]="['/webserver']">Web Server</a></li>
-                <li class="websites"><a [routerLink]="['/webserver/web-sites']">Web Sites</a></li>
-                <li class="websites color-active">{{site.name}}</li>
-                <hr />
+            <ul class="crumbs">
+                <li><a [routerLink]="['/webserver']">Web Server</a></li>
+                <li><a [routerLink]="['/webserver/web-sites']">Web Sites</a></li>
             </ul>
             <vtabs [markLocation]="true" (activate)="_options.refresh()">
                 <item [name]="'General'" [ico]="'fa fa-wrench'">
@@ -33,16 +30,12 @@ import { OptionsService } from '../../main/options.service';
         </div>
     `,
     styles: [`
-        .sidebar .home::before {content: "\\f015";}
-        .sidebar .webserver::before {content: "\\f233";}
-        .sidebar .websites::before {content: "\\f0ac";}
-
         :host >>> .sidebar vtabs .vtabs > .items {
-            top: 215px;
+            top: 35px;
         }
 
         :host >>> .sidebar vtabs .vtabs > .content {
-            top: 82px;
+            top: 96px;
         }
     `]
 })

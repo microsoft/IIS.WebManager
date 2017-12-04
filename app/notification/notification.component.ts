@@ -15,7 +15,7 @@ import { DynamicComponent } from '../common/dynamic.component';
             width: 100%;
             position: absolute;
             top: 0;
-            margin-top: 55px;
+            margin-top: 35px;
             color: #444;
             overflow: hidden;
             font-size:16px;

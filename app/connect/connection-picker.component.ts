@@ -10,14 +10,12 @@ import {ComponentUtil} from '../utils/component';
 @Component({
     selector: 'connection-picker',
     template: `
-        <a title="Manage Servers" class="background-active hover-primary2" [routerLink]="[_connections.length > 0 ? '/settings/servers' : '/connect']">{{currentName()}}</a>
+        <a title="Manage Servers" class="background-active hover-primary2 nav-height" [routerLink]="[_connections.length > 0 ? '/settings/servers' : '/connect']">{{currentName()}}</a>
     `,
     styles: [`
         a {
-            height:55px;
             max-width:300px;
             vertical-align: middle;
-            height: 55px;
             display: table-cell;
             padding: 0 10px;
         }

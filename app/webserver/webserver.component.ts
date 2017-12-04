@@ -21,13 +21,8 @@ import { WebServerService } from './webserver.service';
         </div>
         <div *ngIf="webServer">
             <loading *ngIf="!webServer"></loading>
-            <webserver-header [model]="webServer" [class.sidebar-nav-content]="_options.active"></webserver-header>
+            <webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
             <div class="sidebar crumb" [class.nav]="_options.active">
-                <ul class="items">
-                    <li class="home"><a [routerLink]="['/']">Home</a></li>
-                    <li class="webserver color-active">Web Server</li>
-                    <hr />
-                </ul>
                 <vtabs *ngIf="webServer" [markLocation]="true" (activate)="_options.refresh()">
                     <item [name]="'General'" [ico]="'fa fa-wrench'">
                         <webserver-general [model]="webServer"></webserver-general>
@@ -40,15 +35,12 @@ import { WebServerService } from './webserver.service';
         </div>
     `,
     styles: [`
-        .sidebar .home::before {content: "\\f015";}
-        .sidebar .webserver::before {content: "\\f233";}
-
         :host >>> .sidebar > vtabs .vtabs > .items {
-            top: 143px;
+            top: 35px;
         }
 
         :host >>> .sidebar > vtabs .vtabs > .content {
-            top: 82px;
+            top: 96px;
         }
 
         .not-installed {
