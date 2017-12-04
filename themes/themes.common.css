@@ -20,12 +20,12 @@
 
 .started.status,
 .started .status {
-    color: #4bce46;
+    color: #32842f;
 }
 
 .stopped,
 .stopped a {
-    color: #bbbbbb;
+    color: #757575;
 }
 
 .expired,
@@ -44,13 +44,6 @@
 .units {
     color: #777;
 }
-
-/*.background-active {
-	transition:             All 0.3s ease;
-	-webkit-transition:     All 0.3s ease;
-	-moz-transition:        All 0.3s ease;
-	-o-transition:          All 0.3s ease;
-}*/
 
 button,
 .bttn,

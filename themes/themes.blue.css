@@ -20,7 +20,7 @@ button.save:not([disabled]):not(:hover):not(:active)::before,
 button.edit:not([disabled]):not(:hover):not(:active)::before,
 button.go:not([disabled]):not(:hover):not(:active)::before,
 .bttn.edit:not([disabled]):not(:hover):not(:active)::before {
-    color: #0093fe;
+    color: #0077ce;
 }
 
 button.start:not([disabled]):not(:hover):not(:active)::before {
@@ -32,7 +32,7 @@ button.stop:not([disabled]):not(:hover):not(:active)::before {
 }
 
 a.link:not([disabled]):not(:hover):not(:active)::before {
-    color: #0093fe;
+    color: #0077ce;
 }
 
 .border-color,
@@ -69,7 +69,7 @@ button.hover-color-normal:hover::before {
 .hover-color-active:hover,
 .color-active,
 a {
-    color: #0093fe;
+    color: #0077ce;
 }
 
 a:hover,
@@ -86,13 +86,13 @@ button:hover,
 button:hover::before,
 .bttn:active,
 .bttn:hover  {
-    background-color: #0093fe;
+    background-color: #0077ce;
     color: white;
 }
 
 .hover-primary2:hover,
 .background-primary2 {
-    background-color: #0086E7;
+    background-color: #006dbc;
     color: white;
 }
 
@@ -105,7 +105,7 @@ button:hover::before,
 .border-active,
 button,
 .bttn.bordered {
-    border-color: #0093fe;
+    border-color: #0077ce;
 }
 
 .border-bottom-normal {
@@ -243,11 +243,11 @@ button[disabled] i.fa,
 
 
 .sidebar li:hover a {
-    border-color: #0093fe;
+    border-color: #0077ce;
 }
 
 .sidebar > vtabs .items:before {
-    color: #0093fe;
+    color: #0077ce;
 }
 
 .sidebar .items,
