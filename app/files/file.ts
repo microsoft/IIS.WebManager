@@ -125,3 +125,29 @@ export class FileChangeEvent {
         return evt;
     }
 }
+
+export class ExplorerOptions {
+    public EnableRefresh: boolean;
+    public EnableNewFile: boolean;
+    public EnableNewFolder: boolean;
+    public EnableUpload: boolean;
+    public EnableDelete: boolean;
+
+    private static _allEnabled = new ExplorerOptions(true);
+
+    constructor(initalValue: boolean) {
+        this.setAll(initalValue);
+    }
+
+    public static get AllEnabled() {
+        return this._allEnabled;
+    }
+
+    private setAll(val: boolean) {
+        this.EnableRefresh = val;
+        this.EnableNewFile = val;
+        this.EnableNewFolder = val;
+        this.EnableUpload = val;
+        this.EnableDelete = val;
+    }
+}

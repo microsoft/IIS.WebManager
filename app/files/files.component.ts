@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Input, Inject, ViewChild } from '@angular
 
 import { Subscription } from 'rxjs/Subscription';
 
-import { ApiFile, ApiFileType } from './file';
+import { ApiFile, ApiFileType, ExplorerOptions } from './file';
 import { FilesService } from './files.service';
 import { FileNavService } from './file-nav.service';
 import { NavigationHelper } from './navigation-helper';
@@ -12,7 +12,7 @@ import { FileExplorer } from './file-explorer';
     selector: 'file-viewer',
     template: `
         <file-editor *ngIf="_current && !isDir(_current)" [file]="_current"></file-editor>
-        <file-explorer *ngIf="isDir(_current)" [types]="types"></file-explorer>
+        <file-explorer *ngIf="isDir(_current)" [types]="types" [options]="options"></file-explorer>
     `,
     providers: [
         FileNavService,
@@ -24,6 +24,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     private _subscriptions: Array<Subscription> = [];
     @ViewChild(FileExplorer) private _list: FileExplorer;
 
+    @Input() public options: ExplorerOptions = ExplorerOptions.AllEnabled;
     @Input() public types: Array<string> = [];
     @Input() public useHash: boolean = true;
 

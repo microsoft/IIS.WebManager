@@ -21,8 +21,11 @@ import { WebFileType, WebFile } from './webfile';
                     <input class="form-control inline-block" type="text" 
                            [ngModel]="model.name"
                            (ngModelChange)="rename($event)"
+                           (blur)="onBlur($event)"
+                           (keyup.enter)="_editing=false"
                            (keyup.esc)="onCancel($event)"
                            (keyup.delete)="$event.stopImmediatePropagation()"
+                           (dblclick)="prevent($event)"
                            required throttle autofocus/>
                 </div>
             </div>
@@ -126,7 +129,7 @@ export class WebFileComponent {
     }
     
     private rename(name: string) {
-        if (this._editing && name) {
+        if (name) {
             this._service.rename(this.model, name);
             this.modelChanged.emit(this.model);
         }
@@ -139,6 +142,15 @@ export class WebFileComponent {
         this.selector.close();
 
         this.cancel();
+    }
+
+    private onBlur(event: Event) {
+        if (event && event.target && (<HTMLInputElement>event.target).value === this.model.name) {
+
+            //
+            // No change. Force cancel
+            this.cancel();
+        }
     }
 
     private onRename(e: Event) {

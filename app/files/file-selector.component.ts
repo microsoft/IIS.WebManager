@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, OnInit } from '@angular/core';
 
 import { Selector } from '../common/selector';
 
-import { ApiFile } from './file';
+import { ApiFile, ExplorerOptions } from './file';
 import { FilesComponent } from './files.component';
 
 
@@ -14,6 +14,7 @@ import { FilesComponent } from './files.component';
                 <file-viewer
                     *ngIf="selector.opened"
                     [types]="types" 
+                    [options]="_explorerOptions"
                     [useHash]="false"></file-viewer>
             </div>
             <p class="pull-right">
@@ -43,13 +44,25 @@ import { FilesComponent } from './files.component';
         }
     `]
 })
-export class FileSelectorComponent {
+export class FileSelectorComponent implements OnInit {
     @Input() public types: Array<string> = [];
     @Input() public multi: boolean = false;
     @Output() public selected: EventEmitter<Array<ApiFile>> = new EventEmitter<Array<ApiFile>>();
 
+    private _explorerOptions: ExplorerOptions;
     @ViewChild(Selector) private _selector: Selector;
     @ViewChild(FilesComponent) private _fileList: FilesComponent;
+
+    constructor() {
+        this._explorerOptions = new ExplorerOptions(false);
+        this._explorerOptions.EnableRefresh = this._explorerOptions.EnableNewFolder = true;
+    }
+
+    public ngOnInit() {
+        if (this.types.find(t => t.toLocaleLowerCase() == 'file')) {
+            this._explorerOptions.EnableNewFile = true;
+        }
+    }
 
     public toggle(): void {
         this._selector.toggle();

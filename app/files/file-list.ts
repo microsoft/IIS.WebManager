@@ -29,7 +29,7 @@ import { FileNavService } from './file-nav.service';
             [selected]="_selected"
 
             (blur)="onBlur($event)"
-            (keyup.delete)="deleteFiles(_selected)"
+            (keyup.delete)="deleteFiles($event, _selected)"
 
             (drop)="drop($event)"
             (dragover)="dragOver($event)"
@@ -48,9 +48,9 @@ import { FileNavService } from './file-nav.service';
                     <label class="col-md-1 visible-lg visible-md text-right" [ngClass]="_orderBy.css('size')" (click)="sort('size')">Size</label>
                 </div>
             </div>
-            <div class="grid-list container-fluid" *ngIf="_newLocation">
+            <selector #editSelector [opened]="true" *ngIf="_newLocation" class="container-fluid" (hide)="_newLocation=null">
                 <edit-location [model]="_newLocation" (cancel)="_newLocation=null" (save)="onSaveNewLocation()"></edit-location>
-            </div>
+            </selector>
             <div class="grid-list container-fluid" *ngIf="_newDir">
                 <new-file [model]="_newDir" (cancel)="_newDir=null" (save)="onSaveNewDir()"></new-file>
             </div>
@@ -125,6 +125,10 @@ export class FileListComponent implements OnInit, OnDestroy {
                 private _navSvc: FileNavService) {
     }
 
+    public get creating(): boolean {
+        return !!this._newDir || !!this._newLocation;
+    }
+
     public get selected(): Array<ApiFile> {
         return this._selected;
     }
@@ -169,10 +173,24 @@ export class FileListComponent implements OnInit, OnDestroy {
     public createLocation() {
         this.clearSelection();
 
+        let alias = "sites"
+        let index = 0;
+
+        //
+        // Avoid new name collision
+
+        while (this._items.length > 0 && 
+                (this._items.find(item => item.isLocation && item.name.toLowerCase() == alias) != null ||
+                 this._items.find(item => item.isLocation && item.alias && item.alias.toLowerCase() == alias) != null))
+        {
+            index++;
+            alias = "sites (" + index + ")";
+        }
+
         let location = new Location();
 
-        location.alias = "sites";
-        location.path = "%systemdrive%\\sites";
+        location.alias = alias;
+        location.path = "%systemdrive%\\" + alias;
 
         location.claims = [
             "read",
@@ -187,8 +205,17 @@ export class FileListComponent implements OnInit, OnDestroy {
     public createDirectory() {
         this.clearSelection();
 
+        let name = "New Folder";
+        let index = 0;
+
+        while (this._items.length > 0 && this._items.find(item => item.name.toLocaleLowerCase() == name.toLocaleLowerCase()) != null) {
+            index++;
+            name = "New Folder (" + index + ")";
+        }
+
         let dir = new ApiFile();
 
+        dir.name = name;
         dir.parent = this._current;
         dir.type = ApiFileType.Directory;
 
@@ -199,8 +226,17 @@ export class FileListComponent implements OnInit, OnDestroy {
     public createFile() {
         this.clearSelection();
 
+        let name = "new.html";
+        let index = 0;
+
+        while (this._items.length > 0 && this._items.find(item => item.name.toLocaleLowerCase() == name.toLocaleLowerCase()) != null) {
+            index++;
+            name = "new (" + index + ").html";
+        }
+
         let file = new ApiFile();
 
+        file.name = name;
         file.parent = this._current;
         file.type = ApiFileType.File;
 
@@ -208,7 +244,10 @@ export class FileListComponent implements OnInit, OnDestroy {
         this._newDir = file;
     }
 
-    public deleteFiles(files: Array<ApiFile>) {
+    public deleteFiles(e: Event, files: Array<ApiFile>) {
+        if (e.defaultPrevented) {
+            return;
+        }
 
         if (files && files.length < 1) {
             return;
@@ -295,6 +334,10 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     private onSaveNewDir() {
+        if (!this._newDir) {
+            return;
+        }
+
         let existing = this._items.find(f => f.name == this._newDir.name);
 
         if (!existing) {
@@ -305,6 +348,10 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     private onSaveNewLocation() {
+        if (!this._newLocation) {
+            return;
+        }
+
         let existing = this._items.find(f => f.name == this._newLocation.alias);
 
         if (!existing) {

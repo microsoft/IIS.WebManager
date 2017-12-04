@@ -1,6 +1,5 @@
 import { Component, Input, Output, Inject, ViewChild, EventEmitter } from '@angular/core';
 
-import { Selector } from '../common/selector';
 import { NotificationService } from '../notification/notification.service';
 import { Humanizer } from '../common/primitives';
 
@@ -11,18 +10,21 @@ import { ApiFile, ApiFileType } from './file';
 @Component({
     selector: 'file',
     template: `
-        <div *ngIf="model && !(_editing && _location)" class="grid-item row" [class.background-editing]="_editing" (keyup.f2)="onRename($event)" tabindex="-1">
+        <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing && !_location" [class.background-selected]="_editing && _location" (keyup.f2)="onRename($event)" tabindex="-1">
             <div class="col-xs-9 col-sm-5 col-lg-4 fi" [ngClass]="[model.type, model.extension, (isRoot ? 'location' : '')]">
-                <div *ngIf="!_editing">
+                <div *ngIf="!_editing || _location">
                     <a class="color-normal hover-color-active" [href]="href" nofocus (click)="onClickName($event)"><i></i>{{model.alias || model.name}}</a>
                 </div>
-                <div *ngIf="_editing">
+                <div *ngIf="_editing && !_location">
                     <i></i>
                     <input class="form-control inline-block" type="text" 
                            [ngModel]="model.name"
                            (ngModelChange)="rename($event)"
+                           (blur)="onBlur($event)"
+                           (keyup.enter)="_editing=false"
                            (keyup.esc)="onCancel($event)"
                            (keyup.delete)="$event.stopImmediatePropagation()"
+                           (dblclick)="prevent($event)"
                            required throttle autofocus/>
                 </div>
             </div>
@@ -36,23 +38,25 @@ import { ApiFile, ApiFileType } from './file';
                 <span *ngIf="model.size">{{getSize()}}</span>
             </div>
             <div class="actions">
-                <div class="selector-wrapper">
-                    <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
+                <div class="action-selector">
+                    <button title="More" (click)="selector.toggle()" (dblclick)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
                         <i class="fa fa-ellipsis-h"></i>
                     </button>
-                    <selector [right]="true">
+                    <selector #selector [right]="true">
                         <ul>
-                            <li><button *ngIf="!isRoot" class="edit" title="Rename" (click)="onRename($event)">Rename</button></li>
-                            <li><button *ngIf="isRoot" class="edit" title="Edit" (click)="onEdit($event)">Edit</button></li>
-                            <li><button class="download" title="Download" *ngIf="model.type=='file'" (click)="onDownload($event)">Download</button></li>
-                            <li><button *ngIf="!isRoot" class="delete" title="Delete" (click)="onDelete($event)">Delete</button></li>
-                            <li><button *ngIf="isRoot" class="delete" title="Delete" (click)="onDelete($event)">Remove</button></li>
+                            <li><button *ngIf="!isRoot" #menuButton class="edit" title="Rename" (click)="onRename($event)">Rename</button></li>
+                            <li><button *ngIf="isRoot" #menuButton class="edit" title="Edit" (click)="onEdit($event)">Edit</button></li>
+                            <li><button class="download" #menuButton title="Download" *ngIf="model.type=='file'" (click)="onDownload($event)">Download</button></li>
+                            <li><button *ngIf="!isRoot" #menuButton class="delete" title="Delete" (click)="onDelete($event)">Delete</button></li>
+                            <li><button *ngIf="isRoot" #menuButton class="delete" title="Delete" (click)="onDelete($event)">Remove</button></li>
                         </ul>
                     </selector>
                 </div>
             </div>
         </div>
-        <edit-location *ngIf="_location && _editing" [model]="_location" (cancel)="cancel()" (dblclick)="prevent($event)"></edit-location>
+        <selector #editSelector [opened]="true" *ngIf="_location && _editing" class="container-fluid" (hide)="cancel()">
+            <edit-location *ngIf="_location && _editing" [model]="_location" (cancel)="cancel()" (dblclick)="prevent($event)" (keyup.delete)="prevent($event)"></edit-location>
+        </selector>
     `,
     styles: [`
         a {
@@ -77,21 +81,6 @@ import { ApiFile, ApiFileType } from './file';
         .row {
             margin: 0px;
         }
-
-        .selector-wrapper {
-            position: relative;
-        }
-
-        selector {
-            position:absolute;
-            right:0;
-            top: 32px;
-        }
-
-        selector button {
-            min-width: 125px;
-            width: 100%;
-        }
     `],
     styleUrls: [
         'app/files/file-icons.css'
@@ -102,9 +91,6 @@ export class FileComponent {
     @Output() modelChanged: EventEmitter<any> = new EventEmitter();
     private _date = null;
     private _location = null;
-
-    @ViewChild(Selector) selector: Selector;
-
     private _editing = false;
 
     constructor(@Inject("FilesService") private _svc: FilesService,
@@ -128,7 +114,7 @@ export class FileComponent {
     }
 
     private rename(name: string) {
-        if (this._editing && name) {
+        if (name) {
             this._svc.rename(this.model, name);
             this.modelChanged.emit(this.model);
         }
@@ -138,7 +124,6 @@ export class FileComponent {
 
     private onRename(e: Event) {
         e.preventDefault();
-        this.selector.close();
 
         this._editing = true;
     }
@@ -153,16 +138,23 @@ export class FileComponent {
             })
     }
 
+    private onBlur(event: Event) {
+        if (event && event.target && (<HTMLInputElement>event.target).value === this.model.name) {
+
+            //
+            // No change. Force cancel
+            this.cancel();
+        }
+    }
+
     private onCancel(e: Event) {
         e.preventDefault();
-        this.selector.close();
 
         this.cancel();
     }
 
     private onDelete(e: Event) {
         e.preventDefault();
-        this.selector.close();
 
         let msg = this.model.isLocation ? "Are you sure you want to remove the root folder '" + this.model.name + "'?" :
             "Are you sure you want to delete '" + this.model.name + "'?";
@@ -180,7 +172,6 @@ export class FileComponent {
 
     private onDownload(e: Event) {
         e.preventDefault();
-        this.selector.close();
 
         this._svc.download(this.model);
     }
@@ -190,16 +181,8 @@ export class FileComponent {
     }
 
     private cancel() {
-        if (this.selector) {
-            this.selector.close();
-        }
-
         this._editing = false;
-        this._location = false;
-    }
-
-    private openSelector(e: Event) {
-        this.selector.toggle();
+        this._location = null;
     }
 
     private onClickName(e: Event) {

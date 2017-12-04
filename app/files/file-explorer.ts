@@ -2,7 +2,7 @@ import { Component, OnDestroy, Input, Inject, ViewChild } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 
-import { ApiFile, ApiFileType } from './file';
+import { ApiFile, ApiFileType, ExplorerOptions } from './file';
 import { FileListComponent } from './file-list';
 import { FilesService } from './files.service';
 import { FileNavService } from './file-nav.service';
@@ -13,18 +13,18 @@ import { FileNavService } from './file-nav.service';
         <file-selector #fileSelector class="right" (selected)="upload($event)" [multiple]="true">
         </file-selector>
         <toolbar
-            [refresh]="true"
-            [newFile]="!atRoot()"
-            [newLocation]="atRoot() || null"
-            [newFolder]="!atRoot() || null"
-            [upload]="!atRoot()"
-            [delete]="selected && selected.length > 0"
+            [refresh]="options.EnableRefresh || null"
+            [newFile]="(options.EnableNewFile || null) && !atRoot()"
+            [newLocation]="(options.EnableNewFolder || null) && showNewLocation()"
+            [newFolder]="(options.EnableNewFolder || null) && showNewFolder()"
+            [upload]="(options.EnableUpload || null) && !atRoot()"
+            [delete]="(options.EnableDelete || null) && selected && selected.length > 0"
             (onNewLocation)="createLocation()"
             (onRefresh)="refresh()"
             (onNewFolder)="createDirectory()"
             (onNewFile)="createFile()"
             (onUpload)="fileSelector.open()"
-            (onDelete)="deleteFiles(selected)"></toolbar>
+            (onDelete)="deleteFiles($event, selected)"></toolbar>
         <navigation></navigation>
         <file-list *ngIf="isDir(_current)" [types]="types"></file-list>
     `,
@@ -40,6 +40,7 @@ export class FileExplorer implements OnDestroy {
     private _subscriptions: Array<Subscription> = [];
     @ViewChild(FileListComponent) private _list: FileListComponent;
 
+    @Input() public options: ExplorerOptions = new ExplorerOptions(true);
     @Input() public types: Array<string> = [];
 
     constructor(@Inject("FilesService") private _svc: FilesService,
@@ -73,8 +74,8 @@ export class FileExplorer implements OnDestroy {
         this._list.createFile();
     }
 
-    private deleteFiles(files: Array<ApiFile>) {
-        this._list.deleteFiles(files);
+    private deleteFiles(event: Event, files: Array<ApiFile>) {
+        this._list.deleteFiles(event, files);
     }
 
     private upload(files: Array<File>) {
@@ -87,5 +88,29 @@ export class FileExplorer implements OnDestroy {
 
     private atRoot(): boolean {
         return !!(this._current && !this._current.physical_path);
+    }
+
+    private showNewLocation() {
+
+        //
+        // If the list is being used to create a folder/dir hide the button
+
+        if (!(this._list && !this._list.creating)) {
+            return null;
+        }
+
+        return this.atRoot() || null;
+    }
+
+    private showNewFolder() {
+
+        //
+        // If the list is being used to create a folder/dir disable the button
+
+        if (!(this._list && !this._list.creating)) {
+            return false;
+        }
+
+        return !this.atRoot() || null;
     }
 }
