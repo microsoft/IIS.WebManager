@@ -30,7 +30,6 @@ import { WebSiteListComponent } from './website-list.component';
 import { NewWebSiteComponent } from './new-website.component';
 import { BindingList, BindingItem } from './binding-list.component';
 import { LimitsComponent } from './limits.component';
-import { AppPoolDetailsComponent } from './app-pool-details';
 
 @NgModule({
     imports: [
@@ -65,8 +64,7 @@ import { AppPoolDetailsComponent } from './app-pool-details';
         NewWebSiteComponent,
         BindingList,
         BindingItem,
-        LimitsComponent,
-        AppPoolDetailsComponent
+        LimitsComponent
     ]
 
 })

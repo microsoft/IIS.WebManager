@@ -38,14 +38,14 @@ import { ApplicationPool } from '../app-pools/app-pool';
                     <label>Create Own Application Pool</label>
                     <switch class="block" [(model)]="_createAppPool" (modelChange)="onNewAppPool($event)">{{_createAppPool ? "Yes" : "No"}}</switch>
                 </fieldset>
-                <div *ngIf="!_createAppPool">
-                    <fieldset>
-                        <app-pool-item [model]="site.application_pool" [actions]="'view,recycle,start,stop'"></app-pool-item>
-                    </fieldset>
-                    <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Select <i class="fa fa-caret-down"></i></button>
-                    <selector #poolSelect class="container-fluid">
+                <div class="app-pool" *ngIf="!_createAppPool">
+                    <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">{{!site.application_pool ? "Choose Application Pool" : "Change Application Pool" }} <i class="fa fa-caret-down"></i></button>
+                    <selector #poolSelect class="container-fluid create">
                         <app-pools #appPools [actions]="'view'" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
                     </selector>
+                    <fieldset>
+                        <app-pool-details *ngIf="site.application_pool" [model]="site.application_pool"></app-pool-details>
+                    </fieldset>
                 </div>
             </tab>
         </tabs>
@@ -70,6 +70,10 @@ import { ApplicationPool } from '../app-pools/app-pool';
 
         p {
             margin: 10px 0;
+        }
+
+        .app-pool > button {
+            margin-top: 10px;
         }
     `]
 })

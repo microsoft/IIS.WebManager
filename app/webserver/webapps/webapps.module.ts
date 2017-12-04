@@ -10,6 +10,7 @@ import { Module as VTabs } from '../../common/vtabs.component';
 import { Module as Loading } from '../../notification/loading.component';
 import { Module as Sort } from '../../common/sort.pipe';
 import { Module as Selector } from '../../common/selector';
+import { Module as Tabs } from '../../common/tabs.component';
 
 import { Module as WebSitesModule } from '../websites/module';
 import { Module as AppPoolsModule } from '../app-pools/module';
@@ -40,7 +41,8 @@ import { NewWebAppComponent } from './new-webapp.component';
         VTabs,
         Loading,
         Sort,
-        Selector
+        Selector,
+        Tabs
     ],
     declarations: [
         WebAppComponent,
