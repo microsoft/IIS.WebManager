@@ -21,6 +21,7 @@ import {WebAppsService} from './webapps.service';
         <div *ngIf="app" class="sidebar crumb" [class.nav]="_options.active">
             <ul class="crumbs">
                 <li><a [routerLink]="['/webserver']">Web Server</a></li>
+                <li><a [routerLink]="['/webserver/web-sites/']">Web Sites</a></li>
                 <li><a [routerLink]="['/webserver/websites/', app.website.id]">{{app.website.name}}</a></li>
             </ul>
             <vtabs [markLocation]="true" (activate)="_options.refresh()">
