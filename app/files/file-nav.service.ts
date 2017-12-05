@@ -229,6 +229,7 @@ export class FileNavService implements IDisposable {
 
                 if (this._defaultPath && path == this._defaultPath) {
                     this.load("/");
+                    return;
                 }
 
                 this.handleError(e, path);
