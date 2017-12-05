@@ -73,6 +73,10 @@ export class NetworkChart implements OnDestroy {
                             if (value == 0) {
                                 return value;
                             }
+                            // float values less than five causing y axis scale label clipping https://github.com/chartjs/Chart.js/issues/729
+                            else if (values[0] < 6) {
+                                return value.toFixed(1);
+                            }
                             else if (value < 1) {
                                 return value.toFixed(1);
                             }
