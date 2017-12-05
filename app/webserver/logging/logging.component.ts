@@ -39,7 +39,7 @@ import { NotificationService } from '../../notification/notification.service';
                         <div class="fill">
                             <input [disabled]="!logging.log_per_site && logging.website" type="text" class="form-control" [(ngModel)]="logging.directory" throttle (modelChanged)="onModelChanged()" throttle required />
                         </div>
-                        <server-file-selector #fileSelector [types]="['directory']" (selected)="onSelectPath($event)"></server-file-selector>
+                        <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="logging.directory" (selected)="onSelectPath($event)"></server-file-selector>
                     </fieldset>
                     <fieldset *ngIf="!logging.website">
                         <label>Separate Log per Web Site</label>

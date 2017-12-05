@@ -27,6 +27,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     @Input() public options: ExplorerOptions = ExplorerOptions.AllEnabled;
     @Input() public types: Array<string> = [];
     @Input() public useHash: boolean = true;
+    @Input() public defaultPath: string = null;
 
     constructor(@Inject("FilesService") private _svc: FilesService,
                 private _navSvc: FileNavService) {
@@ -40,7 +41,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this._navSvc.init(this.useHash);
+        this._navSvc.init(this.useHash, this.defaultPath);
     }
 
     public ngOnDestroy() {

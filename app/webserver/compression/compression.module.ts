@@ -8,6 +8,7 @@ import { Module as Switch } from '../../common/switch.component';
 import { Module as Loading } from '../../notification/loading.component';
 import { Module as OverrideMode } from '../../common/override-mode.component';
 import { Module as ErrorComponent } from '../../error/error.component';
+import { FilesModule } from '../../files/files.module';
 
 import { CompressionService } from './compression.service';
 
@@ -22,7 +23,8 @@ import { CompressionComponent } from './compression.component';
         Switch,
         Loading,
         OverrideMode,
-        ErrorComponent
+        ErrorComponent,
+        FilesModule
     ],
     declarations: [
         CompressionComponent

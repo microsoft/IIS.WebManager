@@ -28,7 +28,7 @@ import { AppPoolsService } from '../app-pools/app-pools.service';
                     <div class="fill">
                         <input type="text" class="form-control" [(ngModel)]="site.physical_path" (modelChanged)="onModelChanged()" throttle required />
                     </div>
-                    <server-file-selector #fileSelector [types]="['directory']" (selected)="onSelectPath($event)"></server-file-selector>
+                    <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="site.physical_path" (selected)="onSelectPath($event)"></server-file-selector>
                 </fieldset>
                 <fieldset>
                     <label>Auto Start</label>

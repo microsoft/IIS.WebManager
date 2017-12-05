@@ -27,7 +27,7 @@ import { CentralCertificateConfiguration } from './central-certificates';
                 <div class="fill">
                     <input type="text" class="form-control" [(ngModel)]="_configuration.path" (modelChanged)="onModelChanged()" throttle required [attr.disabled]="isPending || null" />
                 </div>
-                <server-file-selector #fileSelector (selected)="onSelectPath($event)" [types]="['directory']"></server-file-selector>
+                <server-file-selector #fileSelector (selected)="onSelectPath($event)" [defaultPath]="_configuration.path" [types]="['directory']"></server-file-selector>
             </fieldset>
             <label class="block">Connection Credentials</label>
             <div class="in">

@@ -27,7 +27,7 @@ import { ApplicationPool } from '../app-pools/app-pool';
                     <div class="fill">
                         <input type="text" class="form-control" [(ngModel)]="model.physical_path" required />
                     </div>
-                    <server-file-selector #fileSelector [types]="['directory']" (selected)="onSelectPath($event)"></server-file-selector>
+                    <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="model.physical_path" (selected)="onSelectPath($event)"></server-file-selector>
                 </fieldset>
             </tab>
             <tab [name]="'Application Pool'">
