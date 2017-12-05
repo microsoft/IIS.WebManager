@@ -65,6 +65,19 @@ export class WebServerComponent {
             ModuleUtil.initModules(this.modules, this.webServer, "webserver");
             ModuleUtil.addModule(this.modules, "Certificates");
 
+            //
+            // Insert files global module after application pools
+            let index = this.modules.findIndex(m => m.name.toLocaleLowerCase() == "application pools") + 1;
+
+            this.modules.splice(index, 0, {
+                name: "Files",
+                ico: "fa fa-files-o",
+                component_name: "FilesComponent",
+                module: "app/files/files.module#FilesModule",
+                api_name: "files",
+                api_path: "/api/files/{id}"
+            });
+
             this._http.head('/certificates/', null, false)
                 .catch(res => {
                     this.modules = this.modules.filter(m => m.name.toLocaleLowerCase() !== 'certificates')
