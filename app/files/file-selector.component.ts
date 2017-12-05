@@ -15,7 +15,8 @@ import { FilesComponent } from './files.component';
                     *ngIf="selector.opened"
                     [types]="types" 
                     [options]="_explorerOptions"
-                    [useHash]="false"></file-viewer>
+                    [useHash]="false"
+                    [defaultPath]="defaultPath"></file-viewer>
             </div>
             <p class="pull-right">
                 <button class="ok" [attr.disabled]="!canAccept() || null" (click)="accept()">OK</button>
@@ -46,6 +47,7 @@ import { FilesComponent } from './files.component';
 })
 export class FileSelectorComponent implements OnInit {
     @Input() public types: Array<string> = [];
+    @Input() public defaultPath: string = null;
     @Input() public multi: boolean = false;
     @Output() public selected: EventEmitter<Array<ApiFile>> = new EventEmitter<Array<ApiFile>>();
 

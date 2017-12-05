@@ -25,6 +25,7 @@ const Root: ApiFile = ApiFile.fromObj({
 export class FileNavService implements IDisposable {
     private _nav: Navigator;
     private _roots: Array<ApiFile> = null;
+    private _defaultPath: string = null;
     private _subscriptions: Array<Subscription> = [];
     private _current: BehaviorSubject<ApiFile> = new BehaviorSubject<ApiFile>(null);
     private _files: BehaviorSubject<Array<ApiFile>> = new BehaviorSubject<Array<ApiFile>>([]);
@@ -110,10 +111,11 @@ export class FileNavService implements IDisposable {
         }
     }
 
-    public init(useHash: boolean) {
+    public init(useHash: boolean, defaultPath: string = null) {
         //
         // Navigation
-        this._nav = new Navigator(this._route, this._location, useHash);
+        this._defaultPath = defaultPath;
+        this._nav = new Navigator(this._route, this._location, useHash, defaultPath);
 
         this._subscriptions.push(this._nav.path.startWith(null).pairwise().subscribe((pair: [string, string]) => {
             let previous = pair[0];
@@ -202,6 +204,12 @@ export class FileNavService implements IDisposable {
 
         // Get dir
         return (path == "/" ? Promise.resolve(Root) : this.get(path))
+            .catch(e => {
+
+                //
+                // Load root directory if initial path doesn't exist
+                throw e;
+            })
             .then(dir => {
                 this._current.next(ApiFile.fromObj(dir));
 
@@ -217,6 +225,11 @@ export class FileNavService implements IDisposable {
                 // Clear files
                 this._files.getValue().splice(0);
                 this._files.next(this._files.getValue());
+
+
+                if (this._defaultPath && path == this._defaultPath) {
+                    this.load("/");
+                }
 
                 this.handleError(e, path);
                 throw e;

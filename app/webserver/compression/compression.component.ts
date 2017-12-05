@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 
+import { ApiFile } from '../../files/file';
 import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
 import { ResponseCompression } from './compression'
@@ -34,9 +35,13 @@ import { NotificationService } from '../../notification/notification.service';
 
             <!-- Settings only visible at Web Server level -->
             <div *ngIf="!model.scope">
-                <fieldset>
+                <fieldset class="path">
                     <label>Directory</label>
-                    <input class="form-control path" type="text" [(ngModel)]="model.directory" throttle (modelChanged)="onModelChanged()" required />
+                    <button title="Select Directory" [class.background-active]="fileSelector.isOpen()" class="right select" (click)="fileSelector.toggle()"></button>
+                    <div class="fill">
+                        <input type="text" class="form-control" [(ngModel)]="model.directory" (modelChanged)="onModelChanged()" throttle required />
+                    </div>
+                    <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="model.directory" (selected)="onSelectPath($event)"></server-file-selector>
                 </fieldset>
                 <fieldset class="inline-block">
                     <label>Limit Storage</label>
@@ -134,6 +139,13 @@ export class CompressionComponent implements OnInit, OnDestroy {
                         this._service.uninstall();
                     }
                 });
+        }
+    }
+
+    private onSelectPath(event: Array<ApiFile>) {
+        if (event.length == 1) {
+            this.model.directory = event[0].physical_path;
+            this.onModelChanged();
         }
     }
 }

@@ -23,7 +23,7 @@ import { AppPoolListComponent } from '../app-pools/app-pool-list.component';
                     <div class="fill">
                         <input type="text" class="form-control" [(ngModel)]="model.physical_path" (modelChanged)="onModelChanged()" required />
                     </div>
-                    <server-file-selector #fileSelector [types]="['directory']" (selected)="onSelectPath($event)"></server-file-selector>
+                    <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="model.physical_path" (selected)="onSelectPath($event)"></server-file-selector>
                 </fieldset>
 
                 <fieldset class="inline-block">

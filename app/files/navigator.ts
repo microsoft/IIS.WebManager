@@ -15,9 +15,10 @@ export class Navigator implements IDisposable {
 
     constructor(private _route: ActivatedRoute,
                 private _location: Location,
-                private _useHash: boolean) {
+                private _useHash: boolean,
+                defaultPath: string = null) {
 
-        this._path = new BehaviorSubject<string>("");
+        this._path = new BehaviorSubject<string>(defaultPath || "");
 
         if (_useHash) {
             this._hashWatcher = new LocationHash(_route, _location);

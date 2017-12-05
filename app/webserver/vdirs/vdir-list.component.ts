@@ -61,7 +61,7 @@ import { WebApp } from '../webapps/webapp';
                     <div class="fill">
                         <input type="text" class="form-control block" [(ngModel)]="model.physical_path" throttle required />
                     </div>
-                    <server-file-selector #fileSelector [types]="['directory']" (selected)="onSelectPath($event)"></server-file-selector>
+                    <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="model.physical_path" (selected)="onSelectPath($event)"></server-file-selector>
                 </fieldset>
                 <div class="col-xs-12">
                     <fieldset>

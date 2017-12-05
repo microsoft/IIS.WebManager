@@ -48,7 +48,7 @@ import { RequestTracing, RequestTracingRule, Trace, EventSeverity, Verbosity } f
                         <div class="fill">
                             <input type="text" class="form-control" [(ngModel)]="requestTracing.directory" (modelChanged)="onModelChanged()" throttle />
                         </div>
-                        <server-file-selector #fileSelector [types]="['directory']" (selected)="onSelectPath($event)"></server-file-selector>
+                        <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="requestTracing.directory" (selected)="onSelectPath($event)"></server-file-selector>
                     </fieldset>
                     <fieldset>
                         <label>Max Trace Files</label>
