@@ -117,7 +117,8 @@ export class WebFileComponent {
     private _editing = false;
 
     constructor(private _service: WebFilesService,
-                @Inject("FilesService") private _fileService: FilesService) {
+                @Inject("FilesService") private _fileService: FilesService,
+                private _notificationService: NotificationService) {
     }
     
     private get href() {
@@ -168,9 +169,12 @@ export class WebFileComponent {
         e.preventDefault();
         this.selector.close();
 
-        if (confirm("Are you sure you want to delete " + this.model.name)) {
-            this._service.delete([this.model]);
-        }
+        this._notificationService.confirm("Delete File", "Are you sure you want to delete " + this.model.name)
+            .then(confirmed => {
+                if (confirmed) {
+                    this._service.delete([this.model]);
+                }
+            });
     }
 
     private onDownload(e: Event) {
