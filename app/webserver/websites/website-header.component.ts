@@ -1,6 +1,7 @@
 import { Component, Input, Inject, ViewChild } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 
+import { NotificationService } from '../../notification/notification.service';
 import { Selector } from '../../common/selector';
 import { WebSitesService } from './websites.service';
 import { WebSite } from './site';
@@ -50,7 +51,8 @@ export class WebSiteHeaderComponent {
     @ViewChild(Selector) private _selector: Selector;
 
     constructor(@Inject("WebSitesService") private _service: WebSitesService,
-        private _router: Router) {
+        private _router: Router,
+        private _notificationService: NotificationService) {
     }
 
     onStart() {
@@ -64,13 +66,16 @@ export class WebSiteHeaderComponent {
     }
 
     onDelete() {
-        if (confirm("Are you sure you would like to delete '" + this.site.name + "'?")) {
-            this._service.delete(this.site)
-                .then(() => {
-                    this._router.navigate(["/webserver/web-sites"]);
-                });
-        }
-        this._selector.close();
+        this._notificationService.confirm("Delete Web Site", "Are you sure you would like to delete '" + this.site.name + "'?")
+            .then(confirmed => {
+                if (confirmed) {
+                    this._service.delete(this.site)
+                        .then(() => {
+                            this._router.navigate(["/webserver/web-sites"]);
+                        });
+                }
+                this._selector.close();
+            });
     }
 
     private get url() {

@@ -5,6 +5,7 @@ import 'rxjs/add/operator/take';
 import { Subscription } from 'rxjs/Subscription';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 
+import { NotificationService } from '../notification/notification.service';
 import { OrderBy, SortPipe } from '../common/sort.pipe';
 import { FilterPipe } from '../common/filter.pipe';
 import { Range } from '../common/virtual-list.component';
@@ -122,7 +123,8 @@ export class FileListComponent implements OnInit, OnDestroy {
     @Input() public types: Array<string> = [];
 
     constructor(@Inject("FilesService") private _svc: FilesService,
-                private _navSvc: FileNavService) {
+                private _navSvc: FileNavService,
+                private _notificationService: NotificationService) {
     }
 
     public get creating(): boolean {
@@ -259,10 +261,14 @@ export class FileListComponent implements OnInit, OnDestroy {
 
         let msg = files.length == 1 ? "Are you sure you want to delete '" + files[0].name + "'?" :
             "Are you sure you want to delete " + files.length + " items?";
-        if (confirm(msg)) {
-            this._svc.delete(files);
-        }
-        this.clearSelection();
+
+        this._notificationService.confirm("Delete File", msg)
+            .then(confirmed => {
+                if (confirmed) {
+                    this._svc.delete(files);
+                }
+                this.clearSelection();
+            });
     }
 
     private deleteLocations(files: Array<ApiFile>) {
@@ -270,11 +276,13 @@ export class FileListComponent implements OnInit, OnDestroy {
         let msg = files.length == 1 ? "Are you sure you want to remove the root folder '" + files[0].name + "'?" :
             "Are you sure you want to remove " + files.length + " root folders?";
 
-        if (confirm(msg)) {
-            this._svc.deleteLocations(files);
-        }
-
-        this.clearSelection();
+        this._notificationService.confirm("Delete Root Folder", msg)
+            .then(confirmed => {
+                if (confirmed) {
+                    this._svc.deleteLocations(files);
+                }
+                this.clearSelection();
+            });
     }
 
     private onBlur(e: FocusEvent) {

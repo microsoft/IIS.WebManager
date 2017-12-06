@@ -94,7 +94,8 @@ export class FileComponent {
     private _editing = false;
 
     constructor(@Inject("FilesService") private _svc: FilesService,
-                private _nav: FileNavService) {
+                private _nav: FileNavService,
+                private _notificationService: NotificationService) {
     }
 
     private get isRoot(): boolean {
@@ -156,18 +157,23 @@ export class FileComponent {
     private onDelete(e: Event) {
         e.preventDefault();
 
+        let title = this.model.isLocation ? "Remove Root Folder" : "Delete File";
+
         let msg = this.model.isLocation ? "Are you sure you want to remove the root folder '" + this.model.name + "'?" :
             "Are you sure you want to delete '" + this.model.name + "'?";
 
-        if (confirm(msg)) {
+        this._notificationService.confirm(title, msg)
+            .then(confirmed => {
+                if (confirmed) {
+                    if (!this.model.isLocation) {
+                        this._svc.delete([this.model]);
+                    }
+                    else {
+                        this._svc.deleteLocations([this.model]);
+                    }
+                }
+            });
 
-            if (!this.model.isLocation) {
-                this._svc.delete([this.model]);
-            }
-            else {
-                this._svc.deleteLocations([this.model]);
-            }
-        }
     }
 
     private onDownload(e: Event) {
