@@ -280,6 +280,16 @@ fieldset.inline-block {
     overflow: hidden;
 }
 
+span.fill {
+    display: block;
+    overflow: hidden;
+    width: auto;
+}
+
+span.fill > input {
+    display: block;
+}
+
 button.right.select {
     width: 34px;
 }
@@ -865,8 +875,8 @@ a.link:before {
 }
 
 .sidebar .crumbs {
-    position: fixed;
-    top: 41px;
+    position: absolute;
+    top: 6px;
     white-space: nowrap;
 }
 

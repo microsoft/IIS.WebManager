@@ -10,8 +10,8 @@ import { ApiFile, ApiFileType } from './file';
     template: `
         <div class="grid-item row background-editing">
             <div class="col-xs-8 col-sm-5 col-md-5 col-lg-4 col-left fi" [ngClass]="type || (model && model.type)">
-                <i></i>
-                <input [(ngModel)]="model.name" class="form-control inline-block" type="text" (keyup.enter)="onOk()" (blur)="onOk()" (keyup.esc)="cancel.next()" autofocus>
+                <i class="pull-left"></i>
+                <span class="fill"><input [(ngModel)]="model.name" class="form-control" type="text" (keyup.enter)="onOk()" (blur)="onOk()" (keyup.esc)="cancel.next()" autofocus></span>
             </div>
         </div>
     `,
