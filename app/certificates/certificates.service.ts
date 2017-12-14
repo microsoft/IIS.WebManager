@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Response, RequestOptionsArgs, Headers } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
@@ -83,7 +84,7 @@ export class CertificatesService {
 
     private getAllByRange(start: number = 0, total: number = 0): Promise<Array<Certificate>> {
         let stop = false;
-        let sub = this._stopRetrievals.take(1).subscribe(() => {
+        let sub = <Subscription>(<any>this._stopRetrievals).take(1).subscribe(() => {
             stop = true;
         });
 
