@@ -2,59 +2,53 @@
     "name":  "Microsoft.IIS.WebManager",
     "dependencies":  {
                          "@angular/common":  {
-                                                 "version":  "2.4.10",
-                                                 "from":  "@angular/common@2.4.10",
-                                                 "resolved":  "https://registry.npmjs.org/@angular/common/-/common-2.4.10.tgz",
-                                                 "Hash":  "289D5A4186AF4A6B0353DB9D031DF7ED2B1F96FEDBBA61E39373BC7558239AE9"
+                                                 "version":  "5.0.0",
+                                                 "from":  "@angular/common@5.0.0",
+                                                 "resolved":  "https://registry.npmjs.org/@angular/common/-/common-5.0.0.tgz",
+                                                 "Hash":  "249962F834EA44923B0282799C35FE4E5F43D494238C0EB13D1CC6E2D82A43E3"
                                              },
                          "@angular/compiler":  {
-                                                   "version":  "2.4.10",
-                                                   "from":  "@angular/compiler@2.4.10",
-                                                   "resolved":  "https://registry.npmjs.org/@angular/compiler/-/compiler-2.4.10.tgz",
-                                                   "Hash":  "FCA1602F1F7E2B5568374E5E3B39E4D1F4932E5D1134F660FCF93826C1F835C2"
+                                                   "version":  "5.0.0",
+                                                   "from":  "@angular/compiler@5.0.0",
+                                                   "resolved":  "https://registry.npmjs.org/@angular/compiler/-/compiler-5.0.0.tgz",
+                                                   "Hash":  "548C170ED5138C65DBBAA435B3955F7A44858247E84786F398ED9567F05B1272"
                                                },
                          "@angular/core":  {
-                                               "version":  "2.4.10",
-                                               "from":  "@angular/core@2.4.10",
-                                               "resolved":  "https://registry.npmjs.org/@angular/core/-/core-2.4.10.tgz",
-                                               "Hash":  "DB75B4765ABCC6F0ABCFA7E24B1FFE6CCC89D6E519AFE544F2DC5CBEC620C726"
+                                               "version":  "5.0.0",
+                                               "from":  "@angular/core@5.0.0",
+                                               "resolved":  "https://registry.npmjs.org/@angular/core/-/core-5.0.0.tgz",
+                                               "Hash":  "8AFF6F6B6F7493AC85AF8727FD06120C47101E53A84962466683F7D9570C7D18"
                                            },
                          "@angular/forms":  {
-                                                "version":  "2.4.10",
-                                                "from":  "@angular/forms@2.4.10",
-                                                "resolved":  "https://registry.npmjs.org/@angular/forms/-/forms-2.4.10.tgz",
-                                                "Hash":  "305289E53265447975554F1D63719725E593EA7963610A9899AB884DE7BC2543"
+                                                "version":  "5.0.0",
+                                                "from":  "@angular/forms@5.0.0",
+                                                "resolved":  "https://registry.npmjs.org/@angular/forms/-/forms-5.0.0.tgz",
+                                                "Hash":  "81B7863867E8AAF5DDE118FB0FF9B43F1BC45E238AD78FF076E04539A086FC11"
                                             },
                          "@angular/http":  {
-                                               "version":  "2.4.10",
-                                               "from":  "@angular/http@2.4.10",
-                                               "resolved":  "https://registry.npmjs.org/@angular/http/-/http-2.4.10.tgz",
-                                               "Hash":  "FB9D4F854DCAD854923AE892FD7729F2EDC3F64DEBE1B9C0D5CA81CA45927F88"
+                                               "version":  "5.0.0",
+                                               "from":  "@angular/http@5.0.0",
+                                               "resolved":  "https://registry.npmjs.org/@angular/http/-/http-5.0.0.tgz",
+                                               "Hash":  "738CDEC8E768EB4340FF555B56DD9AF986A7F1BFC705A7D95626E4910203D30F"
                                            },
                          "@angular/platform-browser":  {
-                                                           "version":  "2.4.10",
-                                                           "from":  "@angular/platform-browser@2.4.10",
-                                                           "resolved":  "https://registry.npmjs.org/@angular/platform-browser/-/platform-browser-2.4.10.tgz",
-                                                           "Hash":  "A83584323D86F94EAEAC5A59D92915EBBD18CC26C5BB7BBB2F5C7A8102C07923"
+                                                           "version":  "5.0.0",
+                                                           "from":  "@angular/platform-browser@5.0.0",
+                                                           "resolved":  "https://registry.npmjs.org/@angular/platform-browser/-/platform-browser-5.0.0.tgz",
+                                                           "Hash":  "9503DE7D923A51AFA740E7573EE6512C7D9A5C6E77CEC9E819CF86ACBEAA82F9"
                                                        },
                          "@angular/platform-browser-dynamic":  {
-                                                                   "version":  "2.4.10",
-                                                                   "from":  "@angular/platform-browser-dynamic@2.4.10",
-                                                                   "resolved":  "https://registry.npmjs.org/@angular/platform-browser-dynamic/-/platform-browser-dynamic-2.4.10.tgz",
-                                                                   "Hash":  "E948D2AAD6B9890765B66894D1DB013916633823EE33AA28C5ACFCFB2A8AA75A"
+                                                                   "version":  "5.0.0",
+                                                                   "from":  "@angular/platform-browser-dynamic@5.0.0",
+                                                                   "resolved":  "https://registry.npmjs.org/@angular/platform-browser-dynamic/-/platform-browser-dynamic-5.0.0.tgz",
+                                                                   "Hash":  "A631E22038E2C58357FC4BE915B726DCE3A68295397CBBB2E68B367D802EB539"
                                                                },
                          "@angular/router":  {
-                                                 "version":  "3.4.10",
-                                                 "from":  "@angular/router@3.4.10",
-                                                 "resolved":  "https://registry.npmjs.org/@angular/router/-/router-3.4.10.tgz",
-                                                 "Hash":  "67F20D71CE7BFEC9A3DA6BCBC3053EF2A69BF5E9B3D9C13EF3697335E1265F90"
+                                                 "version":  "5.0.0",
+                                                 "from":  "@angular/router@5.0.0",
+                                                 "resolved":  "https://registry.npmjs.org/@angular/router/-/router-5.0.0.tgz",
+                                                 "Hash":  "F80EA7046A20A0182B479336CD0B70FC600C3017C3F82417CB12FDDD63CB9093"
                                              },
-                         "@angular/upgrade":  {
-                                                  "version":  "2.4.10",
-                                                  "from":  "@angular/upgrade@2.4.10",
-                                                  "resolved":  "https://registry.npmjs.org/@angular/upgrade/-/upgrade-2.4.10.tgz",
-                                                  "Hash":  "CCCB2CD7A4D5BB45B288028905806B11C13F12C9C0BCE9BF775A56D450F32D38"
-                                              },
                          "angulartics2":  {
                                               "version":  "1.1.12",
                                               "from":  "angulartics2@1.1.12",
@@ -152,16 +146,16 @@
                                                   "Hash":  "C7B1AA496B28E7BA438382ADF047F3FEA8D933C9665FB34AD81305934D268FA8"
                                               },
                          "rxjs":  {
-                                      "version":  "5.0.1",
-                                      "from":  "rxjs@5.0.1",
-                                      "resolved":  "https://registry.npmjs.org/rxjs/-/rxjs-5.0.1.tgz",
-                                      "Hash":  "5E620D7735F754A02AD5DC4FC0593C28D523153E19A7FE329B7C4BB99E067764"
+                                      "version":  "5.5.2",
+                                      "from":  "rxjs@5.5.2",
+                                      "resolved":  "https://registry.npmjs.org/rxjs/-/rxjs-5.5.2.tgz",
+                                      "Hash":  "C4786C329C77E1333767765AB112CA4E78DCEE4930CFD221BC80A1678198C33F"
                                   },
                          "symbol-observable":  {
-                                                   "version":  "1.0.4",
+                                                   "version":  "1.1.0",
                                                    "from":  "symbol-observable@\u003e=1.0.1 \u003c2.0.0",
-                                                   "resolved":  "https://registry.npmjs.org/symbol-observable/-/symbol-observable-1.0.4.tgz",
-                                                   "Hash":  "D2C4E95F4B3005CB9331502C71C7D411CDEE49DB0BBB01562C276D563D7E7D75"
+                                                   "resolved":  "https://registry.npmjs.org/symbol-observable/-/symbol-observable-1.1.0.tgz",
+                                                   "Hash":  "5AE3F910B988BFA0883AD81908008F7EB8286AC2B7761AE915C15FEDE7BB3A4D"
                                                },
                          "systemjs":  {
                                           "version":  "0.19.40",
@@ -169,6 +163,12 @@
                                           "resolved":  "https://registry.npmjs.org/systemjs/-/systemjs-0.19.40.tgz",
                                           "Hash":  "329DAAB374A0902C53CBBEC5A1B18BB32D4590EE9FD193AEBF4E4354F500A791"
                                       },
+                         "tslib":  {
+                                       "version":  "1.8.1",
+                                       "from":  "tslib@\u003e=1.7.1 \u003c2.0.0",
+                                       "resolved":  "https://registry.npmjs.org/tslib/-/tslib-1.8.1.tgz",
+                                       "Hash":  "7561BFCAAD3DA6175681495D29A571C8F20D740A8A7DB03A9689B47589B89992"
+                                   },
                          "when":  {
                                       "version":  "3.7.8",
                                       "from":  "when@\u003e=3.7.5 \u003c4.0.0",
@@ -176,10 +176,10 @@
                                       "Hash":  "E071B1118428E1EFE8FE3794CC990B1C07409F4D917D9E65FC521F01E0B5C39F"
                                   },
                          "zone.js":  {
-                                         "version":  "0.7.4",
-                                         "from":  "zone.js@0.7.4",
-                                         "resolved":  "https://registry.npmjs.org/zone.js/-/zone.js-0.7.4.tgz",
-                                         "Hash":  "0B2659FD097570469D7B259A6DB57DBB219BA1B645F023ECF69702C08023AE99"
+                                         "version":  "0.8.14",
+                                         "from":  "zone.js@0.8.14",
+                                         "resolved":  "https://registry.npmjs.org/zone.js/-/zone.js-0.8.14.tgz",
+                                         "Hash":  "C44E04FD26CC82852DC52758F88B77B434CCEFEF19F85F4AB15EF725045B5034"
                                      }
                      }
 }

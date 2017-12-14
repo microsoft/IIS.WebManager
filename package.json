@@ -1,15 +1,14 @@
 {
   "name": "Microsoft.IIS.WebManager",
   "dependencies": {
-    "@angular/common": "2.4.10",
-    "@angular/compiler": "2.4.10",
-    "@angular/core": "2.4.10",
-    "@angular/forms": "2.4.10",
-    "@angular/http": "2.4.10",
-    "@angular/platform-browser": "2.4.10",
-    "@angular/platform-browser-dynamic": "2.4.10",
-    "@angular/router": "3.4.10",
-    "@angular/upgrade": "2.4.10",
+    "@angular/common": "5.0.0",
+    "@angular/compiler": "5.0.0",
+    "@angular/core": "5.0.0",
+    "@angular/forms": "5.0.0",
+    "@angular/http": "5.0.0",
+    "@angular/platform-browser": "5.0.0",
+    "@angular/platform-browser-dynamic": "5.0.0",
+    "@angular/router": "5.0.0",
     "angulartics2": "1.1.12",
     "bootstrap": "3.3.7",
     "chart.js": "2.7.0",
@@ -21,9 +20,9 @@
     "monaco-editor": "0.8.1",
     "ng2-charts": "1.6.0",
     "reflect-metadata": "0.1.10",
-    "rxjs": "5.0.1",
+    "rxjs": "5.5.2",
     "systemjs": "0.19.40",
-    "zone.js": "0.7.4"
+    "zone.js": "0.8.14"
   },
   "devDependencies": {
     "@types/core-js": "0.9.35",
