@@ -48,7 +48,7 @@
     <DebugSymbols>true</DebugSymbols>
     <TypeScriptToolsVersion>2.5</TypeScriptToolsVersion>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort>43182</IISExpressSSLPort>
+    <IISExpressSSLPort>44382</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
@@ -89,7 +89,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>43181</DevelopmentServerPort>
+          <DevelopmentServerPort>44382</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>https://localhost:44382/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
