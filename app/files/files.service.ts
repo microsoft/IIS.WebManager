@@ -888,7 +888,7 @@ export class FilesService implements IDisposable {
     }
 
     private updateMetadata(file: ApiFile, metaData: File): Promise<ApiFile> {
-        return this.updateInternal(file, { last_modified: new Date(metaData.lastModifiedDate) })
+        return this.updateInternal(file, { last_modified: new Date(metaData.lastModifiedDate.toDateString()) })
             .then(fileInfo => {
                 return ApiFile.fromObj(fileInfo);
             });
