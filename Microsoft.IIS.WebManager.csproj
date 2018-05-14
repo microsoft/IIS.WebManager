@@ -352,7 +352,6 @@
     <TypeScriptCompile Include="app\webserver\websites\site.ts" />
     <TypeScriptCompile Include="app\utils\diff.ts" />
     <Content Include="app\webserver\monitoring\monitoring.css" />
-    <Content Include="js\feedback.js" />
     <Content Include="js\main.js" />
     <TypeScriptCompile Include="app\files\filesystem.d.ts" />
     <Content Include="app\files\file-icons.css" />

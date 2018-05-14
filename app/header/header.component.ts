@@ -21,9 +21,6 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
             
             <div class="abs-right background-active">
                 <notification-indicator></notification-indicator>
-                <div class="hover-primary2 hidden-sm hidden-xs nav-button" title="Provide Feedback" *ngIf="_window.usabilla_live" (click)="provideFeedback()">
-                    <i class="fa fa-comment-o"></i>
-                </div>
                 <settings></settings>
             </div>
         </div>
@@ -155,17 +152,5 @@ export class HeaderComponent implements OnDestroy {
 
     public ngOnDestroy() {
         this._subs.forEach(s => s.unsubscribe());
-    }
-
-    private provideFeedback(): void {
-        if (this._angulartics2GoogleAnalytics) {
-            this._angulartics2GoogleAnalytics.eventTrack('OpenFeedback', {
-                category: 'Feedback',
-                label: 'Feedback from header button'
-            });
-        }
-
-        // usabilla API
-        (<any>window).usabilla_live("click");
     }
 }
