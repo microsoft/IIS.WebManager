@@ -20,9 +20,6 @@ import { Selector } from '../common/selector';
                 <li class="hover-editing">
                     <a class="color-normal download" [routerLink]="['/get']" (click)="_settingsMenu.close()">Download Microsoft IIS Administration</a>
                 </li>
-                <li *ngIf="_window.usabilla_live" class="hover-editing">
-                    <button class="no-border hover-editing hover-color-normal comment" (click)="provideFeedback()">Provide Feedback</button>
-                </li>
                 <li class="hover-editing">
                     <a class="color-normal dev" href="https://github.com/microsoft/iis.administration" target="_blank">Developers</a>
                 </li>
@@ -101,18 +98,5 @@ export class SettingsMenuComponent implements OnDestroy {
 
     private onClickSettings(): void {
         this._settingsMenu.toggle();
-    }
-
-    private provideFeedback(): void {
-        if (this._angulartics2GoogleAnalytics) {
-            this._angulartics2GoogleAnalytics.eventTrack('OpenFeedback', {
-                category: 'Feedback',
-                label: 'Feedback from the settings menu'
-            });
-        }
-
-        // usabilla API
-        (<any>window).usabilla_live("click");
-        this._settingsMenu.close();
     }
 }
