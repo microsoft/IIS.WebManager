@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.IIS.WebManager", "Microsoft.IIS.WebManager.csproj", "{D943757A-E0A9-486E-91F9-CC2CC8C2724C}"
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Microsoft.IIS.WebManager", "Microsoft.IIS.WebManager\Microsoft.IIS.WebManager.njsproj", "{06F827C8-BFF4-472A-A121-07865C96A3AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,12 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D943757A-E0A9-486E-91F9-CC2CC8C2724C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D943757A-E0A9-486E-91F9-CC2CC8C2724C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D943757A-E0A9-486E-91F9-CC2CC8C2724C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D943757A-E0A9-486E-91F9-CC2CC8C2724C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06F827C8-BFF4-472A-A121-07865C96A3AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06F827C8-BFF4-472A-A121-07865C96A3AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06F827C8-BFF4-472A-A121-07865C96A3AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06F827C8-BFF4-472A-A121-07865C96A3AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {92B49061-9EB3-4794-8A3A-958D865CE73C}
 	EndGlobalSection
 EndGlobal
