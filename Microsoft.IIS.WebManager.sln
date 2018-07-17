@@ -5,6 +5,11 @@ VisualStudioVersion = 15.0.27703.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Microsoft.IIS.WebManager", "Microsoft.IIS.WebManager\Microsoft.IIS.WebManager.njsproj", "{06F827C8-BFF4-472A-A121-07865C96A3AA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.IIS.WebManager.Hosted", "Microsoft.IIS.WebManager.Hosted\Microsoft.IIS.WebManager.Hosted.csproj", "{9E6BA8A6-2A18-439A-9A9C-0F4B05C0E993}"
+	ProjectSection(ProjectDependencies) = postProject
+		{06F827C8-BFF4-472A-A121-07865C96A3AA} = {06F827C8-BFF4-472A-A121-07865C96A3AA}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +20,10 @@ Global
 		{06F827C8-BFF4-472A-A121-07865C96A3AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06F827C8-BFF4-472A-A121-07865C96A3AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06F827C8-BFF4-472A-A121-07865C96A3AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E6BA8A6-2A18-439A-9A9C-0F4B05C0E993}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E6BA8A6-2A18-439A-9A9C-0F4B05C0E993}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E6BA8A6-2A18-439A-9A9C-0F4B05C0E993}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E6BA8A6-2A18-439A-9A9C-0F4B05C0E993}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

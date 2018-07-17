@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <OutputPath>$(MSBuildProjectDirectory)/../artifacts/app</OutputPath>
+  </PropertyGroup>
+
+  <!-- This import generates build warnings but without it the site can't be copied -->
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk.Web" />
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Rewrite" version="2.1.0" />
+  </ItemGroup>
+
+  <Target Name="AfterBuild" AfterTargets="Build">
+    <Message Text="Copying static contents" Importance="high"></Message>
+    <PropertyGroup>
+      <SiteRoot>$(MSBuildProjectDirectory)/../artifacts/site</SiteRoot>
+    </PropertyGroup>
+    <ItemGroup>
+      <SiteContents Include="$(SiteRoot)\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(SiteContents)" DestinationFiles="@(SiteContents->'$(OutputPath)\wwwroot\%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+</Project>
