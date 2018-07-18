@@ -8,12 +8,13 @@
     <ProjectView>ShowAllFiles</ProjectView>
     <StartupFile />
     <WorkingDirectory>.</WorkingDirectory>
-    <OutputPath>$(MSBuildProjectDirectory)/../artifacts</OutputPath>
+    <OutputPath>$(MSBuildProjectDirectory)/../artifacts/site</OutputPath>
     <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
     <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
     <EnableTypeScript>true</EnableTypeScript>
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <LastActiveSolutionConfig>Debug|Any CPU</LastActiveSolutionConfig>
@@ -668,21 +669,26 @@
   <!--Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them.-->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
+
   <Target Name="AfterBuild">
-    <PropertyGroup>
-      <SiteRoot>$(OutputPath)\site</SiteRoot>
-    </PropertyGroup>
     <ItemGroup>
       <appFiles Include="$(MSBuildProjectDirectory)\app\**\*.js" />
-      <jsFiles Include="$(MSBuildProjectDirectory)\js\**\*.*" />
-      <nodeModules Include="$(MSBuildProjectDirectory)\node_modules\**\*.*" />
-      <themes Include="$(MSBuildProjectDirectory)\themes\**\*.*" />
+      <jsFiles Include="$(MSBuildProjectDirectory)\js\**" />
+      <nodeModules Include="$(MSBuildProjectDirectory)\node_modules\**" />
+      <themes Include="$(MSBuildProjectDirectory)\themes\**" />
     </ItemGroup>
-    <Copy SourceFiles="@(appFiles)" DestinationFiles="@(appFiles->'$(SiteRoot)\app\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(jsFiles)" DestinationFiles="@(jsFiles->'$(SiteRoot)\js\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(nodeModules)" DestinationFiles="@(nodeModules->'$(SiteRoot)\node_modules\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(themes)" DestinationFiles="@(themes->'$(SiteRoot)\themes\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(appFiles)" DestinationFiles="@(appFiles->'$(OutputPath)\app\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(jsFiles)" DestinationFiles="@(jsFiles->'$(OutputPath)\js\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(nodeModules)" DestinationFiles="@(nodeModules->'$(OutputPath)\node_modules\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(themes)" DestinationFiles="@(themes->'$(OutputPath)\themes\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\index.html;$(MSBuildProjectDirectory)\web.config" DestinationFolder="$(OutputPath)" />
   </Target>
+
+  <Target Name="CleanDist" AfterTargets="Clean">
+    <Delete Files="$(OutputPath)\**" />
+    <RemoveDir Directories="$(OutputPath)" />
+  </Target>
+
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">

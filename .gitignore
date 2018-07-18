@@ -12,3 +12,4 @@ dist
 **.user
 assets
 artifacts
+Microsoft.IIS.WebManager.Host/build/*.Targets

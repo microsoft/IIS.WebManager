@@ -1,0 +1,5 @@
+<Project>
+  <PropertyGroup>
+    <IISWebManagerVersion>1.0.0</IISWebManagerVersion>
+  </PropertyGroup>
+</Project>
