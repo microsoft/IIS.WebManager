@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.IIS.WebManager.Host;
+using Microsoft.IIS.WebManager.Middleware;
 
 namespace Microsoft.IIS.WebManager.SelfHost
 {

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Rewrite;
 
-namespace Microsoft.IIS.WebManager.Host
+namespace Microsoft.IIS.WebManager.Middleware
 {
     public static class IISManagerExtension
     {

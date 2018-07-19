@@ -2,7 +2,7 @@
 <Project>
   <Target Name="CopyIISWebManagerStaticContents" AfterTargets="Build">
     <ItemGroup>
-      <SiteContents Include="$(NuGetPackageRoot)Microsoft.IIS.WebManager.Host\$(IISWebManagerVersion)\wwwroot\**\*.*"/>
+      <SiteContents Include="$(NuGetPackageRoot)Microsoft.IIS.WebManager.Middleware\$(IISWebManagerVersion)\wwwroot\**\*.*"/>
     </ItemGroup>
     <Copy SourceFiles="@(SiteContents)" DestinationFiles="@(SiteContents -> '$(OutputPath)\wwwroot\%(RecursiveDir)%(Filename)%(Extension)')"/>
   </Target>

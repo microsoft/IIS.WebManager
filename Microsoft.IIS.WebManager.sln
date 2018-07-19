@@ -10,7 +10,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.IIS.WebManager.Se
 		{2350EB05-BC92-493F-A09A-B73C2660D406} = {2350EB05-BC92-493F-A09A-B73C2660D406}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.IIS.WebManager.Host", "Microsoft.IIS.WebManager.Host\Microsoft.IIS.WebManager.Host.csproj", "{2350EB05-BC92-493F-A09A-B73C2660D406}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.IIS.WebManager.Middleware", "Microsoft.IIS.WebManager.Middleware\Microsoft.IIS.WebManager.Middleware.csproj", "{2350EB05-BC92-493F-A09A-B73C2660D406}"
 	ProjectSection(ProjectDependencies) = postProject
 		{06F827C8-BFF4-472A-A121-07865C96A3AA} = {06F827C8-BFF4-472A-A121-07865C96A3AA}
 	EndProjectSection

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <Import Project="../msbuild/global.props" />
-  <Import Project="$(NuGetPackageRoot)Microsoft.IIS.WebManager.Host/$(IISWebManagerVersion)/build/Microsoft.IIS.WebManager.Host.Targets" />
+  <Import Project="$(NuGetPackageRoot)Microsoft.IIS.WebManager.Middleware/$(IISWebManagerVersion)/build/Microsoft.IIS.WebManager.Middleware.Targets" />
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" version="2.1.0" />
-    <PackageReference Include="Microsoft.IIS.WebManager.Host" Version="$(IISWebManagerVersion)" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.IIS.WebManager.Middleware" Version="$(IISWebManagerVersion)" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

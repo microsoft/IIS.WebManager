@@ -4,7 +4,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageId>Microsoft.IIS.WebManager.Host</PackageId>
+    <PackageId>Microsoft.IIS.WebManager.Middleware</PackageId>
     <Authors>iiscore</Authors>
     <Company>Microsoft</Company>
     <Product>IIS Web Manager dotnet host bundle</Product>
@@ -47,7 +47,7 @@
   </Target>
 
   <Target Name="Clean NuGet Cache" BeforeTargets="Clean">
-    <RemoveDir Directories="$(NuGetPackageRoot)Microsoft.IIS.WebManager.Host/$(IISWebManagerVersion)" />
+    <RemoveDir Directories="$(NuGetPackageRoot)Microsoft.IIS.WebManager.Middleware/$(IISWebManagerVersion)" />
   </Target>
 
   <Target Name="Clean Target Files" BeforeTargets="Clean">
