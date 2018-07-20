@@ -12,17 +12,22 @@
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>$(MSBuildProjectDirectory)/../../artifacts/site</OutputPath>
     <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
-    <TypeScriptSourceMap>true</TypeScriptSourceMap>
-    <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
     <EnableTypeScript>true</EnableTypeScript>
     <TypeScriptToolsVersion>2.8</TypeScriptToolsVersion>
-    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptTarget>es5</TypeScriptTarget>
+    <TypeScriptModuleKind>commonjs</TypeScriptModuleKind>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptExperimentalDecorators>true</TypeScriptExperimentalDecorators>
+    <TypeScriptNoImplicitAny>false</TypeScriptNoImplicitAny>
+    <TypeScriptModuleResolution>Node</TypeScriptModuleResolution>
+    <TypeScriptEmitDecoratorMetadata>true</TypeScriptEmitDecoratorMetadata>
+    <TypeScriptNoEmitOnError>false</TypeScriptNoEmitOnError>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <LastActiveSolutionConfig>Debug|Any CPU</LastActiveSolutionConfig>
     <StartWebBrowser>True</StartWebBrowser>
   </PropertyGroup>
-  <Import Condition="'$(Configuration)' == 'Release'" Project="build\targets\Node.targets" />
+  <Import Project="build\targets\Node.targets" />
   <Import Condition="'$(Configuration)' == 'Release'" Project="build\targets\VerifyModules.targets" />
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
@@ -30,7 +35,6 @@
     <Content Include="index.html" />
     <Content Include="npm-shrinkwrap.json" />
     <Content Include="package.json" />
-    <Content Include="tsconfig.json" />
     <Compile Include="js\main.js" />
     <Compile Include="js\settings.js" />
     <Content Include="themes\main.css" />
