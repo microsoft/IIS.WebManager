@@ -8,4 +8,7 @@
     <PackageReference Include="Microsoft.AspNetCore.App" version="2.1.0" />
     <PackageReference Include="Microsoft.IIS.WebManager.Middleware" Version="$(IISWebManagerVersion)" PrivateAssets="All" />
   </ItemGroup>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="dotnet restore" />
+  </Target>
 </Project>

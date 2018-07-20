@@ -56,4 +56,8 @@
     <RemoveDir Directories="$(NuGetPackageRoot)Microsoft.IIS.WebManager.Middleware/$(IISWebManagerVersion)" />
   </Target>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="dotnet restore" />
+  </Target>
+
 </Project>
