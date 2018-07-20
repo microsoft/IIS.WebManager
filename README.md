@@ -1,13 +1,19 @@
 # Microsoft IIS Web Manager
 Microsoft IIS Web Manager provides a browser interface for users to manage local and remote installations of IIS.
 
-### Requirements
-* The [Microsoft IIS Administration API](https://github.com/microsoft/iis.administration) must be installed on the target machine
+### Deploying IIS Web Manager
+* IIS Web Manager is shipped as a part of [Microsoft IIS Administration API](https://github.com/microsoft/iis.administration)
+* Standalone dotnet core host [WIP]
+* Extract the website [zip file] and add it as a website on IIS
 
 ### Building
-* [Typescript 2.1.* For Visual Studio 2015 ](https://www.microsoft.com/en-us/download/details.aspx?id=48593)
-* [Microsoft Visual Studio 2015](https://www.visualstudio.com/en-us/news/releasenotes/vs2015-update3-vs)
-* The project will build in Visual Studio directly after cloning
+* (Optional) [Microsoft Visual Studio 2017](https://visualstudio.microsoft.com/downloads/)
+* (Minimal, if VS2017 is not installed) [Visual Studio 2017 Build Tools](https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=15)
+* [Typescript 2.8.* For Visual Studio 2017](https://marketplace.visualstudio.com/items?itemName=TypeScriptTeam.typescript-281-vs2017)
+
+Run
+
+    msbuild Microsoft.IIS.WebManager.sln
 
 ### Images
 

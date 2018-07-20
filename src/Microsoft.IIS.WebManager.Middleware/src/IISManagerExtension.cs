@@ -12,13 +12,18 @@ namespace Microsoft.IIS.WebManager.Middleware
     {
         public static void UseIISWebManager(this IApplicationBuilder app, IHostingEnvironment env)
         {
+            UseIISWebManager(app, env, string.Empty);   // string.Empty is not compile constant and cannot be used as optional parameter
+        }
+
+        public static void UseIISWebManager(this IApplicationBuilder app, IHostingEnvironment env, string requestPath)
+        {
             using (var iisUrlRewriteStreamReader = File.OpenText(Path.Join(env.WebRootPath, "web.config")))
             {
                 var options = new RewriteOptions().AddIISUrlRewrite(iisUrlRewriteStreamReader);
                 app.UseRewriter(options);
             }
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
+            app.UseDefaultFiles(requestPath);
+            app.UseStaticFiles(requestPath);
         }
     }
 }

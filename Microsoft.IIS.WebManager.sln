@@ -15,6 +15,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.IIS.WebManager.Mi
 		{06F827C8-BFF4-472A-A121-07865C96A3AA} = {06F827C8-BFF4-472A-A121-07865C96A3AA}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F13EE251-AE53-4252-BC8A-9D6016A13F50}"
+	ProjectSection(SolutionItems) = preProject
+		src\build\global.props = src\build\global.props
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+		src\build\versions.Targets = src\build\versions.Targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{ACDD68EC-B07A-4827-8182-C2142AFEA2C8}"
+	ProjectSection(SolutionItems) = preProject
+		src\build\global.props = src\build\global.props
+		src\build\versions.Targets = src\build\versions.Targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{FDF366CA-0125-44EA-8105-C97C65BA0CFF}"
+	ProjectSection(SolutionItems) = preProject
+		src\scripts\transform.ps1 = src\scripts\transform.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +55,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{ACDD68EC-B07A-4827-8182-C2142AFEA2C8} = {F13EE251-AE53-4252-BC8A-9D6016A13F50}
+		{FDF366CA-0125-44EA-8105-C97C65BA0CFF} = {F13EE251-AE53-4252-BC8A-9D6016A13F50}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {92B49061-9EB3-4794-8A3A-958D865CE73C}
