@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../msbuild/global.props" />
+  <Import Project="$(MSBuildProjectDirectory)\..\build\global.props" />
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
@@ -17,7 +17,7 @@
     <RepositoryUrl>https://github.com/Microsoft/IIS.WebManager</RepositoryUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageTags>IIS WebManager</PackageTags>
-    <PackageOutputPath>..\artifacts</PackageOutputPath>
+    <PackageOutputPath>$(MSBuildProjectDirectory)\..\..\artifacts</PackageOutputPath>
     <Version>$(IISWebManagerVersion)</Version>
   </PropertyGroup>
 
@@ -28,7 +28,7 @@
   </ItemGroup>
 
    <ItemGroup>
-    <SiteFiles Include="$(MSBuildProjectDirectory)\..\artifacts\site\**" />
+    <SiteFiles Include="$(PackageOutputPath)\site\**" />
     <Content Include="@(SiteFiles)">
       <Pack>true</Pack>
       <PackagePath>wwwroot</PackagePath>
@@ -38,7 +38,13 @@
 
   <Target Name="Package build targets" AfterTargets="Build">
     <ItemGroup>
-      <Content Include="$(MSBuildProjectDirectory)\build\*.Targets">
+      <Content Include="$(MSBuildProjectDirectory)\build\*.*">
+        <Pack>true</Pack>
+        <PackagePath>build</PackagePath>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+
+      <Content Include="$(MSBuildProjectDirectory)\..\build\global.props">
         <Pack>true</Pack>
         <PackagePath>build</PackagePath>
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -46,21 +52,8 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="Clean NuGet Cache" BeforeTargets="Clean">
+  <Target Name="Clean NuGet Cache" BeforeTargets="Clean;Build;Rebuild">
     <RemoveDir Directories="$(NuGetPackageRoot)Microsoft.IIS.WebManager.Middleware/$(IISWebManagerVersion)" />
   </Target>
 
-  <Target Name="Clean Target Files" BeforeTargets="Clean">
-    <ItemGroup>
-      <BuildTemplates Include="$(MSBuildProjectDirectory)\build\*.Template" />
-    </ItemGroup>
-    <Delete Files="$(MSBuildProjectDirectory)\build\%(BuildTemplates.Filename)"/>
-  </Target>
-
-  <Target Name="Version Stamping" BeforeTargets="Build;Rebuild">
-    <ItemGroup>
-      <BuildTemplates Include="$(MSBuildProjectDirectory)\build\*.Template" />
-    </ItemGroup>
-    <Exec IgnoreExitCode="false" Command="Powershell.exe $(MSBuildProjectDirectory)\scripts\transform.ps1 -inputFile $(MSBuildProjectDirectory)\build\%(BuildTemplates.Filename)%(BuildTemplates.Extension) -symbol '\%24\(IISWebManagerVersion\)' -value '$(IISWebManagerVersion)' -outputFile $(MSBuildProjectDirectory)\build\%(BuildTemplates.Filename)" />
-  </Target>
 </Project>

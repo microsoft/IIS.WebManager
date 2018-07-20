@@ -1,6 +1,7 @@
 typings
-Microsoft.IIS.WebManager/app/**/*.js
-Microsoft.IIS.WebManager/app/**/*.map
+src/Microsoft.IIS.WebManager/index.html
+src/Microsoft.IIS.WebManager/app/**/*.js
+src/Microsoft.IIS.WebManager/app/**/*.map
 node_modules
 jspm_packages
 bower_components
@@ -12,4 +13,4 @@ dist
 **.user
 assets
 artifacts
-Microsoft.IIS.WebManager.Middleware/build/*.Targets
+src/Microsoft.IIS.WebManager.Middleware/build/*.Targets
