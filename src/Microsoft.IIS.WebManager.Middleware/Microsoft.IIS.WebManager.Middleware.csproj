@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="$(MSBuildProjectDirectory)\..\build\global.props" />
+  <Import Project="$(MSBuildProjectDirectory)\..\build\versions.Targets" />
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
@@ -38,7 +39,7 @@
 
   <Target Name="Package build targets" AfterTargets="Build">
     <ItemGroup>
-      <Content Include="$(MSBuildProjectDirectory)\build\*.*">
+      <Content Include="$(MSBuildProjectDirectory)\build\*.Targets">
         <Pack>true</Pack>
         <PackagePath>build</PackagePath>
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
