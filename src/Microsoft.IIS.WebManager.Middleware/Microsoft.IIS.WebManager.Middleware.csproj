@@ -33,7 +33,6 @@
     <Content Include="@(SiteFiles)">
       <Pack>true</Pack>
       <PackagePath>wwwroot</PackagePath>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
@@ -42,13 +41,11 @@
       <Content Include="$(MSBuildProjectDirectory)\build\*.props">
         <Pack>true</Pack>
         <PackagePath>build</PackagePath>
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
 
       <Content Include="$(MSBuildProjectDirectory)\..\build\global.props">
         <Pack>true</Pack>
         <PackagePath>build</PackagePath>
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
   </Target>
