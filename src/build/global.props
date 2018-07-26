@@ -1,5 +1,6 @@
 <Project>
   <PropertyGroup>
     <IISWebManagerVersion>2.2.2</IISWebManagerVersion>
+    <NuGetPackageRoot Condition=" '$(NuGetPackageRoot)' == '' ">$(UserProfile)\.nuget\packages\</NuGetPackageRoot>
   </PropertyGroup>
 </Project>

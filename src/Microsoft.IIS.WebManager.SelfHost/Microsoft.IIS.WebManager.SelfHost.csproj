@@ -2,8 +2,10 @@
   <Import Project="$(MSBuildProjectDirectory)\..\build\global.props" />
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-    <OutputPath>$(MSBuildProjectDirectory)/../../artifacts/WebManagerApp</OutputPath>
+    <OutputPath>$(MSBuildProjectDirectory)\..\..\artifacts\WebManagerApp</OutputPath>
+    <MiddlewareTasks>$(NuGetPackageRoot)Microsoft.IIS.WebManager.Middleware\$(IISWebManagerVersion)\build\Microsoft.IIS.WebManager.Middleware.Tasks</MiddlewareTasks>
   </PropertyGroup>
+  <Import Project="$(MiddlewareTasks)" Condition="Exists($(MiddlewareTasks))" />
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" version="2.1.0" />
     <PackageReference Include="Microsoft.IIS.WebManager.Middleware" Version="$(IISWebManagerVersion)" PrivateAssets="All" />

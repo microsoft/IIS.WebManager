@@ -39,7 +39,7 @@
 
   <Target Name="Package build targets" AfterTargets="Build">
     <ItemGroup>
-      <Content Include="$(MSBuildProjectDirectory)\build\*.Targets">
+      <Content Include="$(MSBuildProjectDirectory)\build\*.Tasks">
         <Pack>true</Pack>
         <PackagePath>build</PackagePath>
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -60,5 +60,4 @@
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="dotnet restore" />
   </Target>
-
 </Project>
