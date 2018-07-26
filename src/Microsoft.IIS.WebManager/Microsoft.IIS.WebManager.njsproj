@@ -24,7 +24,7 @@
     <TypeScriptNoEmitOnError>false</TypeScriptNoEmitOnError>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <LastActiveSolutionConfig>Debug|Any CPU</LastActiveSolutionConfig>
+    <LastActiveSolutionConfig>Release|Any CPU</LastActiveSolutionConfig>
     <StartWebBrowser>True</StartWebBrowser>
   </PropertyGroup>
   <Import Project="build\targets\Node.targets" />
