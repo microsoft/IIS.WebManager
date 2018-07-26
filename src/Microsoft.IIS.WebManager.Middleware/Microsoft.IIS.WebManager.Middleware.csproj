@@ -39,7 +39,7 @@
 
   <Target Name="Package build targets" AfterTargets="Build">
     <ItemGroup>
-      <Content Include="$(MSBuildProjectDirectory)\build\*.Tasks">
+      <Content Include="$(MSBuildProjectDirectory)\build\*.props">
         <Pack>true</Pack>
         <PackagePath>build</PackagePath>
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>

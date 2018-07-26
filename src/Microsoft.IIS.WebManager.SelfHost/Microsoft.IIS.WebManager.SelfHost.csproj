@@ -3,13 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <OutputPath>$(MSBuildProjectDirectory)\..\..\artifacts\WebManagerApp</OutputPath>
-    <MiddlewareTasks>$(NuGetPackageRoot)Microsoft.IIS.WebManager.Middleware\$(IISWebManagerVersion)\build\Microsoft.IIS.WebManager.Middleware.Tasks</MiddlewareTasks>
   </PropertyGroup>
-  <!-- Problem: If the user checkout the project and directly run dotnet build, the behavior would be incorrect, becasue $(MiddlewareTasks) file does not exist -->
-  <!-- However, if the user runs restore and build on different commands this would still work -->
-  <Import Project="$(MiddlewareTasks)" Condition="Exists($(MiddlewareTasks))" />
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" version="2.1.0" />
     <PackageReference Include="Microsoft.IIS.WebManager.Middleware" Version="$(IISWebManagerVersion)" PrivateAssets="All" />
   </ItemGroup>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="dotnet restore" />
+  </Target>
 </Project>
