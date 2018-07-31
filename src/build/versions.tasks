@@ -1,14 +1,14 @@
 <Project>
   <Target Name="Clean Target Files" BeforeTargets="Clean">
     <ItemGroup>
-      <BuildTemplates Include="$(MSBuildProjectDirectory)\**\*.versioned" />
+      <BuildTemplates Include="$(MSBuildProjectDirectory)\**\*.in" />
     </ItemGroup>
     <Delete Files="$(MSBuildProjectDirectory)\%(BuildTemplates.RecursiveDir)%(BuildTemplates.Filename)"/>
   </Target>
 
   <Target Name="Version Stamping" BeforeTargets="Build;Rebuild">
     <ItemGroup>
-      <BuildTemplates Include="$(MSBuildProjectDirectory)\**\*.versioned" />
+      <BuildTemplates Include="$(MSBuildProjectDirectory)\**\*.in" />
     </ItemGroup>
     <Message Text="Copying %(BuildTemplates.RecursiveDir)%(BuildTemplates.Filename)%(BuildTemplates.Extension)" Importance="High" />
     <Exec IgnoreExitCode="false" Command="Powershell.exe $(MSBuildProjectDirectory)\..\scripts\transform.ps1 -inputFile $(MSBuildProjectDirectory)\%(BuildTemplates.RecursiveDir)%(BuildTemplates.Filename)%(BuildTemplates.Extension) -symbol '\%24\(IISWebManagerVersion\)' -value '$(IISWebManagerVersion)' -outputFile $(MSBuildProjectDirectory)\%(BuildTemplates.RecursiveDir)%(BuildTemplates.Filename)" />

@@ -10,12 +10,7 @@ namespace Microsoft.IIS.WebManager.Middleware
 {
     public static class IISManagerExtension
     {
-        public static void UseIISWebManager(this IApplicationBuilder app, IHostingEnvironment env)
-        {
-            UseIISWebManager(app, env, string.Empty);   // string.Empty is not compile constant and cannot be used as optional parameter
-        }
-
-        public static void UseIISWebManager(this IApplicationBuilder app, IHostingEnvironment env, string requestPath)
+        public static void UseIISWebManager(this IApplicationBuilder app, IHostingEnvironment env, string requestPath = "")
         {
             using (var iisUrlRewriteStreamReader = File.OpenText(Path.Join(env.WebRootPath, "web.config")))
             {
