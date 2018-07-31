@@ -13,4 +13,4 @@ dist
 **.user
 assets
 artifacts
-src/Microsoft.IIS.WebManager.Middleware/build/*.Targets
+src/Microsoft.IIS.WebManager.Middleware/build/*.props

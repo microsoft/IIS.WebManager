@@ -12,7 +12,7 @@ Microsoft IIS Web Manager provides a browser interface for users to manage local
 Run the following in developer command prompt for Visual Studio
 
     msbuild Microsoft.IIS.WebManager.sln
-    cd Microsoft.IIS.WebManager.SelfHost
+    cd src/Microsoft.IIS.WebManager.SelfHost
     dotnet restore
     msbuild
 
