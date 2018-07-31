@@ -13,4 +13,3 @@ dist
 **.user
 assets
 artifacts
-src/Microsoft.IIS.WebManager.Middleware/build/*.props
