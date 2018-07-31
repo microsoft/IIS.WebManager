@@ -8,7 +8,7 @@
     <PackageId>Microsoft.IIS.WebManager.Middleware</PackageId>
     <Authors>iiscore</Authors>
     <Company>Microsoft</Company>
-    <Product>IIS Web Manager dotnet host bundle</Product>
+    <Product>IIS Web Manager .NET Core host bundle</Product>
     <Description>DotnetCore library for hosting Microsoft IIS Web Manager</Description>
     <Copyright>© .NET Foundation. All rights reserved.</Copyright>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
