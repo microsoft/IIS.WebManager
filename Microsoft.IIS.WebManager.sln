@@ -1,9 +1,38 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.IIS.WebManager", "Microsoft.IIS.WebManager.csproj", "{D943757A-E0A9-486E-91F9-CC2CC8C2724C}"
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Microsoft.IIS.WebManager", "src\Microsoft.IIS.WebManager\Microsoft.IIS.WebManager.njsproj", "{06F827C8-BFF4-472A-A121-07865C96A3AA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.IIS.WebManager.SelfHost", "src\Microsoft.IIS.WebManager.SelfHost\Microsoft.IIS.WebManager.SelfHost.csproj", "{9E6BA8A6-2A18-439A-9A9C-0F4B05C0E993}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2350EB05-BC92-493F-A09A-B73C2660D406} = {2350EB05-BC92-493F-A09A-B73C2660D406}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.IIS.WebManager.Middleware", "src\Microsoft.IIS.WebManager.Middleware\Microsoft.IIS.WebManager.Middleware.csproj", "{2350EB05-BC92-493F-A09A-B73C2660D406}"
+	ProjectSection(ProjectDependencies) = postProject
+		{06F827C8-BFF4-472A-A121-07865C96A3AA} = {06F827C8-BFF4-472A-A121-07865C96A3AA}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F13EE251-AE53-4252-BC8A-9D6016A13F50}"
+	ProjectSection(SolutionItems) = preProject
+		src\build\global.props = src\build\global.props
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+		src\build\versions.tasks = src\build\versions.tasks
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{ACDD68EC-B07A-4827-8182-C2142AFEA2C8}"
+	ProjectSection(SolutionItems) = preProject
+		src\build\global.props = src\build\global.props
+		src\build\versions.tasks = src\build\versions.tasks
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{FDF366CA-0125-44EA-8105-C97C65BA0CFF}"
+	ProjectSection(SolutionItems) = preProject
+		src\scripts\transform.ps1 = src\scripts\transform.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,12 +40,25 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D943757A-E0A9-486E-91F9-CC2CC8C2724C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D943757A-E0A9-486E-91F9-CC2CC8C2724C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D943757A-E0A9-486E-91F9-CC2CC8C2724C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D943757A-E0A9-486E-91F9-CC2CC8C2724C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06F827C8-BFF4-472A-A121-07865C96A3AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06F827C8-BFF4-472A-A121-07865C96A3AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06F827C8-BFF4-472A-A121-07865C96A3AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06F827C8-BFF4-472A-A121-07865C96A3AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E6BA8A6-2A18-439A-9A9C-0F4B05C0E993}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E6BA8A6-2A18-439A-9A9C-0F4B05C0E993}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2350EB05-BC92-493F-A09A-B73C2660D406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2350EB05-BC92-493F-A09A-B73C2660D406}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2350EB05-BC92-493F-A09A-B73C2660D406}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2350EB05-BC92-493F-A09A-B73C2660D406}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{ACDD68EC-B07A-4827-8182-C2142AFEA2C8} = {F13EE251-AE53-4252-BC8A-9D6016A13F50}
+		{FDF366CA-0125-44EA-8105-C97C65BA0CFF} = {F13EE251-AE53-4252-BC8A-9D6016A13F50}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {92B49061-9EB3-4794-8A3A-958D865CE73C}
 	EndGlobalSection
 EndGlobal

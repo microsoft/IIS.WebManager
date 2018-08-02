@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="$(MSBuildProjectDirectory)\..\build\global.props" />
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>Microsoft.IIS.WebManager.Middleware</PackageId>
+    <Authors>iiscore</Authors>
+    <Company>Microsoft</Company>
+    <Product>IIS Web Manager .NET Core host bundle</Product>
+    <Description>DotnetCore library for hosting Microsoft IIS Web Manager</Description>
+    <Copyright>© .NET Foundation. All rights reserved.</Copyright>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl>https://www.microsoft.com/web/webpi/eula/net_library_eula_ENU.htm</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Microsoft/IIS.WebManager</PackageProjectUrl>
+    <PackageIconUrl>https://go.microsoft.com/fwlink/?LinkID=288859</PackageIconUrl>
+    <RepositoryUrl>https://github.com/Microsoft/IIS.WebManager</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>IIS WebManager</PackageTags>
+    <PackageOutputPath>$(MSBuildProjectDirectory)\..\..\artifacts</PackageOutputPath>
+    <Version>$(IISWebManagerVersion)</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Rewrite" version="2.1.0" />
+  </ItemGroup>
+
+   <ItemGroup>
+    <SiteFiles Include="$(PackageOutputPath)\site\**" />
+    <Content Include="@(SiteFiles)">
+      <Pack>true</Pack>
+      <PackagePath>wwwroot</PackagePath>
+    </Content>
+  </ItemGroup>
+
+  <Target Name="Package build targets" AfterTargets="Build">
+    <ItemGroup>
+      <Content Include="$(MSBuildProjectDirectory)\build\*.props">
+        <Pack>true</Pack>
+        <PackagePath>build</PackagePath>
+      </Content>
+
+      <Content Include="$(MSBuildProjectDirectory)\..\build\global.props">
+        <Pack>true</Pack>
+        <PackagePath>build</PackagePath>
+      </Content>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="Clean NuGet Cache" BeforeTargets="Clean;Build;Rebuild">
+    <RemoveDir Directories="$(NuGetPackageRoot)Microsoft.IIS.WebManager.Middleware/$(IISWebManagerVersion)" />
+  </Target>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="dotnet restore" />
+  </Target>
+</Project>

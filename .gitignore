@@ -1,6 +1,7 @@
 typings
-app/**/*.js
-app/**/*.map
+src/Microsoft.IIS.WebManager/index.html
+src/Microsoft.IIS.WebManager/app/**/*.js
+src/Microsoft.IIS.WebManager/app/**/*.map
 node_modules
 jspm_packages
 bower_components
@@ -11,3 +12,4 @@ obj
 dist
 **.user
 assets
+artifacts
