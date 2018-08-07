@@ -228,6 +228,6 @@ export class RecyclingComponent {
     }
 
     timeIntervalEnabled(): boolean {
-        return this.model.periodic_restart.time_interval < TimeSpan.MaxMinutes;
+        return this.model.periodic_restart.time_interval != TimeSpan.MaxMinutes;
     }
 }

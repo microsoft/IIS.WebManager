@@ -9,7 +9,7 @@ export class DiffUtil {
             return null;
         }
 
-        if ((typeof o2 == 'object' && typeof modified == 'object') && (Object.keys(original).length != Object.keys(modified).length)) {
+        if ((typeof original == 'object' && typeof modified == 'object') && (Object.keys(original).length != Object.keys(modified).length)) {
 
             // A key from original is missing in modified OR a key was added to modified
             // We don't know how to handle this so we just return the whole modified object
