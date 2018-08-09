@@ -26,21 +26,21 @@ import { DiffUtil } from '../../utils/diff';
                 </div>
             </div>
         </fieldset>
-        <fieldset *ngIf="_svc">
+        <fieldset *ngIf="svc">
             <label>Auto Start</label>
             <switch class="block" [(model)]="model.auto_start" (modelChanged)="onModelChanged()">{{model.auto_start ? "On" : "Off"}}</switch>
         </fieldset>
-        <fieldset *ngIf="_svc">
+        <fieldset *ngIf="svc">
             <identity [model]="model.identity" [useUserProfile]="false" (modelChanged)="onModelChanged()"></identity>
         </fieldset>
-        <fieldset *ngIf="_svc">
+        <fieldset *ngIf="svc">
             <label>Pipeline</label>
             <enum [(model)]="model.pipeline_mode" (modelChanged)="onModelChanged()">
                 <field name="Integrated" value="integrated"></field>
                 <field name="Classic" value="classic"></field>
             </enum>
         </fieldset>
-        <fieldset *ngIf="_svc">
+        <fieldset *ngIf="svc">
             <label>.NET Framework</label>
             <enum [(model)]="model.managed_runtime_version" (modelChanged)="onModelChanged()">
                 <field name="3.5" value="v2.0"></field>
@@ -80,6 +80,10 @@ export class AppPoolDetailsComponent {
         this.setAppPool(this.model);
     }
 
+    get svc() {
+        return this._svc;
+    }
+
     private onModelChanged(): void {
         if (!this._svc) {
             return;
@@ -109,17 +113,17 @@ export class AppPoolDetailsComponent {
         return this.model.status == 'started';
     }
 
-    onStart(e: Event) {
+    onStart() {
         this._selector.close();
         this._svc.start(this.model);
     }
 
-    onStop(e: Event) {
+    onStop() {
         this._selector.close();
         this._svc.stop(this.model);
     }
 
-    onRecycle(e: Event) {
+    onRecycle() {
         this._selector.close();
         this._svc.recycle(this.model);
     }

@@ -9,8 +9,8 @@ import { RewriteMapsSection, RewriteMap, RewriteMapping } from '../url-rewrite';
 @Component({
     selector: 'rewrite-maps',
     template: `
-        <error [error]="_service.rewriteMapsError"></error>
-        <div *ngIf="!_service.rewriteMapsError && _settings">
+        <error [error]="service.rewriteMapsError"></error>
+        <div *ngIf="!service.rewriteMapsError && _settings">
             <override-mode class="pull-right"
                 [metadata]="_settings.metadata"
                 [scope]="_settings.scope"
@@ -58,6 +58,10 @@ export class RewriteMapsComponent implements OnDestroy {
 
     public ngOnDestroy(): void {
         this._subscriptions.forEach(sub => sub.unsubscribe());
+    }
+
+    get service() {
+        return this._service;
     }
 
     private initializeNewRewriteMap() {

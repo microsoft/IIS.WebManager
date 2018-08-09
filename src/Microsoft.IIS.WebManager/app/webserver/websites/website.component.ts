@@ -24,7 +24,7 @@ import { OptionsService } from '../../main/options.service';
                     <website-general [site]="site" (modelChanged)="onModelChanged()"></website-general>
                 </item>
                 <item *ngFor="let module of modules" [name]="module.name" [ico]="module.ico">
-                    <dynamic [name]="module.component_name" [module]="module.module" [data]="module.data"></dynamic>
+                    <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
                 </item>
             </vtabs>
         </div>

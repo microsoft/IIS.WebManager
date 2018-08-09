@@ -96,7 +96,6 @@ export class FileEditor {
         this.getFileText().then(txt => {
             this._text.next(txt);
             this._dirty = false;
-           
         });
     }
 
@@ -122,7 +121,9 @@ export class FileEditor {
         this._unsupported = false;
         this._text.next(null);
 
-        this.getFileText().then(txt => this._text.next(txt));
+        this.getFileText().then(txt => {
+            this._text.next(txt)
+        });
     }
 
     private getFileText(): Promise<string> {
@@ -133,7 +134,10 @@ export class FileEditor {
 
         return this._svc.getFileContent(this.file)
             .then(r => r.text())
-            .catch(e => { this._unsupported = true });
+            .catch(e => {
+                this._unsupported = true
+                return Promise.reject<string>("Invalid text");
+            });
     }
 
     private codeEditorLoaded(lang: any) {

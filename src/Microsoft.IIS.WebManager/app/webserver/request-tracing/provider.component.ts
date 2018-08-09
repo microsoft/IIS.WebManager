@@ -71,7 +71,6 @@ export class ProviderComponent implements OnInit {
     private _isEditing: boolean;
     private _original: Provider;
 
-
     constructor(private _eRef: ElementRef, private _service: RequestTracingService) {
     }
 

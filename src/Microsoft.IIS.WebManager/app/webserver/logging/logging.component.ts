@@ -11,17 +11,17 @@ import { NotificationService } from '../../notification/notification.service';
 
 @Component({
     template: `
-        <loading *ngIf="_service.status == 'unknown' && !_service.error"></loading>
-        <error [error]="_service.error"></error>
-        <switch class="install" *ngIf="_service.webserverScope && _service.status != 'unknown'" #s
+        <loading *ngIf="service.status == 'unknown' && !service.error"></loading>
+        <error [error]="service.error"></error>
+        <switch class="install" *ngIf="service.webserverScope && service.status != 'unknown'" #s
                 [auto]="false"
-                [model]="_service.status == 'started' || _service.status == 'starting'" 
-                [disabled]="_service.status == 'starting' || _service.status == 'stopping'"
+                [model]="service.status == 'started' || service.status == 'starting'"
+                [disabled]="service.status == 'starting' || service.status == 'stopping'"
                 (modelChanged)="install(!s.model)">
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="_service.status == 'stopped' && !_service.webserverScope">Logging is off. Turn it on <a [routerLink]="['/webserver/logging']">here</a></span>
+        <span *ngIf="service.status == 'stopped' && !service.webserverScope">Logging is off. Turn it on <a [routerLink]="['/webserver/logging']">here</a></span>
         <override-mode class="pull-right" *ngIf="logging" [scope]="logging.scope" [metadata]="logging.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="logging">
             <fieldset class="collect">
@@ -80,6 +80,10 @@ export class LoggingComponent implements OnInit, OnDestroy {
 
     constructor(private _service: LoggingService,
                 private _notificationService: NotificationService) {
+    }
+
+    get service() {
+        return this._service;
     }
 
     ngOnInit() {

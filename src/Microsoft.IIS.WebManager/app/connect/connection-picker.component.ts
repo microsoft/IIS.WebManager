@@ -22,13 +22,11 @@ import {ComponentUtil} from '../utils/component';
     `]
 })
 export class ConnectionPickerComponent implements OnDestroy {
+    private _connections: Array<ApiConnection>;
     private _focused = false;
     private _doubleClick = false;
-
-    private _connections: Array<ApiConnection>;
     private _active: ApiConnection;
     private _subs: Array<Subscription> = [];
-
 
     constructor(private _eref: ElementRef,
                 private _service: ConnectService,

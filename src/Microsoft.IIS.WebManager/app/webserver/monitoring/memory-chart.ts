@@ -34,7 +34,7 @@ import { ServerSnapshot } from './server-snapshot';
         </div>
     `,
     styleUrls: [
-        'app/webserver/monitoring/monitoring.css'
+        'monitoring.css'
     ]
 })
 export class MemoryChart implements OnDestroy {
@@ -83,7 +83,6 @@ export class MemoryChart implements OnDestroy {
     }
 
     private _colors: Array<any> = this.colors;
-
     private _labels: Array<string> = [];
     private _serverMemValues: Array<number> = [];
     private _systemMemValues: Array<number> = [];

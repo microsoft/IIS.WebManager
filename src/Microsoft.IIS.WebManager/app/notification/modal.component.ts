@@ -89,6 +89,7 @@ import { NotificationService } from './notification.service';
     `]
 })
 export class ModalComponent implements OnDestroy {
+
     public message: string = "";
     public title: string = "";
 

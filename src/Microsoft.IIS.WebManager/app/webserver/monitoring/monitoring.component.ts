@@ -3,13 +3,14 @@
 import { MonitoringService } from './monitoring.service';
 
 @Component({
+    selector: 'monitoring',
     template: `
-        <div *ngIf="!_svc.apiInstalled">
+        <div *ngIf="!svc.apiInstalled">
             The monitoring component has not been installed. Update to the <a [routerLink]="['/get']">latest version</a> to begin
             using this feature.
         </div>
 
-        <div *ngIf="_svc.apiInstalled">
+        <div *ngIf="svc.apiInstalled">
             <div class="row">
                 <div class="col-lg-5">
                     <h2>
@@ -53,6 +54,10 @@ export class MonitoringComponent implements OnDestroy {
 
     constructor(private _svc: MonitoringService) {
         this.activate();
+    }
+
+    get svc() {
+        return this._svc;
     }
 
     public activate() {

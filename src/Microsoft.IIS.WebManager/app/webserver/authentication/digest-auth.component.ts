@@ -11,16 +11,16 @@ import { NotificationService } from '../../notification/notification.service';
 @Component({
     selector: 'digest-auth',
     template: `
-        <error [error]="_service.digestError"></error>
-        <switch class="install" *ngIf="_service.webserverScope && _service.digestStatus != 'unknown'" #s
+        <error [error]="service.digestError"></error>
+        <switch class="install" *ngIf="service.webserverScope && service.digestStatus != 'unknown'" #s
                 [auto]="false"
-                [model]="_service.digestStatus == 'started' || _service.digestStatus == 'starting'" 
-                [disabled]="_service.digestStatus == 'starting' || _service.digestStatus == 'stopping'"
+                [model]="service.digestStatus == 'started' || service.digestStatus == 'starting'"
+                [disabled]="service.digestStatus == 'starting' || service.digestStatus == 'stopping'"
                 (modelChanged)="install(!s.model)">
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="_service.digestStatus == 'stopped' && !_service.webserverScope">Digest Authentication is off. Turn it on <a [routerLink]="['/webserver/authentication']">here</a></span>
+        <span *ngIf="service.digestStatus == 'stopped' && !service.webserverScope">Digest Authentication is off. Turn it on <a [routerLink]="['/webserver/authentication']">here</a></span>
         <override-mode class="pull-right" *ngIf="_model" [scope]="_model.scope" [metadata]="_model.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="_model">
             <fieldset>
@@ -49,6 +49,10 @@ export class DigestAuthenticationComponent implements OnDestroy {
 
     public ngOnDestroy() {
         this._subscriptions.forEach(sub => sub.unsubscribe());
+    }
+
+    get service() {
+        return this._service;
     }
 
     private onModelChanged() {

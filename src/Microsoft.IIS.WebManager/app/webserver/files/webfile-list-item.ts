@@ -105,7 +105,7 @@ import { WebFileType, WebFile } from './webfile';
 	`
     ],
     styleUrls: [
-        'app/files/file-icons.css'
+        '../../files/file-icons.css'
     ]
 })
 export class WebFileComponent {

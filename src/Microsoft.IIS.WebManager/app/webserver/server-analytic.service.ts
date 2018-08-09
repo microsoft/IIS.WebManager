@@ -1,6 +1,4 @@
-﻿declare var SETTINGS: any; 
-
-import { Injectable, OnDestroy } from '@angular/core';
+﻿import { Injectable, OnDestroy } from '@angular/core';
 import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-ga';
 
 import { Subscription } from 'rxjs/Subscription';
@@ -8,6 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { HttpClient } from '../common/httpclient';
 import { ApiConnection } from '../connect/api-connection';
 import { ConnectService } from '../connect/connect.service';
+import { SETTINGS } from '../main/settings';
 import { Notification, NotificationType } from '../notification/notification';
 
 

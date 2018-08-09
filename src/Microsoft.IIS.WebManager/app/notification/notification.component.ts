@@ -1,10 +1,8 @@
 import { Component, OnDestroy, ViewChildren, QueryList } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
-import { Subscription } from 'rxjs/subscription';
+import { Subscription } from 'rxjs/Subscription';
 import { NotificationService } from './notification.service';
 import { Notification, NotificationType } from './notification';
-
-import { ArrayUtil } from '../utils/array';
 import { DynamicComponent } from '../common/dynamic.component';
 
 @Component({
@@ -51,10 +49,10 @@ import { DynamicComponent } from '../common/dynamic.component';
 })
 export class NotificationComponent implements OnDestroy {
     private _active: boolean;
-    private _warningTimer: number;
     private _warning: Notification;
-    private _subscriptions: Subscription[] = [];
     private _notifications: Array<Notification> = [];
+    private _warningTimer: NodeJS.Timer;
+    private _subscriptions: Subscription[] = [];
     private _warningTimeout: number = 1 * 1000; // ms
     private _showNext: boolean = true;
 
@@ -141,7 +139,7 @@ export class NotificationComponent implements OnDestroy {
     }
 
     private resetWarningTimer() {
-        if (this._warningTimer > 0) {
+        if (this._warningTimer != null) {
             clearTimeout(this._warningTimer);
         }
 
@@ -155,11 +153,11 @@ export class NotificationComponent implements OnDestroy {
     }
 
     private onFocus() {
-        if (this._warningTimer <= 0) {
-            this.resetWarningTimer();
+        if (this._warningTimer != null) {
+            clearTimeout(this._warningTimer);
         }
         else {
-            clearTimeout(this._warningTimer);
+            this.resetWarningTimer();
         }
     }
 }

@@ -10,22 +10,22 @@ import { NotificationService } from '../../notification/notification.service';
 
 @Component({
     template: `
-        <loading *ngIf="_service.status == 'unknown' && !_service.error"></loading>
+        <loading *ngIf="service.status == 'unknown' && !service.error"></loading>
         <override-mode class="pull-right" 
             *ngIf="_defDoc" 
             [metadata]="_defDoc.metadata"
             [scope]="_defDoc.scope"
             (revert)="onRevert()" 
             (modelChanged)="onModelChanged()"></override-mode>
-        <switch class="install" *ngIf="_service.webserverScope && _service.status != 'unknown'" #s
+        <switch class="install" *ngIf="service.webserverScope && service.status != 'unknown'" #s
                 [auto]="false"
-                [model]="_service.status == 'started' || _service.status == 'starting'" 
-                [disabled]="_service.status == 'starting' || _service.status == 'stopping'"
+                [model]="service.status == 'started' || service.status == 'starting'"
+                [disabled]="service.status == 'starting' || service.status == 'stopping'"
                 (modelChanged)="install(!s.model)">
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="_service.status == 'stopped' && !_service.webserverScope">Default Documents are off. Turn them on <a [routerLink]="['/webserver/default-documents']">here</a></span>
+        <span *ngIf="service.status == 'stopped' && !service.webserverScope">Default Documents are off. Turn them on <a [routerLink]="['/webserver/default-documents']">here</a></span>
         <div *ngIf="_defDoc" [attr.disabled]="_defDoc.metadata.is_locked ? true : null">
             <fieldset>
                 <label *ngIf="!_defDoc.scope">Web Site Default</label>
@@ -56,6 +56,10 @@ export class DefaultDocumentsComponent implements OnInit, OnDestroy {
         this._subscriptions.push(this._service.defaultDocument.subscribe(doc => {
             this.setFeature(doc);
         }));
+    }
+
+    get service() {
+        return this._service;
     }
 
     public ngOnDestroy() {

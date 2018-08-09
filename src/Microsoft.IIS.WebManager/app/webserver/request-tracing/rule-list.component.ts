@@ -36,7 +36,6 @@ export class RulesComponent implements OnInit {
     private _orderBy: string;
     private _orderByAsc: boolean;
     private _rules: Array<RequestTracingRule>;
-
     private _newRule: RequestTracingRule;
 
     constructor(private _service: RequestTracingService) {

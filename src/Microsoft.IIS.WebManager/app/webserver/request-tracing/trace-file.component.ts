@@ -81,7 +81,7 @@ import { FilesService } from '../../files/files.service';
         }`
     ],
     styleUrls: [
-        'app/files/file-icons.css'
+        '../../files/file-icons.css'
     ]
 })
 export class TraceFileComponent {

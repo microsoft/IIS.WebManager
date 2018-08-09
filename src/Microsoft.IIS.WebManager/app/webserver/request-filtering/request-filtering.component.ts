@@ -10,18 +10,18 @@ import { RequestFilteringSettings, RequestFilteringChildType, RequestFiltering }
 
 @Component({
     template: `
-        <loading *ngIf="_service.status == 'unknown' && !_service.error"></loading>
-        <error [error]="_service.error"></error>
+        <loading *ngIf="service.status == 'unknown' && !service.error"></loading>
+        <error [error]="service.error"></error>
         <override-mode class="pull-right" *ngIf="settings" [scope]="settings.scope" [metadata]="settings.metadata" (revert)="onRevert()" (modelChanged)="onFeatureChanged()"></override-mode>
-        <switch class="install" *ngIf="_service.webserverScope && _service.status != 'unknown'" #s
+        <switch class="install" *ngIf="service.webserverScope && service.status != 'unknown'" #s
                 [auto]="false"
-                [model]="_service.status == 'started' || _service.status == 'starting'" 
-                [disabled]="_service.status == 'starting' || _service.status == 'stopping'"
+                [model]="service.status == 'started' || service.status == 'starting'"
+                [disabled]="service.status == 'starting' || service.status == 'stopping'"
                 (modelChanged)="install(!s.model)">
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="_service.status == 'stopped' && !_service.webserverScope">Request Filtering is off. Turn it on <a [routerLink]="['/webserver/request-filtering']">here</a></span>
+        <span *ngIf="service.status == 'stopped' && !service.webserverScope">Request Filtering is off. Turn it on <a [routerLink]="['/webserver/request-filtering']">here</a></span>
         <div *ngIf="settings">
             <tabs>
                 <tab [name]="'Settings'">
@@ -91,6 +91,10 @@ export class RequestFilteringComponent implements OnInit, OnDestroy {
 
     constructor(private _service: RequestFilteringService,
                 private _notificationService: NotificationService) {
+    }
+
+    get service() {
+        return this._service;
     }
 
     ngOnInit() {

@@ -8,8 +8,8 @@ import { AllowedServerVariablesSection } from '../url-rewrite';
 @Component({
     selector: 'server-variables',
     template: `
-        <error [error]="_service.serverVariablesError"></error>
-        <div *ngIf="!_service.serverVariablesError && _settings">
+        <error [error]="service.serverVariablesError"></error>
+        <div *ngIf="!service.serverVariablesError && _settings">
             <override-mode class="pull-right"
                 [metadata]="_settings.metadata"
                 [scope]="_settings.scope"
@@ -33,6 +33,10 @@ export class ServerVariablesComponent implements OnDestroy {
 
     public ngOnDestroy(): void {
         this._subscriptions.forEach(sub => sub.unsubscribe());
+    }
+
+    get service() {
+        return this._service;
     }
 
     private onModelChanged(): void {

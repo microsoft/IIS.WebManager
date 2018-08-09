@@ -1,4 +1,4 @@
-import { NgModule, Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild, ElementRef, Renderer } from '@angular/core';
+import { Inject, Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild, ElementRef, Renderer } from '@angular/core';
 import { Router } from '@angular/router';
 
 import 'rxjs/add/operator/take';
@@ -11,10 +11,11 @@ import { LoadingService } from '../notification/loading.service';
 import { WindowService } from './window.service';
 import { VersionService } from '../versioning/version.service';
 import { ServerAnalyticService } from '../webserver/server-analytic.service';
-
+import { AppContextService, NavigationService } from '@microsoft/windows-admin-center-sdk/angular';
+import { Runtime } from '../runtime/runtime';
 
 @Component({
-    selector: 'app',
+    selector: 'app-root',
     styles: [`
         .content {
             height: 100%;
@@ -67,32 +68,35 @@ import { ServerAnalyticService } from '../webserver/server-analytic.service';
 })
 export class AppComponent implements OnInit, OnDestroy {
     constructor(private _router: Router,
-                private _connectService: ConnectService,
-                private _loadingSvc: LoadingService,
-                private _windowService: WindowService,
-                private _versionService: VersionService,
-                private _serverAnalyticService: ServerAnalyticService,
-                private _renderer: Renderer,
-                angulartics2: Angulartics2,
-                angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
+        private _connectService: ConnectService,
+        private _loadingSvc: LoadingService,
+        private _windowService: WindowService,
+        private _versionService: VersionService,
+        private _serverAnalyticService: ServerAnalyticService,
+        @Inject("Runtime") private runtime: Runtime,
+        private _renderer: Renderer,
+        angulartics2: Angulartics2,
+        angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
     }
 
     @ViewChild('mainContainer') mainContainer: ElementRef;
 
     ngOnInit() {
+        this.runtime.InitContext()
         this._connectService.active.subscribe(c => {
             this._router.events.take(1).subscribe(evt => {
                 if (!c) {
                     this._connectService.gotoConnect(false);
                 }
             });
-        });
+        })
 
-        this._windowService.initialize(this.mainContainer, this._renderer);
+        this._windowService.initialize(this.mainContainer, this._renderer)
     }
 
     ngOnDestroy() {
-        this._loadingSvc.destroy();
+        this._loadingSvc.destroy()
+        this.runtime.DestroyContext()
     }
 
     isRouteActive(route: string): boolean {

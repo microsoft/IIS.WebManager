@@ -3,7 +3,7 @@ import { OptionsService } from '../main/options.service';
 
 @Component({
     template: `
-        <div class="sidebar crumb" [class.nav]="_options.active">
+        <div class="sidebar crumb" [class.nav]="options.active">
             <vtabs [markLocation]="true">
                 <item [name]="'Servers'" [ico]="'fa fa-server'">
                     <server-list></server-list>
@@ -25,7 +25,10 @@ import { OptionsService } from '../main/options.service';
     `]
 })
 export class SettingsComponent {
-
     constructor(private _options: OptionsService) {
+    }
+
+    get options() {
+        return this._options;
     }
 }

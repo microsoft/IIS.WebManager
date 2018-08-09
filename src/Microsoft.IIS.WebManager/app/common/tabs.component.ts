@@ -8,8 +8,6 @@ import { Subscription } from 'rxjs/Subscription'
 import { DynamicComponent } from './dynamic.component';
 import { ComponentUtil } from '../utils/component';
 import { SectionHelper } from './section.helper';
-import { ArrayUtil } from '../utils/array';
-import { UrlUtil } from '../utils/url';
 
 @Component({
     selector: 'tabs',
@@ -160,7 +158,7 @@ import { UrlUtil } from '../utils/url';
             <div class="tabs-container">
                 <div class='tabs border-active'>
                     <ul>
-                        <li #item *ngFor="let tab of tabs; let i = index;" class="border-active border-bottom-normal" [ngClass]="{active: tab.active}" (click)="selectTab(i)">
+                        <li #item *ngFor="let tab of tabs; let i = index" class="border-active border-bottom-normal" [ngClass]="{active: tab.active}" (click)="selectTab(i)">
                             <span>{{tab.name}}</span>
                         </li>
                         <li *ngIf="_selectedIndex != -1" class="sticky background-normal border-active border-bottom-normal" [ngClass]="{active: !!'true', hidden: tabs[_selectedIndex].visible}" (click)="selectTab(_selectedIndex)">
@@ -171,7 +169,7 @@ import { UrlUtil } from '../utils/url';
                 </div>
             </div>
 
-            <div class='menu-btn color-active background-normal' #menuBtn tabindex='0' (click)="showMenu()"><span class="border-active hover-active color-normal" [class.background-active]="_menuOn"><i class="fa fa-ellipsis-h"></i></span></div>
+            <div class='menu-btn color-active background-normal' #menuBtn tabindex='0' (click)="showMenu(true)"><span class="border-active hover-active color-normal" [class.background-active]="_menuOn"><i class="fa fa-ellipsis-h"></i></span></div>
             <div class='menu border-active background-normal' [hidden]="!_menuOn">
                 <ul>
                     <li *ngFor="let tab of tabs; let i = index;" class="hover-active" [ngClass]="{'background-active': tab.active}" (click)="selectTab(i)">{{tab.name}}</li>
@@ -190,10 +188,10 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
     @Input() markLocation: boolean;
 
     tabs: TabComponent[];
-    
-    private _default: string;
+
     private _selectedIndex = -1;
     private _menuOn: boolean = false;
+    private _default: string;
     private _tabsItems: Array<ElementRef>;
     private _hashCache: Array<string> = [];
     private _sectionHelper: SectionHelper;

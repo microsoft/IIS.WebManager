@@ -57,7 +57,6 @@ export class UploadComponent implements OnDestroy {
     private _numUploading: number = 0;
     private _uploadProgress: number = 0;
     private _bytesRemaining: number = 0;
-
     private _finished: Array<Progress> = [];
     private _subscriptions: Array<Subscription> = [];
     private _avg: SlidingAverage = new SlidingAverage();

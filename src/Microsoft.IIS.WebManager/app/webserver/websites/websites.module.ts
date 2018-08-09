@@ -1,4 +1,4 @@
-import { NgModule, OnDestroy } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -65,8 +65,10 @@ import { LimitsComponent } from './limits.component';
         BindingList,
         BindingItem,
         LimitsComponent
+    ],
+    exports: [
+        WebSiteListComponent
     ]
-
 })
 export class WebSitesModule {
 }

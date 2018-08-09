@@ -47,7 +47,7 @@ import { WebServer } from './webserver';
 })
 export class WebServerHeaderComponent {
     @Input() model: WebServer;
-    @ViewChild(Selector) private _selector: Selector;
+    @ViewChild(Selector) _selector: Selector;
 
     private _subs: Array<Subscription> = [];
 

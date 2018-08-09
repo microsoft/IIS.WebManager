@@ -104,13 +104,10 @@ export class WebFileListComponent implements OnInit, OnDestroy {
     private _sortPipe: SortPipe = new SortPipe();
     private _filter: string = "";
     private _subscriptions = [];
-
     private _range: Range = new Range(0, 0);
-
     private _selected: Array<WebFile> = [];
     private _items: Array<WebFile> = [];
     private _view: Array<WebFile> = [];
-
     private _active: WebFile;
 
     @ViewChild('dragInfo') _dragInfo: ElementRef;

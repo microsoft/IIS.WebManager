@@ -13,7 +13,7 @@ import { CertificatesService } from './certificates.service';
     template: `
         <loading *ngIf="!_items"></loading>
         <div class="toolbar">
-            <span *ngIf="_service.loading" class="loading">Retrieving certificates</span>
+            <span *ngIf="serviceLoading" class="loading">Retrieving certificates</span>
             <button class="refresh" title="Refresh" (click)="refresh()"></button>
             <div *ngIf="_items" class="col-xs-8 col-sm-5 col-md-4 col-lg-3 actions filter hidden-xs">
                 <input type="search" class="form-control" [class.border-active]="_filter" [(ngModel)]="_filter" (ngModelChange)="filter($event)" [throttle]="300" />
@@ -103,7 +103,6 @@ import { CertificatesService } from './certificates.service';
 export class CertificatesListComponent implements OnInit, OnDestroy {
     @Output() public itemSelected: EventEmitter<any> = new EventEmitter();
     @Input() public lazy: boolean;
-
     private _filter = "";
     private certs: Array<Certificate>;
     private _view: Array<Certificate> = [];
@@ -119,6 +118,10 @@ export class CertificatesListComponent implements OnInit, OnDestroy {
         if (!this.lazy) {
             this.activate();
         }
+    }
+
+    get serviceLoading() {
+        return this._service.loading;
     }
 
     public ngOnDestroy() {

@@ -9,7 +9,7 @@ import { AuthenticationService } from './authentication.service';
 @Component({
     selector: 'anon-auth',
     template: `
-        <error [error]="_service.anonymousError"></error>
+        <error [error]="service.anonymousError"></error>
         <div *ngIf="_model">
             <override-mode class="pull-right" [metadata]="_model.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
             <fieldset>
@@ -43,6 +43,10 @@ export class AnonymousAuthenticationComponent implements OnDestroy {
 
     public ngOnDestroy() {
         this._subscriptions.forEach(sub => sub.unsubscribe());
+    }
+
+    get service() {
+        return this._service;
     }
 
     private onModelChanged() {

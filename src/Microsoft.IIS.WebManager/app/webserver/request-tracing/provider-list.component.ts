@@ -29,11 +29,11 @@ import {RequestTracingService} from './request-tracing.service';
     `
 })
 export class ProvidersComponent implements OnInit {
+    _providers: Array<Provider>;
+
     private _editing: Provider;
     private _orderBy: string;
     private _orderByAsc: boolean;
-    private _providers: Array<Provider>;
-
     private _newProvider: Provider;
 
     constructor(private _service: RequestTracingService) {

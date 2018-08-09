@@ -62,12 +62,12 @@ export class Selector implements OnInit, AfterViewInit, OnDestroy {
 
     @Output() hide: EventEmitter<any> = new EventEmitter();
     @Output() show: EventEmitter<any> = new EventEmitter();
+    private _fluid: boolean;
+    private _stretch: boolean;
 
     @ContentChildren('menuButton') _menuButtons: QueryList<ElementRef>;
     private _menuButtonDestructors: Array<Function> = [];
     private static _selectorId: number = 0;
-    private _fluid: boolean;
-    private _stretch: boolean;
     private _pending: boolean;
     private _id: number;
 

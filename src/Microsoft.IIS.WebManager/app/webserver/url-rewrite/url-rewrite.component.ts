@@ -6,18 +6,18 @@ import { UrlRewriteService } from './service/url-rewrite.service';
 
 @Component({
     template: `
-        <loading *ngIf="_service.status == 'unknown' && !_service.error"></loading>
-        <error [error]="_service.error"></error>
-        <switch class="install" *ngIf="_service.webserverScope && _service.status != 'unknown'" #s
+        <loading *ngIf="service.status == 'unknown' && !service.error"></loading>
+        <error [error]="service.error"></error>
+        <switch class="install" *ngIf="service.webserverScope && service.status != 'unknown'" #s
                 [auto]="false"
-                [model]="_service.status == 'started' || _service.status == 'starting'" 
-                [disabled]="_service.status == 'starting' || _service.status == 'stopping'"
+                [model]="service.status == 'started' || service.status == 'starting'"
+                [disabled]="service.status == 'starting' || service.status == 'stopping'"
                 (modelChanged)="install(!s.model)">
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="_service.status == 'stopped' && !_service.webserverScope">URL Rewrite is not installed. Install it <a [routerLink]="['/webserver/url-rewrite']">here</a></span>
-        <div *ngIf="_service.status == 'started'">
+        <span *ngIf="service.status == 'stopped' && !service.webserverScope">URL Rewrite is not installed. Install it <a [routerLink]="['/webserver/url-rewrite']">here</a></span>
+        <div *ngIf="service.status == 'started'">
             <tabs>
                 <tab [name]="'Inbound Rules'">
                     <inbound-rules></inbound-rules>
@@ -52,6 +52,10 @@ export class UrlRewriteComponent implements OnInit {
 
     public ngOnInit() {
         this._service.initialize(this.id);
+    }
+
+    get service() {
+        return this._service;
     }
 
     private isPending(): boolean {

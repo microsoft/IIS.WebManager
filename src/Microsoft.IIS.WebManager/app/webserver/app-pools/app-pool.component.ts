@@ -1,5 +1,3 @@
-declare var GLOBAL_MODULES: any;
-
 import {Component, OnInit, Inject} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -27,7 +25,7 @@ import {AppPoolsService} from './app-pools.service';
                     <app-pool-general [pool]="pool" (modelChanged)="onModelChanged()"></app-pool-general>
                 </item>
                 <item *ngFor="let module of modules" [name]="module.name" [ico]="module.ico">
-                    <dynamic [name]="module.component_name" [module]="module.module" [data]="module.data"></dynamic>
+                    <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
                 </item>
             </vtabs>
         </div>

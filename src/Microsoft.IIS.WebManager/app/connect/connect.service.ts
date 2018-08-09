@@ -19,7 +19,7 @@ export class ConnectService {
 
     private _store: ConnectionStore;
     private _client: HttpConnection;
-    private _pingTimeoutId: number;
+    private _pingTimeout: NodeJS.Timer;
     private _pingPopup = new PWrapper();
     private _active: ApiConnection;
     private _connecting: BehaviorSubject<ApiConnection> = new BehaviorSubject<ApiConnection>(null);
@@ -136,7 +136,7 @@ export class ConnectService {
     }
 
     private ping(conn: ApiConnection, time2stop: number, force: boolean): Promise<any> {
-        clearTimeout(this._pingTimeoutId);
+        clearTimeout(this._pingTimeout);
 
         return this._client.get(conn, "/api").toPromise()
             .then(_ => {
@@ -186,7 +186,7 @@ export class ConnectService {
         return new Promise((resolve, reject) => {
             if (timeout > 0) {
                 if (this._connecting.getValue()) {
-                    this._pingTimeoutId = setTimeout(_ => {
+                    this._pingTimeout = setTimeout(_ => {
                         this.ping(conn, time2stop, true)
                             .then(_ => {
                                 resolve(conn);
@@ -239,8 +239,8 @@ export class ConnectService {
     }
 
     private reset(clearError: boolean = true) {
-        clearTimeout(this._pingTimeoutId);
-        this._pingTimeoutId = 0;
+        clearTimeout(this._pingTimeout);
+        this._pingTimeout = null;
 
         if (clearError) {
             this._notificationSvc.clearWarnings();

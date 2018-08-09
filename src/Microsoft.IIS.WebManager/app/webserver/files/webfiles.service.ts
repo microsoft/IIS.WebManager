@@ -7,7 +7,7 @@ import { Subject } from "rxjs/Subject";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/startwith';
+import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/pairwise';
 import 'rxjs/add/operator/first';
 

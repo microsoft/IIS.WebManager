@@ -9,8 +9,8 @@ import { ProvidersSection, Provider, ProviderSetting } from '../url-rewrite';
 @Component({
     selector: 'providers',
     template: `
-        <error [error]="_service.providersError"></error>
-        <div *ngIf="!_service.providersError && _settings">
+        <error [error]="service.providersError"></error>
+        <div *ngIf="!service.providersError && _settings">
             <override-mode class="pull-right"
                 [metadata]="_settings.metadata"
                 [scope]="_settings.scope"
@@ -58,6 +58,10 @@ export class ProvidersComponent implements OnDestroy {
 
     public ngOnDestroy(): void {
         this._subscriptions.forEach(sub => sub.unsubscribe());
+    }
+
+    get service() {
+        return this._service;
     }
 
     private initializeNewProvider() {

@@ -48,8 +48,8 @@ export class ServerListComponent implements OnDestroy {
     private _orderBy: OrderBy = new OrderBy();
     private _sortPipe: SortPipe = new SortPipe();
     private _subscriptions: Array<Subscription> = [];
-    @ViewChild(Selector) private _selector: Selector;
     private _newServer: ApiConnection;
+    @ViewChild(Selector) private _selector: Selector;
 
     constructor(private _svc: ConnectService) {
 

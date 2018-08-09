@@ -8,9 +8,9 @@ import { StaticContent, MimeMap } from '../static-content/static-content';
 
 @Component({
     template: `
-        <loading *ngIf="_service.status == 'unknown' && !_service.error"></loading>
-        <error [error]="_service.error"></error>
-        <span *ngIf="_service.status == 'stopped'">Mime Maps are off. Turn them on <a [routerLink]="['/webserver/static-content']">here</a></span>
+        <loading *ngIf="service.status == 'unknown' && !service.error"></loading>
+        <error [error]="service.error"></error>
+        <span *ngIf="service.status == 'stopped'">Mime Maps are off. Turn them on <a [routerLink]="['/webserver/static-content']">here</a></span>
         <override-mode class="pull-right" *ngIf="staticContent" [scope]="staticContent.scope" [metadata]="staticContent.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="staticContent">
             <mime-maps (modelChanged)="onSave($event)" (delete)="onDelete($event)" (add)="onAdd($event)"><mime-maps>
@@ -36,6 +36,10 @@ export class MimeMapsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._subscriptions.forEach(sub => sub.unsubscribe());
+    }
+
+    get service() {
+        return this._service;
     }
 
     private onModelChanged() {

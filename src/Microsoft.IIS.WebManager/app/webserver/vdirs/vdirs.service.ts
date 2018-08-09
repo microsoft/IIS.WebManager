@@ -4,7 +4,7 @@ import {Response} from '@angular/http';
 
 import {Observable} from "rxjs/Observable";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {Subscription} from "rxjs/subscription";
+import {Subscription} from "rxjs/Subscription";
 
 import {HttpClient} from '../../common/httpclient';
 import {ApiError} from '../../error/api-error';
