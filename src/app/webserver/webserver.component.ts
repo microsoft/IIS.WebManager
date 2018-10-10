@@ -8,6 +8,22 @@ import { HttpClient } from '../common/httpclient';
 import { WebServer } from './webserver';
 import { WebServerService } from './webserver.service';
 import { ComponentReference, FilesComponentName } from '../main/settings';
+import { environment } from '../environments/environment'
+
+const sidebarStyles = `
+:host >>> .sidebar > vtabs .vtabs > .items {
+    top: ` + (environment.WAC ? 0 : 35) + `px;
+}
+
+:host >>> .sidebar > vtabs .vtabs > .content {
+    top: 96px;
+}
+
+.not-installed {
+    text-align: center;
+    margin-top: 50px;
+}
+`
 
 @Component({
     template: `
@@ -33,20 +49,7 @@ import { ComponentReference, FilesComponentName } from '../main/settings';
             </div>
         </div>
     `,
-    styles: [`
-        :host >>> .sidebar > vtabs .vtabs > .items {
-            top: 35px;
-        }
-
-        :host >>> .sidebar > vtabs .vtabs > .content {
-            top: 96px;
-        }
-
-        .not-installed {
-            text-align: center;
-            margin-top: 50px;
-        }
-    `]
+    styles: [ sidebarStyles ]
 })
 export class WebServerComponent {
     webServer: WebServer;

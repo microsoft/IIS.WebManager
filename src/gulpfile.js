@@ -78,10 +78,10 @@ gulp.task('generate', (cb) => {
 });
 
 gulp.task('lint', () => {
-    var program = tslint.Linter.createProgram("./tsconfig.json");
+    var program = tslint.Linter.createProgram("app/tsconfig.json");
     return gulp.src('app/**/*.ts')
-      .pipe(gulpTslint({ program }))
-      .pipe(gulpTslint.report({
+        .pipe(gulpTslint({ program }))
+        .pipe(gulpTslint.report({
             "emitError": true,
             "reportLimit": 0,
             "summarizeFailureOutput": true
@@ -101,7 +101,7 @@ gulp.task('copy', () => {
 
 gulp.task('compile', () => {
     // Why does this work??
-    return ngCompile('./tsconfig-inline.json');
+    return ngCompile('app/tsconfig-inline.json');
 });
 
 gulp.task('bundle', cb => {
@@ -123,6 +123,6 @@ gulp.task('serve', (cb) => {
 });
 
 gulp.task('build', (cb) => {
-    // skipping lint, 
+    // skipping lint, inline
     runSequence('clean', 'generate', ['compile', 'copy'], 'bundle', cb);
 });

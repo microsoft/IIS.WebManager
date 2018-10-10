@@ -1,17 +1,16 @@
 
-import {Injectable} from '@angular/core';
+import {Inject, Injectable} from '@angular/core';
 import {Http, Headers, Response, Request, RequestOptions, RequestOptionsArgs, RequestMethod} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
-
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/toPromise';
 
 import {NotificationService} from '../notification/notification.service';
 import {ApiConnection} from '../connect/api-connection'
 import {ApiError, ApiErrorType} from '../error/api-error';
 import {ConnectService} from '../connect/connect.service';
+import {Runtime} from '../runtime/runtime'
 
-
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class HttpClient {
@@ -20,7 +19,8 @@ export class HttpClient {
 
     constructor(private _http: Http,
                 private _notificationService: NotificationService,
-                private _connectSvc: ConnectService)
+                private _connectSvc: ConnectService,
+                @Inject("Runtime") private runtime: Runtime)
     {
         //
         // Support withCredentials
@@ -111,7 +111,7 @@ export class HttpClient {
 
     public request(url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<any> {
         if (!this._conn) {
-            this._connectSvc.gotoConnect(true);
+            this.runtime.ConnectToIISHost()
             return Promise.reject("Not connected");
         }
 

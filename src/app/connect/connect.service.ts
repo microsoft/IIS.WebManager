@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Http } from '@angular/http';
-
-import 'rxjs/add/operator/toPromise';
-import { Observable } from "rxjs/Observable";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-
 import { HttpConnection } from './httpconnection';
 import { ApiConnection } from './api-connection';
 import { ConnectionStore } from './connection-store';
 import { NotificationService } from '../notification/notification.service';
+import { Observable } from "rxjs/Observable";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { environment } from '../environments/environment'
 
+import 'rxjs/add/operator/toPromise';
 
+export class AdminApiUnreachableError extends Error {
+    public static readonly Instance = new AdminApiUnreachableError()
+}
 
 @Injectable()
 export class ConnectService {
@@ -146,9 +148,12 @@ export class ConnectService {
             .catch(e => {
                 if (e.status == 403) {
                     this.error(conn, _ => this._notificationSvc.invalidAccessToken());
-                    return Promise.reject("Could not connect.");
+                    return Promise.reject("Could not connect: Unauthorized.");
                 }
                 else {
+                    if (environment.WAC && e.status == 0) {
+                        return Promise.reject(AdminApiUnreachableError.Instance);
+                    }
                     return this._client.options(conn, "/api").toPromise()
                         .then(_ => {
                             // 
@@ -165,7 +170,7 @@ export class ConnectService {
                                     else {
                                         // Notify that the user is unauthorized but don't force the connecting page
                                         this.error(conn, _ => this._notificationSvc.unauthorized())
-                                        return Promise.reject("Could not connect.");
+                                        return Promise.reject("Could not connect: Unauthorized.");
                                     }
                                 });
                         })

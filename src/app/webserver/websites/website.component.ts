@@ -28,16 +28,7 @@ import { OptionsService } from '../../main/options.service';
                 </item>
             </vtabs>
         </div>
-    `,
-    styles: [`
-        :host >>> .sidebar vtabs .vtabs > .items {
-            top: 35px;
-        }
-
-        :host >>> .sidebar vtabs .vtabs > .content {
-            top: 96px;
-        }
-    `]
+    `
 })
 export class WebSiteComponent implements OnInit {
     id: string;
