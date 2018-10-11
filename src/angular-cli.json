@@ -9,7 +9,7 @@
       "index": "index.html",
       "main": "main/main.ts",
       "root": "app",
-      "outDir": "dist/app",
+      "outDir": "../dist/app",
       "scripts": [
         "../node_modules/jquery/dist/jquery.min.js",
         "../node_modules/bootstrap/dist/js/bootstrap.min.js"
