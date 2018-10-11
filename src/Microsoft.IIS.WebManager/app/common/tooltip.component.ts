@@ -57,15 +57,15 @@ export class TooltipComponent implements OnDestroy, AfterViewInit {
     private _bottom: number = 16;
     private _padding: 20;
 
+    private _timer = null;
+    private _hideDelay: number = 150; //ms
+    private _subscriptions: Array<Subscription> = [];
+
+    private _visible: boolean = false;
     private _heightStyle: string = "initial";
     private _widthStyle: string = "initial";
     private _leftStyle: string = this._left + 'px';
     private _bottomStyle: string = this._bottom + 'px';
-
-    private _timer = null;
-    private _visible: boolean = false;
-    private _hideDelay: number = 150; //ms
-    private _subscriptions: Array<Subscription> = [];
 
     @ViewChild('helpContent')
     private _helpContent: ElementRef;

@@ -67,7 +67,7 @@ export class WebServerService {
             this.triggerStatusUpdate();
 
             if (ws.status == Status.Stopping) {
-                return new Promise((resolve, reject) => {
+                return new Promise<WebServer>((resolve, reject) => {
                     //
                     // Ping
                     let ob = IntervalObservable.create(1000).subscribe(i => {
@@ -125,6 +125,7 @@ export class WebServerService {
             if (e.type && e.type == ApiErrorType.FeatureNotInstalled) {
                 this._installStatus = Status.Stopped;
             }
+            return null;
         });
     }
 

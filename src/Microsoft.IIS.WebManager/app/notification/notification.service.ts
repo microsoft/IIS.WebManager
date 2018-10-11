@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiConnection } from '../connect/api-connection';
 
-import { DynamicComponentArgs } from '../common/dynamic.component';
-
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -10,6 +8,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ApiError, ApiErrorType } from '../error/api-error';
 import { Notification, NotificationType } from './notification';
 import { ModalArgs } from './modal';
+import { ComponentReference, WarningComponentName } from '../main/settings';
+
+const WarningComponentReference: ComponentReference = { name: WarningComponentName, ico: null, component_name: WarningComponentName, api_name: null, api_path: null }
 
 @Injectable()
 export class NotificationService {
@@ -41,8 +42,8 @@ export class NotificationService {
     public warn(message: string) {
         let notification: Notification = {
             type: NotificationType.Warning,
-            componentName: 'WarningComponent',
-            module: 'app/notification/warning.component#Module',
+            componentName: WarningComponentReference.component_name,
+            module: WarningComponentReference,
             data: {
                 warning: message
             },

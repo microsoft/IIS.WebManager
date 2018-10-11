@@ -8,7 +8,7 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
     selector: 'header',
     template: `
         <div class="nav background-active">
-            <button class="fa fa-bars nav-item nav-options hover-primary2" [attr.title]="this._options.active ? 'Hide Sidebar' : 'Show Sidebar'" (click)="this._options.toggle()" [class.background-primary2]="this._options.active"></button>
+            <button class="fa fa-bars nav-item nav-options hover-primary2" [attr.title]="this.options.active ? 'Hide Sidebar' : 'Show Sidebar'" (click)="this.options.toggle()" [class.background-primary2]="this.options.active"></button>
             <a [routerLink]="['/']" title="Home" class="nav-brand nav-item background-active hover-primary2 nav-height">
                 <span class="v-center hidden-xs">Microsoft IIS</span>
                 <span class="v-center visible-xs">IIS</span>
@@ -126,9 +126,9 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
     `]
 })
 export class HeaderComponent implements OnDestroy {
-    private _subs = [];
     private _inProgress: boolean;
-    private _timeout: number;
+    private _subs = [];
+    private _timeout: NodeJS.Timer;
     private _window: Window = window;
 
     constructor(loadingSvc: LoadingService,
@@ -143,11 +143,15 @@ export class HeaderComponent implements OnDestroy {
             else {
                 if (this._timeout) {
                     clearTimeout(this._timeout);
-                    this._timeout = 0;
+                    this._timeout = null;
                     setTimeout(_ => this._inProgress = false, 300);
                 }
             }
         }));
+    }
+
+    private get options() {
+        return this._options;
     }
 
     public ngOnDestroy() {

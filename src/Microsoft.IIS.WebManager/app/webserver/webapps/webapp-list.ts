@@ -207,7 +207,6 @@ export class WebAppList {
     private _orderBy: string;
     private _orderByAsc: boolean;
 
-
     constructor(private _router: Router) {
         this.sort("path");
     }

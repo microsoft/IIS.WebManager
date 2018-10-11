@@ -2,8 +2,6 @@ import { Injectable, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
-import 'rxjs/add/operator/pairwise';
-import 'rxjs/add/operator/startwith';
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
@@ -15,6 +13,9 @@ import { StringUtil } from '../utils/string';
 import { ApiFile, ApiFileType, ChangeType } from './file';
 import { Navigator } from './navigator';
 import { FilesService } from './files.service';
+
+import 'rxjs/add/operator/pairwise'
+import 'rxjs/add/operator/startWith'
 
 const Root: ApiFile = ApiFile.fromObj({
     physical_path: "",
@@ -116,7 +117,6 @@ export class FileNavService implements IDisposable {
         // Navigation
         this._defaultPath = defaultPath;
         this._nav = new Navigator(this._route, this._location, useHash, defaultPath);
-
         this._subscriptions.push(this._nav.path.startWith(null).pairwise().subscribe((pair: [string, string]) => {
             let previous = pair[0];
             let hash = pair[1];
@@ -195,7 +195,7 @@ export class FileNavService implements IDisposable {
             })
     }
 
-    private loadDir(path: string): Promise<ApiFile> {
+    private loadDir(path: string): Promise<ApiFile | void> {
         this._notificationService.clearWarnings();
 
         if (!path || path.endsWith(":")) {

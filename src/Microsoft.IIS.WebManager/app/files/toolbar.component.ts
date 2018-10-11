@@ -26,7 +26,7 @@ import { FormsModule } from '@angular/forms';
         }
     `],
     styleUrls: [
-        'app/files/file-icons.css'
+        'file-icons.css'
     ]
 })
 export class ToolbarComponent {

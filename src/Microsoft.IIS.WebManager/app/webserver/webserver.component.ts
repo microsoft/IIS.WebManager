@@ -1,18 +1,17 @@
 import { Component, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { ModuleUtil } from '../utils/Module';
+import { ModuleUtil } from '../utils/module';
 import { OptionsService } from '../main/options.service';
 
 import { HttpClient } from '../common/httpclient';
 import { WebServer } from './webserver';
 import { WebServerService } from './webserver.service';
-
-
+import { ComponentReference, FilesComponentName } from '../main/settings';
 
 @Component({
     template: `
-        <div *ngIf="_service.installStatus == 'stopped'" class="not-installed">
+        <div *ngIf="service.installStatus == 'stopped'" class="not-installed">
             <p>
                 Web Server (IIS) is not installed on the machine
                 <br/>
@@ -28,7 +27,7 @@ import { WebServerService } from './webserver.service';
                         <webserver-general [model]="webServer"></webserver-general>
                     </item>
                     <item *ngFor="let module of modules" [name]="module.name" [ico]="module.ico">
-                        <dynamic [name]="module.component_name" [module]="module.module" [data]="module.data"></dynamic>
+                        <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
                     </item>
                 </vtabs>
             </div>
@@ -65,23 +64,17 @@ export class WebServerComponent {
             ModuleUtil.initModules(this.modules, this.webServer, "webserver");
             ModuleUtil.addModule(this.modules, "Certificates");
 
-            //
             // Insert files global module after application pools
             let index = this.modules.findIndex(m => m.name.toLocaleLowerCase() == "application pools") + 1;
-
-            this.modules.splice(index, 0, {
-                name: "Files",
-                ico: "fa fa-files-o",
-                component_name: "FilesComponent",
-                module: "app/files/files.module#FilesModule",
-                api_name: "files",
-                api_path: "/api/files/{id}"
-            });
-
+            this.modules.splice(index, 0, new ComponentReference("Files", "fa fa-files-o", FilesComponentName, "files", "/api/files/{id}"));
             this._http.head('/certificates/', null, false)
                 .catch(res => {
                     this.modules = this.modules.filter(m => m.name.toLocaleLowerCase() !== 'certificates')
                 });
         });
+    }
+
+    get service() {
+        return this._service;
     }
 }

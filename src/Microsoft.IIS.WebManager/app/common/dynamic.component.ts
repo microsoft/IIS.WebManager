@@ -2,9 +2,8 @@
 import {NgModule, Directive, Input, ReflectiveInjector, ModuleWithComponentFactories, ComponentFactory, ViewContainerRef, NgModuleRef, ComponentRef, Compiler, OnInit, Injector} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-
 import {ComponentLoader} from './component-loader';
-
+import { ComponentReference } from '../main/settings';
 
 @Directive({
     selector: 'dynamic',
@@ -14,14 +13,12 @@ export class DynamicComponent implements OnInit {
     //
     // Angular2 module loading syntax
     // '<modulePath>#<moduleName>'
-    @Input() module: string;
+    @Input() module: ComponentReference;
     @Input() selector: string;
     @Input() data: any;
     @Input() loader: any;
     @Input() eager: boolean;
 
-    private _modulePath: string;
-    private _moduleName: string;
     private _moduleRef: NgModuleRef<any>;
     private _componentRef: ComponentRef<any>;
 
@@ -29,9 +26,6 @@ export class DynamicComponent implements OnInit {
     }
 
     ngOnInit() {
-        this._modulePath = this.module.substr(0, this.module.indexOf("#"));
-        this._moduleName = this.module.substr(this._modulePath.length + 1);
-
         if (this.eager) {
             this.activate();
         }
@@ -89,7 +83,7 @@ export class DynamicComponent implements OnInit {
         }
 
         let vRef = this.vcRef;
-        return DynamicComponent.CreateModuleWithComponentFactories(this.compiler, this._moduleName, this._modulePath)
+        return ComponentLoader.LoadAsync(this.compiler, this.module)
             .then(moduleWithComponentFactories => {
 
                 let targetFactory = moduleWithComponentFactories.componentFactories.find(x => {
@@ -116,14 +110,6 @@ export class DynamicComponent implements OnInit {
                 this._componentRef.instance[key] = data[key];
             }
         }
-    }
-
-    private static CreateModuleWithComponentFactories(compiler: Compiler, name: string, path: string): Promise<ModuleWithComponentFactories<{}>> {
-
-        return ComponentLoader.LoadAsync(name, path)
-            .then(m => {
-                return compiler.compileModuleAndAllComponentsAsync(m)
-            });
     }
 }
 

@@ -47,7 +47,7 @@ export class ProcessModel {
     idle_timeout: number;
     idle_timeout_action: IdleTimeoutAction;
     max_processes: number;
-    pingig_enabled: boolean;
+    pinging_enabled: boolean;
     ping_interval: number;
     ping_response_time: number;
     shutdown_time_limit: number;
@@ -118,7 +118,7 @@ export const ProcessModelIdentityType = {
 }
 
 
-enum IdleTimeoutAction {
+export enum IdleTimeoutAction {
     Terminate,
     Suspend
 }

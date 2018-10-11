@@ -25,7 +25,7 @@ export class Limits {
     max_url_segments: number;
 }
 
-class RequestTracing {
+export class RequestTracing {
     enabled: boolean;
     directory: string;
     maximum_number_trace_files: number;
@@ -40,4 +40,5 @@ export class Binding {
     protocol: string; // required
     binding_information: boolean;
     certificate: Certificate;
+    isNew: boolean;
 }

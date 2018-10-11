@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Injectable()
-class SelectableService {
+export class SelectableService {
     private _selected: Array<any>;
     private _selectable: Array<any>;
     private _active: boolean;

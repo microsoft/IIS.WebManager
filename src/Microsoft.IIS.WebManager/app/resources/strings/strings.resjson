@@ -1,0 +1,13 @@
+{
+    "//": "manifest section",
+    "Manifest_displayName": "waciis",
+    "Manifest_description": "{!product-description}",
+    "Manifest_category": "SME",
+
+    "//": "waciis",
+    "waciis_title": "waciis",
+
+    "//": "about",
+    "waciis_about": "{!product-about}",
+    "waciis_aboutDescription": "{!product-about-description}"
+}

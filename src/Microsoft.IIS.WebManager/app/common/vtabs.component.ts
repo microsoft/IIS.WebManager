@@ -6,9 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription'
 
 import { DynamicComponent } from './dynamic.component';
-import { ComponentUtil } from '../utils/component';
-import { ArrayUtil } from '../utils/array';
-import { UrlUtil } from '../utils/url';
 import { SectionHelper } from './section.helper';
 
 @Component({

@@ -1,5 +1,3 @@
-declare var SETTINGS: any;
-
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Http } from '@angular/http';
@@ -8,8 +6,8 @@ import 'rxjs/add/operator/toPromise';
 
 import { ApiConnection } from '../connect/api-connection'
 import { HttpConnection } from '../connect/httpconnection'
-import { ConnectService } from '../connect/connect.service';
-
+import { ConnectService } from '../connect/connect.service'
+import { SETTINGS } from '../main/settings'
 
 @Component({
     template: `
@@ -88,6 +86,7 @@ import { ConnectService } from '../connect/connect.service';
     `]
 })
 export class GetComponent implements OnDestroy {
+    private _inProgress: boolean;
     private DOWNLOAD_URL: string = SETTINGS.api_download_url;
     private SETUP_VERSION: string = SETTINGS.api_setup_version;
     private static STATUS_MSG: string[] = [
@@ -97,9 +96,7 @@ export class GetComponent implements OnDestroy {
         'It takes a bit longer',
         'Trying to establish connection'
     ];
-
-    private _inProgress: boolean;
-    private _pingTimeoutId: number;
+    private _pingTimeout: NodeJS.Timer;
     private _client: HttpConnection;
     private _status: string;
     private _activeConnection: ApiConnection;
@@ -155,14 +152,14 @@ export class GetComponent implements OnDestroy {
                 }
                 else {
                     if (this._inProgress) {
-                        this._pingTimeoutId = setTimeout(() => this.ping(i + 1), 2000);
+                        this._pingTimeout = setTimeout(() => this.ping(i + 1), 2000);
                     }
                 }
             })
     }
 
     private finish() {
-        clearTimeout(this._pingTimeoutId);
+        clearTimeout(this._pingTimeout);
 
         this._inProgress = false;
 

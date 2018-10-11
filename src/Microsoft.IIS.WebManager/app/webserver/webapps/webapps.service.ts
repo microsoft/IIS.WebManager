@@ -8,7 +8,7 @@ import {Response} from '@angular/http';
 import {IntervalObservable} from 'rxjs/observable/IntervalObservable';
 import {Observable} from "rxjs/Observable";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {Subscription} from "rxjs/subscription";
+import {Subscription} from "rxjs/Subscription";
 
 import {HttpClient} from '../../common/httpclient';
 import {WebSite} from '../websites/site'

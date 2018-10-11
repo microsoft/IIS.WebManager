@@ -152,10 +152,10 @@ import { ApiConnection } from './api-connection';
     `]
 })
 export class ConnectComponent implements OnDestroy {
+    private _connecting: boolean;
     private _conn: ApiConnection = this.localConnection;
     private _advancedState: ApiConnection = new ApiConnection("");
     private _original: ApiConnection;
-    private _connecting: boolean;
     private _subs: Array<Subscription> = [];
     private _connectionType = ConnectionType.Simple;
     private _disableSimple: boolean;

@@ -8,7 +8,7 @@ import { Module as VTabs } from '../common/vtabs.component';
 import { Module as Selector } from '../common/selector';
 import { Module as Loading } from '../notification/loading.component';
 
-import { Routing } from './webserver.routes';
+import { WebServerRoutingModule } from './webserver-routing.module';
 
 import { WebServerGeneralComponent } from './webserver-general.component';
 import { WebServerHeaderComponent } from './webserver-header.component';
@@ -19,7 +19,7 @@ import { WebServerComponent } from './webserver.component';
     imports: [
         CommonModule,
         FormsModule,
-        Routing,
+        WebServerRoutingModule,
         BModel,
         Dynamic,
         VTabs,

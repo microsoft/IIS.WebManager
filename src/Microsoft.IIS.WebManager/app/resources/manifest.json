@@ -1,0 +1,181 @@
+{
+    "$schema": "../../node_modules/@microsoft/windows-admin-center-sdk/dist/core/manifest/module-schema.json#",
+    "name": "microsoft.wac-iis",
+    "displayName": "resources:strings:displayName",
+    "description": "resources:strings:description",
+    "target": "/modules/microsoft.wac-iis",
+    "icon": "sme-icon:icon-win-powerShell",
+    "keywords": [
+        "resources:strings:keyword-example"
+    ],
+    "entryPoints": [
+        {
+          "entryPointType": "tool",
+          "name": "main",
+          "urlName": "IIS",
+          "displayName": "resources:strings:displayName",
+          "description": "resources:strings:description",
+          "icon": "sme-icon:icon-win-powerShell",
+          "path": "",
+          "requirements": [
+                {
+                  "solutionIds": [
+                    "msft.sme.server-manager!servers",
+                    "msft.sme.server-manager!windowsClients",
+                    "msft.sme.developer-tools!main"
+                  ],
+                  "connectionTypes": [
+                    "msft.sme.connection-type.server",
+                    "msft.sme.connection-type.windows-client"
+                  ]
+                }
+              ]
+        }
+    ],
+    "resources": [
+        {
+            "locale": "default",
+            "strings": {
+                "keyword-example": "example",
+                "description": "{!product-description}",
+                "displayName": "IIS"
+            }
+        },
+        {
+            "locale": "cs",
+            "strings": {
+                "keyword-example": "example",
+                "description": "{!product-description}",
+                "displayName": "IIS"
+            }
+        },
+        {
+            "locale": "de",
+            "strings": {
+                "keyword-example": "example",
+                "description": "{!product-description}",
+                "displayName": "IIS"
+            }
+        },
+        {
+            "locale": "es",
+            "strings": {
+                "keyword-example": "example",
+                "description": "{!product-description}",
+                "displayName": "IIS"
+            }
+        },
+        {
+            "locale": "fr",
+            "strings": {
+                "keyword-example": "example",
+                "description": "{!product-description}",
+                "displayName": "IIS"
+            }
+        },
+        {
+            "locale": "hu",
+            "strings": {
+                "keyword-example": "example",
+                "description": "{!product-description}",
+                "displayName": "IIS"
+            }
+        },
+        {
+            "locale": "it",
+            "strings": {
+                "keyword-example": "example",
+                "description": "{!product-description}",
+                "displayName": "IIS"
+            }
+        },
+        {
+            "locale": "ja",
+            "strings": {
+                "keyword-example": "example",
+                "description": "{!product-description}",
+                "displayName": "IIS"
+            }
+        },
+        {
+            "locale": "ko",
+            "strings": {
+                "keyword-example": "example",
+                "description": "{!product-description}",
+                "displayName": "IIS"
+            }
+        },
+        {
+            "locale": "nl",
+            "strings": {
+                "keyword-example": "example",
+                "description": "{!product-description}",
+                "displayName": "IIS"
+            }
+        },
+        {
+            "locale": "pl",
+            "strings": {
+                "keyword-example": "example",
+                "description": "{!product-description}",
+                "displayName": "IIS"
+            }
+        },
+        {
+            "locale": "pt-BR",
+            "strings": {
+                "keyword-example": "example",
+                "description": "{!product-description}",
+                "displayName": "IIS"
+            }
+        },
+        {
+            "locale": "pt-PT",
+            "strings": {
+                "keyword-example": "example",
+                "description": "{!product-description}",
+                "displayName": "IIS"
+            }
+        },
+        {
+            "locale": "ru",
+            "strings": {
+                "keyword-example": "example",
+                "description": "{!product-description}",
+                "displayName": "IIS"
+            }
+        },
+        {
+            "locale": "sv",
+            "strings": {
+                "keyword-example": "example",
+                "description": "{!product-description}",
+                "displayName": "IIS"
+            }
+        },
+        {
+            "locale": "tr",
+            "strings": {
+                "keyword-example": "example",
+                "description": "{!product-description}",
+                "displayName": "IIS"
+            }
+        },
+        {
+            "locale": "zh-Hans",
+            "strings": {
+                "keyword-example": "example",
+                "description": "{!product-description}",
+                "displayName": "IIS"
+            }
+        },
+        {
+            "locale": "zh-Hant",
+            "strings": {
+                "keyword-example": "example",
+                "description": "{!product-description}",
+                "displayName": "IIS"
+            }
+        }
+    ]
+}

@@ -11,17 +11,17 @@ import { NotificationService } from '../../notification/notification.service';
 
 @Component({
     template: `
-        <loading *ngIf="_service.status == 'unknown' && !_service.error"></loading>
+        <loading *ngIf="service.status == 'unknown' && !service.error"></loading>
         <error [error]="_error"></error>
-        <switch class="install" *ngIf="_service.webserverScope && _service.status != 'unknown'" #s
+        <switch class="install" *ngIf="service.webserverScope && service.status != 'unknown'" #s
                 [auto]="false"
-                [model]="_service.status == 'started' || _service.status == 'starting'" 
-                [disabled]="_service.status == 'starting' || _service.status == 'stopping'"
+                [model]="service.status == 'started' || service.status == 'starting'"
+                [disabled]="service.status == 'starting' || service.status == 'stopping'"
                 (modelChanged)="install(!s.model)">
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="_service.status == 'stopped' && !_service.webserverScope">Response Compression is off. Turn it on <a [routerLink]="['/webserver/response-compression']">here</a></span>
+        <span *ngIf="service.status == 'stopped' && !service.webserverScope">Response Compression is off. Turn it on <a [routerLink]="['/webserver/response-compression']">here</a></span>
         <override-mode class="pull-right" *ngIf="model" [scope]="model.scope" (revert)="onRevert()" [metadata]="model.metadata" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="model">
             <fieldset>
@@ -63,7 +63,7 @@ import { NotificationService } from '../../notification/notification.service';
 })
 export class CompressionComponent implements OnInit, OnDestroy {
     public id: string;
-
+    private _error: any;
     private model: ResponseCompression;
     private _original: ResponseCompression;
     private _locked: boolean;
@@ -84,6 +84,10 @@ export class CompressionComponent implements OnInit, OnDestroy {
         this._subscriptions.forEach(sub => sub.unsubscribe());
     }
 
+    get service() {
+        return this._service;
+    }
+
     private onModelChanged() {
         if (!this.isValid()) {
             return;
@@ -93,7 +97,7 @@ export class CompressionComponent implements OnInit, OnDestroy {
         if (Object.keys(changes).length > 0) {
             this._service.update(changes);
         }
-    }
+}
 
     private onRevert() {
         this._service.revert();

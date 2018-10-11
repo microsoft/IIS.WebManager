@@ -44,7 +44,6 @@ import {ClientCache} from './static-content'
 export class ClientCacheComponent implements OnInit {
     @Input() model: ClientCache;
     @Input() locked: boolean;
-
     @Output() modelChange: any = new EventEmitter();
 
     private _useCustom: boolean;

@@ -25,7 +25,7 @@ import { ApiFile, ApiFileType } from './file';
         }
     `],
     styleUrls: [
-        'app/files/file-icons.css'
+        'file-icons.css'
     ]
 })
 export class NewFileComponent {

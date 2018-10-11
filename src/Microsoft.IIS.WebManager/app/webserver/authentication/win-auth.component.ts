@@ -11,16 +11,16 @@ import { NotificationService } from '../../notification/notification.service';
 @Component({
     selector: 'win-auth',
     template: `
-        <error [error]="_service.windowsError"></error>
-        <switch class="install" *ngIf="_service.webserverScope && _service.windowsStatus != 'unknown'" #s
+        <error [error]="service.windowsError"></error>
+        <switch class="install" *ngIf="service.webserverScope && service.windowsStatus != 'unknown'" #s
                 [auto]="false"
-                [model]="_service.windowsStatus == 'started' || _service.windowsStatus == 'starting'" 
-                [disabled]="_service.windowsStatus == 'starting' || _service.windowsStatus == 'stopping'"
+                [model]="service.windowsStatus == 'started' || service.windowsStatus == 'starting'"
+                [disabled]="service.windowsStatus == 'starting' || service.windowsStatus == 'stopping'"
                 (modelChanged)="install(!s.model)">
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="_service.windowsStatus == 'stopped' && !_service.webserverScope">Windows Authentication is off. Turn it on <a [routerLink]="['/webserver/authentication']">here</a></span>
+        <span *ngIf="service.windowsStatus == 'stopped' && !service.webserverScope">Windows Authentication is off. Turn it on <a [routerLink]="['/webserver/authentication']">here</a></span>
         <override-mode class="pull-right" *ngIf="_model" [scope]="_model.scope" [metadata]="_model.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="_model">
             <fieldset>
@@ -56,6 +56,10 @@ export class WindowsAuthenticationComponent implements OnDestroy {
 
     public ngOnDestroy() {
         this._subscriptions.forEach(sub => sub.unsubscribe());
+    }
+
+    get service() {
+        return this._service;
     }
 
     private onModelChanged() {

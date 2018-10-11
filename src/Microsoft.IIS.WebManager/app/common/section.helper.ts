@@ -6,8 +6,6 @@ import { Subscription } from 'rxjs/Subscription'
 import { BehaviorSubject } from 'rxjs/BehaviorSubject'
 
 import { IDisposable } from './IDisposable';
-import { DynamicComponent } from './dynamic.component';
-import { ComponentUtil } from '../utils/component';
 import { UrlUtil } from '../utils/url';
 
 export class SectionHelper implements IDisposable {

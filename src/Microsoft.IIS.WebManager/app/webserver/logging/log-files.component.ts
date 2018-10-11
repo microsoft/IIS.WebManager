@@ -66,7 +66,6 @@ export class LogFilesComponent implements OnInit, OnDestroy {
     private _orderBy: OrderBy = new OrderBy();
     private _sortPipe: SortPipe = new SortPipe();
     private _subscriptions: Array<Subscription> = [];
-
     private _range: Range = new Range(0, 0);
     private _logs: Array<ApiFile>;
     private _view: Array<ApiFile> = [];

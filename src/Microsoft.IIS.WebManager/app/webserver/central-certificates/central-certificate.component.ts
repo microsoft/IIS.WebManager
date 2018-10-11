@@ -15,7 +15,7 @@ import { CentralCertificateConfiguration } from './central-certificates';
             <switch #s
                 [model]="_enabled"
                 (modelChange)="onEnabled($event)"
-                [disabled]="_service.status == 'starting' || _service.status == 'stopping'">
+                [disabled]="service.status == 'starting' || service.status == 'stopping'">
                     <span *ngIf="!isPending">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending" class="loading"></span>
             </switch>
@@ -75,6 +75,7 @@ import { CentralCertificateConfiguration } from './central-certificates';
 export class CentralCertificateComponent implements OnInit, OnDestroy {
     id: string;
     private _enabled: boolean;
+    private _configuration: CentralCertificateConfiguration;
     private _usePvkPass: boolean = true;
     private _identityPassword: string = null;
     private _identityPasswordConfirm: string = null;
@@ -82,10 +83,13 @@ export class CentralCertificateComponent implements OnInit, OnDestroy {
     private _privateKeyPasswordConfirm: string = null;
     private _subscriptions: Array<Subscription> = [];
     private _original: CentralCertificateConfiguration;
-    private _configuration: CentralCertificateConfiguration;
     @ViewChildren(NgModel) private _validators: QueryList<NgModel>;
 
     constructor(private _service: CentralCertificateService) {
+    }
+
+    get service() {
+        return this._service;
     }
 
     private get canEnable(): boolean {

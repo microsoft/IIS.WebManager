@@ -44,9 +44,8 @@ export class FileListItem {
     @Output() edit: EventEmitter<any> = new EventEmitter();
     @Output() close: EventEmitter<any> = new EventEmitter();
 
-    private _original: File;
     private _editing: boolean;
-
+    private _original: File;
 
     constructor(private _service: DefaultDocumentsService) {
     }

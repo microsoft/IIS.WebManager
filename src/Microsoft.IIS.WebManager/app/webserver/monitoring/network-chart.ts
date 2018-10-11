@@ -47,14 +47,14 @@ import { ServerSnapshot } from './server-snapshot';
         </div>
     `,
     styleUrls: [
-        'app/webserver/monitoring/monitoring.css'
+        'monitoring.css'
     ]
 })
 export class NetworkChart implements OnDestroy {
 
+    private _snapshot: ServerSnapshot = null;
     private _subscriptionId: number = null;
     private _length = 20;
-    private _snapshot: ServerSnapshot = null;
     private formatNumber = Humanizer.number;
     private formatMemory = Humanizer.memory;
 
@@ -105,7 +105,6 @@ export class NetworkChart implements OnDestroy {
     };
 
     private _colors: Array<any> = MonitoringComponent.DefaultColors;
-
     private _bytesSentSecValues: Array<number> = [];
     private _bytesRecvSecValues: Array<number> = [];
     private _labels: Array<string> = [];

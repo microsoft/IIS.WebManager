@@ -11,16 +11,16 @@ import { NotificationService } from '../../notification/notification.service';
 @Component({
     selector: 'basic-auth',
     template: `
-        <error [error]="_service.basicError"></error>
-        <switch class="install" *ngIf="_service.webserverScope && _service.basicStatus != 'unknown'" #s
+        <error [error]="service.basicError"></error>
+        <switch class="install" *ngIf="service.webserverScope && service.basicStatus != 'unknown'" #s
                 [auto]="false"
-                [model]="_service.basicStatus == 'started' || _service.basicStatus == 'starting'" 
-                [disabled]="_service.basicStatus == 'starting' || _service.basicStatus == 'stopping'"
+                [model]="service.basicStatus == 'started' || service.basicStatus == 'starting'"
+                [disabled]="service.basicStatus == 'starting' || service.basicStatus == 'stopping'"
                 (modelChanged)="install(!s.model)">
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="_service.basicStatus == 'stopped' && !_service.webserverScope">Basic Authentication is off. Turn it on <a [routerLink]="['/webserver/authentication']">here</a></span>
+        <span *ngIf="service.basicStatus == 'stopped' && !service.webserverScope">Basic Authentication is off. Turn it on <a [routerLink]="['/webserver/authentication']">here</a></span>
         <override-mode class="pull-right" *ngIf="_model" [scope]="_model.scope" [metadata]="_model.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="_model">
             <fieldset>
@@ -55,6 +55,10 @@ export class BasicAuthenticationComponent implements OnDestroy {
 
     public ngOnDestroy() {
         this._subscriptions.forEach(sub => sub.unsubscribe());
+    }
+
+    get service() {
+        return this._service;
     }
 
     private onModelChanged() {

@@ -33,6 +33,9 @@ import { MonitoringService } from './monitoring.service';
     ],
     providers: [
         MonitoringService
+    ],
+    exports: [
+        MonitoringComponent
     ]
 })
 export class MonitoringModule {

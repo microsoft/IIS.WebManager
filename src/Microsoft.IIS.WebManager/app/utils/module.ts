@@ -1,6 +1,5 @@
-declare var GLOBAL_MODULES: Array<any>;
-
 import { UrlUtil } from './url';
+import { GLOBAL_MODULES } from '../main/settings';
 
 export class ModuleUtil {
     public static initModules(modules: Array<any>, resource: any, resourceName: string): Array<any> {

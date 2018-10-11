@@ -15,15 +15,17 @@ import { IDisposable } from '../common/idisposable';
 import { ApiFile, ApiFileType, FileChangeEvent, ChangeType, MimeTypes } from './file';
 import { Location } from './location';
 import { ParallelExecutor } from './parallel-executor';
+import { ComponentReference, UploadComponentName } from '../main/settings';
 
 declare var unescape: any;
 
+const UploadComponentReference: ComponentReference = { name: UploadComponentName, ico: null, component_name: UploadComponentName, api_name: null, api_path: null };
+
 @Injectable()
 export class FilesService implements IDisposable {
-    private _uploadSignal: number = -1;
+    private _uploadSignal: NodeJS.Timer = null;
     private _fields = "name,id,alias,type,physical_path,size,created,last_modified,mime_type,e_tag,parent";
     private _subscriptions: Array<Subscription> = [];
-    private _uploadComponentName: string = "UploadComponent";
     private _creator: ParallelExecutor = new ParallelExecutor(10);
     private _uploader: ParallelExecutor = new ParallelExecutor(50);
     private _change: Subject<FileChangeEvent> = new Subject<FileChangeEvent>();
@@ -953,11 +955,11 @@ export class FilesService implements IDisposable {
 
     private showUploads(show: boolean) {
         if (show) {
-            if (!this._notificationService.getNotifications().find(n => n.componentName == this._uploadComponentName)) {
+            if (!this._notificationService.getNotifications().find(n => n.componentName == UploadComponentName)) {
                 this._notificationService.notify({
                     type: NotificationType.Information,
-                    componentName: this._uploadComponentName,
-                    module: "app/files/upload.component#Module",
+                    componentName: UploadComponentReference.component_name,
+                    module: UploadComponentReference,
                     data: null,
                     highPriority: true
                 });
@@ -965,7 +967,7 @@ export class FilesService implements IDisposable {
             }
         }
         else {
-            let uploadNotification = this._notificationService.getNotifications().find(n => n.componentName == this._uploadComponentName);
+            let uploadNotification = this._notificationService.getNotifications().find(n => n.componentName == UploadComponentName);
             if (uploadNotification) {
                 this._notificationService.remove(uploadNotification);
             }            
@@ -974,17 +976,17 @@ export class FilesService implements IDisposable {
 
     private signalUploadDisplay(hide: boolean) {
         if (hide) {
-            if (this._uploadSignal == -1) {
+            if (this._uploadSignal == null) {
                 this._uploadSignal = setTimeout(() => {
                     this.showUploads(false);
-                    this._uploadSignal = -1
+                    this._uploadSignal = null
                 }, 500);
             }
         }
         else {
-            if (this._uploadSignal != -1) {
+            if (this._uploadSignal != null) {
                 clearTimeout(this._uploadSignal);
-                this._uploadSignal = -1;
+                this._uploadSignal = null;
             }
         }
     }

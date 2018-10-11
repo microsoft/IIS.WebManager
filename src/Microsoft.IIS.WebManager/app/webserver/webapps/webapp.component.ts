@@ -1,5 +1,3 @@
-declare var GLOBAL_MODULES: any;
-
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 
@@ -29,7 +27,7 @@ import {WebAppsService} from './webapps.service';
                     <webapp-general [model]="app" (modelChanged)="onModelChanged()"></webapp-general>
                 </item>
                 <item *ngFor="let module of modules" [name]="module.name" [ico]="module.ico">
-                    <dynamic [name]="module.component_name" [module]="module.module" [data]="module.data"></dynamic>
+                    <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
                 </item>
             </vtabs>
         </div>

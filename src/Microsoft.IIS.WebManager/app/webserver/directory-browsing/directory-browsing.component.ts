@@ -9,17 +9,17 @@ import { NotificationService } from '../../notification/notification.service';
 
 @Component({
     template: `
-        <loading *ngIf="_service.status == 'unknown' && !_service.error"></loading>
-        <error [error]="_service.error"></error>
-        <switch class="install" *ngIf="_service.webserverScope && _service.status != 'unknown'" #s
+        <loading *ngIf="service.status == 'unknown' && !service.error"></loading>
+        <error [error]="service.error"></error>
+        <switch class="install" *ngIf="service.webserverScope && service.status != 'unknown'" #s
                 [auto]="false"
-                [model]="_service.status == 'started' || _service.status == 'starting'" 
-                [disabled]="_service.status == 'starting' || _service.status == 'stopping'"
+                [model]="service.status == 'started' || service.status == 'starting'"
+                [disabled]="service.status == 'starting' || service.status == 'stopping'"
                 (modelChanged)="install(!s.model)">
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="_service.status == 'stopped' && !_service.webserverScope">Directory Browsing is off. Turn it on <a [routerLink]="['/webserver/directory-browsing']">here</a></span>
+        <span *ngIf= "service.status == 'stopped' && !service.webserverScope">Directory Browsing is off. Turn it on <a [routerLink]="['/webserver/directory-browsing']">here</a></span>
         <override-mode class="pull-right" *ngIf="feature" [scope]="feature.scope" [metadata]="feature.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="feature">
             <fieldset>
@@ -80,6 +80,10 @@ export class DirectoryBrowsingComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._subscriptions.forEach(sub => sub.unsubscribe());
+    }
+
+    get service() {
+        return this._service;
     }
 
     private onModelChanged() {

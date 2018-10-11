@@ -1,4 +1,5 @@
-﻿import { Routes, RouterModule } from '@angular/router';
+﻿import { ModuleWithProviders } from '@angular/core'
+import { Routes, RouterModule } from '@angular/router';
 
 //
 // Components
@@ -10,4 +11,4 @@ const routes: Routes = [
 ];
 
 // - Updated Export
-export const Routing = RouterModule.forChild(routes);
+export const Routing: ModuleWithProviders = RouterModule.forChild(routes);

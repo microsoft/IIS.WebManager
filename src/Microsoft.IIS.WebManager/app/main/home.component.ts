@@ -1,7 +1,11 @@
-import { Component, Inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-
+import { Component } from '@angular/core';
 import { OptionsService } from './options.service';
+import {
+    ComponentReference,
+    WebSiteListComponentName,
+    FilesComponentName,
+    MonitoringComponentName
+ } from '../main/settings'
 
 @Component({
     styles: [`
@@ -21,17 +25,17 @@ import { OptionsService } from './options.service';
     `],
     template: `
         <div>
-            <div class="sidebar" [class.nav]="_options.active">
-                <vtabs [markLocation]="true" (activate)="_options.refresh()">
+            <div class="sidebar" [class.nav]="options.active">
+                <vtabs [markLocation]="true" (activate)="options.refresh()">
                     <item [name]="'Web Sites'" [ico]="'fa fa-globe'">
-                        <dynamic [name]="'WebSiteListComponent'" [module]="'app/webserver/websites/websites.module#WebSitesModule'"></dynamic>
+                        <dynamic [name]="'WebSiteListComponent'" [module]="WebSiteListComponentReference"></dynamic>
                     </item>
                     <item [name]="'Web Server'" [ico]="'fa fa-server'" [routerLink]="['/webserver']"></item>
                     <item [name]="'Files'" [ico]="'fa fa-files-o'">
-                        <dynamic [name]="'FilesComponent'" [module]="'app/files/files.module#FilesModule'"></dynamic>
+                        <dynamic [name]="'FilesComponent'" [module]="FilesComponentReference"></dynamic>
                     </item>
                     <item [name]="'Monitoring'" [ico]="'fa fa-medkit'">
-                        <dynamic [name]="'MonitoringComponent'" [module]="'app/webserver/monitoring/monitoring.module#MonitoringModule'"></dynamic>
+                        <dynamic [name]="'MonitoringComponent'" [module]="MonitoringComponentReference"></dynamic>
                     </item>
                 </vtabs>
             </div>
@@ -39,7 +43,13 @@ import { OptionsService } from './options.service';
     `
 })
 export class HomeComponent {
-    constructor(private _options: OptionsService,
-        private _route: ActivatedRoute) {
+    WebSiteListComponentReference = new ComponentReference("WebSiteListComponent", null, WebSiteListComponentName, null, null)
+    FilesComponentReference = new ComponentReference("FilesComponent", null, FilesComponentName, null, null)
+    MonitoringComponentReference = new ComponentReference("MonitoringComponent", null, MonitoringComponentName, null, null)
+    constructor(private _options: OptionsService) {
+    }
+
+    get options() {
+        return this._options;
     }
 }

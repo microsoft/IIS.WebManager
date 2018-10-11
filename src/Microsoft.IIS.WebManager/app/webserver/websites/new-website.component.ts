@@ -2,7 +2,6 @@ import { Component, ViewChild, Output, EventEmitter, Inject } from '@angular/cor
 import { Subject } from 'rxjs/Subject'
 
 import { Selector } from '../../common/selector';
-import { FileSelectorComponent } from '../../files/file-selector.component';
 
 import { ApiFile } from '../../files/file';
 import { WebSite, Binding } from './site';
@@ -79,8 +78,8 @@ import { ApplicationPool } from '../app-pools/app-pool';
 })
 export class NewWebSiteComponent {
     site: WebSite;
-    private _createAppPool: boolean = true;
 
+    private _createAppPool: boolean = true;
     private _nameChange: Subject<string> = new Subject<string>();
 
     @Output() created: EventEmitter<any> = new EventEmitter();
@@ -176,7 +175,8 @@ export class NewWebSiteComponent {
             certificate: null,
             binding_information: null,
             protocol: "http",
-            require_sni: false
+            require_sni: false,
+            isNew: true
         };
 
         site.bindings.unshift(binding);

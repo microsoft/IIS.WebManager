@@ -4,7 +4,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 
 import {Observable} from 'rxjs/Observable'
-import {Subscription} from 'rxjs/subscription'
+import {Subscription} from 'rxjs/Subscription'
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
@@ -24,7 +24,7 @@ import 'rxjs/add/operator/distinctUntilChanged'
         '(input)': 'onInputChange($event)'
     }
 })
-class Throttle implements ControlValueAccessor, OnDestroy {
+export class Throttle implements ControlValueAccessor, OnDestroy {
     @Input('throttle') delay: number;
 
     private _modified = false;
@@ -96,14 +96,14 @@ class Throttle implements ControlValueAccessor, OnDestroy {
         '(focus)': '_visited=true'
     }
 })
-class FocusMarker {
+export class FocusMarker {
     private _visited: boolean;
 }
 
 @Directive({
     selector: '[ngModel][validate]'
 })
-class Validator {
+export class Validator {
     private _prev;
 
     constructor(@Optional() @Self() @Inject(NG_VALUE_ACCESSOR) private _valueAccessors: ControlValueAccessor[],
@@ -145,7 +145,7 @@ class Validator {
 @Directive({
     selector: 'input[ngModel],select[ngModel]'
 })
-class ModelChange {
+export class ModelChange {
     @Output()
     modelChanged: EventEmitter<any> = new EventEmitter();
     
