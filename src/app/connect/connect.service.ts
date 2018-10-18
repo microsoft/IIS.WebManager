@@ -150,10 +150,10 @@ export class ConnectService {
                     this.error(conn, _ => this._notificationSvc.invalidAccessToken());
                     return Promise.reject("Could not connect: Unauthorized.");
                 }
+                else if (environment.WAC && e.status == 0) {
+                    return Promise.reject(AdminApiUnreachableError.Instance);
+                }
                 else {
-                    if (environment.WAC && e.status == 0) {
-                        return Promise.reject(AdminApiUnreachableError.Instance);
-                    }
                     return this._client.options(conn, "/api").toPromise()
                         .then(_ => {
                             // 

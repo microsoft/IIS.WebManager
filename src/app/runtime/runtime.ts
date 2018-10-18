@@ -6,7 +6,7 @@ import { ConnectService } from '../connect/connect.service'
 export interface Runtime {
     InitContext(): void
     DestroyContext(): void
-    ConnectToIISHost(): void
+    ConnectToIISHost(): Promise<any>
 }
 
 @Injectable()
@@ -18,7 +18,11 @@ export class StandardRuntime implements Runtime {
 
     public DestroyContext() {}
 
-    public ConnectToIISHost() {
-        this.connectService.gotoConnect(false)
+    public ConnectToIISHost(): Promise<any> {
+        return new Promise(
+            (_, reject) => {
+                this.connectService.gotoConnect(false)
+                reject("authentication required")
+            })
     }
 }

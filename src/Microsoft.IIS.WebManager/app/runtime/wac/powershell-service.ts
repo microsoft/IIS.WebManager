@@ -1,38 +1,38 @@
+import { Observable } from 'rxjs/Observable'
 import { Injectable } from '@angular/core'
 import { AppContextService } from '@microsoft/windows-admin-center-sdk/angular'
-import { Logging, LogLevel, PowerShell, PowerShellSession } from '@microsoft/windows-admin-center-sdk/core'
+import { PowerShell, PowerShellSession } from '@microsoft/windows-admin-center-sdk/core'
 
-const APP_NAME = "wac-iis"
 const PS_SESSION_KEY = 'wac-iis-ps-session'
 
 @Injectable()
 export class PowershellService {
-  private psSession: PowerShellSession;
+  private psSession: Promise<PowerShellSession>
 
-  constructor(private appContextService: AppContextService) {
-    this.psSession = this.appContextService.powerShell.createSession(this.appContextService.activeConnection.nodeName, PS_SESSION_KEY)
+  constructor(private appContext: AppContextService) {
+    this.psSession = this.appContext.servicesReady.map(_ => {
+      return this.appContext.powerShell.createSession(this.appContext.activeConnection.nodeName, PS_SESSION_KEY)
+    }).toPromise()
   }
 
-  public run<T>(pwCmdString: string, processFunc: (arr: Array<T>) => void, psParameters = { name: 'winrm' }) {
-    let command = PowerShell.createScript(pwCmdString, psParameters);
-    this.appContextService.powerShell.run(this.psSession, command).map(
-      (response: any) => {
+  public run(pwCmdString: string, psParameters = {}): Promise<any> {
+    return this.psSession.then(ps =>{
+        return this.appContext.powerShell.run(ps, PowerShell.createScript(pwCmdString, psParameters)).toPromise()
+      })
+      .then(response => {
         if (!response) {
-          Logging.log({ source: APP_NAME, level: LogLevel.Warning, message: 'Powershell command {0} returns no response'.format(pwCmdString)})
-        } else if (!response.results) {
-          Logging.log({ source: APP_NAME, level: LogLevel.Warning, message: 'Powershell command {0} returns null response'.format(pwCmdString)})
-        } else if (response.results.length <= 0) {
-          Logging.log({ source: APP_NAME, level: LogLevel.Warning, message: 'Powershell command {0} returns empty response'.format(pwCmdString)})
-        } else {
-          // TODO: any way to do this with yield/generator
-          let results = new Array<T>(response.results.length)
-          for (let i = 0; i < response.results.length; i++) {
-            results[i] = <T> response.results[i]
-          }
-          return results
+          throw `Powershell command ${pwCmdString} returns no response`
         }
-        return null
-      }
-    ).subscribe(processFunc)
+
+        if (!response.results) {
+          throw `Powershell command ${pwCmdString} returns null response`
+        }
+
+        if (response.results.length <= 0) {
+          throw `Powershell command ${pwCmdString} returns empty response`
+        }
+
+        return response.results
+      })
   }
 }

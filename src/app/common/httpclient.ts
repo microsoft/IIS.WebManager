@@ -35,7 +35,12 @@ export class HttpClient {
             return _xhr;
         };
 
-        this._connectSvc.active.subscribe(c => this._conn = c);
+        this._connectSvc.active.subscribe(c => {
+            if (c) {
+                this._conn = c
+                console.log(`Connection persisted`)
+            }
+        });
     }
 
     private get headers(): Headers {
@@ -108,27 +113,20 @@ export class HttpClient {
         return options;
     }
 
-
-    public request(url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<any> {
-        if (!this._conn) {
-            this.runtime.ConnectToIISHost()
-            return Promise.reject("Not connected");
-        }
-
+    private performRequest(conn: ApiConnection, url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<any> {
         let req: Request;
-
         let reqOpt = new RequestOptions(options);
 
         if (url.toString().indexOf("/") != 0) {
             url = '/' + url;
         }
 
-        reqOpt.url = this._conn.url + '/api' + url;
+        reqOpt.url = conn.url + '/api' + url;
         req = new Request(reqOpt);
         
         //
         // Set Access-Token
-        req.headers.set('Access-Token', 'Bearer ' + this._conn.accessToken);
+        req.headers.set('Access-Token', 'Bearer ' + conn.accessToken);
         
         return this._http.request(req).toPromise()
             .catch(e => {
@@ -144,7 +142,7 @@ export class HttpClient {
                         .catch(err => {
                             //
                             // Check to see if connected
-                            return this._http.options(this._conn.url).toPromise()
+                            return this._http.options(conn.url).toPromise()
                                 .catch(e => {
                                     this._connectSvc.reconnect();
                                     return Promise.reject("Not connected");
@@ -156,6 +154,18 @@ export class HttpClient {
                 }
                 return this.handleHttpError(e, warn);
             });
+    }
+
+    public request(url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<any> {
+        if (this._conn) {
+            return this.performRequest(this._conn, url, options, warn)
+        } else {
+            this.runtime.ConnectToIISHost().then(
+                _ => this._connectSvc.active.toPromise().then(
+                    c => this.performRequest(c, url, options, warn)
+                )
+            )
+        }
     }
 
     private handleHttpError(err, warn?: boolean): Promise<any> {

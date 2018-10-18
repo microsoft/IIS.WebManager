@@ -40,7 +40,7 @@ gulp.task('clean', () => {
 });
 
 gulp.task('generate-powershell', () => {
-    return gulp.src(['app/resources/scripts/**/*.ps1'])
+    return gulp.src(['app/resources/*scripts/**/*.ps1'])
         .pipe(gulpPsCode({ name: 'powershell-scripts.ts', removeComments: true }))
         .pipe(gulp.dest('generated'));
 });
