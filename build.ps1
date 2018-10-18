@@ -17,7 +17,11 @@ try {
         Write-Host "Installing dependencies..."
         npm install
     }
-    
+
+    Write-Host "Ensure build tools are installed..."
+    npm install -g @angular/cli@1.7.4
+    npm install -g gulp-cli@2.0.1
+
     Write-Host "Building project..."
     gulp build $buildArgs
 } finally {
