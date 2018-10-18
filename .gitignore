@@ -1,16 +1,5 @@
-typings
-src/Microsoft.IIS.WebManager/index.html
-src/Microsoft.IIS.WebManager/app/**/*.js
-src/Microsoft.IIS.WebManager/app/**/*.map
-src/Microsoft.IIS.WebManager/generated/**
 node_modules
-jspm_packages
-bower_components
-bin
-obj
-**.suo
+src/generated/**
 .vs/
 dist
-**.user
 assets
-artifacts
