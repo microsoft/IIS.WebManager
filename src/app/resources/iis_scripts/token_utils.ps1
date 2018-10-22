@@ -2,8 +2,17 @@
 #Requires -Version 4.0
 
 Param(
+    [Parameter(Mandatory=$true)]
     [string]
-    $orgin,
+    $sessionId,
+
+    [Parameter(Mandatory=$true)]
+    [ValidateSet('ensure', 'delete')]
+    [string]
+    $command,
+
+    [string]
+    $tokenId,
 
     [string]
     $iisHost = "https://localhost:55539"
@@ -11,9 +20,10 @@ Param(
 
 $ErrorActionPreference = "Stop"
 $contentEncoding = [System.Text.Encoding]::UTF8
-$tokenName = "WAC"
-$RenewEndpoint = "access-tokens"    # Used to renew tokens
-$CreateEndpoint = "api-keys"        # Used to create and query existing tokens
+$tokenName = "WAC/${sessionId}"
+$RenewEndpoint = "access-tokens"
+$CreateEndpoint = "api-keys"
+$DeleteEndpoint = "api-keys"
 
 function VerifyResponse([string] $action, [Microsoft.Powershell.Commands.WebResponseObject] $response) {
     if ($response.StatusCode -ge 300) {
@@ -21,34 +31,61 @@ function VerifyResponse([string] $action, [Microsoft.Powershell.Commands.WebResp
     }
 }
 
-function UpsertToken([string] $targetEndpoint, $data) {
+function TokenRequest([string] $targetEndpoint, [string]$method, [string]$subpath, $requestBody) {
     $sessionCreate = Invoke-WebRequest "$iisHost/security/$targetEndpoint" -UseBasicParsing -UseDefaultCredentials -SessionVariable sess
     VerifyResponse "Create WSRF-TOKEN on $targetEndpoint" $sessionCreate | Out-Null
     $hTok = $sessionCreate.headers."XSRF-TOKEN"
     if ($hTok -is [array]) {
         $hTok = $hTok[0]
     }
-    $tokenUpsert = Invoke-WebRequest "$iisHost/security/$targetEndpoint" -UseBasicParsing -Headers @{ "XSRF-TOKEN" = $htok } `
-        -Method POST -UseDefaultCredentials -ContentType "application/json" -WebSession $sess -Body (ConvertTo-Json $data)
+    $requestParams = @{
+        "Uri" = "$iisHost/security/$targetEndpoint";
+        "Headers" = @{ 'XSRF-TOKEN' = $htok };
+        "Method" = $method;
+        "UseDefaultCredentials" = $true;
+        "UseBasicParsing" = $true;
+        "ContentType" = "application/json";
+        "WebSession" = $sess
+    }
+    if ($subpath) {
+        $requestParams.Uri += "/${subpath}"
+    }
+    if ($requestBody) {
+        $requestParams.Body = (ConvertTo-Json -Compress $requestBody)
+    }
+    $tokenUpsert = Invoke-WebRequest @requestParams
     VerifyResponse "Upsert access token on $targetEndpoint" $sessionCreate | Out-Null
     return $contentEncoding.GetString($tokenUpsert.Content)
 }
 
-if ($origin) {
-    $tokenName += $orgin
+if ($tokenId) {
+    $existingToken = @{ "id" = $tokenId }
+} else {
+    try {
+        $query = Invoke-WebRequest "$iisHost/security/$CreateEndpoint" -UseDefaultCredentials -ContentType "application/json"
+    } catch {
+        if ($_.Exception.Status -eq [System.Net.WebExceptionStatus]::ConnectFailure) {
+            ## NOTE: we will be detecting this error message upstream
+            throw "Unable to connect to the remote server"
+        } else {
+            throw $_
+        }
+    }
+    VerifyResponse "query exsiting tokens" $query | Out-Null
+    $existingToken = (ConvertFrom-Json $contentEncoding.GetString($query.Content)).api_keys | Where-Object { $_.purpose -eq $tokenName }
 }
 
-$query = Invoke-WebRequest "$iisHost/security/$CreateEndpoint" -UseDefaultCredentials -ContentType "application/json"
-VerifyResponse "query exsiting tokens" $query | Out-Null
-$existingToken = (ConvertFrom-Json $contentEncoding.GetString($query.Content)).api_keys | Where-Object { $_.purpose -eq $tokenName }
-
-if ($existingToken) {
-    ## always renew token when this script is called because there was no way to query for existing token's value
-    $existingToken.expires_on = (Get-Date).AddDays(14).ToString()
-    ## This is an odd behavior: we need to wrap the existing token in a new object
-    $output = UpsertToken $RenewEndpoint @{ "api_key" = $existingToken }
-} else {
-    $output = UpsertToken $CreateEndpoint @{ "expires_on" = (Get-Date).AddDays(14).ToString(); "purpose" = $tokenName }
+if ($command -eq 'ensure') {
+    if ($existingToken) {
+        ## always renew token when this script is called because there was no way to query for existing token's value
+        $existingToken.expires_on = (Get-Date).AddDays(3).ToString()
+        ## This is an odd behavior: we need to wrap the existing token in a new object
+        $output = TokenRequest -targetEndpoint $RenewEndpoint -method "POST" -requestBody @{ "api_key" = $existingToken }
+    } else {
+        $output = TokenRequest -targetEndpoint $CreateEndpoint -method "POST" -requestBody @{ "expires_on" = (Get-Date).AddDays(14).ToString(); "purpose" = $tokenName }
+    }
+} elseif ($command -eq 'delete') {
+    $output = TokenRequest -targetEndpoint $DeleteEndpoint -method "DELETE" -subpath $existingToken.id
 }
 
 $output

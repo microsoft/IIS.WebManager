@@ -2,11 +2,12 @@
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { ConnectService } from '../connect/connect.service'
+import { ApiConnection } from '../connect/api-connection'
 
 export interface Runtime {
     InitContext(): void
     DestroyContext(): void
-    ConnectToIISHost(): Promise<any>
+    ConnectToIISHost(): Promise<ApiConnection>
 }
 
 @Injectable()
@@ -18,7 +19,7 @@ export class StandardRuntime implements Runtime {
 
     public DestroyContext() {}
 
-    public ConnectToIISHost(): Promise<any> {
+    public ConnectToIISHost(): Promise<ApiConnection> {
         return new Promise(
             (_, reject) => {
                 this.connectService.gotoConnect(false)

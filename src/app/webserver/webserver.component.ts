@@ -74,7 +74,7 @@ export class WebServerComponent {
                 .catch(res => {
                     this.modules = this.modules.filter(m => m.name.toLocaleLowerCase() !== 'certificates')
                 });
-        });
+        })
     }
 
     get service() {

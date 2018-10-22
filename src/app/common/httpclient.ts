@@ -160,10 +160,8 @@ export class HttpClient {
         if (this._conn) {
             return this.performRequest(this._conn, url, options, warn)
         } else {
-            this.runtime.ConnectToIISHost().then(
-                _ => this._connectSvc.active.toPromise().then(
-                    c => this.performRequest(c, url, options, warn)
-                )
+            this.runtime.ConnectToIISHost().then(c =>
+                this.performRequest(c, url, options, warn)
             )
         }
     }

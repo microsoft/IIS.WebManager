@@ -1,13 +1,13 @@
-import { Observable } from 'rxjs/Observable'
 import { Injectable } from '@angular/core'
 import { AppContextService } from '@microsoft/windows-admin-center-sdk/angular'
 import { PowerShell, PowerShellSession } from '@microsoft/windows-admin-center-sdk/core'
-
+import 'rxjs/add/operator/catch'
 const PS_SESSION_KEY = 'wac-iis-ps-session'
 
 @Injectable()
 export class PowershellService {
   private psSession: Promise<PowerShellSession>
+  private sessionId = Math.random().toString(36).substring(2, 15) // TODO: modify this with WAC session ID
 
   constructor(private appContext: AppContextService) {
     this.psSession = this.appContext.servicesReady.map(_ => {
@@ -15,9 +15,13 @@ export class PowershellService {
     }).toPromise()
   }
 
-  public run(pwCmdString: string, psParameters = {}): Promise<any> {
+  public run(pwCmdString: string, psParameters: any): Promise<any> {
     return this.psSession.then(ps =>{
-        return this.appContext.powerShell.run(ps, PowerShell.createScript(pwCmdString, psParameters)).toPromise()
+        psParameters.sessionId = this.sessionId
+        var script = PowerShell.createScript(pwCmdString, psParameters)
+        return this.appContext.powerShell.run(ps, script).catch((e, _) => {
+          throw e
+        }).toPromise()
       })
       .then(response => {
         if (!response) {
