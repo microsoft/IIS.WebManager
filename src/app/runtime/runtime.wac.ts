@@ -6,11 +6,14 @@ import {
     NavigationService
 } from '@microsoft/windows-admin-center-sdk/angular'
 import { Runtime } from './runtime'
-import { PowershellService } from './wac/powershell-service'
-import { ConnectService, AdminApiUnreachableError } from '../connect/connect.service'
+import { PowershellService } from './wac/services/powershell-service'
+import { ConnectService } from '../connect/connect.service'
 import { ApiConnection } from '../connect/api-connection'
 import { PowerShellScripts } from '../../generated/powershell-scripts'
 import 'rxjs/add/operator/take'
+import { ApiErrorType } from 'error/api-error';
+import { AdminAPIInstallService } from './wac/services/admin-api-install-service';
+import { SETTINGS } from 'main/settings';
 
 class ApiKey {
     public id: string
@@ -29,6 +32,7 @@ export class WACRuntime implements Runtime {
         private navigationService: NavigationService,
         private connectService: ConnectService,
         private powershellService: PowershellService,
+        private installer: AdminAPIInstallService,
     ) {
     }
 
@@ -47,34 +51,38 @@ export class WACRuntime implements Runtime {
         }
     }
 
-    public ConnectToIISHost(): Promise<ApiConnection> {
-        // TODO: check for installation
-        // TODO: edit cors setting on client admin api
-        return this.GetApiKey().then(apiKey => {
-            var connection = new ApiConnection(this.appContext.activeConnection.nodeName)
-            if (apiKey.access_token) {
-                connection.accessToken = apiKey.access_token
-            } else {
-                connection.accessToken = apiKey.value
-            }
-            this._tokenId = apiKey.id
-            console.log(`received token ID from admin api: ${apiKey.id}`)
-            return this.connectService.connect(connection)
-                .then(conn => {
-                    this.connectService.save(conn)
-                    return conn
-                })
-        })
+    public async ConnectToIISHost(): Promise<ApiConnection> {
+        await this.appContext.servicesReady.toPromise()
+        await this.installer.ensurePermission(SETTINGS["iis_admin_api_service_name"])
+        var apiKey = await this.GetApiKey()
+        var connection = new ApiConnection(this.appContext.activeConnection.nodeName)
+        if (apiKey.access_token) {
+            connection.accessToken = apiKey.access_token
+        } else {
+            connection.accessToken = apiKey.value
+        }
+        this._tokenId = apiKey.id
+        console.log(`received token ID from admin api: ${apiKey.id}`)
+        var conn = await this.connectService.connect(connection)
+        this.connectService.save(conn)
+        return conn
     }
 
-    private GetApiKey(): Promise<ApiKey> {
+    private async GetApiKey(): Promise<ApiKey> {
         var cmdParams: any = { command: 'ensure' }
         if (this._tokenId) {
             console.log(`existing token ID ${this._tokenId} will be refreshed`)
             cmdParams.tokenId = this._tokenId
         }
-        return this.powershellService.run(PowerShellScripts.token_utils, cmdParams).then(results => {
-            return <ApiKey> JSON.parse(results[0])
-        })
+        try {
+            var output = await this.powershellService.run(PowerShellScripts.token_utils, cmdParams)
+        } catch (e) {
+            if (e.status === 400 && e.response.exception === 'Unable to connect to the remote server') {
+                throw ApiErrorType.Unreachable
+            } else {
+                throw e
+            }
+        }
+        return <ApiKey> JSON.parse(output[0])
     }
 }

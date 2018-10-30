@@ -1,4 +1,4 @@
-import { NgModule, Optional } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
@@ -49,7 +49,7 @@ import { MonitoringModule } from '../webserver/monitoring/monitoring.module';
 import { WebSitesModule } from '../webserver/websites/websites.module';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { AppRoutingModule } from './app-routing.module';
-import { Runtime, StandardRuntime } from '../runtime/runtime';
+import { StandardRuntime } from '../runtime/runtime';
 
 @NgModule({
     imports: [

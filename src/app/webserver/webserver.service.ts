@@ -97,7 +97,6 @@ export class WebServerService {
 
     private get(): Promise<WebServer> {
         return this._http.get("/webserver").then(ws => {
-
             this._server = new WebServer();
             this._server.id = ws.id;
             this._server._links = ws._links;
@@ -113,20 +112,17 @@ export class WebServerService {
                 this._server.status = info.status;
                 this._server.version = info.version;
                 this._server.supports_sni = info.supports_sni;
-
                 this.triggerStatusUpdate();
-
                 return this._server;
             });
         })
         .catch(e => {
             this.error = e;
-
             if (e.type && e.type == ApiErrorType.FeatureNotInstalled) {
                 this._installStatus = Status.Stopped;
             }
-            return null;
-        });
+            throw e
+        })
     }
 
     private updateStatus(status: string): Promise<WebServer> {

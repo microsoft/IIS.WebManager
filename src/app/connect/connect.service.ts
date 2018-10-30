@@ -10,10 +10,7 @@ import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { environment } from '../environments/environment'
 
 import 'rxjs/add/operator/toPromise';
-
-export class AdminApiUnreachableError extends Error {
-    public static readonly Instance = new AdminApiUnreachableError()
-}
+import { ApiErrorType } from 'error/api-error';
 
 @Injectable()
 export class ConnectService {
@@ -119,16 +116,16 @@ export class ConnectService {
         this._router.navigate(['/connect']);
     }
 
-    public gotoConnect(skipGet: boolean) {
+    public gotoConnect(skipGet: boolean): Promise<boolean> {
         let totalConnections: number = 0;
         this._store.connections.subscribe(conns => totalConnections = conns.length).unsubscribe();
 
         if (totalConnections == 0 && !skipGet) {
             // Goto Get
-            this._router.navigate(['/get']);
+            return this._router.navigate(['/get']);
         }
         else {
-            this._router.navigate(['/connect']);
+            return this._router.navigate(['/connect']);
         }
     }
 
@@ -151,7 +148,7 @@ export class ConnectService {
                     return Promise.reject("Could not connect: Unauthorized.");
                 }
                 else if (environment.WAC && e.status == 0) {
-                    return Promise.reject(AdminApiUnreachableError.Instance);
+                    return Promise.reject(ApiErrorType.Unreachable);
                 }
                 else {
                     return this._client.options(conn, "/api").toPromise()

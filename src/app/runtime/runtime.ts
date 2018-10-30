@@ -22,8 +22,9 @@ export class StandardRuntime implements Runtime {
     public ConnectToIISHost(): Promise<ApiConnection> {
         return new Promise(
             (_, reject) => {
-                this.connectService.gotoConnect(false)
-                reject("authentication required")
+                this.connectService.gotoConnect(false).then(success => {
+                    reject(`authentication required, redirect successful: ${success}`)
+                })
             })
     }
 }

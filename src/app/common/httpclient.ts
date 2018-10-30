@@ -7,7 +7,7 @@ import {NotificationService} from '../notification/notification.service';
 import {ApiConnection} from '../connect/api-connection'
 import {ApiError, ApiErrorType} from '../error/api-error';
 import {ConnectService} from '../connect/connect.service';
-import {Runtime} from '../runtime/runtime'
+import {Runtime} from '../runtime/runtime';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
@@ -16,6 +16,7 @@ import 'rxjs/add/operator/toPromise';
 export class HttpClient {
     private _headers: Headers= new Headers();
     private _conn: ApiConnection;
+    private _connecting: boolean = false
 
     constructor(private _http: Http,
                 private _notificationService: NotificationService,
@@ -34,13 +35,11 @@ export class HttpClient {
 
             return _xhr;
         };
-
         this._connectSvc.active.subscribe(c => {
             if (c) {
                 this._conn = c
-                console.log(`Connection persisted`)
-            }
-        });
+                this._connecting = false
+            }})
     }
 
     private get headers(): Headers {
@@ -58,21 +57,18 @@ export class HttpClient {
 
     public get(url: string, options?: RequestOptionsArgs, warn: boolean = true): Promise<any> {
         let ops: RequestOptionsArgs = this.getOptions(RequestMethod.Get, url, options);
-
         return this.request(url, ops, warn)
             .then(res => res.status !== 204 ? res.json() : null);
     }
 
     public head(url: string, options?: RequestOptionsArgs, warn: boolean = true): Promise<any> {
         let ops: RequestOptionsArgs = this.getOptions(RequestMethod.Head, url, options);
-
         return this.request(url, ops, warn);
     }
 
     public post(url: string, body: string, options?: RequestOptionsArgs, warn: boolean = true): Promise<any> {
         options = this.setJsonContentType(options);
         let ops: RequestOptionsArgs = this.getOptions(RequestMethod.Post, url, options, body);
-
         return this.request(url, ops, warn)
             .then(res => res.status !== 204 ? res.json() : null);
     }
@@ -80,7 +76,6 @@ export class HttpClient {
     public patch(url: string, body: string, options?: RequestOptionsArgs, warn: boolean = true): Promise<any> {
         options = this.setJsonContentType(options);
         let ops: RequestOptionsArgs = this.getOptions(RequestMethod.Patch, url, options, body);
-
         return this.request(url, ops, warn)
             .then(res => res.status !== 204 ? res.json() : null);
     }
@@ -156,14 +151,26 @@ export class HttpClient {
             });
     }
 
-    public request(url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<any> {
+    public async request(url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<any> {
+        var conn: ApiConnection
         if (this._conn) {
-            return this.performRequest(this._conn, url, options, warn)
+            console.log("connection exists")
+            conn = this._conn
+        } else if (this._connecting) {
+            console.log("currently connecting, awaiting results...")
+            conn = await this._connectSvc.active.filter(c => c != null).toPromise()
         } else {
-            this.runtime.ConnectToIISHost().then(c =>
-                this.performRequest(c, url, options, warn)
-            )
+            this._connecting = true
+            console.log("establishing new connection")
+            try {
+                conn = await this.runtime.ConnectToIISHost()
+            } catch (e) {
+                console.log(`error during connection`)
+                this._connecting = false
+                throw e
+            }
         }
+        return await this.performRequest(conn, url, options, warn)
     }
 
     private handleHttpError(err, warn?: boolean): Promise<any> {
