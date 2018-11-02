@@ -153,7 +153,7 @@ button {
 }
 
 button:focus {
-    outline: none;
+    outline: thin dotted;
 }
 
 .bttn i.fa,
@@ -179,7 +179,7 @@ button span {
 button:active, 
 .bttn:active,
 button.active {
-    outline: none;
+    outline: none;  
 }
 
 button::before,
