@@ -54,6 +54,10 @@ input[type=checkbox][disabled] + label {
     cursor           : default;
 }
 
+input[type=checkbox].revamped:focus + label {
+    text-decoration: underline;
+}
+
 label {
     font-weight : normal;
 }
