@@ -153,7 +153,11 @@ button {
 }
 
 button:focus {
-    outline: thin dotted;
+    outline-style: dashed;
+    outline-width: 2px;
+    outline-offset: -2px;
+    outline-color: #000;
+    text-decoration: underline;
 }
 
 .bttn i.fa,

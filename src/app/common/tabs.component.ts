@@ -103,7 +103,11 @@ import { SectionHelper } from './section.helper';
           right: 0;
           cursor: pointer;
           z-index: 9;
-          outline: thin dotted;
+          outline-style: dashed;
+          outline-width: 2px;
+          outline-offset: -2px;
+          outline-color: #000;
+          text-decoration: underline;
           height: 25px;
         }
 
