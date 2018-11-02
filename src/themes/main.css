@@ -179,7 +179,7 @@ button span {
 button:active, 
 .bttn:active,
 button.active {
-    outline: none;  
+    outline: none;
 }
 
 button::before,
