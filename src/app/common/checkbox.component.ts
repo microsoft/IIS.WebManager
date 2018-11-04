@@ -55,7 +55,11 @@ input[type=checkbox][disabled] + label {
 }
 
 input[type=checkbox].revamped:focus + label {
+    outline-style: dashed;
+    outline-color: #000;
     text-decoration: underline;
+    padding : 0px;
+    vertical-align : bottom;
 }
 
 label {

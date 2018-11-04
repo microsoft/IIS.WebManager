@@ -30,6 +30,15 @@ a:focus{
     text-decoration: none;
 }
 
+a:focus{
+    /* accessibility */
+    outline-style: dashed;
+    outline-width: 2px;
+    outline-offset: -2px;
+    outline-color: #000;
+    text-decoration: underline;
+}
+
 .path {
     max-width: 800px;
     width: 100%;
@@ -144,6 +153,10 @@ input:not(:required).ng-invalid {
     border-width: 1px;
 }
 
+.bttn.bordered:focus {
+    border-style: none;
+}
+
 button {
     border-style: solid;
     border-width: 1px;
@@ -153,6 +166,7 @@ button {
 }
 
 button:focus {
+    /* accessibility */
     outline-style: dashed;
     outline-width: 2px;
     outline-offset: -2px;
@@ -183,7 +197,8 @@ button span {
 button:active, 
 .bttn:active,
 button.active {
-    outline: none;
+    /* accessibility */
+    /* outline: none; */
 }
 
 button::before,
