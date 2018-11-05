@@ -195,12 +195,14 @@ button span {
     margin-top: -8px;
 }
 
+/* accessibility */
+/*
 button:active, 
 .bttn:active,
 button.active {
-    /* accessibility */
-    /* outline: none; */
+    outline: none;
 }
+*/
 
 button::before,
 button::after,
