@@ -100,8 +100,15 @@ import { FormsModule } from '@angular/forms';
 	        height: 12px;
         }
         .switch-input:checked ~ .switch-handle {
-	        left: 71px;
+            left: 71px;
         }
+        .switch-input:focus ~ .switch-handle {
+            outline-style: dashed;
+            outline-color: #000;
+            outline-width: 2px;
+            outline-offset: -1px;
+            text-decoration: underline;
+        }        
         .switch-container {
             display: inline-block;
             height: 34px;
