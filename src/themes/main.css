@@ -154,6 +154,7 @@ input:not(:required).ng-invalid {
 }
 
 .bttn.bordered:focus {
+    /* accessibility */
     border-style: none;
 }
 

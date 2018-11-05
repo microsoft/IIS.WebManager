@@ -100,7 +100,7 @@ import { FormsModule } from '@angular/forms';
 	        height: 12px;
         }
         .switch-input:checked ~ .switch-handle {
-            left: 71px;
+	        left: 71px; 
         }
         .switch-input:focus ~ .switch-handle {
             outline-style: dashed;
