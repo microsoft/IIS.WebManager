@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 	        position: relative;
 	        display: inline-block;
 	        vertical-align: top;
-	        height: 34px;
+            height: 34px;
 	        cursor: pointer;
             font-weight: normal;
             -webkit-user-select: none;
@@ -23,6 +23,15 @@ import { FormsModule } from '@angular/forms';
 	        top: 0;
 	        left: 0;
 	        opacity: 0;
+        }
+
+        .toggle-input:focus + span {
+            /* Accessibility */
+            outline-style: dashed;
+            outline-color: #000;
+            outline-width: 2px;
+            outline-offset: -2px;
+            text-decoration: underline;
         }
 
         .toggle-container {
