@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 
 import { Angulartics2Module } from 'angulartics2';
@@ -54,7 +53,6 @@ import { StandardRuntime } from '../runtime/runtime';
 @NgModule({
     imports: [
         BrowserModule,
-        HttpModule,
         FormsModule,
         AppRoutingModule,
         Angulartics2Module.forRoot(),

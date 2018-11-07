@@ -15,7 +15,7 @@ Param(
     $tokenId,
 
     [string]
-    $iisHost = "https://localhost:55539"
+    $apiHost = "https://localhost:55539"
 )
 
 $ErrorActionPreference = "Stop"
@@ -24,22 +24,20 @@ $tokenName = "WAC/${sessionId}"
 $RenewEndpoint = "access-tokens"
 $CreateEndpoint = "api-keys"
 $DeleteEndpoint = "api-keys"
-
 function VerifyResponse([string] $action, [Microsoft.Powershell.Commands.WebResponseObject] $response) {
     if ($response.StatusCode -ge 300) {
         throw "Invalid status code $($response.StatusCode) while performing action: $action"
     }
 }
-
 function TokenRequest([string] $targetEndpoint, [string]$method, [string]$subpath, $requestBody) {
-    $sessionCreate = Invoke-WebRequest "$iisHost/security/$targetEndpoint" -UseBasicParsing -UseDefaultCredentials -SessionVariable sess
+    $sessionCreate = Invoke-WebRequest "$apiHost/security/$targetEndpoint" -UseBasicParsing -UseDefaultCredentials -SessionVariable sess
     VerifyResponse "Create WSRF-TOKEN on $targetEndpoint" $sessionCreate | Out-Null
     $hTok = $sessionCreate.headers."XSRF-TOKEN"
     if ($hTok -is [array]) {
         $hTok = $hTok[0]
     }
     $requestParams = @{
-        "Uri" = "$iisHost/security/$targetEndpoint";
+        "Uri" = "$apiHost/security/$targetEndpoint";
         "Headers" = @{ 'XSRF-TOKEN' = $htok };
         "Method" = $method;
         "UseDefaultCredentials" = $true;
@@ -62,7 +60,7 @@ if ($tokenId) {
     $existingToken = @{ "id" = $tokenId }
 } else {
     try {
-        $query = Invoke-WebRequest "$iisHost/security/$CreateEndpoint" -UseDefaultCredentials -ContentType "application/json"
+        $query = Invoke-WebRequest "$apiHost/security/$CreateEndpoint" -UseBasicParsing -UseDefaultCredentials -ContentType "application/json"
     } catch {
         if ($_.Exception.Status -eq [System.Net.WebExceptionStatus]::ConnectFailure) {
             ## NOTE: we will be detecting this error message upstream

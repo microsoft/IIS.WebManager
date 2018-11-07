@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core'
 import { AppContextService } from '@microsoft/windows-admin-center-sdk/angular'
 import { PowerShell, PowerShellSession } from '@microsoft/windows-admin-center-sdk/core'
 import 'rxjs/add/operator/catch'
-const PS_SESSION_KEY = 'wac-iis-ps-session'
+import { Observable, Subscriber } from 'rxjs'
+import { ObservableInput } from 'rxjs/Observable'
+import { PowerShellScripts } from '../../../../generated/powershell-scripts'
+import { Request, Response, ResponseOptions } from '@angular/http'
+
+const PS_SESSION_KEY = '475e8b48-d4c4-4624-b719-f041067cb5fb'
 
 @Injectable()
 export class PowershellService {
@@ -15,28 +20,56 @@ export class PowershellService {
     }).toPromise()
   }
 
-  public run(pwCmdString: string, psParameters: any): Promise<any> {
-    return this.psSession.then(ps =>{
-        psParameters.sessionId = this.sessionId
-        var script = PowerShell.createScript(pwCmdString, psParameters)
-        return this.appContext.powerShell.run(ps, script).catch((e, _) => {
-          throw e
-        }).toPromise()
-      })
-      .then(response => {
-        if (!response) {
-          throw `Powershell command ${pwCmdString} returns no response`
-        }
+  public run<T>(pwCmdString: string, psParameters: any): Observable<T> {
+    psParameters.sessionId = this.sessionId
+    return new Observable<T>(o => {
+      this.emit(pwCmdString, psParameters, o)
+    })
+  }
 
-        if (!response.results) {
-          throw `Powershell command ${pwCmdString} returns null response`
-        }
+  public invokeHttp(req: Request): Observable<Response> {
+    return new Observable(o => {
+      this.emit<ResponseOptions>(PowerShellScripts.local_http, {
+        requestBase64: btoa(JSON.stringify(req)),
+      }, o)
+    }).map((res: ResponseOptions, _) => new Response(res))
+  }
 
-        if (response.results.length <= 0) {
-          throw `Powershell command ${pwCmdString} returns empty response`
-        }
+  private async emit<T>(pwCmdString: string, psParameters: any, observer: Subscriber<T>) {
+    var ps = await this.psSession
+    var script = PowerShell.createScript(pwCmdString, psParameters)
+    this.appContext.powerShell.run(ps, script).catch((e, _) => {
+      console.log(`error on powershell script`)
+      console.log(JSON.stringify(e))
+      if (psParameters.requestBase64) {
+        console.log(`error request: ${psParameters.requestBase64}`)
+        console.log(`${atob(psParameters.requestBase64)}`)
+      }
+      observer.error(e)
+      try {
+        return Observable.throw(e)
+      } finally {
+        observer.unsubscribe()
+      }
+    }).subscribe(response => {
+      if (!response) {
+        throw `Powershell command ${pwCmdString} returns no response`
+      }
 
-        return response.results
-      })
+      if (!response.results) {
+        throw `Powershell command ${pwCmdString} returns null response`
+      }
+
+      if (response.results.length <= 0) {
+        throw `Powershell command ${pwCmdString} returns empty response`
+      }
+      for (let result of response.results) {
+        if (result) {
+          observer.next(JSON.parse(result))
+        }
+      }
+      observer.complete()
+      observer.unsubscribe()
+    })
   }
 }

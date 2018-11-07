@@ -5,7 +5,6 @@ Param(
     $origin,
 
     ## requestHost is the hostname where the http requests would be coming from - the computer that is running WAC on client side
-    [Parameter(Mandatory=$true)]
     [string]
     $requestHost,
 
@@ -17,7 +16,11 @@ Param(
     $sessionId,
 
     [int]
-    $adminAPIPort = 55539
+    $adminAPIPort = 55539,
+
+    [ValidateSet("domain", "host")]
+    [string]
+    $firewallRule
 )
 
 $ErrorActionPreference = "Stop"
@@ -62,12 +65,26 @@ if (!$userPolicy -or !$originPolicy -or !$originPolicy.allow) {
     Restart-Service -Name $serviceName
 }
 
-$firewallRuleName = "wac-iis.$requestHost"
+if ($firewallRule -eq "host") {
+    $ips = [System.Net.Dns]::GetHostAddresses($requestHost)
 
-if (!(Get-NetFirewallProfile -Name $firewallRuleName -ErrorAction SilentlyContinue)) {
-    New-NetFirewallRule -Name $firewallRuleName -DisplayName $firewallRuleName `
-        -Description "Enabled by Windows Admin Center: allow $requestHost to access admin api, port $adminAPIPort" `
-        -Enabled "true" -RemoteAddress $requestHost -Action "allow" -LocalPort $adminAPIPort -Direction Inbound
+    if (!$ips) {
+        throw "Cannot resolve IP for $requestHost"
+    }
+
+    ## Prefer IPv6
+    $selectedIp = $ips | Where-Object { $_.AddressFamily -eq "InterNetworkV6" }
+    if (!$selectedIp) {
+        $selectedIp = $ips[0]
+    }
+
+    $firewallRuleName = "wac-iis.$selectedIp"
+
+    if (!(Get-NetFirewallProfile -Name $firewallRuleName -ErrorAction SilentlyContinue)) {
+        New-NetFirewallRule -Name $firewallRuleName -DisplayName "wac-iis-$requestHost.$selectedIp" `
+            -Description "Enabled by Windows Admin Center: allow $requestHost to access admin api, port $adminAPIPort" `
+            -Enabled "true" -RemoteAddress $selectedIp -Action "allow" -LocalPort $adminAPIPort -Direction Inbound
+    }
 }
 
-"Success"
+'{ "result" : "permission modified" }'

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { RequestMethod, RequestOptionsArgs, Headers, Response } from '@angular/http';
+import { RequestMethod, RequestOptionsArgs, Response } from '@angular/http';
 
 import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
@@ -12,7 +12,7 @@ import { NotificationType } from '../notification/notification';
 import { Progress } from './progress';
 import { IDisposable } from '../common/idisposable';
 
-import { ApiFile, ApiFileType, FileChangeEvent, ChangeType, MimeTypes } from './file';
+import { ApiFile, ApiFileType, FileChangeEvent, MimeTypes } from './file';
 import { Location } from './location';
 import { ParallelExecutor } from './parallel-executor';
 import { ComponentReference, UploadComponentName } from '../main/settings';

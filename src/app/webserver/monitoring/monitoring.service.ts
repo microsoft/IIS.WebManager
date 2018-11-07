@@ -1,14 +1,7 @@
-﻿import { Injectable, EventEmitter } from '@angular/core';
-import { Response } from '@angular/http';
-
-import { Observable } from "rxjs/Observable";
+﻿import { Injectable } from '@angular/core';
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import { Subscription } from "rxjs/Subscription";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-
 import { HttpClient } from '../../common/httpclient';
-import { ApiError, ApiErrorType } from '../../error/api-error';
-
 import { ServerSnapshot } from './server-snapshot';
 
 @Injectable()

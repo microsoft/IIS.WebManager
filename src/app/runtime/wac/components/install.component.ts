@@ -1,8 +1,9 @@
 import { Component } from "@angular/core"
 import { AppContextService } from "@microsoft/windows-admin-center-sdk/angular"
 import { SETTINGS } from "main/settings"
-import { AdminAPIInstallService } from "../services/admin-api-install-service";
-import { Router } from "@angular/router";
+import { Router } from "@angular/router"
+import { PowershellService } from "../services/powershell-service"
+import { PowerShellScripts } from "../../../../generated/powershell-scripts"
 
 @Component({
     template: `
@@ -75,17 +76,18 @@ export class InstallComponent {
     constructor(
         private router: Router,
         private appContext: AppContextService,
-        private installer: AdminAPIInstallService,
+        private powershell: PowershellService,
     ) {
         this._adminApiLocation = SETTINGS.api_download_url
-        this._targetHost = appContext.activeConnection.nodeName
+        this._targetHost = this.appContext.activeConnection.nodeName
     }
 
     public install() {
         this._inProgress = true
-        this.installer.install(this._adminApiLocation).then(_ => {
-            console.log("navigating back to home")
-            this.router.navigate(["/"])
-        })
+        this.powershell.run(
+            PowerShellScripts.install_admin_api,
+            { download: this._adminApiLocation }).subscribe(_ => {
+                this.router.navigate(["/"])
+            })
     }
 }

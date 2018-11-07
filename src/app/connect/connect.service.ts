@@ -1,6 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Http } from '@angular/http';
 import { HttpConnection } from './httpconnection';
 import { ApiConnection } from './api-connection';
 import { ConnectionStore } from './connection-store';
@@ -11,6 +10,7 @@ import { environment } from '../environments/environment'
 
 import 'rxjs/add/operator/toPromise';
 import { ApiErrorType } from 'error/api-error';
+import { HttpFacade } from 'common/http-facade';
 
 @Injectable()
 export class ConnectService {
@@ -25,7 +25,7 @@ export class ConnectService {
     private _edit: BehaviorSubject<ApiConnection> = new BehaviorSubject<ApiConnection>(null);
 
 
-    constructor(private _http: Http,
+    constructor(@Inject("Http") private _http: HttpFacade,
                 private _router: Router,
                 private _notificationSvc: NotificationService) {
 

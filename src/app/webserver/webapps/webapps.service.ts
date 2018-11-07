@@ -1,11 +1,8 @@
 
 import {Injectable, Inject, Optional} from '@angular/core';
-import {Response} from '@angular/http';
-
 // 
 // Don't import rxjs/Rx. Loading is too slow!
 // Import only needed operators
-import {IntervalObservable} from 'rxjs/observable/IntervalObservable';
 import {Observable} from "rxjs/Observable";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Subscription} from "rxjs/Subscription";

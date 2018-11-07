@@ -1,7 +1,6 @@
 
 import {Inject, Injectable} from '@angular/core';
-import {Http, Headers, Response, Request, RequestOptions, RequestOptionsArgs, RequestMethod} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
+import {Headers, Request, RequestOptions, RequestOptionsArgs, RequestMethod} from '@angular/http';
 
 import {NotificationService} from '../notification/notification.service';
 import {ApiConnection} from '../connect/api-connection'
@@ -11,6 +10,7 @@ import {Runtime} from '../runtime/runtime';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
+import { HttpFacade } from './http-facade';
 
 @Injectable()
 export class HttpClient {
@@ -18,23 +18,11 @@ export class HttpClient {
     private _conn: ApiConnection;
     private _connecting: boolean = false
 
-    constructor(private _http: Http,
+    constructor(@Inject("Http") private _http: HttpFacade,
                 private _notificationService: NotificationService,
                 private _connectSvc: ConnectService,
                 @Inject("Runtime") private runtime: Runtime)
     {
-        //
-        // Support withCredentials
-        //
-        // TODO: Use official Angular2 CORS support when merged (https://github.com/angular/angular/issues/4231).
-        let _build = (<any>_http)._backend._browserXHR.build;
-        (<any>_http)._backend._browserXHR.build = () => {
-            let _xhr = _build();
-
-            _xhr.withCredentials = true;
-
-            return _xhr;
-        };
         this._connectSvc.active.subscribe(c => {
             if (c) {
                 this._conn = c
@@ -122,7 +110,7 @@ export class HttpClient {
         //
         // Set Access-Token
         req.headers.set('Access-Token', 'Bearer ' + conn.accessToken);
-        
+
         return this._http.request(req).toPromise()
             .catch(e => {
                 // Status code 0 possible causes:
@@ -152,20 +140,17 @@ export class HttpClient {
     }
 
     public async request(url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<any> {
-        var conn: ApiConnection
+        let conn: ApiConnection
         if (this._conn) {
-            console.log("connection exists")
             conn = this._conn
         } else if (this._connecting) {
-            console.log("currently connecting, awaiting results...")
             conn = await this._connectSvc.active.filter(c => c != null).toPromise()
         } else {
             this._connecting = true
-            console.log("establishing new connection")
             try {
                 conn = await this.runtime.ConnectToIISHost()
             } catch (e) {
-                console.log(`error during connection`)
+                console.log(`exception: ${JSON.stringify(e)}`)
                 this._connecting = false
                 throw e
             }

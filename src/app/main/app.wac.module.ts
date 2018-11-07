@@ -14,11 +14,11 @@ import { WACRuntime } from '../runtime/runtime.wac'
 import { BootstrapModule } from './bootstrap.module'
 import { AppComponent } from './app.component'
 import { PowershellService } from '../runtime/wac/services/powershell-service'
-import { WebServerComponent } from 'webserver/webserver.component';
-import { InstallComponent } from 'runtime/wac/components/install.component';
-import { WebServerModule } from 'webserver/webserver.module';
-import { WACModule } from 'runtime/wac/components/wac.module';
-import { AdminAPIInstallService } from 'runtime/wac/services/admin-api-install-service';
+import { WebServerComponent } from 'webserver/webserver.component'
+import { InstallComponent } from 'runtime/wac/components/install.component'
+import { WebServerModule } from 'webserver/webserver.module'
+import { WACModule } from 'runtime/wac/components/wac.module'
+import { LocalHttpClient } from 'runtime/wac/services/local-http-client'
 
 @NgModule({
     imports: [
@@ -33,8 +33,8 @@ import { AdminAPIInstallService } from 'runtime/wac/services/admin-api-install-s
     providers: [
         ResourceService,
         PowershellService,
-        AdminAPIInstallService,
         { provide: ErrorHandler, useClass: AppErrorHandler },
+        { provide: "Http", useClass: LocalHttpClient },
         { provide: "Runtime", useClass: WACRuntime }
     ],
     entryComponents: [

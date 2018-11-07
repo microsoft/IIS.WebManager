@@ -1,6 +1,4 @@
-import { Injectable, EventEmitter } from '@angular/core';
-import { Response } from '@angular/http';
-
+import { Injectable } from '@angular/core';
 import { Observable } from "rxjs/Observable";
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import { BehaviorSubject } from "rxjs/BehaviorSubject";

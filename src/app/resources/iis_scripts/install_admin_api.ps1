@@ -5,13 +5,27 @@ param(
     
     ## Not doing anything with this parameter yet
     [string]
-    $sessionId
+    $sessionId,
+
+    [string]
+    $serviceName = "Microsoft IIS Administration"
 )
 
 $ErrorActionPreference = "Stop"
 
-$installer = Join-Path $env:TEMP iis-admin-api-install.exe
+$installer = Join-Path $env:TEMP iis-administration-setup.exe
 Invoke-WebRequest $download -OutFile $installer
 & $installer /s
 
-"Success"
+$waitPeriod = 1
+$remainingTime = 60
+
+while (!(Get-Service $serviceName -ErrorAction SilentlyContinue | Where-Object {$_.Status -eq "Running"})) {
+    Start-Sleep -Seconds $waitPeriod
+    $remainingTime -= $waitPeriod
+    if ($remainingTime -lt 0) {
+        throw "timeout waiting for service to start"
+    }
+}
+
+'{ "result" : "installation successful" }'

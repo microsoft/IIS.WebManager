@@ -11,9 +11,8 @@ import { ConnectService } from '../connect/connect.service'
 import { ApiConnection } from '../connect/api-connection'
 import { PowerShellScripts } from '../../generated/powershell-scripts'
 import 'rxjs/add/operator/take'
-import { ApiErrorType } from 'error/api-error';
-import { AdminAPIInstallService } from './wac/services/admin-api-install-service';
-import { SETTINGS } from 'main/settings';
+import { ApiErrorType } from 'error/api-error'
+import { SETTINGS } from 'main/settings'
 
 class ApiKey {
     public id: string
@@ -32,7 +31,6 @@ export class WACRuntime implements Runtime {
         private navigationService: NavigationService,
         private connectService: ConnectService,
         private powershellService: PowershellService,
-        private installer: AdminAPIInstallService,
     ) {
     }
 
@@ -43,7 +41,7 @@ export class WACRuntime implements Runtime {
     public DestroyContext() {
         if (this._tokenId) {
             console.log(`removing token ${this._tokenId}`)
-            this.powershellService.run(PowerShellScripts.token_utils, { command: 'delete', tokenId: this._tokenId }).then(_ => {
+            this.powershellService.run(PowerShellScripts.token_utils, { command: 'delete', tokenId: this._tokenId }).subscribe(_ => {
                 this.appContext.ngDestroy()
             })
         } else {
@@ -53,7 +51,6 @@ export class WACRuntime implements Runtime {
 
     public async ConnectToIISHost(): Promise<ApiConnection> {
         await this.appContext.servicesReady.toPromise()
-        await this.installer.ensurePermission(SETTINGS["iis_admin_api_service_name"])
         var apiKey = await this.GetApiKey()
         var connection = new ApiConnection(this.appContext.activeConnection.nodeName)
         if (apiKey.access_token) {
@@ -75,14 +72,13 @@ export class WACRuntime implements Runtime {
             cmdParams.tokenId = this._tokenId
         }
         try {
-            var output = await this.powershellService.run(PowerShellScripts.token_utils, cmdParams)
+            let apiKey = await this.powershellService.run<ApiKey>(PowerShellScripts.token_utils, cmdParams).toPromise()
+            return apiKey
         } catch (e) {
             if (e.status === 400 && e.response.exception === 'Unable to connect to the remote server') {
-                throw ApiErrorType.Unreachable
-            } else {
-                throw e
+                this.router.navigate(['wac', 'install'])
             }
+            throw e
         }
-        return <ApiKey> JSON.parse(output[0])
     }
 }
