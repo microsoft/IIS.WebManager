@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
     selector: 'enum',
     template: `
         <ul [attr.disabled]="disabled ? true : null">
-            <li *ngFor="let field of fields" [class.background-active]="'' + model == field.value" [attr.title]="field.title || null" [hidden]="field.hidden" (click)="select(field)">
+        <li tabindex="0" *ngFor="let field of fields" [class.background-active]="'' + model == field.value" [attr.title]="field.title || null" [hidden]="field.hidden" (keyup.enter)="select(field)" (click)="select(field)">
                 {{field.name}}
             </li>
         </ul>
@@ -28,6 +28,15 @@ import { FormsModule } from '@angular/forms';
 
         li:last-of-type {
             margin-right: 0;
+        }
+
+        li:focus {
+            /* Accessibility */
+            outline-style: dashed;
+            outline-color: #000;
+            outline-width: 2px;
+            outline-offset: -2px;
+            text-decoration: underline;
         }
     `]
 })
