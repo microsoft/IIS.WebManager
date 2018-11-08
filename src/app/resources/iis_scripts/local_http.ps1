@@ -3,11 +3,13 @@ param(
     $requestBase64
 )
 
+$contentEncoding = [System.Text.Encoding]::UTF8
+
 function stringify($content) {
     if ((!$content) -or ($content -is [System.String])) {
         return $content
     } elseif ($content -is [System.Byte[]]) {
-        return [System.Text.Encoding]::ASCII.GetString($content)
+        return [System.Convert]::ToBase64String($content)
     } else {
         return $content.ToString()
     }
@@ -16,7 +18,7 @@ function stringify($content) {
 $httpLogs = Join-Path $env:USERPROFILE "http.log"
 Add-Content -Path $httpLogs -Value "encrypted: $requestBase64" -Force | Out-Null
 
-$decoded = [System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String($requestBase64))
+$decoded = $contentEncoding.GetString([System.Convert]::FromBase64String($requestBase64))
 $reqObj = ConvertFrom-Json $decoded
 $uri = [System.UriBuilder]$reqObj.url
 $uri.Host = "localhost"
@@ -46,14 +48,15 @@ try {
 } catch {
     $res = $_.Exception.Response
 } finally {
+    $content = stringify $res.Content
+    Add-Content -Path $httpLogs -Value "content: $content" -Force | Out-Null
     $result = ConvertTo-Json @{
         "url" = $res.ResponseUri;
         "status" = $res.StatusCode;
         "statusText" = $res.StatusDescription;
         "type" = $res."Content-Type";
         "headers" = $res.Headers;
-        "body" = stringify $res.Content
+        "body" = $content
     } -Compress -Depth 100
-    Add-Content -Path $httpLogs -Value "result: $result" -Force | Out-Null
     $result
 }
