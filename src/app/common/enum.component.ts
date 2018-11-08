@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
     selector: 'enum',
     template: `
         <ul [attr.disabled]="disabled ? true : null">
-        <li tabindex="0" *ngFor="let field of fields" [class.background-active]="'' + model == field.value" [attr.title]="field.title || null" [hidden]="field.hidden" (keyup.enter)="select(field)" (click)="select(field)">
+        <li tabindex="0" *ngFor="let field of fields" [class.background-active]="'' + model == field.value" [attr.title]="field.title || null" [hidden]="field.hidden" (keyup.space)="select(field)" (keyup.enter)="select(field)" (click)="select(field)">
                 {{field.name}}
             </li>
         </ul>
