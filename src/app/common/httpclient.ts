@@ -97,7 +97,7 @@ export class HttpClient {
         return options;
     }
 
-    private performRequest(conn: ApiConnection, url: string, options?: RequestOptionsArgs, warn?: boolean): Observable<Response> {
+    private performRequest(conn: ApiConnection, url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<any> {
         let reqOpt = new RequestOptions(options);
 
         if (url.toString().indexOf("/") != 0) {
@@ -109,31 +109,36 @@ export class HttpClient {
         //
         // Set Access-Token
         req.headers.set('Access-Token', 'Bearer ' + conn.accessToken);
-        return this._http.request(req).catch((e, _) => {
-            // Status code 0 possible causes:
-            // Untrusted certificate
-            // Windows auth, prevents CORS headers from being accessed
-            // Service not responding
-            if (e instanceof Response) {
-                this.handleHttpError(e)
-                if (e.status == 0) {
-                    //
-                    // The first request to the API fails because windows auth has not started yet.
-                    // We repeat the request because in this case the next request will succeed.
-                    return this._http.request(req).catch((err, _) => {
-                        this.handleHttpError(err)
-                        //
-                        // Check to see if connected
-                        return this._http.options(conn.url).catch((error, _) => {
-                            this.handleHttpError(error)
-                            this._connectSvc.reconnect()
-                            return Observable.throw(error)
-                        })
-                    })
+        return this._http.request(req).toPromise()
+            .catch(e => {
+                // Status code 0 possible causes:
+                // Untrusted certificate
+                // Windows auth, prevents CORS headers from being accessed
+                // Service not responding
+                if (e instanceof Response) {
+                    if (e.status == 0) {
+                        return this._http.request(req).toPromise()
+                            .catch(err => {
+                                //
+                                // Check to see if connected
+                                return this._http.options(this._conn.url).toPromise()
+                                    .catch(e => {
+                                        this._connectSvc.reconnect();
+                                        return Promise.reject("Not connected");
+                                    })
+                                    .then(r => {
+                                        return this.handleHttpError(err);
+                                    })})
+                    }
+                    return this.handleHttpError(e, warn);
                 }
-            }
-            return Observable.throw(e)
-        })
+                let apiError = <ApiError>({
+                    title: "unknown error",
+                    detail: JSON.stringify(e),
+                })
+                console.log(`unknown error: ${JSON.stringify(apiError)}`)
+                this._notificationService.apiError(apiError)
+            })
     }
 
     public async request(url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<Response> {
@@ -152,25 +157,19 @@ export class HttpClient {
                 throw e
             }
         }
-        return this.performRequest(conn, url, options, warn).toPromise().catch(e => {
-            console.log(`logging in case upstream is not handling error`)
-            console.log(e)
-            throw e
-        })
+        return this.performRequest(conn, url, options, warn)
     }
 
-    private handleHttpError(err, warn?: boolean) {
-        if (err instanceof Response) {
-            if (err.status == 403 && err.headers.get("WWW-Authenticate") === "Bearer") {
-                this._connectSvc.reconnect();
-            } else {
-                let apiError = this.apiErrorFromHttp(err);
-                if (apiError && warn) {
-                    this._notificationService.apiError(apiError);
-                }
-                throw apiError;
-            }
+    private handleHttpError(err, warn?: boolean): Promise<any> {
+        if (err.status == 403 && err.headers.get("WWW-Authenticate") === "Bearer") {
+            this._connectSvc.reconnect();
+            return Promise.reject("Not connected");
         }
+        let apiError = this.apiErrorFromHttp(err);
+        if (apiError && warn) {
+            this._notificationService.apiError(apiError);
+        }
+        throw apiError;
     }
 
     public getOptions(method: RequestMethod, url: string, options: RequestOptionsArgs, body?: string): RequestOptionsArgs {

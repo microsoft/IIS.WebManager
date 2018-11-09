@@ -39,8 +39,12 @@ export class PowershellService {
         }
         return v
       }).map(res => {
+        let response = new Response(res)
         console.log(`request ${c} received response ${JSON.stringify(res)}`)
-        return new Response(res)
+        if (res.status < 200 || res.status >= 400) {
+          throw response
+        }
+        return response
       })
   }
 

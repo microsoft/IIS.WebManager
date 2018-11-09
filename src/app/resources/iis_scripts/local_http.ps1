@@ -53,7 +53,6 @@ try {
         throw "No response is returned."
     }
     $content = stringify $res.Content
-    Add-Content -Path $httpLogs -Value "result: $content" -Force | Out-Null
     $result = ConvertTo-Json @{
         "url" = $res.ResponseUri;
         "status" = $res.StatusCode;
@@ -62,5 +61,6 @@ try {
         "headers" = $res.Headers;
         "body" = $content
     } -Compress -Depth 100
+    Add-Content -Path $httpLogs -Value "result: $result" -Force | Out-Null
     $result
 }
