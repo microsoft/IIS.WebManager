@@ -11,8 +11,6 @@ import { ConnectService } from '../connect/connect.service'
 import { ApiConnection } from '../connect/api-connection'
 import { PowerShellScripts } from '../../generated/powershell-scripts'
 import 'rxjs/add/operator/take'
-import { ApiErrorType } from 'error/api-error'
-import { SETTINGS } from 'main/settings'
 
 class ApiKey {
     public id: string

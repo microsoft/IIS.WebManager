@@ -3,6 +3,7 @@ param(
     $requestBase64
 )
 
+$ErrorActionPreference = "Stop"
 $contentEncoding = [System.Text.Encoding]::UTF8
 
 function stringify($content) {
@@ -41,15 +42,18 @@ if ($reqObj.headers) {
 }
 
 $transformed = $req | ConvertTo-Json -Compress -Depth 100
-Add-Content -Path $httpLogs -Value "transformed: $transformed" -Force | Out-Null
+Add-Content -Path $httpLogs -Value "decoded: $transformed" -Force | Out-Null
 
 try {
     $res = Invoke-WebRequest -UseBasicParsing -UseDefaultCredentials @req
 } catch {
     $res = $_.Exception.Response
 } finally {
+    if (!$res) {
+        throw "No response is returned."
+    }
     $content = stringify $res.Content
-    Add-Content -Path $httpLogs -Value "content: $content" -Force | Out-Null
+    Add-Content -Path $httpLogs -Value "result: $content" -Force | Out-Null
     $result = ConvertTo-Json @{
         "url" = $res.ResponseUri;
         "status" = $res.StatusCode;
