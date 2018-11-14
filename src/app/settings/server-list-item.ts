@@ -11,6 +11,14 @@ import { NotificationService } from '../notification/notification.service';
     selector: 'server',
     template: `
         <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing" (dblclick)="onDblClick($event)">
+            <div *ngIf="!_editing">
+                <div class="col-xs-10 col-sm-4 v-align">
+                    <a title="Connect" href="#" class="color-normal hover-color-active" [class.active]="_active === model" (click)="onConnect($event)">{{connName()}}</a>
+                </div>     
+                <div class="hidden-xs col-sm-6 v-align">
+                    {{model.url}}
+                </div>
+            </div>
             <div *ngIf="!_editing" class="actions">
                 <div class="selector-wrapper">
                     <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="(_selector && _selector.opened) || false">
@@ -28,14 +36,6 @@ import { NotificationService } from '../notification/notification.service';
             <div class="actions" *ngIf="_editing">
                 <button class="no-border ok" title="Ok" [disabled]="!isValid || null" (click)="onSave()"></button>
                 <button class="no-border cancel" title="Cancel" (click)="onCancel()"></button>
-            </div>
-            <div *ngIf="!_editing">
-                <div class="col-xs-10 col-sm-4 v-align">
-                    <a title="Connect" href="#" class="color-normal hover-color-active" [class.active]="_active === model" (click)="onConnect($event)">{{connName()}}</a>
-                </div>     
-                <div class="hidden-xs col-sm-6 v-align">
-                    {{model.url}}
-                </div>
             </div>
             <div *ngIf="_editing" class="name">
                 <fieldset>
