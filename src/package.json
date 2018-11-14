@@ -21,7 +21,7 @@
     "es6-shim": "0.35.3",
     "font-awesome": "4.7.0",
     "jquery": "3.2.1",
-    "monaco-editor": "0.8.1",
+    "monaco-editor": "0.15.2",
     "ng2-charts": "1.6.0",
     "reflect-metadata": "0.1.10",
     "rxjs": "5.5.6",

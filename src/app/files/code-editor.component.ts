@@ -1,24 +1,15 @@
 
-import { NgModule, Component, ViewChild, Output, Input, EventEmitter, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import {Observable} from 'rxjs/Observable';
+import { Component, ViewChild, Output, Input, EventEmitter, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { WindowService } from '../main/window.service';
+import { ApiFile } from './file';
 import 'rxjs/add/observable/fromEvent';
-
-import {WindowService} from '../main/window.service';
-import {ComponentLoader} from '../common/component-loader';
-
-import {ApiFile} from './file';
-
-declare var monaco: any;
-
 
 enum CompareMode {
     None = 0,
     Inline = 1,
     Split = 2
 }
-
 
 @Component({
     selector: 'code-editor',
@@ -74,15 +65,48 @@ export class CodeEditorComponent implements AfterViewInit, OnDestroy {
     private _originalText: string;
     private _lang: any;
     private _diff: CompareMode = CompareMode.None;
+    private _loading: Promise<void>;
 
     constructor(private _window: WindowService) {
     }
 
     ngAfterViewInit() {
-        //
-        // VS Monaco Editor
-        this.setupCodeEditor().catch(e => {
-        });
+        this._subs.push(this._window.resize.subscribe(e => {
+            this.updateLayout();
+        }));
+
+        if (this._monaco) {
+            this.initMonaco(this._monaco)
+        } else {
+            if (!this._loading) {
+                this._loading = new Promise<any>((resolve) => {
+                    if (typeof((<any>window).monaco) === 'object') {
+                      resolve((<any>window).monaco);
+                      return;
+                    }
+                    const assetsDir = '/assets'
+                    const onLoad = () => {
+                        // Load monaco
+                        (<any>window).require.config({ paths: { 'vs': `${assetsDir}/monaco/vs` } });
+                        (<any>window).require(['vs/editor/editor.main'], () => {
+                        // TODO: add onMonaco Load actions
+                        resolve((<any>window).monaco);
+                        });
+                    };
+
+                    if (!(<any>window).require) {
+                        const loaderScript: HTMLScriptElement = document.createElement('script');
+                        loaderScript.type = 'text/javascript';
+                        loaderScript.src = `${assetsDir}/monaco/vs/loader.js`;
+                        loaderScript.addEventListener('load', onLoad);
+                        document.body.appendChild(loaderScript);
+                    } else {
+                        onLoad();
+                    }
+                })
+            }
+            this._loading.then(m => this.initMonaco(m))
+        }
     }
 
     ngOnDestroy() {
@@ -110,61 +134,24 @@ export class CodeEditorComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    private setupCodeEditor(): Promise<any> {
-        this._subs.push(this._window.resize.subscribe(e => {
-            this.updateLayout();
-        }));
+    private initMonaco(monaco: any) {
+        this._monaco = monaco;
+        this._lang = this.mapLanguage(this._monaco.languages.getLanguages());
+
+        this.load.emit(this._lang);
 
         //
-        // Initialize Monaco
-        return this.loadMonaco().then(monaco => {
-            this._monaco = monaco;
-            this._lang = this.mapLanguage(this._monaco.languages.getLanguages());
+        // Load file content
+        this.content.subscribe(txt => {
+            this._originalText = txt;
 
-            this.load.emit(this._lang);
-
-            //
-            // Load file content
-            this.content.subscribe(txt => {
-                this._originalText = txt;
-
-                if (txt != null) {
-                    if (!this.compareMode) {
-                        this.createEditor(this._originalText);
-                    }
-                    else {
-                        this.createDiffEditor(this._originalText);
-                    }
+            if (txt != null) {
+                if (!this.compareMode) {
+                    this.createEditor(this._originalText);
                 }
-            });
-        });
-    }
-
-    private loadMonaco(): Promise<any> {
-        //
-        var loader = (resolve) => {
-            (<any>window).require.config({ paths: { 'vs': 'node_modules/monaco-editor/min/vs' } });
-            (<any>window).require(['vs/editor/editor.main'], m => {
-                resolve(monaco);
-            });
-        };
-
-        return new Promise((resolve, reject) => {
-            //
-            // Inject AMD loader if necessary
-            if (!(<any>window).require) {
-                var script = document.createElement('script');
-                script.type = 'text/javascript';
-                script.src = 'node_modules/monaco-editor/min/vs/loader.js';
-
-                this._subs.push(Observable.fromEvent(script, 'load').subscribe(() => {
-                    loader(resolve);
-                }));
-
-                document.body.appendChild(script);
-            }
-            else {
-                loader(resolve);
+                else {
+                    this.createDiffEditor(this._originalText);
+                }
             }
         });
     }

@@ -4,6 +4,7 @@
       "assets": [
         { "glob": "manifest.json", "input": "resources", "output": "" },
         { "glob": "**/*", "input": "assets/", "output": "assets/" },
+        { "glob": "**/*", "input": "../node_modules/monaco-editor/min", "output": "assets/monaco" },
         "web.config"
       ],
       "index": "index.html",
