@@ -65,7 +65,7 @@ export class CodeEditorComponent implements AfterViewInit, OnDestroy {
     private _originalText: string;
     private _lang: any;
     private _diff: CompareMode = CompareMode.None;
-    private _loading: Promise<void>;
+    private _loading: Promise<any>;
 
     constructor(private _window: WindowService) {
     }
