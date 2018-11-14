@@ -69,7 +69,6 @@ export class FileEditor {
 
     @ViewChild(CodeEditorComponent) private _codeEditor: CodeEditorComponent;
 
-
     constructor(@Inject("FilesService") private _svc: FilesService) {
     }
 
