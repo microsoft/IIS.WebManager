@@ -89,7 +89,6 @@ export class CodeEditorComponent implements AfterViewInit, OnDestroy {
                         // Load monaco
                         (<any>window).require.config({ paths: { 'vs': `${assetsDir}/monaco/vs` } });
                         (<any>window).require(['vs/editor/editor.main'], () => {
-                        // TODO: add onMonaco Load actions
                         resolve((<any>window).monaco);
                         });
                     };
