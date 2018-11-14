@@ -26,7 +26,6 @@ import { FormsModule } from '@angular/forms';
         }
 
         .toggle-input:focus + span {
-            /* Accessibility */
             outline-style: dashed;
             outline-color: #000;
             outline-width: 2px;

@@ -28,7 +28,6 @@ import { SectionHelper } from './section.helper';
         }
 
         li:focus {
-            /* Accessibility */
             outline-style: dashed;
             outline-color: #000;
             outline-width: 2px;

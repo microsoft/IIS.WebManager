@@ -83,7 +83,6 @@ import { SectionHelper } from './section.helper';
         }
 
         .tabs li:focus {
-            /* Accessibility */
             outline-style: dashed;
             outline-color: #000;
             outline-width: 2px;
@@ -113,8 +112,6 @@ import { SectionHelper } from './section.helper';
           cursor: pointer;
           z-index: 9;
           
-          /* accessibility */
-          /* outline: none; */
           outline-style: dashed;
           outline-width: 2px;
           outline-offset: -2px;

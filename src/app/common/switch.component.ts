@@ -103,7 +103,6 @@ import { FormsModule } from '@angular/forms';
 	        left: 71px; 
         }
         .switch-input:focus ~ .switch-handle {
-            /* accessibility */
             outline-style: dashed;
             outline-color: #000;
             outline-width: 2px;

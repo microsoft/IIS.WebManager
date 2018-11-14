@@ -77,7 +77,6 @@ import { Selector } from '../common/selector';
         }
 
         div:focus { 
-            /* Accessibility */ 
             outline-style: dashed; 
             outline-color: #000; 
             outline-width: 2px; 
