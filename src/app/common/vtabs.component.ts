@@ -13,7 +13,7 @@ import { SectionHelper } from './section.helper';
     template: `
         <div class="vtabs">
             <ul class="items">
-                <li #item class="hover-edit"  *ngFor="let tab of tabs; let i = index;" [ngClass]="{active: tab.active}" (click)="selectItem(i)">
+                <li tabindex="0" #item class="hover-edit"  *ngFor="let tab of tabs; let i = index;" [ngClass]="{active: tab.active}" (keyup.space)="selectItem(i)" (keyup.enter)="selectItem(i)" (click)="selectItem(i)">
                     <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
                 </li>
             </ul>
@@ -25,6 +25,14 @@ import { SectionHelper } from './section.helper';
     styles: [`
         .content {
             min-width: 320px;
+        }
+
+        li:focus {
+            outline-style: dashed;
+            outline-color: #000;
+            outline-width: 2px;
+            outline-offset: -2px;
+            text-decoration: underline;
         }
     `],
     host: {

@@ -9,7 +9,7 @@ import { Selector } from '../common/selector';
 @Component({
     selector: 'settings',
     template: `
-        <div title="Options" class="s-container nav-button hover-primary2" [class.background-primary2]="settingsMenu && settingsMenu.isOpen()" (click)="onClickSettings()">
+        <div tabindex="0" title="Options" class="s-container nav-button hover-primary2" [class.background-primary2]="settingsMenu && settingsMenu.isOpen()" (keyup.space)="onClickSettings()" (keyup.enter)="onClickSettings()" (click)="onClickSettings()">
             <i class="fa fa-cog"></i>
         </div>
         <selector #settingsMenu class="color-normal" [right]="true">
@@ -75,6 +75,13 @@ import { Selector } from '../common/selector';
         .download:before {
             content: "\\f019";
         }
+
+        div:focus { 
+            outline-style: dashed; 
+            outline-color: #000; 
+            outline-width: 2px; 
+            outline-offset: -2px; 
+            text-decoration: underline; 
     `]
 })
 export class SettingsMenuComponent implements OnDestroy {

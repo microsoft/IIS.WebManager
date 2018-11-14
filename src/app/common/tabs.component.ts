@@ -82,6 +82,14 @@ import { SectionHelper } from './section.helper';
           padding-bottom: 1px;
         }
 
+        .tabs li:focus {
+            outline-style: dashed;
+            outline-color: #000;
+            outline-width: 2px;
+            outline-offset: -2px;
+            text-decoration: underline;
+        }
+
         .hider {
           margin-left: 10px;
           margin-top: 0;
@@ -103,7 +111,13 @@ import { SectionHelper } from './section.helper';
           right: 0;
           cursor: pointer;
           z-index: 9;
-          outline: none;
+          
+          outline-style: dashed;
+          outline-width: 2px;
+          outline-offset: -2px;
+          outline-color: #000;
+          text-decoration: underline;
+          
           height: 25px;
         }
 
@@ -158,7 +172,7 @@ import { SectionHelper } from './section.helper';
             <div class="tabs-container">
                 <div class='tabs border-active'>
                     <ul>
-                        <li #item *ngFor="let tab of tabs; let i = index" class="border-active border-bottom-normal" [ngClass]="{active: tab.active}" (click)="selectTab(i)">
+                        <li tabindex="0" #item *ngFor="let tab of tabs; let i = index" class="border-active border-bottom-normal" [ngClass]="{active: tab.active}" (keyup.space)="selectTab(i)" (keyup.enter)="selectTab(i)" (click)="selectTab(i)">
                             <span>{{tab.name}}</span>
                         </li>
                         <li *ngIf="_selectedIndex != -1" class="sticky background-normal border-active border-bottom-normal" [ngClass]="{active: !!'true', hidden: tabs[_selectedIndex].visible}" (click)="selectTab(_selectedIndex)">
@@ -172,7 +186,7 @@ import { SectionHelper } from './section.helper';
             <div class='menu-btn color-active background-normal' #menuBtn tabindex='0' (click)="showMenu(true)"><span class="border-active hover-active color-normal" [class.background-active]="_menuOn"><i class="fa fa-ellipsis-h"></i></span></div>
             <div class='menu border-active background-normal' [hidden]="!_menuOn">
                 <ul>
-                    <li *ngFor="let tab of tabs; let i = index;" class="hover-active" [ngClass]="{'background-active': tab.active}" (click)="selectTab(i)">{{tab.name}}</li>
+                    <li tabindex="0" *ngFor="let tab of tabs; let i = index;" class="hover-active" [ngClass]="{'background-active': tab.active}" (keyup.space)="selectTab(i)" (keyup.enter)="selectTab(i)" (click)="selectTab(i)">{{tab.name}}</li>
                 </ul>
             </div>
         </div>

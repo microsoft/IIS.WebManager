@@ -25,6 +25,14 @@ import { FormsModule } from '@angular/forms';
 	        opacity: 0;
         }
 
+        .toggle-input:focus + span {
+            outline-style: dashed;
+            outline-color: #000;
+            outline-width: 2px;
+            outline-offset: -2px;
+            text-decoration: underline;
+        }
+
         .toggle-container {
             display: inline-block;
             height: 34px;
