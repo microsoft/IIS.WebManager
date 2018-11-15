@@ -29,7 +29,7 @@ export class ConnectService {
                 private _router: Router,
                 private _notificationSvc: NotificationService) {
 
-        this._client = new HttpConnection(_http);
+        this._client = new HttpConnection(this._http);
         this._store = new ConnectionStore();
 
         this.active.subscribe(c => {
@@ -61,7 +61,7 @@ export class ConnectService {
         this._pingPopup.close();
 
         // Open ping popup window which can only be opened as the result of a user click event
-        if (popup) {
+        if (!environment.WAC && popup) {
             this._pingPopup.open(conn.url + "/ping");
 
             // Raw request to url causes certificate acceptance prompt on IE.
@@ -76,9 +76,9 @@ export class ConnectService {
                 return Promise.resolve(conn);
             })
             .catch(_ => {
-                this.gotoConnect(true);
-
-                return this.ping(conn, new Date().getTime() + ConnectService.PING_TIMEOUT, popup);
+                return this.gotoConnect(true).then(_ => {
+                    return this.ping(conn, new Date().getTime() + ConnectService.PING_TIMEOUT, popup);
+                })
             });
     }
 

@@ -62,7 +62,8 @@ export class WACRuntime implements Runtime {
                     this._tokenId = apiKey.id
                     console.log(`received token ID from admin api: ${apiKey.id}`)
                     this.connectService.connect(connection).then(c => {
-                        observer.next(c)
+                        console.log(`pooled connection assigned`)
+                        observer.next(connection)
                         observer.complete()
                         this.connectService.save(c)
                     })

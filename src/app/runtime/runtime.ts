@@ -21,7 +21,11 @@ export class StandardRuntime implements Runtime {
     public DestroyContext() {}
 
     public ConnectToIISHost(): Observable<ApiConnection> {
-        // TODO: test
-        return Observable.create(() => this.connectService.gotoConnect(false))
+        return Observable.create(observer => {
+            this.connectService.gotoConnect(false).then(_ => {
+                console.log(`navigate to connect page`)
+                observer.complete()
+            })
+        })
     }
 }

@@ -15,7 +15,8 @@ export class ServerAnalyticService implements OnDestroy {
 
     private _subscriptions: Array<Subscription> = [];
 
-    constructor(private _httpClient: HttpClient,
+    constructor(
+        private _httpClient: HttpClient,
         private _connectSvc: ConnectService)
     {
         this._subscriptions.push(this._connectSvc.active.subscribe(c => {
@@ -52,6 +53,7 @@ export class ServerAnalyticService implements OnDestroy {
                 this.setupAnalytics(clientId);
             })
             .catch(e => {
+                console.log(`caught error, ${JSON.stringify(e)}`)
                 // NoOp
             });
         }

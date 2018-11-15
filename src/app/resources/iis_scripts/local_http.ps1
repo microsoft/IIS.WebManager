@@ -61,7 +61,6 @@ try {
         "headers" = $res.Headers;
         "body" = $content
     } -Compress -Depth 100
-    $resultEncoded = [Convert]::ToBase64String($contentEncoding.GetBytes($result))
     Add-Content -Path $httpLogs -Value "result: $result" -Force | Out-Null
-    $resultEncoded
+    $result
 }

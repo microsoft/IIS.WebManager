@@ -26,8 +26,8 @@ export class HttpClient {
     {
         this._connectSvc.active.subscribe(c => {
             if (c) {
+                console.log(`assigning conn`)
                 this._conn = c
-                this._transientObserver = null
             }})
     }
 
@@ -45,6 +45,9 @@ export class HttpClient {
     }
 
     public get(url: string, options?: RequestOptionsArgs, warn: boolean = true): Promise<any> {
+        // if (url.endsWith('webserver')) {
+        //     debugger
+        // }
         let ops: RequestOptionsArgs = this.getOptions(RequestMethod.Get, url, options);
         return this.request(url, ops, warn)
             .then(res => res.status !== 204 ? res.json() : null);
@@ -129,7 +132,7 @@ export class HttpClient {
                                 })
                     }
                     this.handleHttpError(e, warn);
-                    return c;
+                    throw e
                 }
                 let apiError = <ApiError>({
                     title: "unknown error",
@@ -137,7 +140,7 @@ export class HttpClient {
                 })
                 console.log(`unknown error: ${JSON.stringify(apiError)}`)
                 this._notificationService.apiError(apiError)
-                return c
+                throw apiError
             })
     }
 
@@ -147,17 +150,22 @@ export class HttpClient {
 
     private performRequestOnConnection(url: string, options?: RequestOptionsArgs, warn?: boolean): Observable<Response> {
         if (this._conn) {
+            console.log(`connection exists`)
             return this.performRequest(this._conn, url, options, warn)
         } else {
             if (!this._transientObserver) {
-                this._transientObserver = this.runtime.ConnectToIISHost().catch(
-                    (e, caught) => {
+                console.log(`allocating connection`)
+                this._transientObserver = this.runtime.ConnectToIISHost().do(_ => {},
+                    e => {
                         console.log(`encountered exception while connecting to host: ${JSON.stringify(e)}`)
                         this._transientObserver = null
-                        return caught
-                    }).shareReplay()
+                    }, () => {
+                        this._transientObserver = null
+                    })
+                return this._transientObserver.mergeMap(c => this.performRequest(c, url, options, warn))
+            } else {
+                return this._connectSvc.active.filter(c => c != null).mergeMap(c => this.performRequest(c, url, options, warn))
             }
-            return this._transientObserver.mergeMap(c => this.performRequest(c, url, options, warn))
         }
     }
 
