@@ -17,7 +17,7 @@ import { Observable } from 'rxjs';
 export class HttpClient {
     private _headers: Headers= new Headers();
     private _conn: ApiConnection;
-    private _connecting: boolean = false
+    private _transientObserver: Observable<ApiConnection>
 
     constructor(@Inject("Http") private _http: HttpFacade,
                 private _notificationService: NotificationService,
@@ -27,7 +27,7 @@ export class HttpClient {
         this._connectSvc.active.subscribe(c => {
             if (c) {
                 this._conn = c
-                this._connecting = false
+                this._transientObserver = null
             }})
     }
 
@@ -97,7 +97,7 @@ export class HttpClient {
         return options;
     }
 
-    private performRequest(conn: ApiConnection, url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<any> {
+    private performRequest(conn: ApiConnection, url: string, options?: RequestOptionsArgs, warn?: boolean): Observable<Response> {
         let reqOpt = new RequestOptions(options);
 
         if (url.toString().indexOf("/") != 0) {
@@ -109,28 +109,27 @@ export class HttpClient {
         //
         // Set Access-Token
         req.headers.set('Access-Token', 'Bearer ' + conn.accessToken);
-        return this._http.request(req).toPromise()
-            .catch(e => {
+        return this._http.request(req)
+            .catch((e, c) => {
                 // Status code 0 possible causes:
                 // Untrusted certificate
                 // Windows auth, prevents CORS headers from being accessed
                 // Service not responding
                 if (e instanceof Response) {
                     if (e.status == 0) {
-                        return this._http.request(req).toPromise()
-                            .catch(err => {
-                                //
+                        return this._http.request(req)
+                            .catch((err, _) => {
                                 // Check to see if connected
-                                return this._http.options(this._conn.url).toPromise()
-                                    .catch(e => {
+                                return this._http.options(this._conn.url)
+                                    .catch((e, c2) => {
                                         this._connectSvc.reconnect();
-                                        return Promise.reject("Not connected");
+                                        this.handleHttpError(err);
+                                        return c2
                                     })
-                                    .then(r => {
-                                        return this.handleHttpError(err);
-                                    })})
+                                })
                     }
-                    return this.handleHttpError(e, warn);
+                    this.handleHttpError(e, warn);
+                    return c;
                 }
                 let apiError = <ApiError>({
                     title: "unknown error",
@@ -138,32 +137,34 @@ export class HttpClient {
                 })
                 console.log(`unknown error: ${JSON.stringify(apiError)}`)
                 this._notificationService.apiError(apiError)
+                return c
             })
     }
 
     public async request(url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<Response> {
-        let conn: ApiConnection
-        if (this._conn) {
-            conn = this._conn
-        } else if (this._connecting) {
-            conn = await this._connectSvc.active.filter(c => c != null).toPromise()
-        } else {
-            this._connecting = true
-            try {
-                conn = await this.runtime.ConnectToIISHost()
-            } catch (e) {
-                console.log(`exception: ${JSON.stringify(e)}`)
-                this._connecting = false
-                throw e
-            }
-        }
-        return this.performRequest(conn, url, options, warn)
+        return this.performRequestOnConnection(url, options, warn).toPromise()
     }
 
-    private handleHttpError(err, warn?: boolean): Promise<any> {
+    private performRequestOnConnection(url: string, options?: RequestOptionsArgs, warn?: boolean): Observable<Response> {
+        if (this._conn) {
+            return this.performRequest(this._conn, url, options, warn)
+        } else {
+            if (!this._transientObserver) {
+                this._transientObserver = this.runtime.ConnectToIISHost().catch(
+                    (e, caught) => {
+                        console.log(`encountered exception while connecting to host: ${JSON.stringify(e)}`)
+                        this._transientObserver = null
+                        return caught
+                    }).shareReplay()
+            }
+            return this._transientObserver.mergeMap(c => this.performRequest(c, url, options, warn))
+        }
+    }
+
+    private handleHttpError(err, warn?: boolean) {
         if (err.status == 403 && err.headers.get("WWW-Authenticate") === "Bearer") {
             this._connectSvc.reconnect();
-            return Promise.reject("Not connected");
+            throw "not connected"
         }
         let apiError = this.apiErrorFromHttp(err);
         if (apiError && warn) {

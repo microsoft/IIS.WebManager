@@ -3,11 +3,12 @@ import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { ConnectService } from '../connect/connect.service'
 import { ApiConnection } from '../connect/api-connection'
+import { Observable } from 'rxjs';
 
 export interface Runtime {
     InitContext(): void
     DestroyContext(): void
-    ConnectToIISHost(): Promise<ApiConnection>
+    ConnectToIISHost(): Observable<ApiConnection>
 }
 
 @Injectable()
@@ -19,12 +20,8 @@ export class StandardRuntime implements Runtime {
 
     public DestroyContext() {}
 
-    public ConnectToIISHost(): Promise<ApiConnection> {
-        return new Promise(
-            (_, reject) => {
-                this.connectService.gotoConnect(false).then(success => {
-                    reject(`authentication required, redirect successful: ${success}`)
-                })
-            })
+    public ConnectToIISHost(): Observable<ApiConnection> {
+        // TODO: test
+        return Observable.create(() => this.connectService.gotoConnect(false))
     }
 }

@@ -11,6 +11,8 @@ import { ConnectService } from '../connect/connect.service'
 import { ApiConnection } from '../connect/api-connection'
 import { PowerShellScripts } from '../../generated/powershell-scripts'
 import 'rxjs/add/operator/take'
+import 'rxjs/add/operator/map'
+import { Observable, Observer, Subscriber } from 'rxjs';
 
 class ApiKey {
     public id: string
@@ -47,36 +49,39 @@ export class WACRuntime implements Runtime {
         }
     }
 
-    public async ConnectToIISHost(): Promise<ApiConnection> {
-        await this.appContext.servicesReady.toPromise()
-        var apiKey = await this.GetApiKey()
-        var connection = new ApiConnection(this.appContext.activeConnection.nodeName)
-        if (apiKey.access_token) {
-            connection.accessToken = apiKey.access_token
-        } else {
-            connection.accessToken = apiKey.value
-        }
-        this._tokenId = apiKey.id
-        console.log(`received token ID from admin api: ${apiKey.id}`)
-        var conn = await this.connectService.connect(connection)
-        this.connectService.save(conn)
-        return conn
+    public ConnectToIISHost(): Observable<ApiConnection> {
+        return new Observable<ApiConnection>(observer => {
+            this.appContext.servicesReady.take(1).subscribe(_ => {
+                this.GetApiKey().subscribe(apiKey => {
+                    var connection = new ApiConnection(this.appContext.activeConnection.nodeName)
+                    if (apiKey.access_token) {
+                        connection.accessToken = apiKey.access_token
+                    } else {
+                        connection.accessToken = apiKey.value
+                    }
+                    this._tokenId = apiKey.id
+                    console.log(`received token ID from admin api: ${apiKey.id}`)
+                    this.connectService.connect(connection).then(c => {
+                        observer.next(c)
+                        observer.complete()
+                        this.connectService.save(c)
+                    })
+                })
+            })
+        })
     }
 
-    private async GetApiKey(): Promise<ApiKey> {
+    private GetApiKey(): Observable<ApiKey> {
         var cmdParams: any = { command: 'ensure' }
         if (this._tokenId) {
             console.log(`existing token ID ${this._tokenId} will be refreshed`)
             cmdParams.tokenId = this._tokenId
         }
-        try {
-            let apiKey = await this.powershellService.run<ApiKey>(PowerShellScripts.token_utils, cmdParams).toPromise()
-            return apiKey
-        } catch (e) {
+        return this.powershellService.run<ApiKey>(PowerShellScripts.token_utils, cmdParams).catch((e, caught) => {
             if (e.status === 400 && e.response.exception === 'Unable to connect to the remote server') {
                 this.router.navigate(['wac', 'install'])
             }
-            throw e
-        }
+            return caught
+        })
     }
 }
