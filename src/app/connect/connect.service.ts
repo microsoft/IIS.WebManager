@@ -129,11 +129,6 @@ export class ConnectService {
         }
     }
 
-
-    private activate(conn: ApiConnection) {
-        this._store.setActive(conn);
-    }
-
     private ping(conn: ApiConnection, time2stop: number, force: boolean): Promise<any> {
         clearTimeout(this._pingTimeout);
 
@@ -210,7 +205,7 @@ export class ConnectService {
         this.reset();
 
         try {
-            this.activate(conn);
+            this._store.setActive(conn);
             this._connecting.next(null);
         }
         catch (e) {

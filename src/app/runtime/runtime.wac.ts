@@ -12,7 +12,7 @@ import { ApiConnection } from '../connect/api-connection'
 import { PowerShellScripts } from '../../generated/powershell-scripts'
 import 'rxjs/add/operator/take'
 import 'rxjs/add/operator/map'
-import { Observable, Observer, Subscriber } from 'rxjs';
+import { Observable, Observer, Subscriber } from 'rxjs'
 
 class ApiKey {
     public id: string
@@ -50,25 +50,22 @@ export class WACRuntime implements Runtime {
     }
 
     public ConnectToIISHost(): Observable<ApiConnection> {
-        return new Observable<ApiConnection>(observer => {
-            this.appContext.servicesReady.take(1).subscribe(_ => {
-                this.GetApiKey().subscribe(apiKey => {
-                    var connection = new ApiConnection(this.appContext.activeConnection.nodeName)
-                    if (apiKey.access_token) {
-                        connection.accessToken = apiKey.access_token
-                    } else {
-                        connection.accessToken = apiKey.value
-                    }
-                    this._tokenId = apiKey.id
-                    console.log(`received token ID from admin api: ${apiKey.id}`)
-                    this.connectService.connect(connection).then(c => {
-                        this.connectService.save(c)
-                        observer.next(connection)
-                        observer.complete()
-                    })
+        return this.appContext.servicesReady.take(1).mergeMap(_ =>
+            this.GetApiKey().map(apiKey => {
+                var connection = new ApiConnection(this.appContext.activeConnection.nodeName)
+                if (apiKey.access_token) {
+                    connection.accessToken = apiKey.access_token
+                } else {
+                    connection.accessToken = apiKey.value
+                }
+                this._tokenId = apiKey.id
+                console.log(`received token ID from admin api: ${apiKey.id}`)
+                this.connectService.connect(connection).then(c => {
+                    console.log(`saving connection`)
+                    this.connectService.save(c)
                 })
-            })
-        })
+                return connection
+            }))
     }
 
     private GetApiKey(): Observable<ApiKey> {
