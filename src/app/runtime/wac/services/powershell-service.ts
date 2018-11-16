@@ -4,7 +4,7 @@ import { PowerShell, PowerShellSession } from '@microsoft/windows-admin-center-s
 import 'rxjs/add/operator/catch'
 import { Observable } from 'rxjs'
 import { PowerShellScripts } from '../../../../generated/powershell-scripts'
-import { Request, Response, ResponseOptions } from '@angular/http'
+import { Request, Response, ResponseOptions, Headers } from '@angular/http'
 
 const PS_SESSION_KEY = '475e8b48-d4c4-4624-b719-f041067cb5fb'
 
@@ -34,6 +34,9 @@ export class PowershellService {
       (k, v) => {
         if (k === "body") {
           return atob(v)
+        } else if (k === "headers") {
+          // we need to explicitly wrap it otherwise when we pass it to new Response(res), the header would remain a plain object
+          return new Headers(v)
         }
         return v
       }).map(res => {

@@ -17,7 +17,7 @@ import { Observable } from 'rxjs';
 export class HttpClient {
     private _headers: Headers= new Headers();
     private _conn: ApiConnection;
-    private _transientObserver: Observable<ApiConnection>
+    private _connecting: Observable<ApiConnection>;
 
     constructor(@Inject("Http") private _http: HttpFacade,
                 private _notificationService: NotificationService,
@@ -153,19 +153,10 @@ export class HttpClient {
             console.log(`connection exists`)
             return this.performRequest(this._conn, url, options, warn)
         } else {
-            if (!this._transientObserver) {
-                console.log(`allocating connection`)
-                this._transientObserver = this.runtime.ConnectToIISHost().do(_ => {},
-                    e => {
-                        console.log(`encountered exception while connecting to host: ${JSON.stringify(e)}`)
-                        this._transientObserver = null
-                    }, () => {
-                        this._transientObserver = null
-                    })
-                return this._transientObserver.mergeMap(c => this.performRequest(c, url, options, warn))
-            } else {
-                return this._connectSvc.active.filter(c => c != null).mergeMap(c => this.performRequest(c, url, options, warn))
+            if (!this._connecting) {
+                this._connecting = this.runtime.ConnectToIISHost().shareReplay()
             }
+            return this._connecting.mergeMap(c => this.performRequest(c, url, options, warn))
         }
     }
 
