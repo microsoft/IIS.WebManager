@@ -72,9 +72,9 @@ var moduleImports: any[] =  [
 ]
 
 if (environment.WAC) {
-    moduleImports.push(WACAppRoutingModule)
+    moduleImports.unshift(WACAppRoutingModule)
 } else {
-    moduleImports.push(AppRoutingModule)
+    moduleImports.unshift(AppRoutingModule)
 }
 
 @NgModule({

@@ -12,7 +12,7 @@ import { ApiConnection } from '../connect/api-connection'
 import { PowerShellScripts } from '../../generated/powershell-scripts'
 import 'rxjs/add/operator/take'
 import 'rxjs/add/operator/map'
-import { Observable, Observer, Subscriber } from 'rxjs'
+import { Observable } from 'rxjs'
 
 class ApiKey {
     public id: string
@@ -22,16 +22,33 @@ class ApiKey {
 }
 
 @Injectable()
+export class WACInfo {
+    constructor(
+        private appContext: AppContextService,
+    ){
+    }
+
+    public get NodeName(): Observable<string> {
+        return this.appContext.servicesReady.map(_ =>
+            this.appContext.activeConnection.nodeName
+        ).shareReplay(1)
+    }
+}
+
+@Injectable()
 export class WACRuntime implements Runtime {
     private _tokenId: string
+    private powershellService: PowershellService
 
     constructor(
         private router: Router,
         private appContext: AppContextService,
         private navigationService: NavigationService,
         private connectService: ConnectService,
-        private powershellService: PowershellService,
+        private wac: WACInfo,
     ) {
+        // somehow DI was unable to create a powershellService
+        this.powershellService = new PowershellService(appContext, wac)
     }
 
     public InitContext() {
@@ -49,36 +66,51 @@ export class WACRuntime implements Runtime {
         }
     }
 
+    public IsWebServerScope() {
+        return true
+    }
+
     public ConnectToIISHost(): Observable<ApiConnection> {
-        return this.appContext.servicesReady.take(1).mergeMap(_ =>
-            this.GetApiKey().map(apiKey => {
-                var connection = new ApiConnection(this.appContext.activeConnection.nodeName)
-                if (apiKey.access_token) {
-                    connection.accessToken = apiKey.access_token
-                } else {
-                    connection.accessToken = apiKey.value
-                }
-                this._tokenId = apiKey.id
-                console.log(`received token ID from admin api: ${apiKey.id}`)
-                this.connectService.connect(connection).then(c => {
-                    console.log(`saving connection`)
-                    this.connectService.save(c)
-                })
-                return connection
-            }))
+        return Observable.forkJoin(
+            this.wac.NodeName,
+            this.GetApiKey(),
+        ).map(([nodeName, apiKey], _) => {
+            var connection = new ApiConnection(nodeName)
+            if (apiKey.access_token) {
+                connection.accessToken = apiKey.access_token
+            } else {
+                connection.accessToken = apiKey.value
+            }
+            this._tokenId = apiKey.id
+            console.log(`received token ID from admin api: ${apiKey.id}`)
+            this.connectService.connect(connection).then(c => {
+                console.log(`saving connection`)
+                this.connectService.save(c)
+            })
+            return connection
+        })
     }
 
     private GetApiKey(): Observable<ApiKey> {
+        console.log(`Getting Api Key`)
         var cmdParams: any = { command: 'ensure' }
         if (this._tokenId) {
             console.log(`existing token ID ${this._tokenId} will be refreshed`)
             cmdParams.tokenId = this._tokenId
         }
-        return this.powershellService.run<ApiKey>(PowerShellScripts.token_utils, cmdParams).catch((e, caught) => {
+        return this.powershellService.run<ApiKey>(PowerShellScripts.token_utils, cmdParams).catch((e, _) => {
+            console.log(`error getting api key`)
             if (e.status === 400 && e.response.exception === 'Unable to connect to the remote server') {
-                this.router.navigate(['wac', 'install'])
+                return Observable.throw(e).finally(() => {
+                    this.router.navigate(['wac', 'install'], {
+                        preserveFragment: false,
+                        preserveQueryParams: false,
+                        skipLocationChange: true,
+                        replaceUrl: true,
+                    })
+                })
             }
-            return caught
+            Observable.throw(e)
         })
     }
 }

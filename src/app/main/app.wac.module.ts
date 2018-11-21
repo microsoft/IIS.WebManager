@@ -10,7 +10,7 @@ import {
     IdleComponent
 } from '@microsoft/windows-admin-center-sdk/angular'
 
-import { WACRuntime } from '../runtime/runtime.wac'
+import { WACRuntime, WACInfo } from '../runtime/runtime.wac'
 import { BootstrapModule } from './bootstrap.module'
 import { AppComponent } from './app.component'
 import { PowershellService } from '../runtime/wac/services/powershell-service'
@@ -29,6 +29,7 @@ import { LocalHttpClient } from 'runtime/wac/services/local-http-client'
     ],
     bootstrap: [ AppComponent ],
     providers: [
+        WACInfo,
         ResourceService,
         PowershellService,
         { provide: ErrorHandler, useClass: AppErrorHandler },

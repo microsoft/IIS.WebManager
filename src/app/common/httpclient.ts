@@ -11,7 +11,7 @@ import {Runtime} from '../runtime/runtime';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import { HttpFacade } from './http-facade';
-import { Observable } from 'rxjs';
+import { Observable, ConnectableObservable } from 'rxjs';
 
 @Injectable()
 export class HttpClient {
@@ -28,6 +28,7 @@ export class HttpClient {
             if (c) {
                 console.log(`assigning conn`)
                 this._conn = c
+                this._connecting = null
             }})
     }
 
@@ -138,25 +139,30 @@ export class HttpClient {
                     title: "unknown error",
                     detail: JSON.stringify(e),
                 })
-                console.log(`unknown error: ${JSON.stringify(apiError)}`)
+                console.log(`Error caught while sending http request: ${JSON.stringify(apiError)}`)
                 this._notificationService.apiError(apiError)
                 throw apiError
             })
     }
 
-    public async request(url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<Response> {
-        return this.performRequestOnConnection(url, options, warn).toPromise()
+    public request(url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<Response> {
+        return this.requestOnConnection(url, options, warn).toPromise()
     }
 
-    private performRequestOnConnection(url: string, options?: RequestOptionsArgs, warn?: boolean): Observable<Response> {
+    private requestOnConnection(url: string, options?: RequestOptionsArgs, warn?: boolean): Observable<Response> {
         if (this._conn) {
             console.log(`connection exists`)
             return this.performRequest(this._conn, url, options, warn)
         } else {
             if (!this._connecting) {
-                this._connecting = this.runtime.ConnectToIISHost().shareReplay()
+                console.log(`new connection needs to be created`)
+                this._connecting = this.runtime.ConnectToIISHost().shareReplay(1)
             }
-            return this._connecting.mergeMap(c => this.performRequest(c, url, options, warn))
+            var result =  this._connecting.mergeMap(c => {
+                console.log(`connection established, performing request`)
+                return this.performRequest(c, url, options, warn)
+            })
+            return result
         }
     }
 
