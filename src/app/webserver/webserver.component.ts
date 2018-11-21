@@ -1,5 +1,4 @@
 import { Component, Inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 
 import { ModuleUtil } from '../utils/module';
 import { OptionsService } from '../main/options.service';
@@ -57,8 +56,7 @@ export class WebServerComponent {
 
     constructor( @Inject('WebServerService') private _service: WebServerService,
         private _http: HttpClient,
-        private _options: OptionsService,
-        private _route: ActivatedRoute) {
+        private _options: OptionsService) {
     }
 
     ngOnInit() {

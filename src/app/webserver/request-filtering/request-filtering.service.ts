@@ -1,6 +1,4 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-
+import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
@@ -9,12 +7,11 @@ import { Status } from '../../common/status';
 import { ApiError, ApiErrorType } from '../../error/api-error';
 import { HttpClient } from '../../common/httpclient';
 import {
-    RequestFilteringSettings,
-    RequestFilteringChildType,
     RequestFiltering,
     FilteringRule,
     FileExtension
 } from './request-filtering';
+import { Runtime } from 'runtime/runtime';
 
 @Injectable()
 export class RequestFilteringService {
@@ -27,8 +24,11 @@ export class RequestFilteringService {
     private _filteringRules: BehaviorSubject<Array<FilteringRule>> = new BehaviorSubject<Array<FilteringRule>>([]);
     private _fileExtensions: BehaviorSubject<Array<FileExtension>> = new BehaviorSubject<Array<FileExtension>>([]);
 
-    constructor(private _http: HttpClient, route: ActivatedRoute) {
-        this._webserverScope = route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver';
+    constructor(
+        private _http: HttpClient,
+        @Inject("Runtime") private runtime: Runtime,
+    ){
+        this._webserverScope = this.runtime.IsWebServerScope();
     }
 
     public get status(): Status {

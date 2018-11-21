@@ -1,6 +1,6 @@
 
 import { Injectable } from '@angular/core'
-import { Router } from '@angular/router'
+import { ActivatedRoute, Route } from '@angular/router'
 import { ConnectService } from '../connect/connect.service'
 import { ApiConnection } from '../connect/api-connection'
 import { Observable } from 'rxjs';
@@ -9,14 +9,21 @@ export interface Runtime {
     InitContext(): void
     DestroyContext(): void
     ConnectToIISHost(): Observable<ApiConnection>
+    IsWebServerScope(): boolean
 }
 
 @Injectable()
 export class StandardRuntime implements Runtime {
-    constructor(private connectService: ConnectService) {
+    private _isWebServerScope = false
+
+    constructor(
+        private connectService: ConnectService,
+        private route: ActivatedRoute,
+    ) {
     }
 
-    public InitContext() {}
+    public InitContext() {
+    }
 
     public DestroyContext() {}
 
@@ -27,5 +34,13 @@ export class StandardRuntime implements Runtime {
                 observer.complete()
             })
         })
+    }
+
+    public IsWebServerScope() {
+        // parent would be null if route parent was unchanged
+        if (this.route.snapshot.parent) {
+            this._isWebServerScope = this.route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver';
+        }
+        return this._isWebServerScope
     }
 }

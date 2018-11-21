@@ -41,7 +41,6 @@ export class WebSiteComponent implements OnInit {
     constructor(private _route: ActivatedRoute,
                 @Inject("WebSitesService") private _service: WebSitesService,
                 private _options: OptionsService) {
-
         this.id = this._route.snapshot.params['id'];
     }
 

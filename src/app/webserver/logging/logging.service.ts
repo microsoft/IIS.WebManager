@@ -1,5 +1,4 @@
 import { Injectable, Inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -14,6 +13,7 @@ import { FilesService } from '../../files/files.service';
 import { ApiError, ApiErrorType } from '../../error/api-error';
 import { WebSitesService } from '../websites/websites.service';
 import { NotificationService } from '../../notification/notification.service';
+import { Runtime } from 'runtime/runtime';
 
 @Injectable()
 export class LoggingService implements IDisposable {
@@ -26,14 +26,14 @@ export class LoggingService implements IDisposable {
     private _logging: BehaviorSubject<Logging> = new BehaviorSubject<Logging>(null);
     private _logs: BehaviorSubject<Array<ApiFile>> = new BehaviorSubject<Array<ApiFile>>([]);
 
-    constructor(private _http: HttpClient,
-                route: ActivatedRoute,
-                private _notifications: NotificationService,
-                @Inject('FilesService') private _filesService: FilesService,
-                @Inject('WebSitesService') private _webSitesService: WebSitesService) {
-
-        this._webserverScope = route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver';
-
+    constructor(
+        private _http: HttpClient,
+        private _notifications: NotificationService,
+        @Inject('FilesService') private _filesService: FilesService,
+        @Inject('WebSitesService') private _webSitesService: WebSitesService,
+        @Inject("Runtime") private runtime: Runtime,
+    ) {
+        this._webserverScope = this.runtime.IsWebServerScope();
         this._subscriptions.push(this._filesService.change.subscribe(evt => {
             if (evt.type == ChangeType.Deleted) {
                 this._logs.next(this._logs.getValue().filter(log => log.id != evt.target.id));

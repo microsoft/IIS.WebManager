@@ -1,8 +1,6 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Injectable, Inject } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 import { DiffUtil } from '../../utils/diff';
@@ -11,6 +9,7 @@ import { ApiError } from '../../error/api-error';
 import { HttpClient } from '../../common/httpclient';
 import { NotificationService } from '../../notification/notification.service';
 import { AnonymousAuthentication, BasicAuthentication, DigestAuthentication, WindowsAuthentication } from './authentication';
+import { Runtime } from 'runtime/runtime';
 
 @Injectable()
 export class AuthenticationService {
@@ -29,10 +28,12 @@ export class AuthenticationService {
     private _windowsStatus: Status = Status.Unknown;
     private _webserverScope: boolean;
 
-    constructor(private _http: HttpClient,
-                private _notificationService: NotificationService,
-                route: ActivatedRoute) {
-        this._webserverScope = route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver';
+    constructor(
+        private _http: HttpClient,
+        private _notificationService: NotificationService,
+        @Inject("Runtime") private runtime: Runtime,
+    ){
+        this._webserverScope = this.runtime.IsWebServerScope();
     }
 
     public get settings(): Observable<any> {

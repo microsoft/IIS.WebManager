@@ -49,27 +49,36 @@ import { WebSitesModule } from '../webserver/websites/websites.module';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { AppRoutingModule } from './app-routing.module';
 import { StandardRuntime } from '../runtime/runtime';
+import { environment } from 'environments/environment.wac.prod';
+import { WACAppRoutingModule } from './app-routing.wac.module';
+
+var moduleImports: any[] =  [
+    BrowserModule,
+    FormsModule,
+    Angulartics2Module.forRoot(),
+    BModel,
+    NotFound,
+    CheckBox,
+    Dynamic,
+    VTabs,
+    AutoFocus,
+    Tooltip,
+    Enum,
+    Selector,
+    WebSitesModule,
+    FilesModule,
+    MonitoringModule,
+    AngularFontAwesomeModule
+]
+
+if (environment.WAC) {
+    moduleImports.push(WACAppRoutingModule)
+} else {
+    moduleImports.push(AppRoutingModule)
+}
 
 @NgModule({
-    imports: [
-        BrowserModule,
-        FormsModule,
-        AppRoutingModule,
-        Angulartics2Module.forRoot(),
-        BModel,
-        NotFound,
-        CheckBox,
-        Dynamic,
-        VTabs,
-        AutoFocus,
-        Tooltip,
-        Enum,
-        Selector,
-        WebSitesModule,
-        FilesModule,
-        MonitoringModule,
-        AngularFontAwesomeModule
-    ],
+    imports: moduleImports,
     declarations: [AppComponent,
         HomeComponent,
         ConnectComponent,

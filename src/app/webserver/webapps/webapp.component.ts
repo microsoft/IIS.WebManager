@@ -45,7 +45,6 @@ export class WebAppComponent implements OnInit {
                 @Inject("WebAppsService") private _service: WebAppsService,
                 private _options: OptionsService,
                 private _router: Router) {
-
         this.id = this._route.snapshot.params["id"];
     }
 

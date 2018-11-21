@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Injectable, Inject } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -8,6 +7,7 @@ import { Status } from '../../common/status';
 import { HttpClient } from '../../common/httpclient';
 import { ApiError, ApiErrorType } from '../../error/api-error';
 import { Authorization, AuthRule } from './authorization'
+import { Runtime } from 'runtime/runtime';
 
 @Injectable()
 export class AuthorizationService {
@@ -19,8 +19,11 @@ export class AuthorizationService {
     private _authorization: BehaviorSubject<Authorization> = new BehaviorSubject<Authorization>(null);
     private _rules: BehaviorSubject<Array<AuthRule>> = new BehaviorSubject<Array<AuthRule>>([]);
 
-    constructor(private _http: HttpClient, route: ActivatedRoute) {
-        this._webserverScope = route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver';
+    constructor(
+        private _http: HttpClient,
+        @Inject("Runtime") private runtime: Runtime,
+    ){
+            this._webserverScope = this.runtime.IsWebServerScope();
     }
 
     public get authorization(): Observable<Authorization> {

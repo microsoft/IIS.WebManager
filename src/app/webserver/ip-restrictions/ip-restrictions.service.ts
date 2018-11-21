@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Injectable, Inject } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -9,6 +8,7 @@ import { Status } from '../../common/status';
 import { HttpClient } from '../../common/httpclient';
 import { ApiError, ApiErrorType } from '../../error/api-error';
 import { IpRestrictions, RestrictionRule } from './ip-restrictions';
+import { Runtime } from 'runtime/runtime';
 
 @Injectable()
 export class IpRestrictionsService {
@@ -20,8 +20,11 @@ export class IpRestrictionsService {
     private _ipRestrictions: BehaviorSubject<IpRestrictions> = new BehaviorSubject<IpRestrictions>(null);
     private _rules: BehaviorSubject<Array<RestrictionRule>> = new BehaviorSubject<Array<RestrictionRule>>([]);
 
-    constructor(private _http: HttpClient, route: ActivatedRoute) {
-        this._webserverScope = route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver';
+    constructor(
+        private _http: HttpClient,
+        @Inject("Runtime") private runtime: Runtime,
+    ){
+        this._webserverScope = this.runtime.IsWebServerScope();
     }
 
     public get status(): Status {

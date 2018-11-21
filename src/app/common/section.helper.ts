@@ -1,4 +1,4 @@
-import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { Observable } from 'rxjs/Observable'
@@ -13,16 +13,14 @@ export class SectionHelper implements IDisposable {
     private _markLocation: boolean;
     private _router: Router;
     private _location: Location;
-    private _route: ActivatedRoute;
     private _sections: Array<string> = [];
     private _hashCache: Array<string> = [];
     private _subscriptions: Array<Subscription> = [];
     private _active: BehaviorSubject<string> = new BehaviorSubject<string>("");
 
-    constructor(sections: Array<string>, defaultSection: string, markLocation: boolean, location: Location, activatedRoute: ActivatedRoute, router: Router) {
+    constructor(sections: Array<string>, defaultSection: string, markLocation: boolean, location: Location, router: Router) {
         this._markLocation = markLocation;
         this._location = location;
-        this._route = activatedRoute;
         this._router = router;
         this._sections = sections;
 

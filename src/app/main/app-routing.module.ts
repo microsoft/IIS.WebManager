@@ -11,8 +11,7 @@ import { SettingsModule } from '../settings/settings.module'
 import { WebServerModule } from '../webserver/webserver.module'
 
 // These are the basic routes that are required in order to load an extension and make service calls.
-const appRoutes: Routes = [
-    { path: '', component: HomeComponent },
+export const commonRoutes: Routes = [
     { path: 'get', component: GetComponent },
     { path: 'connect', component: ConnectComponent },
     { path: 'settings', loadChildren: LoadSettingsModule  },
@@ -21,6 +20,9 @@ const appRoutes: Routes = [
     // Not Found
     { path: '**', component: NotFound }
 ];
+
+const websiteRotes: Routes = [{ path: '', component: HomeComponent }]
+const appRoutes = websiteRotes.concat(commonRoutes)
 
 export function LoadSettingsModule() {
     return import('../settings/settings.module').then(m => m.SettingsModule)
@@ -36,7 +38,7 @@ export function LoadWebServerModule() {
             appRoutes,
             {
                 enableTracing: false,
-                initialNavigation: true
+                initialNavigation: true,
             })
     ],
     exports: [
