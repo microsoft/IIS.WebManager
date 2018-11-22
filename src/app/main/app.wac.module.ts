@@ -1,13 +1,11 @@
 import { CommonModule } from '@angular/common'
 import { NgModule, ErrorHandler } from '@angular/core'
-import { Router } from '@angular/router'
 import {
     CoreServiceModule,
     AppContextService,
     ResourceService,
     IdleModule,
     AppErrorHandler,
-    IdleComponent
 } from '@microsoft/windows-admin-center-sdk/angular'
 
 import { WACRuntime, WACInfo } from '../runtime/runtime.wac'

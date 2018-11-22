@@ -11,13 +11,12 @@ import {Runtime} from '../runtime/runtime';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import { HttpFacade } from './http-facade';
-import { Observable, ConnectableObservable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class HttpClient {
     private _headers: Headers= new Headers();
     private _conn: ApiConnection;
-    private _connecting: Observable<ApiConnection>;
 
     constructor(@Inject("Http") private _http: HttpFacade,
                 private _notificationService: NotificationService,
@@ -28,7 +27,6 @@ export class HttpClient {
             if (c) {
                 console.log(`assigning conn`)
                 this._conn = c
-                this._connecting = null
             }})
     }
 
@@ -46,9 +44,6 @@ export class HttpClient {
     }
 
     public get(url: string, options?: RequestOptionsArgs, warn: boolean = true): Promise<any> {
-        // if (url.endsWith('webserver')) {
-        //     debugger
-        // }
         let ops: RequestOptionsArgs = this.getOptions(RequestMethod.Get, url, options);
         return this.request(url, ops, warn)
             .then(res => res.status !== 204 ? res.json() : null);
@@ -154,15 +149,11 @@ export class HttpClient {
             console.log(`connection exists`)
             return this.performRequest(this._conn, url, options, warn)
         } else {
-            if (!this._connecting) {
-                console.log(`new connection needs to be created`)
-                this._connecting = this.runtime.ConnectToIISHost().shareReplay(1)
-            }
-            var result =  this._connecting.mergeMap(c => {
+            console.log(`connection is not ready yet`)
+            return this.runtime.ConnectToIISHost().mergeMap(c => {
                 console.log(`connection established, performing request`)
                 return this.performRequest(c, url, options, warn)
             })
-            return result
         }
     }
 

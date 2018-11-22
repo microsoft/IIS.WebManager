@@ -201,13 +201,9 @@ export class ConnectComponent implements OnDestroy {
 
     private save() {
         this._service.save(this._conn);
-
-        this._service.active.subscribe(c => {
-            if (!c) {
-                this._service.connect(this._conn);
-            }
-        }).unsubscribe();
-
+        var sub = this._service.connect(this._conn).subscribe(_ => {}, _ => {}, () =>{
+            sub.unsubscribe()
+        })
         this._conn = new ApiConnection("");
         this._original = null;
 
@@ -225,7 +221,7 @@ export class ConnectComponent implements OnDestroy {
             return;
         }
 
-        this._service.connect(this._conn).then(conn => {
+        this._service.connect(this._conn).subscribe(conn => {
             this._service.save(this._conn);
         });
     }

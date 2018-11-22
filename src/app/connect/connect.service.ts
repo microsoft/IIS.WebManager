@@ -53,7 +53,7 @@ export class ConnectService {
         return this._edit.asObservable();
     }
 
-    public connect(conn: ApiConnection, popup: boolean = true): Promise<any> {
+    public connect(conn: ApiConnection, popup: boolean = true): Observable<ApiConnection> {
         this.reset();
         this._connecting.next(conn);
 
@@ -70,14 +70,17 @@ export class ConnectService {
             });
         }
 
-        return this._client.get(conn, "/api").toPromise()
-            .then(_ => {
+        return this._client.get(conn, "/api")
+            .map(_ => {
                 this.complete(conn);
-                return Promise.resolve(conn);
+                this.save(conn);
+                return conn;
             })
-            .catch(_ => {
-                return this.gotoConnect(true).then(_ => {
-                    return this.ping(conn, new Date().getTime() + ConnectService.PING_TIMEOUT, popup);
+            .catch((e, __) => {
+                return new Observable<ApiConnection>(observer => {
+                    this.gotoConnect(true)
+                        .then(_ => this.ping(conn, new Date().getTime() + ConnectService.PING_TIMEOUT, popup)
+                            .then(_ => observer.error(e)))
                 })
             });
     }
@@ -95,6 +98,10 @@ export class ConnectService {
         if (this._connecting.getValue()) {
             this._connecting.next(null);
         }
+    }
+
+    public setActive(conn: ApiConnection) {
+        this._store.setActive(conn)
     }
 
     public save(conn: ApiConnection) {

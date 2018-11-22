@@ -7,5 +7,4 @@ import { Component } from '@angular/core';
         <span>Navigating...</span>
     `
 })
-export class WACIdleComponent {
-}
+export class WACIdleComponent {}
