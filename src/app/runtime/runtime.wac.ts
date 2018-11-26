@@ -1,4 +1,4 @@
-import {DateTime} from '../common/primitives'
+import { DateTime } from '../common/primitives'
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import {
@@ -59,9 +59,10 @@ export class WACRuntime implements Runtime {
 
     public DestroyContext() {
         if (this._tokenId) {
-            this.powershellService.run(PowerShellScripts.token_utils, { command: 'delete', tokenId: this._tokenId }).subscribe(_ => {
+            console.log(`attempting to remove access key ${this._tokenId}`)
+            this.powershellService.run(PowerShellScripts.token_utils, { command: 'delete', tokenId: this._tokenId }).finally(() =>
                 this.appContext.ngDestroy()
-            })
+            ).subscribe()
         } else {
             this.appContext.ngDestroy()
         }
@@ -86,9 +87,6 @@ export class WACRuntime implements Runtime {
                     this._tokenId = apiKey.id
                     return connection
                 })
-                // .mergeMap(connection => {
-                //     return this.connectService.connect(connection)
-                // })
                 .publishReplay(1).refCount()
         }
         this._connecting.subscribe(c => {

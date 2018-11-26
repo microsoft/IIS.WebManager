@@ -1,15 +1,9 @@
-import { Inject, Component, ViewEncapsulation, OnInit, OnDestroy, ViewChild, ElementRef, Renderer } from '@angular/core';
+import { Inject, Component, ViewEncapsulation, OnInit, ViewChild, ElementRef, Renderer, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { Angulartics2 } from 'angulartics2';
 import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-ga';
-
-import { ConnectService } from '../connect/connect.service';
 import { LoadingService } from '../notification/loading.service';
 import { WindowService } from './window.service';
-import { VersionService } from '../versioning/version.service';
-import { ServerAnalyticService } from '../webserver/server-analytic.service';
-import { AppContextService, NavigationService } from '@microsoft/windows-admin-center-sdk/angular';
 import { Runtime } from '../runtime/runtime';
 import { environment } from '../environments/environment'
 
@@ -72,15 +66,12 @@ import { environment } from '../environments/environment'
         </div>
     `
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
     constructor(private _router: Router,
-        private _connectService: ConnectService,
         private _loadingSvc: LoadingService,
         private _windowService: WindowService,
-        private _versionService: VersionService,
-        private _serverAnalyticService: ServerAnalyticService,
-        @Inject("Runtime") private runtime: Runtime,
         private _renderer: Renderer,
+        @Inject("Runtime") private runtime: Runtime,
         angulartics2: Angulartics2,
         angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
     }
@@ -90,11 +81,6 @@ export class AppComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.runtime.InitContext()
         this._windowService.initialize(this.mainContainer, this._renderer)
-    }
-
-    ngOnDestroy() {
-        this._loadingSvc.destroy()
-        this.runtime.DestroyContext()
     }
 
     showHeader() {
@@ -107,6 +93,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
     isRouteActive(route: string): boolean {
         return this._router.isActive(route, true);
+    }
+
+    @HostListener('window:beforeunload', ['$event'])
+    beforeUnloadHander(_) {
+        this._loadingSvc.destroy()
+        this.runtime.DestroyContext()
     }
 
     private dragOver(e: DragEvent) {
