@@ -30,7 +30,6 @@ export class StandardRuntime implements Runtime {
     public ConnectToIISHost(): Observable<ApiConnection> {
         return Observable.create(observer => {
             this.connectService.gotoConnect(false).then(_ => {
-                console.log(`navigate to connect page`)
                 observer.complete()
             })
         })

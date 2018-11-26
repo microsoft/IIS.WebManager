@@ -29,7 +29,7 @@ import {AppPoolsService} from './app-pools.service';
                 </item>
             </vtabs>
         </div>
-    `
+`,
 })
 export class AppPoolComponent implements OnInit {
     private id: string;

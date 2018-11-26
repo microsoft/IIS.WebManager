@@ -2,12 +2,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from "rxjs/Observable";
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
-
 import { Status } from '../common/status';
 import { HttpClient } from '../common/httpclient';
 import { NotificationService } from '../notification/notification.service';
 import { ApiError, ApiErrorType } from '../error/api-error';
-
 import { WebServer } from './webserver';
 
 @Injectable()

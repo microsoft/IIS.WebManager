@@ -1,20 +1,17 @@
 import { Injectable, Inject, Optional } from '@angular/core';
-
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
 import { IDisposable } from '../../common/idisposable';
 import { ChangeType } from '../../files/file';
 import { FilesService } from '../../files/files.service';
-
 import { Status } from '../../common/status';
 import { HttpClient } from '../../common/httpclient';
 import { RequestTracing, Provider, RequestTracingRule, TraceLog } from './request-tracing';
 import { Runtime } from 'runtime/runtime';
 
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
 
 
 @Injectable()

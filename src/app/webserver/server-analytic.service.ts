@@ -1,14 +1,9 @@
 ﻿import { Injectable, OnDestroy } from '@angular/core';
-import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-ga';
-
 import { Subscription } from 'rxjs/Subscription';
-
 import { HttpClient } from '../common/httpclient';
 import { ApiConnection } from '../connect/api-connection';
 import { ConnectService } from '../connect/connect.service';
 import { SETTINGS } from '../main/settings';
-import { Notification, NotificationType } from '../notification/notification';
-
 
 @Injectable()
 export class ServerAnalyticService implements OnDestroy {
@@ -53,7 +48,6 @@ export class ServerAnalyticService implements OnDestroy {
                 this.setupAnalytics(clientId);
             })
             .catch(e => {
-                console.log(`caught error, ${JSON.stringify(e)}`)
                 // NoOp
             });
         }

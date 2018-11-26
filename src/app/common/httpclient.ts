@@ -7,11 +7,11 @@ import {ApiConnection} from '../connect/api-connection'
 import {ApiError, ApiErrorType} from '../error/api-error';
 import {ConnectService} from '../connect/connect.service';
 import {Runtime} from '../runtime/runtime';
+import { HttpFacade } from './http-facade';
+import { Observable } from 'rxjs';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
-import { HttpFacade } from './http-facade';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class HttpClient {
@@ -25,7 +25,6 @@ export class HttpClient {
     {
         this._connectSvc.active.subscribe(c => {
             if (c) {
-                console.log(`assigning conn`)
                 this._conn = c
             }})
     }
@@ -134,7 +133,6 @@ export class HttpClient {
                     title: "unknown error",
                     detail: JSON.stringify(e),
                 })
-                console.log(`Error caught while sending http request: ${JSON.stringify(apiError)}`)
                 this._notificationService.apiError(apiError)
                 throw apiError
             })
@@ -146,12 +144,9 @@ export class HttpClient {
 
     private requestOnConnection(url: string, options?: RequestOptionsArgs, warn?: boolean): Observable<Response> {
         if (this._conn) {
-            console.log(`connection exists`)
             return this.performRequest(this._conn, url, options, warn)
         } else {
-            console.log(`connection is not ready yet`)
             return this.runtime.ConnectToIISHost().mergeMap(c => {
-                console.log(`connection established, performing request`)
                 return this.performRequest(c, url, options, warn)
             })
         }

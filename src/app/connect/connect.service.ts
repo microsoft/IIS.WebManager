@@ -7,10 +7,10 @@ import { NotificationService } from '../notification/notification.service';
 import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { environment } from '../environments/environment'
-
-import 'rxjs/add/operator/toPromise';
 import { ApiErrorType } from 'error/api-error';
 import { HttpFacade } from 'common/http-facade';
+
+import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class ConnectService {

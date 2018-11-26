@@ -10,9 +10,10 @@ import { PowershellService } from './wac/services/powershell-service'
 import { ConnectService } from '../connect/connect.service'
 import { ApiConnection } from '../connect/api-connection'
 import { PowerShellScripts } from '../../generated/powershell-scripts'
+import { Observable } from 'rxjs'
+
 import 'rxjs/add/operator/take'
 import 'rxjs/add/operator/map'
-import { Observable } from 'rxjs'
 
 class ApiKey {
     public id: string
@@ -58,7 +59,6 @@ export class WACRuntime implements Runtime {
 
     public DestroyContext() {
         if (this._tokenId) {
-            console.log(`removing token ${this._tokenId}`)
             this.powershellService.run(PowerShellScripts.token_utils, { command: 'delete', tokenId: this._tokenId }).subscribe(_ => {
                 this.appContext.ngDestroy()
             })
@@ -84,7 +84,6 @@ export class WACRuntime implements Runtime {
                         connection.accessToken = apiKey.value
                     }
                     this._tokenId = apiKey.id
-                    console.log(`received token ID from admin api: ${apiKey.id}`)
                     return connection
                 })
                 // .mergeMap(connection => {
@@ -100,14 +99,11 @@ export class WACRuntime implements Runtime {
     }
 
     private GetApiKey(): Observable<ApiKey> {
-        console.log(`Getting Api Key`)
         var cmdParams: any = { command: 'ensure' }
         if (this._tokenId) {
-            console.log(`existing token ID ${this._tokenId} will be refreshed`)
             cmdParams.tokenId = this._tokenId
         }
         return this.powershellService.run<ApiKey>(PowerShellScripts.token_utils, cmdParams).catch((e, _) => {
-            console.log(`error getting api key`)
             if (e.status === 400 && e.response.exception === 'Unable to connect to the remote server') {
                 return Observable.throw(e).finally(() => {
                     this.router.navigate(['wac', 'install'], {

@@ -1,8 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
-
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
 import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
 import { HttpClient } from '../../common/httpclient';

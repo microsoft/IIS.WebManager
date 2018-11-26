@@ -16,9 +16,6 @@ function stringify($content) {
     }
 }
 
-$httpLogs = Join-Path $env:USERPROFILE "http.log"
-Add-Content -Path $httpLogs -Value "encrypted: $requestBase64" -Force | Out-Null
-
 $decoded = $contentEncoding.GetString([System.Convert]::FromBase64String($requestBase64))
 $reqObj = ConvertFrom-Json $decoded
 $uri = [System.UriBuilder]$reqObj.url
@@ -41,9 +38,6 @@ if ($reqObj.headers) {
     }
 }
 
-$transformed = $req | ConvertTo-Json -Compress -Depth 100
-Add-Content -Path $httpLogs -Value "decoded: $transformed" -Force | Out-Null
-
 try {
     $res = Invoke-WebRequest -UseBasicParsing -UseDefaultCredentials @req
 } catch {
@@ -61,6 +55,5 @@ try {
         "headers" = $res.Headers;
         "body" = $content
     } -Compress -Depth 100
-    Add-Content -Path $httpLogs -Value "result: $result" -Force | Out-Null
     $result
 }

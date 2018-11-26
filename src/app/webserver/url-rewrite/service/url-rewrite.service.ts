@@ -1,8 +1,6 @@
 ﻿import { Injectable, Inject } from '@angular/core';
-
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
 import { NotificationService } from '../../../notification/notification.service';
 import { Status } from '../../../common/status';
 import { ApiError, ApiErrorType } from '../../../error/api-error';
@@ -19,7 +17,6 @@ import {
     Provider,
     ProvidersSection
 } from '../url-rewrite';
-
 import { GlobalService } from './global.service';
 import { InboundService } from './inbound.service';
 import { Runtime } from 'runtime/runtime';
