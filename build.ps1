@@ -24,6 +24,8 @@ try {
 
     Write-Host "Building project..."
     gulp build $buildArgs
+
+    nuget pack -OutputDirectory ..\dist
 } finally {
     Pop-Location
 }

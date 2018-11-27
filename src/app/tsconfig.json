@@ -13,7 +13,6 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "rootDir": "app",
-        "outDir": "../dist/app",
         "sourceMap": true,
         "target": "es5",
         "noEmitOnError": true,

@@ -35,7 +35,7 @@ gulp.task('license', () => {
 });
 
 gulp.task('clean', () => {
-    return gulp.src(['dist', 'bundle', 'generated', 'app/assets/strings', 'inlineSrc'], { read: false })
+    return gulp.src(['../dist', '../bundle', 'generated', 'app/assets/strings', 'inlineSrc'], { read: false })
         .pipe(clean({ force: true }));
 });
 
@@ -95,8 +95,8 @@ gulp.task('inline', function() {
 });
 
 gulp.task('copy', () => {
-    return gulp.src(['./**/*.json', './**/*.d.ts', './app/assets/**/*.*'], { base: '.' })
-        .pipe(gulp.dest('dist'));
+    return gulp.src(['./app/**/*.json', './app/**/*.d.ts', './app/assets/**/*.*'], { base: '.' })
+        .pipe(gulp.dest('../dist'));
 });
 
 gulp.task('compile', () => {
