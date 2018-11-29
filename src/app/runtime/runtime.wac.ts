@@ -11,6 +11,7 @@ import { ConnectService } from '../connect/connect.service'
 import { ApiConnection } from '../connect/api-connection'
 import { PowerShellScripts } from '../../generated/powershell-scripts'
 import { Observable } from 'rxjs'
+import { ApiErrorType } from 'error/api-error';
 
 import 'rxjs/add/operator/take'
 import 'rxjs/add/operator/map'
@@ -24,15 +25,12 @@ class ApiKey {
 
 @Injectable()
 export class WACInfo {
-    constructor(
-        private appContext: AppContextService,
-    ){
-    }
+    constructor(private appContext: AppContextService){}
 
     public get NodeName(): Observable<string> {
         return this.appContext.servicesReady.map(_ =>
             this.appContext.activeConnection.nodeName
-        ).publishReplay().refCount()
+        ).shareReplay()
     }
 }
 
@@ -59,7 +57,6 @@ export class WACRuntime implements Runtime {
 
     public DestroyContext() {
         if (this._tokenId) {
-            console.log(`attempting to remove access key ${this._tokenId}`)
             this.powershellService.run(PowerShellScripts.token_utils, { command: 'delete', tokenId: this._tokenId }).finally(() =>
                 this.appContext.ngDestroy()
             ).subscribe()
@@ -86,8 +83,7 @@ export class WACRuntime implements Runtime {
                     }
                     this._tokenId = apiKey.id
                     return connection
-                })
-                .publishReplay(1).refCount()
+                }).shareReplay()
         }
         this._connecting.subscribe(c => {
             this.connectService.setActive(c)
@@ -103,16 +99,11 @@ export class WACRuntime implements Runtime {
         }
         return this.powershellService.run<ApiKey>(PowerShellScripts.token_utils, cmdParams).catch((e, _) => {
             if (e.status === 400 && e.response.exception === 'Unable to connect to the remote server') {
-                return Observable.throw(e).finally(() => {
-                    this.router.navigate(['wac', 'install'], {
-                        preserveFragment: false,
-                        preserveQueryParams: false,
-                        skipLocationChange: true,
-                        replaceUrl: true,
-                    })
+                return Observable.throw(ApiErrorType.Unreachable).finally(() => {
+                    this.router.navigate(['wac', 'install'])
                 })
             }
-            Observable.throw(e)
+            return Observable.throw(e)
         })
     }
 }

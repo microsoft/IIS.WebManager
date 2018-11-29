@@ -108,7 +108,7 @@ export class HttpClient {
         // Set Access-Token
         req.headers.set('Access-Token', 'Bearer ' + conn.accessToken);
         return this._http.request(req)
-            .catch((e, c) => {
+            .catch((e, _) => {
                 // Status code 0 possible causes:
                 // Untrusted certificate
                 // Windows auth, prevents CORS headers from being accessed
@@ -119,22 +119,22 @@ export class HttpClient {
                             .catch((err, _) => {
                                 // Check to see if connected
                                 return this._http.options(this._conn.url)
-                                    .catch((e, c2) => {
+                                    .catch((e, _) => {
                                         this._connectSvc.reconnect();
                                         this.handleHttpError(err);
-                                        return c2
+                                        return Observable.throw(e)
                                     })
                                 })
                     }
                     this.handleHttpError(e, warn);
-                    throw e
+                    return Observable.throw(e)
                 }
                 let apiError = <ApiError>({
                     title: "unknown error",
                     detail: JSON.stringify(e),
                 })
                 this._notificationService.apiError(apiError)
-                throw apiError
+                return Observable.throw(apiError)
             })
     }
 

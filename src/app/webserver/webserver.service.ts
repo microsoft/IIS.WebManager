@@ -4,7 +4,6 @@ import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Status } from '../common/status';
 import { HttpClient } from '../common/httpclient';
-import { NotificationService } from '../notification/notification.service';
 import { ApiError, ApiErrorType } from '../error/api-error';
 import { WebServer } from './webserver';
 
@@ -16,8 +15,7 @@ export class WebServerService {
     private _statusChanged: BehaviorSubject<Status> = new BehaviorSubject<Status>(Status.Unknown);
     private _installStatus: Status = Status.Unknown;
 
-    constructor(private _http: HttpClient,
-                private _notificationService: NotificationService) {
+    constructor(private _http: HttpClient) {
     }
 
     get status(): Observable<Status> {

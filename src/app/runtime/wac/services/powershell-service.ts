@@ -20,7 +20,7 @@ export class PowershellService {
   ) {
     this.session = this.wac.NodeName.map(nodeName => {
       return this.appContext.powerShell.createSession(nodeName, PS_SESSION_KEY)
-    }).publishReplay(1).refCount()
+    }).shareReplay()
     // not exactly sure why we need to force evaluate this observable here
     // but if we don't, install page would not work
     let sub = this.session.subscribe(_=>{},_=>{}, ()=>{
