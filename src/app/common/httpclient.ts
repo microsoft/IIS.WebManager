@@ -81,6 +81,10 @@ export class HttpClient {
         return this._conn;
     }
 
+    public request(url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<Response> {
+        return this.requestOnConnection(url, options, warn).toPromise()
+    }
+
     private setJsonContentType(options?: RequestOptionsArgs) {
         if (!options) {
             options = {};
@@ -93,6 +97,15 @@ export class HttpClient {
         options.headers.set("Content-Type", "application/json");
 
         return options;
+    }
+
+    private requestOnConnection(url: string, options?: RequestOptionsArgs, warn?: boolean): Observable<Response> {
+        if (this._conn) {
+            return this.performRequest(this._conn, url, options, warn)
+        } else {
+            return this.runtime.ConnectToIISHost().mergeMap(connection =>
+                this.performRequest(connection, url, options, warn))
+        }
     }
 
     private performRequest(conn: ApiConnection, url: string, options?: RequestOptionsArgs, warn?: boolean): Observable<Response> {
@@ -138,24 +151,10 @@ export class HttpClient {
             })
     }
 
-    public request(url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<Response> {
-        return this.requestOnConnection(url, options, warn).toPromise()
-    }
-
-    private requestOnConnection(url: string, options?: RequestOptionsArgs, warn?: boolean): Observable<Response> {
-        if (this._conn) {
-            return this.performRequest(this._conn, url, options, warn)
-        } else {
-            return this.runtime.ConnectToIISHost().mergeMap(c => {
-                return this.performRequest(c, url, options, warn)
-            })
-        }
-    }
-
     private handleHttpError(err, warn?: boolean) {
         if (err.status == 403 && err.headers.get("WWW-Authenticate") === "Bearer") {
             this._connectSvc.reconnect();
-            throw "not connected"
+            throw "Not connected"
         }
         let apiError = this.apiErrorFromHttp(err);
         if (apiError && warn) {

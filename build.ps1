@@ -1,19 +1,34 @@
 $ErrorActionPreference = "Stop"
 
+$purge = $args | Where-Object { $_ -like "--purge" }
+$pack = $args | Where-Object { $_ -like "--pack" }
+
+if (!(Get-Command "npm" -ErrorAction SilentlyContinue)) {
+    throw "npm is required in PATH"
+}
+
+if ($purge -and !(Get-Command "git" -ErrorAction SilentlyContinue)) {
+    throw """--purge"" operation requires git in PATH"
+}
+
+if ($pack -and !(Get-Command "nuget" -ErrorAction SilentlyContinue)) {
+    throw """--pack"" operation requires nugetin PATH"
+}
+
+$buildArgs = $args | Where-Object { $_ -notlike "--purge" -and $_ -notlike "--pack" }
+
 Push-Location src
 try {
-    $NODE_MODULES="node_modules"
-    if ($args | Where-Object { $_ -like "--purge" }) {
-        if (Test-Path $NODE_MODULES) {
-            Write-Host "Remove $NODE_MODULES..."
-            Remove-Item -Force -Recurse $NODE_MODULES | Out-Null
+    if ($purge) {
+        try {
+            git clean -xdf
+        } catch {
+            ## Sometimes somehow git clean throws error, ignoring any clean up error
+            Write-Error $_ -ErrorAction Continue
         }
-        $buildArgs = $args | Where-Object { $_ -notlike "--purge" }
-    } else {
-        $buildArgs = $args
     }
-    
-    if (!(Test-Path $NODE_MODULES)) {
+
+    if (!(Test-Path "node_modules")) {
         Write-Host "Installing dependencies..."
         npm install
     }
@@ -25,7 +40,9 @@ try {
     Write-Host "Building project..."
     gulp build $buildArgs
 
-    nuget pack -OutputDirectory ..\dist
+    if ($pack) {
+        nuget pack . -OutputDirectory (Resolve-Path "..\dist").Path
+    }
 } finally {
     Pop-Location
 }

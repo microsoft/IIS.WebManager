@@ -39,17 +39,21 @@ export class PowershellService {
       PowerShellScripts.local_http,
       { requestBase64: requestEncoded },
       (k, v) => {
-        if (k === "body") {
-          try {
-            return atob(v)
-          } catch {
+        switch (k) {
+          case "body":
+            try {
+              return atob(v)
+            } catch {
+              return v
+            }
+
+          case "headers":
+            // we need to explicitly wrap it otherwise when we pass it to new Response(res), the header would remain a plain object
+            return new Headers(v)
+
+          default:
             return v
-          }
-        } else if (k === "headers") {
-          // we need to explicitly wrap it otherwise when we pass it to new Response(res), the header would remain a plain object
-          return new Headers(v)
         }
-        return v
       }).map(res => {
         let response = new Response(res)
         if (res.status < 200 || res.status >= 400) {

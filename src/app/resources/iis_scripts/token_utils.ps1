@@ -15,7 +15,10 @@ Param(
     $tokenId,
 
     [string]
-    $apiHost = "https://localhost:55539"
+    $apiHost = "https://localhost:55539",
+
+    [int]
+    $tokenExpiryDays = 3
 )
 
 $ErrorActionPreference = "Stop"
@@ -76,7 +79,7 @@ if ($tokenId) {
 if ($command -eq 'ensure') {
     if ($existingToken) {
         ## always renew token when this script is called because there was no way to query for existing token's value
-        $existingToken.expires_on = (Get-Date).AddDays(3).ToString()
+        $existingToken.expires_on = (Get-Date).AddDays($tokenExpiryDays).ToString()
         ## This is an odd behavior: we need to wrap the existing token in a new object
         $output = TokenRequest -targetEndpoint $RenewEndpoint -method "POST" -requestBody @{ "api_key" = $existingToken }
     } else {

@@ -9,11 +9,13 @@ $contentEncoding = [System.Text.Encoding]::UTF8
 function stringify($content) {
     if ((!$content) -or ($content -is [System.String])) {
         return $content
-    } elseif ($content -is [System.Byte[]]) {
-        return [System.Convert]::ToBase64String($content)
-    } else {
-        return $content.ToString()
     }
+
+    if ($content -is [System.Byte[]]) {
+        return [System.Convert]::ToBase64String($content)
+    }
+
+    return $content.ToString()
 }
 
 $decoded = $contentEncoding.GetString([System.Convert]::FromBase64String($requestBase64))

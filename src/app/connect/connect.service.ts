@@ -76,7 +76,7 @@ export class ConnectService {
                 this.save(conn);
                 return conn;
             })
-            .catch((e, __) => {
+            .catch((e, _) => {
                 return new Observable<ApiConnection>(observer => {
                     this.gotoConnect(true)
                         .then(_ => this.ping(conn, new Date().getTime() + ConnectService.PING_TIMEOUT, popup)
