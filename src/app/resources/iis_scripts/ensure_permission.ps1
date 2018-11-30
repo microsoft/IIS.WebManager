@@ -65,6 +65,7 @@ function EnsureAcl($file, $action) {
     Invoke-Command $action
 
     if ($modifyAcl) {
+        ## There's a small room for race condition here, consider if the $fileAcl changes between the Get-Acl and Set-Acl
         $fileAcl = Get-Acl $file
         $fileAcl.RemoveAccessRule($ar)
         Set-Acl $file $fileAcl
