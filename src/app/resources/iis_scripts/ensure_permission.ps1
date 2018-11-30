@@ -41,19 +41,9 @@ $config = Get-Content -Raw -Path $configLocation | ConvertFrom-Json
 
 $user = $(whoami)
 $userPolicy = $config.security.users.administrators | Where-Object { $_ -like $user }
-$originPolicy = $config.cors.rules | Where-Object { $_ -like $origin }
 
-if (!$userPolicy -or !$originPolicy -or !$originPolicy.allow) {
-    if (!$userPolicy) {
-        $config.security.users.administrators += $user
-    }
-
-    if (!$originPolicy) {
-        $config.cors.rules += New-Object PSObject -Property @{ "origin" = $origin; "allow" = $true }
-    } elseif (!$originPolicy.allow) {
-        $originPolicy.allow = $true
-    }
-    
+if (!$userPolicy) {
+    $config.security.users.administrators += $user
     $originalAcl = Get-Acl $configLocation
     $newAcl = Get-Acl $configLocation
     $ar = New-Object System.Security.AccessControl.FileSystemAccessRule($user, "write", "allow")
@@ -61,30 +51,7 @@ if (!$userPolicy -or !$originPolicy -or !$originPolicy.allow) {
     Set-Acl $configLocation $newAcl
     $config | ConvertTo-Json -depth 100 | Out-File $configLocation
     Set-Acl $configLocation $originalAcl
-
     Restart-Service -Name $serviceName
-}
-
-if ($firewallRule -eq "host") {
-    $ips = [System.Net.Dns]::GetHostAddresses($requestHost)
-
-    if (!$ips) {
-        throw "Cannot resolve IP for $requestHost"
-    }
-
-    ## Prefer IPv6
-    $selectedIp = $ips | Where-Object { $_.AddressFamily -eq "InterNetworkV6" }
-    if (!$selectedIp) {
-        $selectedIp = $ips[0]
-    }
-
-    $firewallRuleName = "wac-iis.$selectedIp"
-
-    if (!(Get-NetFirewallProfile -Name $firewallRuleName -ErrorAction SilentlyContinue)) {
-        New-NetFirewallRule -Name $firewallRuleName -DisplayName "wac-iis-$requestHost.$selectedIp" `
-            -Description "Enabled by Windows Admin Center: allow $requestHost to access admin api, port $adminAPIPort" `
-            -Enabled "true" -RemoteAddress $selectedIp -Action "allow" -LocalPort $adminAPIPort -Direction Inbound
-    }
 }
 
 '{ "result" : "permission modified" }'
