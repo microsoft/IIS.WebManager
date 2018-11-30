@@ -43,10 +43,11 @@ if ($reqObj.headers) {
 try {
     $res = Invoke-WebRequest -UseBasicParsing -UseDefaultCredentials @req
 } catch {
+    $errMsg = $_.Exception.Message
     $res = $_.Exception.Response
 } finally {
     if (!$res) {
-        throw "No response is returned."
+        throw $errMsg
     }
     $content = stringify $res.Content
     $result = ConvertTo-Json @{

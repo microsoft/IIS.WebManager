@@ -1,5 +1,29 @@
 $ErrorActionPreference = "Stop"
 
+<#
+.SYNOPSIS
+Sometimes right after git clean is called we are unable to stat the directory currently being deleted
+This function workaround that by retrying Test-Path command multiple times
+#>
+function ShouldNPMInstall {
+    $npmInstallNeeded = "donno"
+    $testPathRetry = 20
+    $nodeModuleDir = "node_modules"
+    while  ((($testPathRetry--) -and ("donno" -eq $npmInstallNeeded))) {
+        try {
+            $npmInstallNeeded = !(Test-Path $nodeModuleDir)
+        } catch {
+            Write-Verbose "Retrying stats on $nodeModuleDir due to error returned: $_"
+            Start-Sleep 1
+        }
+    }
+
+    if ("donno" -eq $npmInstallNeeded) {
+        throw "Unable to stat src/$nodeModuleDir"
+    }
+    return $npmInstallNeeded
+}
+
 $purge = $args | Where-Object { $_ -like "--purge" }
 $pack = $args | Where-Object { $_ -like "--pack" }
 
@@ -20,15 +44,10 @@ $buildArgs = $args | Where-Object { $_ -notlike "--purge" -and $_ -notlike "--pa
 Push-Location src
 try {
     if ($purge) {
-        try {
-            git clean -xdf
-        } catch {
-            ## Sometimes somehow git clean throws error, ignoring any clean up error
-            Write-Error $_ -ErrorAction Continue
-        }
+        git clean -xdf
     }
 
-    if (!(Test-Path "node_modules")) {
+    if (ShouldNPMInstall) {
         Write-Host "Installing dependencies..."
         npm install
     }
