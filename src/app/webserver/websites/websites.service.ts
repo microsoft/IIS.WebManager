@@ -1,7 +1,4 @@
 import { Injectable, OnDestroy, Inject, Optional } from '@angular/core';
-import { Response } from '@angular/http';
-
-import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { Subscription } from "rxjs/Subscription";

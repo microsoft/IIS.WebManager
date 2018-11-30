@@ -12,9 +12,10 @@ export class ApiError {
     public type: ApiErrorType;
 }
 
-export type ApiErrorType = "SectionLocked" | "NotFound" | "FeatureNotInstalled";
+export type ApiErrorType = "SectionLocked" | "NotFound" | "FeatureNotInstalled" | "Unreachable";
 export const ApiErrorType = {
     SectionLocked: "SectionLocked" as ApiErrorType,
     NotFound: "NotFound" as ApiErrorType,
-    FeatureNotInstalled: "FeatureNotInstalled" as ApiErrorType
+    FeatureNotInstalled: "FeatureNotInstalled" as ApiErrorType,
+    Unreachable: "Unreachable" as ApiErrorType
 }

@@ -1,17 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Http } from '@angular/http';
-
-import 'rxjs/add/operator/toPromise';
-import { Observable } from "rxjs/Observable";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-
 import { HttpConnection } from './httpconnection';
 import { ApiConnection } from './api-connection';
 import { ConnectionStore } from './connection-store';
 import { NotificationService } from '../notification/notification.service';
+import { Observable } from "rxjs/Observable";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { environment } from '../environments/environment'
+import { ApiErrorType } from 'error/api-error';
+import { HttpFacade } from 'common/http-facade';
 
-
+import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class ConnectService {
@@ -26,11 +25,11 @@ export class ConnectService {
     private _edit: BehaviorSubject<ApiConnection> = new BehaviorSubject<ApiConnection>(null);
 
 
-    constructor(private _http: Http,
+    constructor(@Inject("Http") private _http: HttpFacade,
                 private _router: Router,
                 private _notificationSvc: NotificationService) {
 
-        this._client = new HttpConnection(_http);
+        this._client = new HttpConnection(this._http);
         this._store = new ConnectionStore();
 
         this.active.subscribe(c => {
@@ -54,7 +53,7 @@ export class ConnectService {
         return this._edit.asObservable();
     }
 
-    public connect(conn: ApiConnection, popup: boolean = true): Promise<any> {
+    public connect(conn: ApiConnection, popup: boolean = true): Observable<ApiConnection> {
         this.reset();
         this._connecting.next(conn);
 
@@ -62,7 +61,7 @@ export class ConnectService {
         this._pingPopup.close();
 
         // Open ping popup window which can only be opened as the result of a user click event
-        if (popup) {
+        if (!environment.WAC && popup) {
             this._pingPopup.open(conn.url + "/ping");
 
             // Raw request to url causes certificate acceptance prompt on IE.
@@ -71,15 +70,18 @@ export class ConnectService {
             });
         }
 
-        return this._client.get(conn, "/api").toPromise()
-            .then(_ => {
+        return this._client.get(conn, "/api")
+            .map(_ => {
                 this.complete(conn);
-                return Promise.resolve(conn);
+                this.save(conn);
+                return conn;
             })
-            .catch(_ => {
-                this.gotoConnect(true);
-
-                return this.ping(conn, new Date().getTime() + ConnectService.PING_TIMEOUT, popup);
+            .catch((e, _) => {
+                return new Observable<ApiConnection>(observer => {
+                    this.gotoConnect(true)
+                        .then(_ => this.ping(conn, new Date().getTime() + ConnectService.PING_TIMEOUT, popup)
+                            .then(_ => observer.error(e)))
+                })
             });
     }
 
@@ -96,6 +98,10 @@ export class ConnectService {
         if (this._connecting.getValue()) {
             this._connecting.next(null);
         }
+    }
+
+    public setActive(conn: ApiConnection) {
+        this._store.setActive(conn)
     }
 
     public save(conn: ApiConnection) {
@@ -117,22 +123,17 @@ export class ConnectService {
         this._router.navigate(['/connect']);
     }
 
-    public gotoConnect(skipGet: boolean) {
+    public gotoConnect(skipGet: boolean): Promise<boolean> {
         let totalConnections: number = 0;
         this._store.connections.subscribe(conns => totalConnections = conns.length).unsubscribe();
 
         if (totalConnections == 0 && !skipGet) {
             // Goto Get
-            this._router.navigate(['/get']);
+            return this._router.navigate(['/get']);
         }
         else {
-            this._router.navigate(['/connect']);
+            return this._router.navigate(['/connect']);
         }
-    }
-
-
-    private activate(conn: ApiConnection) {
-        this._store.setActive(conn);
     }
 
     private ping(conn: ApiConnection, time2stop: number, force: boolean): Promise<any> {
@@ -146,7 +147,10 @@ export class ConnectService {
             .catch(e => {
                 if (e.status == 403) {
                     this.error(conn, _ => this._notificationSvc.invalidAccessToken());
-                    return Promise.reject("Could not connect.");
+                    return Promise.reject("Could not connect: Unauthorized.");
+                }
+                else if (environment.WAC && e.status == 0) {
+                    return Promise.reject(ApiErrorType.Unreachable);
                 }
                 else {
                     return this._client.options(conn, "/api").toPromise()
@@ -165,7 +169,7 @@ export class ConnectService {
                                     else {
                                         // Notify that the user is unauthorized but don't force the connecting page
                                         this.error(conn, _ => this._notificationSvc.unauthorized())
-                                        return Promise.reject("Could not connect.");
+                                        return Promise.reject("Could not connect: Unauthorized.");
                                     }
                                 });
                         })
@@ -208,7 +212,7 @@ export class ConnectService {
         this.reset();
 
         try {
-            this.activate(conn);
+            this._store.setActive(conn);
             this._connecting.next(null);
         }
         catch (e) {

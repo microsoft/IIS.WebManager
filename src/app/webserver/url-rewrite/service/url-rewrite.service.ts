@@ -1,35 +1,25 @@
-﻿import { Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-
+﻿import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
 import { NotificationService } from '../../../notification/notification.service';
 import { Status } from '../../../common/status';
 import { ApiError, ApiErrorType } from '../../../error/api-error';
 import { HttpClient } from '../../../common/httpclient';
 import {
     UrlRewrite,
-    GlobalSection,
     InboundSection,
     InboundRule,
     OutboundSection,
     OutboundRule,
-    Action,
-    Condition,
-    ActionType,
-    MatchType,
-    ConditionMatchConstraints,
-    RedirectType,
     AllowedServerVariablesSection,
     RewriteMapsSection,
     RewriteMap,
     Provider,
     ProvidersSection
 } from '../url-rewrite';
-
 import { GlobalService } from './global.service';
 import { InboundService } from './inbound.service';
+import { Runtime } from 'runtime/runtime';
 
 @Injectable()
 export class UrlRewriteService {
@@ -53,9 +43,12 @@ export class UrlRewriteService {
     private _inboundService: InboundService;
     private _globalService: GlobalService;
 
-    constructor(private _http: HttpClient, private _notificationService: NotificationService, route: ActivatedRoute) {
-        this._webserverScope = route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver';
-
+    constructor(
+        private _http: HttpClient,
+        private _notificationService: NotificationService,
+        @Inject("Runtime") private runtime: Runtime,
+    ){
+        this._webserverScope = this.runtime.IsWebServerScope();
         this._inboundService = new InboundService(this._http, this._notificationService);
         this._globalService = new GlobalService(this._http, this._notificationService);
     }

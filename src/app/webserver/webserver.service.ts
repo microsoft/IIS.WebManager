@@ -1,15 +1,10 @@
-import { Injectable, EventEmitter } from '@angular/core';
-import { Response } from '@angular/http';
-
+import { Injectable } from '@angular/core';
 import { Observable } from "rxjs/Observable";
 import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
-
 import { Status } from '../common/status';
 import { HttpClient } from '../common/httpclient';
-import { NotificationService } from '../notification/notification.service';
 import { ApiError, ApiErrorType } from '../error/api-error';
-
 import { WebServer } from './webserver';
 
 @Injectable()
@@ -20,8 +15,7 @@ export class WebServerService {
     private _statusChanged: BehaviorSubject<Status> = new BehaviorSubject<Status>(Status.Unknown);
     private _installStatus: Status = Status.Unknown;
 
-    constructor(private _http: HttpClient,
-                private _notificationService: NotificationService) {
+    constructor(private _http: HttpClient) {
     }
 
     get status(): Observable<Status> {
@@ -97,7 +91,6 @@ export class WebServerService {
 
     private get(): Promise<WebServer> {
         return this._http.get("/webserver").then(ws => {
-
             this._server = new WebServer();
             this._server.id = ws.id;
             this._server._links = ws._links;
@@ -113,20 +106,17 @@ export class WebServerService {
                 this._server.status = info.status;
                 this._server.version = info.version;
                 this._server.supports_sni = info.supports_sni;
-
                 this.triggerStatusUpdate();
-
                 return this._server;
             });
         })
         .catch(e => {
             this.error = e;
-
             if (e.type && e.type == ApiErrorType.FeatureNotInstalled) {
                 this._installStatus = Status.Stopped;
             }
-            return null;
-        });
+            throw e
+        })
     }
 
     private updateStatus(status: string): Promise<WebServer> {

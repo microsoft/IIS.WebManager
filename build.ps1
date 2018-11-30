@@ -1,19 +1,53 @@
 $ErrorActionPreference = "Stop"
 
+<#
+.SYNOPSIS
+Sometimes right after git clean is called we are unable to stat the directory currently being deleted
+This function workaround that by retrying Test-Path command multiple times
+#>
+function ShouldNPMInstall {
+    $npmInstallNeeded = "donno"
+    $testPathRetry = 20
+    $nodeModuleDir = "node_modules"
+    while  ((($testPathRetry--) -and ("donno" -eq $npmInstallNeeded))) {
+        try {
+            $npmInstallNeeded = !(Test-Path $nodeModuleDir)
+        } catch {
+            Write-Verbose "Retrying stats on $nodeModuleDir due to error returned: $_"
+            Start-Sleep 1
+        }
+    }
+
+    if ("donno" -eq $npmInstallNeeded) {
+        throw "Unable to stat src/$nodeModuleDir"
+    }
+    return $npmInstallNeeded
+}
+
+$purge = $args | Where-Object { $_ -like "--purge" }
+$pack = $args | Where-Object { $_ -like "--pack" }
+
+if (!(Get-Command "npm" -ErrorAction SilentlyContinue)) {
+    throw "npm is required in PATH"
+}
+
+if ($purge -and !(Get-Command "git" -ErrorAction SilentlyContinue)) {
+    throw """--purge"" operation requires git in PATH"
+}
+
+if ($pack -and !(Get-Command "nuget" -ErrorAction SilentlyContinue)) {
+    throw """--pack"" operation requires nugetin PATH"
+}
+
+$buildArgs = $args | Where-Object { $_ -notlike "--purge" -and $_ -notlike "--pack" }
+
 Push-Location src
 try {
-    $NODE_MODULES="node_modules"
-    if ($args | Where-Object { $_ -like "--purge" }) {
-        if (Test-Path $NODE_MODULES) {
-            Write-Host "Remove $NODE_MODULES..."
-            Remove-Item -Force -Recurse $NODE_MODULES | Out-Null
-        }
-        $buildArgs = $args | Where-Object { $_ -notlike "--purge" }
-    } else {
-        $buildArgs = $args
+    if ($purge) {
+        git clean -xdf
     }
-    
-    if (!(Test-Path $NODE_MODULES)) {
+
+    if (ShouldNPMInstall) {
         Write-Host "Installing dependencies..."
         npm install
     }
@@ -24,6 +58,10 @@ try {
 
     Write-Host "Building project..."
     gulp build $buildArgs
+
+    if ($pack) {
+        nuget pack . -OutputDirectory (Resolve-Path "..\dist").Path
+    }
 } finally {
     Pop-Location
 }

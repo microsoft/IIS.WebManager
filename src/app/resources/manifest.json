@@ -1,9 +1,9 @@
 {
     "$schema": "../../node_modules/@microsoft/windows-admin-center-sdk/dist/core/manifest/module-schema.json#",
-    "name": "microsoft.wac-iis",
+    "name": "microsoft.iis-wac-extension",
     "displayName": "resources:strings:displayName",
     "description": "resources:strings:description",
-    "target": "/modules/microsoft.wac-iis",
+    "target": "/modules/microsoft.iis-wac-extension",
     "icon": "sme-icon:icon-win-powerShell",
     "keywords": [
         "resources:strings:keyword-example"

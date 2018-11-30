@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-
+import { Injectable, Inject } from '@angular/core';
 import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
-
 import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
 import { HttpClient } from '../../common/httpclient';
 import { DefaultDocument, File } from './default-documents';
-import { ApiError, ApiErrorType } from '../../error/api-error';
+import { ApiErrorType } from '../../error/api-error';
+import { Runtime } from 'runtime/runtime';
 
 @Injectable()
 export class DefaultDocumentsService {
@@ -20,8 +18,11 @@ export class DefaultDocumentsService {
     public _status: Status = Status.Unknown;
     public defaultDocument: Observable<DefaultDocument> = this._defaultDoc.asObservable();
 
-    constructor(private _http: HttpClient, route: ActivatedRoute) {
-        this._webserverScope = route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver';
+    constructor(
+        private _http: HttpClient,
+        @Inject("Runtime") private runtime: Runtime
+    ){
+        this._webserverScope = this.runtime.IsWebServerScope();
     }
 
     public get status(): Status {

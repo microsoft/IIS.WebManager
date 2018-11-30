@@ -225,7 +225,7 @@ export class ConnectComponent implements OnDestroy {
             return;
         }
 
-        this._service.connect(this._conn).then(conn => {
+        this._service.connect(this._conn).subscribe(conn => {
             this._service.save(this._conn);
         });
     }

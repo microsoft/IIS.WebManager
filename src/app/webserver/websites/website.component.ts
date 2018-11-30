@@ -33,7 +33,6 @@ import { OptionsService } from '../../main/options.service';
         :host >>> .sidebar vtabs .vtabs > .items {
             top: 35px;
         }
-
         :host >>> .sidebar vtabs .vtabs > .content {
             top: 96px;
         }
@@ -50,7 +49,6 @@ export class WebSiteComponent implements OnInit {
     constructor(private _route: ActivatedRoute,
                 @Inject("WebSitesService") private _service: WebSitesService,
                 private _options: OptionsService) {
-
         this.id = this._route.snapshot.params['id'];
     }
 

@@ -1,17 +1,14 @@
-
-import {Injectable, EventEmitter} from '@angular/core';
-import {Response} from '@angular/http';
+import {Injectable} from '@angular/core';
 
 // 
 // Don't import rxjs/Rx. Loading is too slow!
 // Import only needed operators
-import {IntervalObservable} from 'rxjs/observable/IntervalObservable';
-import {Observable} from "rxjs/Observable";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
-
 import {HttpClient} from '../../common/httpclient';
 import {Status} from '../../common/status';
 import {ApplicationPool} from './app-pool';
+import {IntervalObservable} from 'rxjs/observable/IntervalObservable';
+import {Observable} from "rxjs/Observable";
 
 
 @Injectable()

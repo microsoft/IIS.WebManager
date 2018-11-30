@@ -1,41 +1,32 @@
 
-import {Injectable} from '@angular/core';
-import {Http, Headers, Response, Request, RequestOptions, RequestOptionsArgs, RequestMethod} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
-
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/toPromise';
+import {Inject, Injectable} from '@angular/core';
+import {Headers, Request, RequestOptions, RequestOptionsArgs, RequestMethod, Response} from '@angular/http';
 
 import {NotificationService} from '../notification/notification.service';
 import {ApiConnection} from '../connect/api-connection'
 import {ApiError, ApiErrorType} from '../error/api-error';
 import {ConnectService} from '../connect/connect.service';
+import {Runtime} from '../runtime/runtime';
+import { HttpFacade } from './http-facade';
+import { Observable } from 'rxjs';
 
-
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class HttpClient {
     private _headers: Headers= new Headers();
     private _conn: ApiConnection;
 
-    constructor(private _http: Http,
+    constructor(@Inject("Http") private _http: HttpFacade,
                 private _notificationService: NotificationService,
-                private _connectSvc: ConnectService)
+                private _connectSvc: ConnectService,
+                @Inject("Runtime") private runtime: Runtime)
     {
-        //
-        // Support withCredentials
-        //
-        // TODO: Use official Angular2 CORS support when merged (https://github.com/angular/angular/issues/4231).
-        let _build = (<any>_http)._backend._browserXHR.build;
-        (<any>_http)._backend._browserXHR.build = () => {
-            let _xhr = _build();
-
-            _xhr.withCredentials = true;
-
-            return _xhr;
-        };
-
-        this._connectSvc.active.subscribe(c => this._conn = c);
+        this._connectSvc.active.subscribe(c => {
+            if (c) {
+                this._conn = c
+            }})
     }
 
     private get headers(): Headers {
@@ -53,21 +44,18 @@ export class HttpClient {
 
     public get(url: string, options?: RequestOptionsArgs, warn: boolean = true): Promise<any> {
         let ops: RequestOptionsArgs = this.getOptions(RequestMethod.Get, url, options);
-
         return this.request(url, ops, warn)
             .then(res => res.status !== 204 ? res.json() : null);
     }
 
     public head(url: string, options?: RequestOptionsArgs, warn: boolean = true): Promise<any> {
         let ops: RequestOptionsArgs = this.getOptions(RequestMethod.Head, url, options);
-
         return this.request(url, ops, warn);
     }
 
     public post(url: string, body: string, options?: RequestOptionsArgs, warn: boolean = true): Promise<any> {
         options = this.setJsonContentType(options);
         let ops: RequestOptionsArgs = this.getOptions(RequestMethod.Post, url, options, body);
-
         return this.request(url, ops, warn)
             .then(res => res.status !== 204 ? res.json() : null);
     }
@@ -75,7 +63,6 @@ export class HttpClient {
     public patch(url: string, body: string, options?: RequestOptionsArgs, warn: boolean = true): Promise<any> {
         options = this.setJsonContentType(options);
         let ops: RequestOptionsArgs = this.getOptions(RequestMethod.Patch, url, options, body);
-
         return this.request(url, ops, warn)
             .then(res => res.status !== 204 ? res.json() : null);
     }
@@ -94,6 +81,10 @@ export class HttpClient {
         return this._conn;
     }
 
+    public request(url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<Response> {
+        return this.requestOnConnection(url, options, warn).toPromise()
+    }
+
     private setJsonContentType(options?: RequestOptionsArgs) {
         if (!options) {
             options = {};
@@ -108,68 +99,68 @@ export class HttpClient {
         return options;
     }
 
-
-    public request(url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<any> {
-        if (!this._conn) {
-            this._connectSvc.gotoConnect(true);
-            return Promise.reject("Not connected");
+    private requestOnConnection(url: string, options?: RequestOptionsArgs, warn?: boolean): Observable<Response> {
+        if (this._conn) {
+            return this.performRequest(this._conn, url, options, warn)
+        } else {
+            return this.runtime.ConnectToIISHost().mergeMap(connection =>
+                this.performRequest(connection, url, options, warn))
         }
+    }
 
-        let req: Request;
-
+    private performRequest(conn: ApiConnection, url: string, options?: RequestOptionsArgs, warn?: boolean): Observable<Response> {
         let reqOpt = new RequestOptions(options);
 
         if (url.toString().indexOf("/") != 0) {
             url = '/' + url;
         }
 
-        reqOpt.url = this._conn.url + '/api' + url;
-        req = new Request(reqOpt);
-        
+        reqOpt.url = conn.url + '/api' + url;
+        let req = new Request(reqOpt);
         //
         // Set Access-Token
-        req.headers.set('Access-Token', 'Bearer ' + this._conn.accessToken);
-        
-        return this._http.request(req).toPromise()
-            .catch(e => {
+        req.headers.set('Access-Token', 'Bearer ' + conn.accessToken);
+        return this._http.request(req)
+            .catch((e, _) => {
                 // Status code 0 possible causes:
                 // Untrusted certificate
                 // Windows auth, prevents CORS headers from being accessed
                 // Service not responding
-                if (e.status == 0) {
-                    //
-                    // The first request to the API fails because windows auth has not started yet.
-                    // We repeat the request because in this case the next request will succeed.
-                    return this._http.request(req).toPromise()
-                        .catch(err => {
-                            //
-                            // Check to see if connected
-                            return this._http.options(this._conn.url).toPromise()
-                                .catch(e => {
-                                    this._connectSvc.reconnect();
-                                    return Promise.reject("Not connected");
+                if (e instanceof Response) {
+                    if (e.status == 0) {
+                        return this._http.request(req)
+                            .catch((err, _) => {
+                                // Check to see if connected
+                                return this._http.options(this._conn.url)
+                                    .catch((e, _) => {
+                                        this._connectSvc.reconnect();
+                                        return Observable.throw(e)
+                                    }).finally(() => {
+                                        this.handleHttpError(err);
+                                    })
                                 })
-                                .then(r => {
-                                    return this.handleHttpError(err);
-                                });
-                        });
+                    }
+                    this.handleHttpError(e, warn);
+                    return Observable.throw(e)
                 }
-                return this.handleHttpError(e, warn);
-            });
+                let apiError = <ApiError>({
+                    title: "unknown error",
+                    detail: JSON.stringify(e),
+                })
+                this._notificationService.apiError(apiError)
+                return Observable.throw(apiError)
+            })
     }
 
-    private handleHttpError(err, warn?: boolean): Promise<any> {
+    private handleHttpError(err, warn?: boolean) {
         if (err.status == 403 && err.headers.get("WWW-Authenticate") === "Bearer") {
             this._connectSvc.reconnect();
-            return Promise.reject("Not connected");
+            throw "Not connected"
         }
-
         let apiError = this.apiErrorFromHttp(err);
-
         if (apiError && warn) {
             this._notificationService.apiError(apiError);
         }
-
         throw apiError;
     }
 

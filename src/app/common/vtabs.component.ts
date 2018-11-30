@@ -66,7 +66,7 @@ export class VTabsComponent implements OnDestroy {
     }
 
     public ngAfterViewInit() {
-        this._sectionHelper = new SectionHelper(this.tabs.map(t => t.name), this._default, this.markLocation, this._location, this._activatedRoute, this._router);
+        this._sectionHelper = new SectionHelper(this.tabs.map(t => t.name), this._default, this.markLocation, this._location, this._router);
 
         this._subscriptions.push(this._sectionHelper.active.subscribe(sec => this.onSectionChange(sec)));
 

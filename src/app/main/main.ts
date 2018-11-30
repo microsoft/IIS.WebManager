@@ -16,7 +16,7 @@ if (environment.WAC) {
     // initialize SME module environment with localization settings.
     CoreEnvironment.initialize(
         {
-            name: 'microsoft.wac-iis',
+            name: 'microsoft.iis-wac-extension',
             isProduction: environment.Production,
             shellOrigin: '*'
         },

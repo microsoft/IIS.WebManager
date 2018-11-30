@@ -1,21 +1,17 @@
 ﻿import { Injectable, OnDestroy } from '@angular/core';
-import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-ga';
-
 import { Subscription } from 'rxjs/Subscription';
-
 import { HttpClient } from '../common/httpclient';
 import { ApiConnection } from '../connect/api-connection';
 import { ConnectService } from '../connect/connect.service';
 import { SETTINGS } from '../main/settings';
-import { Notification, NotificationType } from '../notification/notification';
-
 
 @Injectable()
 export class ServerAnalyticService implements OnDestroy {
 
     private _subscriptions: Array<Subscription> = [];
 
-    constructor(private _httpClient: HttpClient,
+    constructor(
+        private _httpClient: HttpClient,
         private _connectSvc: ConnectService)
     {
         this._subscriptions.push(this._connectSvc.active.subscribe(c => {

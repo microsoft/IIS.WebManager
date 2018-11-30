@@ -1,5 +1,4 @@
 import { Component, Inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 
 import { ModuleUtil } from '../utils/module';
 import { OptionsService } from '../main/options.service';
@@ -8,6 +7,22 @@ import { HttpClient } from '../common/httpclient';
 import { WebServer } from './webserver';
 import { WebServerService } from './webserver.service';
 import { ComponentReference, FilesComponentName } from '../main/settings';
+import { environment } from '../environments/environment'
+
+const sidebarStyles = `
+:host >>> .sidebar > vtabs .vtabs > .items {
+    top: ` + (environment.WAC ? 0 : 35) + `px;
+}
+
+:host >>> .sidebar > vtabs .vtabs > .content {
+    top: 96px;
+}
+
+.not-installed {
+    text-align: center;
+    margin-top: 50px;
+}
+`
 
 @Component({
     template: `
@@ -33,20 +48,7 @@ import { ComponentReference, FilesComponentName } from '../main/settings';
             </div>
         </div>
     `,
-    styles: [`
-        :host >>> .sidebar > vtabs .vtabs > .items {
-            top: 35px;
-        }
-
-        :host >>> .sidebar > vtabs .vtabs > .content {
-            top: 96px;
-        }
-
-        .not-installed {
-            text-align: center;
-            margin-top: 50px;
-        }
-    `]
+    styles: [ sidebarStyles ]
 })
 export class WebServerComponent {
     webServer: WebServer;
@@ -54,8 +56,7 @@ export class WebServerComponent {
 
     constructor( @Inject('WebServerService') private _service: WebServerService,
         private _http: HttpClient,
-        private _options: OptionsService,
-        private _route: ActivatedRoute) {
+        private _options: OptionsService) {
     }
 
     ngOnInit() {
@@ -71,7 +72,7 @@ export class WebServerComponent {
                 .catch(res => {
                     this.modules = this.modules.filter(m => m.name.toLocaleLowerCase() !== 'certificates')
                 });
-        });
+        })
     }
 
     get service() {

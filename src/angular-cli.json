@@ -42,7 +42,7 @@
     "prefixInterfaces": false,
     "styleExt": "css",
     "build": {
-      "showCircularDependencies": true
+      "showCircularDependencies": false
     }
   },
   "project": {

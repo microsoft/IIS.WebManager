@@ -1,5 +1,5 @@
 import {Injectable, Optional} from '@angular/core';
-import {Http, RequestMethod} from '@angular/http';
+import {RequestMethod} from '@angular/http';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/src/providers/angulartics2-ga';
 
 
@@ -21,8 +21,7 @@ const AppModuleReference: ComponentReference = { name: AppModuleName, ico: null,
 export class VersionService {
 
 
-    constructor(private _http: Http,
-                private _httpClient: HttpClient,
+    constructor(private _httpClient: HttpClient,
                 private _notificationService: NotificationService,
                 private _connectSvc: ConnectService,
                 @Optional() private _analytics: Angulartics2GoogleAnalytics) {

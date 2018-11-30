@@ -36,7 +36,6 @@ import {WebAppsService} from './webapps.service';
         :host >>> .sidebar > vtabs .vtabs > .items {
             top: 35px;
         }
-
         :host >>> .sidebar > vtabs .vtabs > .content {
             top: 96px;
         }
@@ -54,7 +53,6 @@ export class WebAppComponent implements OnInit {
                 @Inject("WebAppsService") private _service: WebAppsService,
                 private _options: OptionsService,
                 private _router: Router) {
-
         this.id = this._route.snapshot.params["id"];
     }
 

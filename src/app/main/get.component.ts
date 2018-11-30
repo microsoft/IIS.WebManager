@@ -1,6 +1,5 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Http } from '@angular/http';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/toPromise';
 
@@ -8,6 +7,7 @@ import { ApiConnection } from '../connect/api-connection'
 import { HttpConnection } from '../connect/httpconnection'
 import { ConnectService } from '../connect/connect.service'
 import { SETTINGS } from '../main/settings'
+import { HttpFacade } from 'common/http-facade';
 
 @Component({
     template: `
@@ -102,7 +102,7 @@ export class GetComponent implements OnDestroy {
     private _activeConnection: ApiConnection;
     private _subscriptions: Array<Subscription> = [];
 
-    constructor(private _http: Http,
+    constructor(@Inject("Http") private _http: HttpFacade,
                 private _service: ConnectService,
                 private _router: Router) {
 
