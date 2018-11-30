@@ -134,8 +134,9 @@ export class HttpClient {
                                 return this._http.options(this._conn.url)
                                     .catch((e, _) => {
                                         this._connectSvc.reconnect();
-                                        this.handleHttpError(err);
                                         return Observable.throw(e)
+                                    }).finally(() => {
+                                        this.handleHttpError(err);
                                     })
                                 })
                     }
