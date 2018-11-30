@@ -42,15 +42,38 @@ $config = Get-Content -Raw -Path $configLocation | ConvertFrom-Json
 $user = $(whoami)
 $userPolicy = $config.security.users.administrators | Where-Object { $_ -like $user }
 
+function EnsureAcl($file, $action) {
+    $fileAcl = Get-Acl $file
+    foreach ($rule in $fileAcl.GetAccessRules($true, $true, [System.Security.Principal.NTAccount])) {
+        if ($rule.IdentityReference.Value -eq $user) {
+            if ($rule.AccessControlType -eq "Deny") {
+                throw "Unexpected: user $user is denied access to config file"
+            }
+            if ($rule.AccessControlType -eq "Allow") {
+                $modifyAcl = $true
+                break
+            }
+        }
+    }
+
+    if ($modifyAcl) {
+        $ar = New-Object System.Security.AccessControl.FileSystemAccessRule($user, "write", "allow")
+        $fileAcl.SetAccessRule($ar)
+        Set-Acl $file $fileAcl
+    }
+
+    Invoke-Command $action
+
+    if ($modifyAcl) {
+        $fileAcl = Get-Acl $file
+        $fileAcl.RemoveAccessRule($ar)
+        Set-Acl $file $fileAcl
+    }
+}
+
 if (!$userPolicy) {
     $config.security.users.administrators += $user
-    $originalAcl = Get-Acl $configLocation
-    $newAcl = Get-Acl $configLocation
-    $ar = New-Object System.Security.AccessControl.FileSystemAccessRule($user, "write", "allow")
-    $newAcl.SetAccessRule($ar)
-    Set-Acl $configLocation $newAcl
-    $config | ConvertTo-Json -depth 100 | Out-File $configLocation
-    Set-Acl $configLocation $originalAcl
+    EnsureAcl $configLocation { $config | ConvertTo-Json -depth 100 | Out-File $configLocation }
     Restart-Service -Name $serviceName
 }
 
