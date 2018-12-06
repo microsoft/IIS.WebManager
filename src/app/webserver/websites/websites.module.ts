@@ -15,6 +15,7 @@ import { Module as Selector } from '../../common/selector';
 import { Module as Tabs } from '../../common/tabs.component';
 import { Module as VirtualList } from '../../common/virtual-list.component';
 import { Module as Enum } from '../../common/enum.component';
+import { Module as AutoFocus } from '../../common/focus';
 
 import { Module } from './module';
 import { Module as AppPoolModule } from '../app-pools/module';
@@ -52,7 +53,8 @@ import { LimitsComponent } from './limits.component';
         Tabs,
         VirtualList,
         Enum,
-        RouterModule
+        RouterModule,
+        AutoFocus,
     ],
     declarations: [
         WebSiteComponent,

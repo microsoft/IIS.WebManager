@@ -14,21 +14,6 @@ import { Binding } from './site';
     selector: 'binding-item',
     template: `
         <div class="row grid-item" [class.background-editing]="edit">
-            <div class="actions">
-                <button title="Edit" [disabled]="!allowed('edit')" class='no-editing' (click)="onEdit()">
-                    <i class="fa fa-pencil color-active"></i>
-                </button>
-                <button title="Save" [disabled]="!isValid()" class="editing" (click)="onSave()">
-                    <i class="fa fa-check color-active"></i>
-                </button>
-                <button title="Cancel" class="editing" (click)="onCancel()">
-                    <i class="fa fa-times red"></i>
-                </button>
-                <button title="Delete" *ngIf="!model.isNew" [disabled]="!allowed('delete')" (click)="onDelete()">
-                    <i class="fa fa-trash-o red"></i>
-                </button>
-            </div>
-
             <div class='valign' *ngIf="!edit">
                 <div class="col-xs-8 col-md-1">
                     <label class="visible-xs visible-sm">Protocol</label>
@@ -56,12 +41,11 @@ import { Binding } from './site';
                     </div>
                 </div>
             </div>
-
-
-            <div class="valign" *ngIf="edit">
+            
+            <div class="col-xs-8 col-sm-4 col-lg-5 overflow-visible" *ngIf="edit">
                 <fieldset class="col-xs-8 col-md-4" *ngIf="isHttp()">
                     <label>Host Name</label>
-                    <input class="form-control" type="text" [(ngModel)]="model.hostname"/>
+                    <input autofocus class="form-control" type="text" [(ngModel)]="model.hostname"/>
                 </fieldset>
                 <fieldset class="col-xs-12 col-sm-10 col-md-4" *ngIf="isHttp()">
                     <label>IP Address</label>
@@ -109,7 +93,26 @@ import { Binding } from './site';
                     </fieldset>
                 </div>
             </div>
+
+            <div>
+                <div class="actions">
+                    <button title="Edit" [disabled]="!allowed('edit')" class='no-editing' (click)="onEdit()">
+                        <i class="fa fa-pencil color-active"></i>
+                    </button>
+                    <button title="Save" [disabled]="!isValid()" class="editing" (click)="onSave()">
+                        <i class="fa fa-check color-active"></i>
+                    </button>
+                    <button title="Cancel" class="editing" (click)="onCancel()">
+                        <i class="fa fa-times red"></i>
+                    </button>
+                    <button title="Delete" *ngIf="!model.isNew" [disabled]="!allowed('delete')" (click)="onDelete()">
+                        <i class="fa fa-trash-o red"></i>
+                    </button>
+                </div>
+            </div>
         </div>
+
+        
     `,
     styles: [`
         .grid-item > div {

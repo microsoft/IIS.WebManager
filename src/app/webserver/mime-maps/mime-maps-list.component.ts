@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, OnDestroy, SimpleChange, Input, Output, EventEmitter, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import { Component, OnInit, OnChanges, OnDestroy, SimpleChange, Input, Output, EventEmitter, ViewChildren, QueryList, ElementRef, ViewChild } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -11,6 +11,23 @@ import { StaticContentService } from '../static-content/static-content.service';
     selector: 'mime-map',
     template: `        
         <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing">
+
+            <fieldset class="col-xs-8 col-sm-3 col-md-4">
+                <label class="visible-xs">File Extension</label>
+                <label class="hidden-xs" *ngIf="_editing">File Extension</label>
+                <input autofocus *ngIf="_editing" class="form-control" type="text" [(ngModel)]="model.file_extension" throttle required />
+                <span *ngIf="!_editing">{{model.file_extension}}</span>
+                <div *ngIf="!_editing">
+                    <br class="visible-xs" />
+                </div>
+            </fieldset>
+
+            <fieldset class="col-xs-12 col-sm-5 col-md-4">
+                <label class="visible-xs">Mime Type</label>
+                <label class="hidden-xs" *ngIf="_editing">Mime Type</label>
+                <input *ngIf="_editing" class="form-control" type="text" [(ngModel)]="model.mime_type" throttle required />
+                <span *ngIf="!_editing">{{model.mime_type}}</span>
+            </fieldset>
 
             <div class="actions">
                 <button *ngIf="!_editing" class="no-border" [class.inactive]="!_editable" title="Edit" (click)="onEdit()">
@@ -26,23 +43,6 @@ import { StaticContentService } from '../static-content/static-content.service';
                     <i class="fa fa-trash-o red"></i>
                 </button>
             </div>
-
-            <fieldset class="col-xs-8 col-sm-3 col-md-4">
-                <label class="visible-xs">File Extension</label>
-                <label class="hidden-xs" *ngIf="_editing">File Extension</label>
-                <input *ngIf="_editing" class="form-control" type="text" [(ngModel)]="model.file_extension" throttle required />
-                <span *ngIf="!_editing">{{model.file_extension}}</span>
-                <div *ngIf="!_editing">
-                    <br class="visible-xs" />
-                </div>
-            </fieldset>
-
-            <fieldset class="col-xs-12 col-sm-5 col-md-4">
-                <label class="visible-xs">Mime Type</label>
-                <label class="hidden-xs" *ngIf="_editing">Mime Type</label>
-                <input *ngIf="_editing" class="form-control" type="text" [(ngModel)]="model.mime_type" throttle required />
-                <span *ngIf="!_editing">{{model.mime_type}}</span>
-            </fieldset>
 
         </div>
     `,
@@ -84,6 +84,8 @@ export class MimeMapListItem implements OnInit, OnChanges {
     public setEditable(val: boolean) {
         this._editable = val;
     }
+
+
 
     private onEdit() {
         this.enter.emit(null);

@@ -37,10 +37,8 @@ import { NotificationService } from '../../notification/notification.service';
             <div *ngIf="!model.scope">
                 <fieldset class="path">
                     <label>Directory</label>
-                    <button title="Select Directory" [class.background-active]="fileSelector.isOpen()" class="right select" (click)="fileSelector.toggle()"></button>
-                    <div class="fill">
-                        <input type="text" class="form-control" [(ngModel)]="model.directory" (modelChanged)="onModelChanged()" throttle required />
-                    </div>
+                    <input type="text" class="form-control left-with-button" [(ngModel)]="model.directory" (modelChanged)="onModelChanged()" throttle required />
+                    <button title="Select Directory" [class.background-active]="fileSelector.isOpen()" class="select" (click)="fileSelector.toggle()"></button>
                     <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="model.directory" (selected)="onSelectPath($event)"></server-file-selector>
                 </fieldset>
                 <fieldset class="inline-block">

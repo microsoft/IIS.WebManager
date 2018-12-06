@@ -5,65 +5,78 @@ import { OutboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
 @Component({
     selector: 'outbound-rule-settings',
     template: `
-        <div class="row" *ngIf="rule">
-            <div class="col-xs-12 col-lg-6">
-                <fieldset>
-                    <label>Name</label>
-                    <input type="text" required class="form-control" [(ngModel)]="rule.name" />
-                </fieldset>
-                <fieldset>
-                    <div>
-                        <label class="inline-block">Pattern</label>
-                        <tooltip>
-                            This pattern is compared to either the response body or a server variable to determine if the rule matches.
-                            <a href="https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/creating-outbound-rules-for-url-rewrite-module" class="link"></a>
-                        </tooltip>
-                        <text-toggle onText="Matches" offText="Doesn't Match" [on]="false" [off]="true" [(model)]="rule.negate" (modelChanged)="testRegex()"></text-toggle>
-                        <text-toggle onText="Case Insensitive" offText="Case Sensitive" [(model)]="rule.ignore_case" (modelChanged)="testRegex()"></text-toggle>
-                    </div>
-                    <input type="text" required class="form-control" [(ngModel)]="rule.pattern" (modelChanged)="testRegex()" />
-                </fieldset>
-                <fieldset>
-                    <label class="inline-block">Test Value</label>
+    <div class="row" *ngIf="rule">
+        <div class="col-xs-12 col-lg-6">
+            <fieldset>
+                <label>Name</label>
+                <input autofocus type="text" required class="form-control" [(ngModel)]="rule.name" />
+            </fieldset>
+            <fieldset>
+                <div>
+                    <label class="inline-block">Pattern</label>
                     <tooltip>
-                        This field can be used to test the matching behavior of the rule pattern.
+                        This pattern is compared to either the response body or a server variable to determine if the rule matches.
+                        <a href="https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/creating-outbound-rules-for-url-rewrite-module" class="link"></a>
                     </tooltip>
-                    <input type="text" class="form-control" [(ngModel)]="_testUrl" (modelChanged)="testRegex()" />
-                </fieldset>
-                <fieldset>
-                    <div>
-                        <label>Substitution Value</label>
-                        <tooltip>
-                            This is the substitution string to use when rewriting the response. The substitution value can include back-references to conditions and the rule pattern as well as server variables.
-                            <a href="https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/creating-outbound-rules-for-url-rewrite-module" class="link"></a>
-                        </tooltip>
+                    <text-toggle onText="Matches" offText="Doesn't Match" [on]="false" [off]="true" [(model)]="rule.negate" (modelChanged)="testRegex()"></text-toggle>
+                    <text-toggle onText="Case Insensitive" offText="Case Sensitive" [(model)]="rule.ignore_case" (modelChanged)="testRegex()"></text-toggle>
+                </div>
+                <input type="text" required class="form-control" [(ngModel)]="rule.pattern" (modelChanged)="testRegex()" />
+            </fieldset>
+            <fieldset>
+                <label class="inline-block">Test Value</label>
+                <tooltip>
+                    This field can be used to test the matching behavior of the rule pattern.
+                </tooltip>
+                <input type="text" class="form-control" [(ngModel)]="_testUrl" (modelChanged)="testRegex()" />
+            </fieldset>
+            <fieldset>
+                <div>
+                    <label>Substitution Value</label>
+                    <tooltip>
+                        This is the substitution string to use when rewriting the response. The substitution value can include back-references to conditions and the rule pattern as well as server variables.
+                        <a href="https://docs.microsoft.com/en-us/iis/extensions/url-rewrite-module/creating-outbound-rules-for-url-rewrite-module" class="link"></a>
+                    </tooltip>
+                </div>
+                <input type="text" required [title]="_result" class="form-control left-with-button" [(ngModel)]="rule.rewrite_value" (modelChanged)="testRegex()" />
+                <button class="input" (click)="macros.toggle()" [class.background-active]="(macros && macros.opened) || false">Macros</button>
+                <selector class="stretch" #macros>
+                    <div class="table-scroll">
+                        <table>
+                            <tr *ngFor="let match of _matches; let i = index;" (dblclick)="addMatch(i)" (click)="select(i)" class="hover-editing" [class.background-selected]="_selected == i">
+                                <td class="back-ref border-color">{{ '{R:' + i + '}' }}</td>
+                                <td class="border-color">{{match}}</td>
+                            </tr>
+                            <tr *ngFor="let variable of _serverVariables; let i = index;" 
+                                (keyup.esc)="macros.toggle()" 
+                                (keyup.enter)="addVariable(i)" 
+                                (dblclick)="addVariable(i)"
+                                (keyup.space)="select(i + _matches.length)" 
+                                (click)="select(i + _matches.length)" 
+                                class="hover-editing" 
+                                [class.background-selected]="_selected == (i + _matches.length)">
+
+                                <td class="back-ref border-color">
+                                    <span tabindex="0">{{ '{' + variable + '}' }}</span>
+                                </td>
+                                <td class="border-color"></td>
+                            </tr>
+                        </table>
                     </div>
-                    <button class="right input" (click)="macros.toggle()" [class.background-active]="(macros && macros.opened) || false">Macros</button>
-                    <div class="fill">
-                        <input type="text" required [title]="_result" class="form-control" [(ngModel)]="rule.rewrite_value" (modelChanged)="testRegex()" />
-                    </div>
-                    <selector class="stretch" #macros>
-                        <div class="table-scroll">
-                            <table>
-                                <tr *ngFor="let match of _matches; let i = index;" (dblclick)="addMatch(i)" (click)="select(i)" class="hover-editing" [class.background-selected]="_selected == i">
-                                    <td class="back-ref border-color">{{ '{R:' + i + '}' }}</td>
-                                    <td class="border-color">{{match}}</td>
-                                </tr>
-                                <tr *ngFor="let variable of _serverVariables; let i = index;" (dblclick)="addVariable(i)" (click)="select(i + _matches.length)" class="hover-editing" [class.background-selected]="_selected == (i + _matches.length)">
-                                    <td class="back-ref border-color">{{ '{' + variable + '}' }}</td>
-                                    <td class="border-color"></td>
-                                </tr>
-                            </table>
-                        </div>
-                        <p class="pull-right">
-                            <button [attr.disabled]="_selected == -1 || null" (click)="addSelected()">Insert</button>
-                        </p>
-                    </selector>
-                </fieldset>
-            </div>
+                    <p class="pull-right">
+                        <button [attr.disabled]="_selected == -1 || null" (click)="addSelected()">Insert</button>
+                    </p>
+                </selector>
+            </fieldset>
         </div>
+    </div>
     `,
     styles: [`
+        .fill {
+            float: left;
+            width: 80%;
+        }
+
         table {
             width: 100%;
         }
@@ -82,6 +95,14 @@ import { OutboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
             border-width: 1px;
             padding: 5px;
             border-top: none;
+        }
+
+        span:focus {
+            outline-style: dashed;
+            outline-color: #000;
+            outline-width: 2px;
+            outline-offset: -2px;
+            text-decoration: underline;
         }
 
         .back-ref {

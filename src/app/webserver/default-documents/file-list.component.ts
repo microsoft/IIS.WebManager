@@ -10,6 +10,10 @@ import { DefaultDocumentsService } from './default-documents.service';
     selector: 'file',
     template: `        
         <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing">
+            <fieldset class="col-xs-8">
+                <input *ngIf="_editing" class="form-control" type="text" [(ngModel)]="model.name" required />
+                <span *ngIf="!_editing" class="form-control">{{model.name}}</span>
+            </fieldset>
             <div class="actions">
                 <button class="no-border no-editing" [class.inactive]="readonly" title="Edit" (click)="onEdit()">
                     <i class="fa fa-pencil color-active"></i>
@@ -24,10 +28,6 @@ import { DefaultDocumentsService } from './default-documents.service';
                     <i class="fa fa-trash-o red"></i>
                 </button>
             </div>
-            <fieldset class="col-xs-8">
-                <input *ngIf="_editing" class="form-control" type="text" [(ngModel)]="model.name" required />
-                <span *ngIf="!_editing" class="form-control">{{model.name}}</span>
-            </fieldset>
         </div>
     `,
     styles: [`

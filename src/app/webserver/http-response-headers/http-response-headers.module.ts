@@ -8,6 +8,7 @@ import { Module as Loading } from '../../notification/loading.component';
 import { Module as OverrideMode } from '../../common/override-mode.component';
 import { Module as ErrorComponent } from '../../error/error.component';
 import { Module as Tabs } from '../../common/tabs.component';
+import { Module as AutoFocus } from '../../common/focus';
 
 import { HttpResponseHeadersService } from './http-response-headers.service';
 
@@ -24,7 +25,8 @@ import { RedirectHeadersComponent } from './redirect-headers.component';
         Loading,
         OverrideMode,
         ErrorComponent,
-        Tabs
+        Tabs,
+        AutoFocus,
     ],
     declarations: [
         CustomHeadersComponent,

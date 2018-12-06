@@ -19,10 +19,8 @@ import { AppPoolListComponent } from '../app-pools/app-pool-list.component';
                 </fieldset>
                 <fieldset class="path">
                     <label>Physical Path</label>
-                    <button [class.background-active]="fileSelector.isOpen()" title="Select Folder" class="right select" (click)="fileSelector.toggle()"></button>
-                    <div class="fill">
-                        <input type="text" class="form-control" [(ngModel)]="model.physical_path" (modelChanged)="onModelChanged()" required />
-                    </div>
+                    <input type="text" class="form-control left-with-button" [(ngModel)]="model.physical_path" (modelChanged)="onModelChanged()" required />
+                    <button [class.background-active]="fileSelector.isOpen()" title="Select Folder" class="select" (click)="fileSelector.toggle()"></button>
                     <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="model.physical_path" (selected)="onSelectPath($event)"></server-file-selector>
                 </fieldset>
 

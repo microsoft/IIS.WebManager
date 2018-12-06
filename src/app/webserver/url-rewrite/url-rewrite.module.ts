@@ -15,6 +15,7 @@ import { Module as Selector } from '../../common/selector';
 import { Module as TextCheckbox } from '../../common/text-toggle.component';
 import { Module as StringList } from '../../common/string-list.component';
 import { Module as Tooltip } from '../../common/tooltip.component';
+import { Module as AutoFocus } from '../../common/focus';
 
 import { UrlRewriteComponent } from './url-rewrite.component';
 
@@ -72,7 +73,8 @@ import { UrlRewriteService } from './service/url-rewrite.service';
         Selector,
         TextCheckbox,
         StringList,
-        Tooltip
+        Tooltip,
+        AutoFocus,
     ],
     declarations: [
         UrlRewriteComponent,

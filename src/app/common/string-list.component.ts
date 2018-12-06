@@ -13,7 +13,14 @@ import { Module as Validators } from './validators';
         <div *ngIf='list.length > 0'>
             <ul class="grid-list container-fluid">
                 <li *ngFor="let item of list; let i = index" class="row border-color grid-item" (dblclick)="onEdit(i)" [class.background-editing]="i === _editing">
-                    <div class="col-xs-12">
+                        <div class="col-xs-6 overflow-visible">
+                            <div>
+                                <span class="form-control" *ngIf="_editing != i">{{item.value}}</span>
+                            </div>
+                            <div *ngIf="_editing == i">
+                                <input  #val='ngModel' autofocus [(ngModel)]="list[i].value" class="form-control" type="text" required [lateBindValidator]="validator" (keyup.enter)="save(i)" [attr.title]="!title ? null : title" />
+                            </div>
+                        </div>
                         <div class="actions">
                             <button [disabled]="shouldDisable(i)" *ngIf="_editing == i" title="Ok" (click)="save(i)">
                                 <i class="fa fa-check color-active"></i>
@@ -28,13 +35,6 @@ import { Module as Validators } from './validators';
                                 <i class="fa fa-trash-o red"></i>
                             </button>
                         </div>
-                        <div>
-                            <span class="form-control" *ngIf="_editing != i">{{item.value}}</span>
-                        </div>
-                        <div *ngIf="_editing == i">
-                            <input  #val='ngModel' autofocus [(ngModel)]="list[i].value" class="form-control" type="text" required [lateBindValidator]="validator" (keyup.enter)="save(i)" [attr.title]="!title ? null : title" />
-                        </div>
-                    </div>
                 </li>
             </ul>
         </div>

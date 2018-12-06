@@ -11,6 +11,7 @@ import { Module as Loading } from '../../notification/loading.component';
 import { Module as Sort } from '../../common/sort.pipe';
 import { Module as Selector } from '../../common/selector';
 import { Module as Tabs } from '../../common/tabs.component';
+import { Module as AutoFocus } from '../../common/focus';
 
 import { Module as WebSitesModule } from '../websites/module';
 import { Module as AppPoolsModule } from '../app-pools/module';
@@ -42,7 +43,8 @@ import { NewWebAppComponent } from './new-webapp.component';
         Loading,
         Sort,
         Selector,
-        Tabs
+        Tabs,
+        AutoFocus,
     ],
     declarations: [
         WebAppComponent,

@@ -53,14 +53,12 @@ import { WebApp } from '../webapps/webapp';
             <div *ngIf="_editing">                
                 <fieldset class="col-xs-8 col-sm-4 col-lg-3">
                     <label>Path</label>
-                    <input class="form-control" type="text" (ngModelChange)="model.path=$event" [ngModel]="model.path" throttle required />
+                    <input autofocus class="form-control" type="text" (ngModelChange)="model.path=$event" [ngModel]="model.path" throttle required />
                 </fieldset>
                 <fieldset class="col-xs-12 overflow">
                     <label class="block">Physical Path</label>
-                    <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="right select" (click)="fileSelector.toggle()"></button>
-                    <div class="fill">
-                        <input type="text" class="form-control block" [(ngModel)]="model.physical_path" throttle required />
-                    </div>
+                    <input type="text" class="form-control block left-with-button" [(ngModel)]="model.physical_path" throttle required />
+                    <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="select" (click)="fileSelector.toggle()"></button>
                     <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="model.physical_path" (selected)="onSelectPath($event)"></server-file-selector>
                 </fieldset>
                 <div class="col-xs-12">

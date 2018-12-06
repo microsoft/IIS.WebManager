@@ -119,7 +119,7 @@ span.form-control {
 }
 
 .form-control[hidden] {
-    display: none;
+    display: none !important;
 }
 
 input[type='number'] {
@@ -131,6 +131,11 @@ input:required:invalid:not(.unfocused),
 input:not(:required).ng-invalid {
     border-left-width: 6px;
     border-left-style: solid;
+}
+
+.left-with-button {
+    float: left;
+    width: 80%;
 }
 
 .bttn {

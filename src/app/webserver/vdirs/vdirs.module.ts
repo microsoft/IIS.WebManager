@@ -8,6 +8,8 @@ import { Module as Validators } from '../../common/validators';
 import { Module as Switch } from '../../common/switch.component';
 import { Module as Sort } from '../../common/sort.pipe';
 import { Module as Enum } from '../../common/enum.component';
+import { Module as AutoFocus } from '../../common/focus';
+
 import { FilesModule } from '../../files/files.module';
 
 import { VdirsService } from './vdirs.service';
@@ -23,7 +25,8 @@ import { VdirListComponent, VdirListItem } from './vdir-list.component';
         Validators,
         Switch,
         Sort,
-        Enum
+        Enum,
+        AutoFocus,
     ],
     declarations: [
         VdirListComponent,

@@ -10,6 +10,7 @@ import { Module as OverrideMode } from '../../common/override-mode.component';
 import { Module as StringList } from '../../common/string-list.component';
 import { Module as ErrorComponent } from '../../error/error.component';
 import { Module as Tabs } from '../../common/tabs.component';
+import { Module as AutoFocus } from '../../common/focus';
 
 import { RequestFilteringService } from './request-filtering.service';
 
@@ -28,7 +29,8 @@ import { RulesComponent, RuleComponent } from './rules.component';
         OverrideMode,
         StringList,
         ErrorComponent,
-        Tabs
+        Tabs,
+        AutoFocus,
     ],
     declarations: [
         FileExtensionsComponent,

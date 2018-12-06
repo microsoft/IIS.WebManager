@@ -29,24 +29,18 @@ import {LocalModule, GlobalModule} from './modules';
         .visible-xs-inline-block {
             margin-left: 15px;
         }
+
+        .switch-wrapper {
+            // outline-style: dashed;
+            // outline-color: #000;
+            // outline-width: 2px;
+            // outline-offset: -2px;
+            // text-decoration: underline;
+            outline: none;
+        }
     `],
     template: `
         <div *ngIf="module" class="row grid-item" [class.background-editing]="_isEditing">
-
-            <div class="actions" [ngClass]="actionClasses()">
-                <button class="no-border" title="Ok" *ngIf="_isEditing" (click)="onFinishEditing()">
-                    <i class="fa fa-check blue"></i>
-                </button>
-                <button class="no-border" title="Cancel" *ngIf="_isEditing" (click)="onDiscardChanges()">
-                    <i class="fa fa-times red"></i>
-                </button>
-                <button class="no-border" title="Edit" [disabled]="!_editable" *ngIf="!_isEditing && allow('edit')" (click)="onEdit()">
-                    <i class="fa fa-pencil blue"></i>
-                </button>
-                <button class="no-border" title="Delete" [disabled]="!_editable" *ngIf="allow('delete')" (click)="onDelete()">
-                    <i class="fa fa-trash-o red"></i>
-                </button>
-            </div>
 
             <fieldset class="col-xs-8 col-sm-3">
                 <label class="hidden-xs editing">Name</label>
@@ -67,13 +61,31 @@ import {LocalModule, GlobalModule} from './modules';
             </fieldset>
             <fieldset class="col-xs-8 col-sm-3 col-md-3 col-lg-2">
                 <label class="editing"><span class="visible-xs-inline-block"></span>Status</label>
-                <div [hidden]="!_isEditing">
+                <div *ngIf="_isEditing">
                     <span class="visible-xs-inline-block"></span>
-                    <switch [(model)]="enabled">{{enabled ? 'Enabled' : 'Disabled'}}</switch>
+                    <span class="switch-wrapper" autofocus tabindex="0">
+                        <switch #switchButton [(model)]="enabled"></switch>
+                    </span>
+                    {{enabled ? 'Enabled' : 'Disabled'}}
                 </div>
                 <span *ngIf="!_isEditing" class="visible-xs-inline-block"></span>
                 <span *ngIf="!_isEditing" [class.stopped]="!enabled" [class.green]="enabled">{{enabled ? 'Enabled' : 'Disabled'}}</span>
             </fieldset>
+
+            <div class="actions" [ngClass]="actionClasses()">
+                <button class="no-border" title="Ok" *ngIf="_isEditing" (click)="onFinishEditing()">
+                    <i class="fa fa-check blue"></i>
+                </button>
+                <button class="no-border" title="Cancel" *ngIf="_isEditing" (click)="onDiscardChanges()">
+                    <i class="fa fa-times red"></i>
+                </button>
+                <button class="no-border" title="Edit" [disabled]="!_editable" *ngIf="!_isEditing && allow('edit')" (click)="onEdit()">
+                    <i class="fa fa-pencil blue"></i>
+                </button>
+                <button class="no-border" title="Delete" [disabled]="!_editable" *ngIf="allow('delete')" (click)="onDelete()">
+                    <i class="fa fa-trash-o red"></i>
+                </button>
+            </div>
 
         </div>
     `

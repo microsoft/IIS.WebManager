@@ -68,7 +68,8 @@ import { FileNavService } from './file-nav.service';
                     (dragstart)="drag(child, $event)"
                     (drop)="drop($event, child)"
                     (dragenter)="onDragItemEnter(child, $event)"
-                    (dragleave)="onDragItemLeave(child, $event)">
+                    (dragleave)="onDragItemLeave(child, $event)"
+                    (keyup.space)="select(child)">
                     <file [model]="child" (modelChanged)="doSort()"></file>
                 </li>
             </virtual-list>
@@ -404,6 +405,11 @@ export class FileListComponent implements OnInit, OnDestroy {
         else if (e.dataTransfer.effectAllowed == "all") {
             e.dataTransfer.dropEffect = "copy";
         }
+    }
+
+    private select(f) {
+        this.clearSelection();
+        this._selected.push(f);
     }
 
     private drag(f: ApiFile, e: DragEvent) {
