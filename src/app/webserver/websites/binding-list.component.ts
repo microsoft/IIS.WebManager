@@ -42,7 +42,7 @@ import { Binding } from './site';
                 </div>
             </div>
             
-            <div class="col-xs-8 col-sm-4 col-lg-5 overflow-visible" *ngIf="edit">
+            <div class="col-lg-10 col-md-10 col-sm-10 overflow-visible" *ngIf="edit">
                 <fieldset class="col-xs-8 col-md-4" *ngIf="isHttp()">
                     <label>Host Name</label>
                     <input autofocus class="form-control" type="text" [(ngModel)]="model.hostname"/>

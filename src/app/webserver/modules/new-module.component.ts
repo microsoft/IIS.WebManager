@@ -6,7 +6,7 @@ import {LocalModule, GlobalModule, ModuleType} from './modules';
     selector: 'new-module',
     template: `
         <div class="grid-item background-editing row">
-            <div class="col-xs-8 col-sm-4 col-lg-5 overflow-visible">
+            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6 overflow-visible">
                 <fieldset class="col-xs-8" *ngIf="isServerSetting">
                     <enum [(model)]="moduleType">
                         <field name="Managed" value="managed"></field>
