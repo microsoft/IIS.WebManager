@@ -16,7 +16,7 @@ import {ApplicationPool} from '../app-pools/app-pool';
         <div *ngIf="website">
             <button [class.background-active]="newWebApp.opened" (click)="newWebApp.toggle()">Create Web Application <i class="fa fa-caret-down"></i></button>
             <selector #newWebApp class="container-fluid">
-                <new-webapp [website]="website" (created)="newWebApp.close()" (cancel)="newWebApp.close()"></new-webapp>
+                <new-webapp *ngIf="newWebApp.opened" [website]="website" (created)="newWebApp.close()" (cancel)="newWebApp.close()"></new-webapp>
             </selector>
         </div>
         <br/>

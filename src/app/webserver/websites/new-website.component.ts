@@ -18,14 +18,12 @@ import { ApplicationPool } from '../app-pools/app-pool';
             <tab [name]="'Settings'">
                 <fieldset>
                     <label>Name</label>
-                    <input type="text" class="form-control name" [ngModel]="site.name" (ngModelChange)="onNameChange($event)" required />
+                    <input autofocus type="text" class="form-control name" [ngModel]="site.name" (ngModelChange)="onNameChange($event)" required />
                 </fieldset>
                 <fieldset class="path">
                     <label>Physical Path</label>
-                    <button [class.background-active]="fileSelector.isOpen()" title="Select Folder" class="right select" (click)="fileSelector.toggle()"></button>
-                    <div class="fill">
-                        <input type="text" class="form-control" [(ngModel)]="site.physical_path" required />
-                    </div>
+                    <input type="text" class="form-control left-with-button" [(ngModel)]="site.physical_path" required />
+                    <button [class.background-active]="fileSelector.isOpen()" title="Select Folder" class="left select" (click)="fileSelector.toggle()"></button>
                     <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="site.physical_path" (selected)="onSelectPath($event)"></server-file-selector>
                 </fieldset>
             </tab>

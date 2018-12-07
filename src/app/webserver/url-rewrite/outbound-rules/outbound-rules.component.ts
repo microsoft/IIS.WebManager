@@ -24,7 +24,7 @@ import { OutboundSection, OutboundRule, PatternSyntax, OutboundTags, ActionType,
                 
                 <button class="create" [class.background-active]="newRule.opened" (click)="newRule.toggle()">Create Rule <i class="fa fa-caret-down"></i></button>
                 <selector #newRule class="container-fluid create" (hide)="initializeNewRule()">
-                    <outbound-rule-edit [rule]="_newRule" (save)="saveNew()" (cancel)="newRule.close()"></outbound-rule-edit>
+                    <outbound-rule-edit *ngIf="newRule.opened" [rule]="_newRule" (save)="saveNew()" (cancel)="newRule.close()"></outbound-rule-edit>
                 </selector>
             </div>
 

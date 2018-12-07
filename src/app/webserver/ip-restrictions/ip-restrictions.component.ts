@@ -37,7 +37,7 @@ import { NotificationService } from '../../notification/notification.service';
                             <restriction-rules [ipRestrictions]="ipRestrictions" (modelChange)="onModelChanged()"></restriction-rules>
                     </tab>
                 </tabs>
-            </div>            
+            </div>
         </div>
     `,
     styles: [`

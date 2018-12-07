@@ -12,6 +12,25 @@ import { RequestFilteringService } from './request-filtering.service';
     template: `
         <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing">
 
+            <fieldset class="col-xs-8 col-sm-4">
+                <label class="visible-xs">Extension</label>
+                <label class="hidden-xs" [hidden]="!_editing">Extension</label>
+                <i class="fa fa-circle green hidden-xs" *ngIf="model.allow && !_editing"></i>
+                <i class="fa fa-ban red hidden-xs" *ngIf="!model.allow && !_editing"></i>
+                <input autofocus class="form-control" *ngIf="_editing" type="text" [disabled]="locked" [(ngModel)]="model.extension" throttle required />
+                <span *ngIf="!_editing">{{model.extension}}</span>
+                <div *ngIf="!_editing">
+                    <br class="visible-xs" />
+                </div>
+            </fieldset>
+
+            <fieldset class="col-xs-12 col-sm-4">
+                <label class="visible-xs">Allowed</label>
+                <label class="hidden-xs" [hidden]="!_editing">Allowed</label>
+                <span *ngIf="!_editing">{{model.allow ? "Allow" : "Deny"}}</span>
+                <switch class="block" *ngIf="_editing" [disabled]="locked" [(model)]="model.allow">{{model.allow ? "Allow" : "Deny"}}</switch>
+            </fieldset>
+
             <div class="actions">
                 <button class="no-border" *ngIf="!_editing" [class.inactive]="!_editable" title="Edit" (click)="onEdit()">
                     <i class="fa fa-pencil color-active"></i>
@@ -26,25 +45,6 @@ import { RequestFilteringService } from './request-filtering.service';
                     <i class="fa fa-trash-o red"></i>
                 </button>
             </div>
-
-            <fieldset class="col-xs-8 col-sm-4">
-                <label class="visible-xs">Extension</label>
-                <label class="hidden-xs" [hidden]="!_editing">Extension</label>
-                <i class="fa fa-circle green hidden-xs" *ngIf="model.allow && !_editing"></i>
-                <i class="fa fa-ban red hidden-xs" *ngIf="!model.allow && !_editing"></i>
-                <input class="form-control" *ngIf="_editing" type="text" [disabled]="locked" [(ngModel)]="model.extension" throttle required />
-                <span *ngIf="!_editing">{{model.extension}}</span>
-                <div *ngIf="!_editing">
-                    <br class="visible-xs" />
-                </div>
-            </fieldset>
-
-            <fieldset class="col-xs-12 col-sm-4">
-                <label class="visible-xs">Allowed</label>
-                <label class="hidden-xs" [hidden]="!_editing">Allowed</label>
-                <span *ngIf="!_editing">{{model.allow ? "Allow" : "Deny"}}</span>
-                <switch class="block" *ngIf="_editing" [disabled]="locked" [(model)]="model.allow">{{model.allow ? "Allow" : "Deny"}}</switch>
-            </fieldset>
 
         </div>
     `,
@@ -177,7 +177,7 @@ export class FileExtensionComponent implements OnInit, OnChanges {
                     <file-extension [model]="fe" [locked]="locked" (enter)="onEnter()" (leave)="onLeave()"></file-extension>
                 </li>
             </ul>
-        </div> 
+        </div>
     `
 })
 export class FileExtensionsComponent implements OnInit, OnDestroy {

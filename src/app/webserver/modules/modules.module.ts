@@ -8,6 +8,7 @@ import {Module as Loading} from '../../notification/loading.component';
 import {Module as OverrideMode} from '../../common/override-mode.component';
 import {Module as Enum} from '../../common/enum.component';
 import {Module as ErrorComponent} from '../../error/error.component';
+import {Module as AutoFocus} from '../../common/focus';
 
 import {ModuleService} from './modules.service';
 
@@ -25,7 +26,8 @@ import {NewModuleComponent} from './new-module.component';
         Loading,
         OverrideMode,
         Enum,
-        ErrorComponent
+        ErrorComponent,
+        AutoFocus,
     ],
     declarations: [
         ModuleListComponent,

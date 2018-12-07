@@ -10,6 +10,7 @@ import { Module as Loading } from '../../notification/loading.component';
 import { Module as Sort } from '../../common/sort.pipe';
 import { Module as Selector } from '../../common/selector';
 import { Module as Enum } from '../../common/enum.component';
+import { Module as AutoFocus } from '../../common/focus';
 
 import { AppPoolList, AppPoolItem } from './app-pool-list';
 import { AppPoolListComponent } from './app-pool-list.component';
@@ -27,7 +28,8 @@ import { IdentityComponent } from './identity.component';
         Loading,
         Sort,
         Selector,
-        Enum
+        Enum,
+        AutoFocus,
     ],
     exports: [
         AppPoolList,

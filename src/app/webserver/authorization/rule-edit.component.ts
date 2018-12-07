@@ -6,7 +6,7 @@ import { AuthorizationService } from './authorization.service';
 @Component({
     selector: 'edit-rule',
     template: `
-        <div>   
+        <div>
             <fieldset>
                 <label class="inline-block">Access Type</label>
                 <enum class="block" [disabled]="locked" [(model)]="rule.access_type">
@@ -23,7 +23,7 @@ import { AuthorizationService } from './authorization.service';
                     <field name="Roles or Groups" value="roles"></field>
                 </enum>
             </fieldset>
-            <fieldset class="no-label" *ngIf="_target == 'roles' || _target == 'users'">   
+            <fieldset class="no-label" *ngIf="_target == 'roles' || _target == 'users'">
                 <div *ngIf="_target == 'roles'">
                     <input placeholder="ex: Administrators, Power Users" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="_roles" />
                 </div>

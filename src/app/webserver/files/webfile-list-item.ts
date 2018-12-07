@@ -31,7 +31,7 @@ import { WebFileType, WebFile } from './webfile';
             </div>
             <div class="col-sm-3 col-md-2 hidden-xs valign support">
                 <span *ngIf="model.file_info && model.file_info.last_modified">{{displayDate}}</span>
-            </div>     
+            </div>
             <div class="col-md-2 visible-lg visible-md valign support">
                 {{this.model.description}}
             </div>

@@ -12,8 +12,10 @@ export class AutoFocus {
     }    
 
     ngOnInit() {
-        this._renderer.invokeElementMethod(this._el.nativeElement, 'focus', []);
-
+        setTimeout(() => {
+            this._renderer.invokeElementMethod(this._el.nativeElement, 'focus', []);
+        }, 1);
+        
         if (this._el.nativeElement.select) {
             setTimeout(() => {
                 this._renderer.invokeElementMethod(this._el.nativeElement, 'select', []);

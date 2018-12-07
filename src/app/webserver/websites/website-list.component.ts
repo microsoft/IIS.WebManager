@@ -21,7 +21,7 @@ import { ApplicationPool } from '../app-pools/app-pool';
         <div *ngIf="!appPool && service.installStatus != 'stopped'">
             <button [class.background-active]="newWebSite.opened" (click)="newWebSite.toggle()">Create Web Site <i class="fa fa-caret-down"></i></button>
             <selector #newWebSite class="container-fluid">
-                <new-website (created)="newWebSite.close()" (cancel)="newWebSite.close()"></new-website>
+                <new-website *ngIf="newWebSite.opened" (created)="newWebSite.close()" (cancel)="newWebSite.close()"></new-website>
             </selector>
         </div>
         <br/>

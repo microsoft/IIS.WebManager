@@ -19,21 +19,6 @@ import { WebApp } from '../webapps/webapp';
     selector: 'vdir',
     template: `
         <div *ngIf="model" class="row grid-item" [class.background-editing]="_editing">
-            <div class="actions">
-                <button class="no-border no-editing" title="Edit" [class.inactive]="readonly" (click)="onEdit()">
-                    <i class="fa fa-pencil color-active"></i>
-                </button>
-                <button [disabled]="!isValid()" class="no-border editing" title="Ok" (click)="onSave()">
-                    <i class="fa fa-check color-active"></i>
-                </button>
-                <button class="no-border editing" title="Cancel" (click)="onCancel()">
-                    <i class="fa fa-times red"></i>
-                </button>
-                <button class="no-border" *ngIf="model.id" title="Delete" [class.inactive]="readonly" (click)="onDelete()">
-                    <i class="fa fa-trash-o red"></i>
-                </button>
-            </div>
-
             <div *ngIf="!_editing">
                 <div class="col-xs-8 col-sm-4 col-lg-3" [class.v-align]="!model.identity.username">
                     <div class="name">
@@ -50,53 +35,67 @@ import { WebApp } from '../webapps/webapp';
                 </div>
             </div>
 
-            <div *ngIf="_editing">                
-                <fieldset class="col-xs-8 col-sm-4 col-lg-3">
-                    <label>Path</label>
-                    <input class="form-control" type="text" (ngModelChange)="model.path=$event" [ngModel]="model.path" throttle required />
-                </fieldset>
-                <fieldset class="col-xs-12 overflow">
-                    <label class="block">Physical Path</label>
-                    <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="right select" (click)="fileSelector.toggle()"></button>
-                    <div class="fill">
-                        <input type="text" class="form-control block" [(ngModel)]="model.physical_path" throttle required />
-                    </div>
-                    <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="model.physical_path" (selected)="onSelectPath($event)"></server-file-selector>
-                </fieldset>
-                <div class="col-xs-12">
-                    <fieldset>
-                        <label>Custom Identity</label>
-                        <switch class="block" #customIdentity="switchVal" [model]="model.identity.username" (modelChange)="onUseCustomIdentity($event)">{{model.identity.username ? "On" : "Off"}}</switch>
+            <div *ngIf="_editing">
+                <fieldset class="col-lg-10 col-md-10 col-sm-8 col-xs-6 overflow-visible">
+                    <fieldset class="col-xs-8 col-sm-4 col-lg-3">
+                        <label>Path</label>
+                        <input autofocus class="form-control" type="text" (ngModelChange)="model.path=$event" [ngModel]="model.path" throttle required />
                     </fieldset>
-                    <div *ngIf="customIdentity.model">
-                        <div class="row">
-                            <fieldset class="col-sm-4 col-xs-12">
-                                <label>Username</label>
-                                <input class="form-control" type="text" [(ngModel)]="model.identity.username" throttle />
-                                <span>{{model.username}}</span>
-                            </fieldset>
-                        </div>
-                        <div class="row">
-                            <fieldset class="col-sm-4 col-xs-12">
-                                <label>Password</label>
-                                <input class="form-control" type="password" [(ngModel)]="_password" (modelChanged)="_confirm=''"/>
-                            </fieldset>
-                            <fieldset *ngIf="!!_password" class="col-sm-4 col-xs-12">
-                                <label>Confirm Password</label>
-                                <input class="form-control" type="password" [(ngModel)]="_confirm" (modelChanged)="onConfirmPassword" [validateEqual]="_password" />
-                            </fieldset>
-                        </div>
+                    <fieldset class="col-xs-12 overflow">
+                        <label class="block">Physical Path</label>
+                        <input type="text" class="form-control block left-with-button" [(ngModel)]="model.physical_path" throttle required />
+                        <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="select" (click)="fileSelector.toggle()"></button>
+                        <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="model.physical_path" (selected)="onSelectPath($event)"></server-file-selector>
+                    </fieldset>
+                    <div class="col-xs-12">
                         <fieldset>
-                            <label>Logon Method</label>
-                            <enum [(model)]="model.identity.logon_method">
-                                <field name="Clear Text" value="network_cleartext"></field>
-                                <field name="Network" value="network"></field>
-                                <field name="Interactive" value="interactive"></field>
-                                <field name="Batch" value="batch"></field>
-                            </enum>
+                            <label>Custom Identity</label>
+                            <switch class="block" #customIdentity="switchVal" [model]="model.identity.username" (modelChange)="onUseCustomIdentity($event)">{{model.identity.username ? "On" : "Off"}}</switch>
                         </fieldset>
+                        <div *ngIf="customIdentity.model">
+                            <div class="row">
+                                <fieldset class="col-sm-4 col-xs-12">
+                                    <label>Username</label>
+                                    <input class="form-control" type="text" [(ngModel)]="model.identity.username" throttle />
+                                    <span>{{model.username}}</span>
+                                </fieldset>
+                            </div>
+                            <div class="row">
+                                <fieldset class="col-sm-4 col-xs-12">
+                                    <label>Password</label>
+                                    <input class="form-control" type="password" [(ngModel)]="_password" (modelChanged)="_confirm=''"/>
+                                </fieldset>
+                                <fieldset *ngIf="!!_password" class="col-sm-4 col-xs-12">
+                                    <label>Confirm Password</label>
+                                    <input class="form-control" type="password" [(ngModel)]="_confirm" (modelChanged)="onConfirmPassword" [validateEqual]="_password" />
+                                </fieldset>
+                            </div>
+                            <fieldset>
+                                <label>Logon Method</label>
+                                <enum [(model)]="model.identity.logon_method">
+                                    <field name="Clear Text" value="network_cleartext"></field>
+                                    <field name="Network" value="network"></field>
+                                    <field name="Interactive" value="interactive"></field>
+                                    <field name="Batch" value="batch"></field>
+                                </enum>
+                            </fieldset>
+                        </div>
                     </div>
-                </div>
+                </fieldset>
+            </div>
+            <div class="actions">
+                <button class="no-border no-editing" title="Edit" [class.inactive]="readonly" (click)="onEdit()">
+                    <i class="fa fa-pencil color-active"></i>
+                </button>
+                <button [disabled]="!isValid()" class="no-border editing" title="Ok" (click)="onSave()">
+                    <i class="fa fa-check color-active"></i>
+                </button>
+                <button class="no-border editing" title="Cancel" (click)="onCancel()">
+                    <i class="fa fa-times red"></i>
+                </button>
+                <button class="no-border" *ngIf="model.id" title="Delete" [class.inactive]="readonly" (click)="onDelete()">
+                    <i class="fa fa-trash-o red"></i>
+                </button>
             </div>
         </div>
     `,

@@ -18,7 +18,7 @@ export class Drop {
         <div>
             <button class="no-border pull-left color-active" title="Go Up" (click)="onClickUp()"><i class="fa fa-level-up"></i></button>
             <div class="fill">
-                <ul *ngIf="_crumbs.length > 0" [hidden]="_typing" class="nav border-color" (click)="onClickAddress($event)">
+                <ul tabindex="0" *ngIf="_crumbs.length > 0" [hidden]="_typing" class="nav border-color" (keyup.space)="onClickAddress($event)" (keyup.enter)="onClickAddress($event)" (click)="onClickAddress($event)">
                     <li *ngFor="let item of _crumbs; let i = index;" 
                         (dragover)="dragOver(i, $event)" 
                         (drop)="onDrop(i, $event)"
@@ -39,6 +39,14 @@ export class Drop {
             cursor: pointer;
             padding: 0 1px;
             direction: ltr;
+        }
+
+        ul:focus {
+            outline-style: dashed;
+            outline-color: #000;
+            outline-width: 2px;
+            outline-offset: -2px;
+            text-decoration: underline;
         }
 
         .crumb:empty:before {

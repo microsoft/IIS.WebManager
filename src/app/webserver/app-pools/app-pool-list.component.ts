@@ -14,7 +14,7 @@ import {AppPoolList} from './app-pool-list';
         <div>
             <button [class.background-active]="newAppPool.opened" (click)="newAppPool.toggle()">Create Application Pool <i class="fa fa-caret-down"></i></button>
             <selector #newAppPool class="container-fluid">
-                <new-app-pool (created)="newAppPool.close()" (cancel)="newAppPool.close()"></new-app-pool>
+                <new-app-pool *ngIf="newAppPool.opened" (created)="newAppPool.close()" (cancel)="newAppPool.close()"></new-app-pool>
             </selector>
         </div>
         <br/>

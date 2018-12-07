@@ -10,7 +10,7 @@ import {AppPoolsService} from './app-pools.service';
     template: `
         <fieldset>
             <label>Name</label>
-            <input type="text" class="form-control name" [(ngModel)]="model.name" required />
+            <input autofocus type="text" class="form-control name" [(ngModel)]="model.name" required />
         </fieldset>
         <section>
             <div class="collapse-heading collapsed" data-toggle="collapse" data-target="#settings">

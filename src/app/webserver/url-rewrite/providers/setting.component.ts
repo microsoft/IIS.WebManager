@@ -71,18 +71,20 @@ export class SettingComponent implements OnChanges {
     selector: 'provider-setting-edit',
     template: `
         <div *ngIf="setting" class="grid-item row background-editing">
+            <fieldset class="col-lg-10 col-md-10 col-sm-8 col-xs-6 overflow-visible">
+                <fieldset>
+                    <label>Name</label>
+                    <input autofocus type="text" required class="form-control name" [(ngModel)]="setting.name" />
+                </fieldset>
+                <fieldset>
+                    <label>Value</label>
+                    <input type="text" required class="form-control name" [(ngModel)]="setting.value" />
+                </fieldset>
+            </fieldset>
             <div class="actions">
                 <button class="no-border ok" [disabled]="!isValid()" title="Ok" (click)="onOk()"></button>
                 <button class="no-border cancel" title="Cancel" (click)="onDiscard()"></button>
             </div>
-            <fieldset>
-                <label>Name</label>
-                <input type="text" required class="form-control name" [(ngModel)]="setting.name" />
-            </fieldset>
-            <fieldset>
-                <label>Value</label>
-                <input type="text" required class="form-control name" [(ngModel)]="setting.value" />
-            </fieldset>
         </div>
     `,
     styles: [`

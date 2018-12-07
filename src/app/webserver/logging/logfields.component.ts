@@ -67,26 +67,12 @@ export class LogFieldsComponent {
     </div>
     <ul class="grid-list">
         <li *ngFor="let field of fields; let i = index;" class="row border-color grid-item" [class.background-editing]="i === _editing">
-            <div class="actions">
-                <button class="no-border no-editing" title="Edit" [class.inactive]="_editing != -1" (click)="edit(i)" >
-                    <i class="fa fa-pencil color-active"></i>
-                </button>
-                <button [disabled]="!isValidCustomField(field)" class="no-border editing" title="Ok" (click)="save(i)">
-                    <i class="fa fa-check color-active"></i>
-                </button>
-                <button class="no-border editing" title="Cancel" (click)="discardChanges(i)">
-                    <i class="fa fa-times red"></i>
-                </button>
-                <button class="no-border" title="Delete" *ngIf="!field.isNew" [class.inactive]="_editing !== -1 && _editing !== i" (click)="delete(i)">
-                    <i class="fa fa-trash-o red"></i>
-                </button>
-            </div>
             <div class="col-xs-8 col-sm-3 col-lg-2">
                 <fieldset>
                     <label class="visible-xs">Read From</label>
                     <label *ngIf="i === _editing" class="hidden-xs">Read From</label>
                     <span *ngIf="i !== _editing">{{sourceTypeName(field.source_type)}}</span>
-                    <select *ngIf="i === _editing" [(ngModel)]="field.source_type" class="form-control">
+                    <select autofocus *ngIf="i === _editing" [(ngModel)]="field.source_type" class="form-control">
                         <option value="request_header">Request Header</option>
                         <option value="response_header">Response Header</option>
                         <option value="server_variable">Server Variable</option>
@@ -117,6 +103,20 @@ export class LogFieldsComponent {
                 <div *ngIf="i !== _editing">
                     <br class="visible-xs" />
                 </div>
+            </div>
+            <div class="actions">
+                <button class="no-border no-editing" title="Edit" [class.inactive]="_editing != -1" (click)="edit(i)" >
+                    <i class="fa fa-pencil color-active"></i>
+                </button>
+                <button [disabled]="!isValidCustomField(field)" class="no-border editing" title="Ok" (click)="save(i)">
+                    <i class="fa fa-check color-active"></i>
+                </button>
+                <button class="no-border editing" title="Cancel" (click)="discardChanges(i)">
+                    <i class="fa fa-times red"></i>
+                </button>
+                <button class="no-border" title="Delete" *ngIf="!field.isNew" [class.inactive]="_editing !== -1 && _editing !== i" (click)="delete(i)">
+                    <i class="fa fa-trash-o red"></i>
+                </button>
             </div>
         </li>
     </ul>

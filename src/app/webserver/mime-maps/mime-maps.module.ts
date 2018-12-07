@@ -7,6 +7,7 @@ import { Module as BModel } from '../../common/bmodel';
 import { Module as Loading } from '../../notification/loading.component';
 import { Module as OverrideMode } from '../../common/override-mode.component';
 import { Module as ErrorComponent } from '../../error/error.component';
+import { Module as AutoFocus } from '../../common/focus';
 
 import { StaticContentService } from '../static-content/static-content.service';
 
@@ -21,7 +22,8 @@ import { MimeMapsComponent } from './mime-maps.component';
         BModel,
         Loading,
         OverrideMode,
-        ErrorComponent
+        ErrorComponent,
+        AutoFocus,
     ],
     declarations: [
         MimeMapListItem,

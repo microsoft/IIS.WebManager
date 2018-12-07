@@ -98,7 +98,7 @@ export class DailyScheduleComponent {
                     <label>Memory Limit <span class="units">(KB)</span></label>
                     <input class="form-control" type="number" [(ngModel)]="model.periodic_restart.private_memory" throttle (modelChanged)="onModelChanged()" />
                 </fieldset>
-            </div>    
+            </div>
             <div>
                 <fieldset class='inline-block'>
                     <label>Virtual Memory</label>
@@ -110,7 +110,7 @@ export class DailyScheduleComponent {
                     <label>Memory Limit <span class="units">(KB)</span></label>
                     <input class="form-control" type="number" [(ngModel)]="model.periodic_restart.virtual_memory" throttle (modelChanged)="onModelChanged()" />
                 </fieldset>
-            </div>    
+            </div>
             <div>
                 <fieldset class='inline-block'>
                     <label>Request Limit</label>

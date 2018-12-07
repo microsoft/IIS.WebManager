@@ -14,7 +14,7 @@ import { NotificationService } from '../notification/notification.service';
             <div *ngIf="!_editing">
                 <div class="col-xs-10 col-sm-4 v-align">
                     <a title="Connect" href="#" class="color-normal hover-color-active" [class.active]="_active === model" (click)="onConnect($event)">{{connName()}}</a>
-                </div>     
+                </div>
                 <div class="hidden-xs col-sm-6 v-align">
                     {{model.url}}
                 </div>

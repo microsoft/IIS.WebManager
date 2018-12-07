@@ -16,6 +16,7 @@ import { Module as Selectable } from '../../common/selectable';
 import { Module as Toolbar } from '../../files/toolbar.component';
 import { Module as Warning } from '../../notification/warning.component';
 import { Module as Tabs } from '../../common/tabs.component';
+import { Module as AutoFocus } from '../../common/focus';
 
 import { FilesModule } from '../../files/files.module';
 
@@ -45,7 +46,8 @@ import { LogFilesComponent } from './log-files.component';
         Toolbar,
         Warning,
         FilesModule,
-        Tabs
+        Tabs,
+        AutoFocus,
     ],
     declarations: [
         FormatComponent,

@@ -24,8 +24,8 @@ import { AuthenticationService } from './authentication.service';
                 <fieldset>
                     <label>Password</label>
                     <input class="form-control path" type="text" [disabled]="_locked" [(ngModel)]="_model.password" throttle (modelChanged)="onModelChanged()" />
-                </fieldset>  
-            </div>  
+                </fieldset>
+            </div>
         </div>
     `
 })

@@ -12,7 +12,7 @@ import {ApplicationPool} from './app-pool';
             <tab [name]="'Settings'">
                 <fieldset>
                     <label>Name</label>
-                    <input class="form-control name" type="text" [(ngModel)]="pool.name" (modelChanged)="onModelChanged()" required throttle />
+                    <input autofocus class="form-control name" type="text" [(ngModel)]="pool.name" (modelChanged)="onModelChanged()" required throttle />
                 </fieldset>
                 <fieldset>
                     <label>Auto Start</label>

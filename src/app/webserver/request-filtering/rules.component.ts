@@ -12,20 +12,6 @@ import { RequestFilteringService } from './request-filtering.service';
     selector: 'rule',
     template: `
         <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing">
-            <div class="actions">
-                <button class="no-border no-editing" [class.inactive]="!_editable" title="Edit" (click)="onEdit()">
-                    <i class="fa fa-pencil color-active"></i>
-                </button>
-                <button class="no-border editing" [disabled]="!isValid() || locked" title="Ok" (click)="onSave()">
-                    <i class="fa fa-check color-active"></i>
-                </button>
-                <button class="no-border editing" title="Cancel" (click)="onDiscard()">
-                    <i class="fa fa-times red"></i>
-                </button>
-                <button class="no-border" *ngIf="model.id" [disabled]="locked" title="Delete" [class.inactive]="!_editable" (click)="onDelete()">
-                    <i class="fa fa-trash-o red"></i>
-                </button>
-            </div>
 
             <fieldset class="col-xs-8 col-sm-3" *ngIf="!_editing">
                 <label class="visible-xs">Name</label>
@@ -37,7 +23,7 @@ import { RequestFilteringService } from './request-filtering.service';
 
             <fieldset class="col-xs-8 col-md-9 col-lg-10" *ngIf="_editing">
                 <label class="block">Name</label>
-                <input class="form-control" type="text" [disabled]="locked" [(ngModel)]="model.name" throttle required />
+                <input autofocus class="form-control" type="text" [disabled]="locked" [(ngModel)]="model.name" throttle required />
             </fieldset>
 
             <fieldset class="col-xs-8 col-sm-5 col-md-6" *ngIf="!_editing">
@@ -94,6 +80,22 @@ import { RequestFilteringService } from './request-filtering.service';
                 </div>
 
             </div>
+
+            <div class="actions">
+                <button class="no-border no-editing" [class.inactive]="!_editable" title="Edit" (click)="onEdit()">
+                    <i class="fa fa-pencil color-active"></i>
+                </button>
+                <button class="no-border editing" [disabled]="!isValid() || locked" title="Ok" (click)="onSave()">
+                    <i class="fa fa-check color-active"></i>
+                </button>
+                <button class="no-border editing" title="Cancel" (click)="onDiscard()">
+                    <i class="fa fa-times red"></i>
+                </button>
+                <button class="no-border" *ngIf="model.id" [disabled]="locked" title="Delete" [class.inactive]="!_editable" (click)="onDelete()">
+                    <i class="fa fa-trash-o red"></i>
+                </button>
+            </div>
+
         </div>
     `,
     styles: [`
@@ -275,9 +277,9 @@ export class RuleComponent implements OnInit, OnChanges {
                 </li>
                 <li *ngFor="let r of rules; let i = index;">
                     <rule [model]="r" [locked]="locked" (enter)="enterRule(i)" (leave)="leaveRule(i)"></rule>
-                </li>                
+                </li>
             </ul>
-        </div>  
+        </div>
     `,
 })
 export class RulesComponent implements OnInit, OnDestroy {

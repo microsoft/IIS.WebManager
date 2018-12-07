@@ -24,7 +24,7 @@ import { InboundSection, InboundRule, PatternSyntax, ActionType, ConditionMatchC
                 
                 <button class="create" [class.background-active]="newRule.opened" (click)="newRule.toggle()">Create Rule <i class="fa fa-caret-down"></i></button>
                 <selector #newRule class="container-fluid create" (hide)="initializeNewRule()">
-                    <inbound-rule-edit [rule]="_newRule" (save)="saveNew($event)" (cancel)="newRule.close()"></inbound-rule-edit>
+                    <inbound-rule-edit *ngIf="newRule.opened" [rule]="_newRule" (save)="saveNew($event)" (cancel)="newRule.close()"></inbound-rule-edit>
                 </selector>
             </div>
 

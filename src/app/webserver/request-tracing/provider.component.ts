@@ -11,7 +11,25 @@ import {RequestTracingService} from './request-tracing.service';
 @Component({
     selector: 'provider',
     template: `
-        <div *ngIf="model" class="grid-item row" [class.background-editing]="_isEditing">
+        <div *ngIf="model" class="row grid-item" [class.background-editing]="_isEditing">
+            <fieldset class="col-xs-8" *ngIf="!_isEditing">
+                <span>{{model.name}}</span>
+            </fieldset>
+            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-8 overflow-visible" *ngIf="_isEditing">
+                <fieldset>
+                    <label>Name</label>
+                    <input autofocus class="form-control name" type="text" [(ngModel)]="model.name" required throttle/>
+                </fieldset>
+                <fieldset class="name" >
+                    <label>Guid</label>
+                    <input *ngIf="!model.id" class="form-control" type="text" [(ngModel)]="model.guid" required pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$" throttle/>
+                    <span *ngIf="model.id" class="editing form-control">{{model.guid}}</span>
+                </fieldset>
+                <fieldset>
+                    <button (click)="areas.add()" class="background-normal" ><i class="fa fa-plus color-active" ></i><span>Add Area</span></button>
+                </fieldset>
+                <string-list class="name"  #areas="stringList" [(model)]="model.areas"></string-list>
+            </div>
             <div class="actions">
                 <button class="no-border no-editing" [class.inactive]="readonly" title="Edit" (click)="onEdit()">
                     <i class="fa fa-pencil color-active"></i>
@@ -25,22 +43,6 @@ import {RequestTracingService} from './request-tracing.service';
                 <button class="no-border" *ngIf="model.id" title="Delete" [class.inactive]="readonly" (click)="onDelete()">
                     <i class="fa fa-trash-o red"></i>
                 </button>
-            </div>
-            <fieldset>
-                <label [hidden]="!_isEditing">Name</label>
-                <input class="form-control name" *ngIf="_isEditing" type="text" [(ngModel)]="model.name" required throttle/>
-                <span>{{model.name}}</span>
-            </fieldset>
-            <fieldset class="name" *ngIf="_isEditing">
-                <label>Guid</label>
-                <input *ngIf="!model.id" class="form-control" type="text" [(ngModel)]="model.guid" required pattern="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$" throttle/>
-                <span *ngIf="model.id" class="editing form-control">{{model.guid}}</span>
-            </fieldset>
-            <div *ngIf="_isEditing">
-                <fieldset>
-                    <button (click)="areas.add()" class="background-normal" ><i class="fa fa-plus color-active" ></i><span>Add Area</span></button>
-                </fieldset>
-                <string-list class="name"  #areas="stringList" [(model)]="model.areas"></string-list>
             </div>
         </div>
     `,

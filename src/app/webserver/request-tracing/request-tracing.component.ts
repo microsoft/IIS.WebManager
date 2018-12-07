@@ -43,10 +43,8 @@ import { RequestTracing, RequestTracingRule, Trace, EventSeverity, Verbosity } f
                 <tab [name]="'settings'" *ngIf="scopeType() == 'website'">
                     <fieldset class="path">
                         <label>Directory</label>
-                        <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="right select" (click)="fileSelector.toggle()"></button>
-                        <div class="fill">
-                            <input type="text" class="form-control" [(ngModel)]="requestTracing.directory" (modelChanged)="onModelChanged()" throttle />
-                        </div>
+                        <input type="text" class="form-control left-with-button" [(ngModel)]="requestTracing.directory" (modelChanged)="onModelChanged()" throttle />
+                        <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="select" (click)="fileSelector.toggle()"></button>
                         <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="requestTracing.directory" (selected)="onSelectPath($event)"></server-file-selector>
                     </fieldset>
                     <fieldset>

@@ -13,6 +13,7 @@ import { Module as Loading } from '../../notification/loading.component';
 import { Module as Enum } from '../../common/enum.component';
 import { Module as StringList } from '../../common/string-list.component';
 import { Module as Tabs } from '../../common/tabs.component';
+import { Module as AutoFocus } from '../../common/focus';
 
 import { Module } from './module';
 import { Routing } from './app-pool.routes';
@@ -41,7 +42,8 @@ import { DailyScheduleComponent, RecyclingComponent } from './recycling.componen
         Loading,
         Enum,
         StringList,
-        Tabs
+        Tabs,
+        AutoFocus,
     ],
     declarations: [
         AppPoolComponent,

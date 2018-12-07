@@ -12,6 +12,62 @@ import { RequestTracingService } from './request-tracing.service';
     selector: 'rule',
     template: `
         <div *ngIf="model" class="grid-item row" [class.background-editing]="_isEditing">
+            <div [class]="_isEditing ? 'col-lg-10 col-md-10 col-sm-10 overflow-visible' : ''">
+                <fieldset class="col-xs-8 col-sm-4 col-md-3" *ngIf="!_isEditing">
+                    <span>{{model.path}}</span>
+                </fieldset>
+                <fieldset class="col-xs-9" *ngIf="_isEditing">
+                    <label>Path</label>
+                    <input autofocus autosize placeholder="Example: *.aspx" class="form-control" type="text" [(ngModel)]="model.path" throttle required />
+                </fieldset>
+                <fieldset class="hidden-xs col-sm-3 col-md-3 col-lg-2" *ngIf="!_isEditing">
+                    <span>{{model.status_codes.join(", ")}}</span>
+                </fieldset>
+                <fieldset class="hidden-xs hidden-sm col-md-3 col-lg-2" *ngIf="!_isEditing">
+                    <span *ngIf="hasMinReqExecutionTime()">{{model.min_request_execution_time}}</span>
+                </fieldset>
+                <fieldset class="hidden-xs hidden-sm hidden-md col-lg-2" *ngIf="!_isEditing">
+                    <span *ngIf="model.event_severity != 'ignore'">{{friendlyEventSeverity(model.event_severity)}}</span>
+                </fieldset>
+                <div *ngIf="_isEditing" id="statusCodes" class="col-xs-12">
+                    <fieldset class="inline-block has-list">
+                        <label>Status Code(s)</label>
+                    </fieldset>
+                    <button class="pull-right background-normal" *ngIf="!!(!(statusCodes && statusCodes.list) && model.status_codes.length > 0 || statusCodes.list && statusCodes.list.length> 0)" (click)="statusCodes.add()" ><i class="fa fa-plus color-active" ></i><span>Add</span></button>
+                    <fieldset>
+                        <string-list #statusCodes="stringList" [(model)]="model.status_codes"></string-list>
+                        <button class="background-normal" *ngIf="statusCodes.list.length == 0" (click)="statusCodes.add()"><i class="fa fa-plus color-active"></i><span>Add</span></button>
+                    </fieldset>
+                </div>
+                <fieldset *ngIf="_isEditing" class="col-xs-12">
+                    <fieldset class="inline-block"> 
+                        <label class="block">Min Request Time</label>
+                        <switch [model]="hasMinReqExecutionTime()" (modelChange)="enableRequestTime($event)">{{hasMinReqExecutionTime() ? "On" : "Off"}}</switch>
+                    </fieldset>
+                    <fieldset class="inline-block" *ngIf="hasMinReqExecutionTime()">
+                        <label class="block">Length <span class="units">(s)</span></label>
+                        <input class="form-control" type="number" [(ngModel)]="model.min_request_execution_time" throttle />
+                    </fieldset>
+                </fieldset>
+                <fieldset *ngIf="_isEditing" class="col-xs-12">
+                    <label>Event Severity</label>
+                    <enum [(model)]="model.event_severity">
+                        <field name="Any" value="ignore"></field>
+                        <field name="Critical Error" value="criticalerror"></field>
+                        <field name="Error" value="error"></field>
+                        <field name="Warning" value="warning"></field>
+                    </enum>
+                </fieldset>
+                <div *ngIf="_isEditing" class="col-xs-12 col-sm-12 col-md-7 col-lg-6">
+                    <fieldset *ngFor="let p of _providers;">
+                        <label>{{p.name}}</label>
+                        <switch class="block" [model]="isProviderEnabled(p)" (modelChange)="enableProvider(p, $event)"></switch>
+                        <div class="trace" *ngIf="isProviderEnabled(p)">
+                            <trace [model]="getTrace(p)"></trace>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
             <div class="actions">
                 <button class="no-border no-editing" [class.inactive]="readonly" title="Edit" (click)="onEdit()">
                     <i class="fa fa-pencil color-active"></i>
@@ -25,60 +81,6 @@ import { RequestTracingService } from './request-tracing.service';
                 <button class="no-border" *ngIf="model.id" title="Delete" [class.inactive]="readonly" (click)="onDelete()">
                     <i class="fa fa-trash-o red"></i>
                 </button>
-            </div>
-            <fieldset class="col-xs-8 col-sm-4 col-md-3" *ngIf="!_isEditing">
-                <span>{{model.path}}</span>
-            </fieldset>
-            <fieldset class="col-xs-9" *ngIf="_isEditing">
-                <label>Path</label>
-                <input autosize placeholder="Example: *.aspx" class="form-control" type="text" [(ngModel)]="model.path" throttle required />
-            </fieldset>
-            <fieldset class="hidden-xs col-sm-3 col-md-3 col-lg-2" *ngIf="!_isEditing">
-                <span>{{model.status_codes.join(", ")}}</span>
-            </fieldset>
-            <fieldset class="hidden-xs hidden-sm col-md-3 col-lg-2" *ngIf="!_isEditing">
-                <span *ngIf="hasMinReqExecutionTime()">{{model.min_request_execution_time}}</span>
-            </fieldset>
-            <fieldset class="hidden-xs hidden-sm hidden-md col-lg-2" *ngIf="!_isEditing">
-                <span *ngIf="model.event_severity != 'ignore'">{{friendlyEventSeverity(model.event_severity)}}</span>
-            </fieldset>
-            <div *ngIf="_isEditing" id="statusCodes" class="col-xs-12">
-                <fieldset class="inline-block has-list">
-                    <label>Status Code(s)</label>
-                </fieldset>
-                <button class="pull-right background-normal" *ngIf="!!(!(statusCodes && statusCodes.list) && model.status_codes.length > 0 || statusCodes.list && statusCodes.list.length> 0)" (click)="statusCodes.add()" ><i class="fa fa-plus color-active" ></i><span>Add</span></button>
-                <fieldset>
-                    <string-list #statusCodes="stringList" [(model)]="model.status_codes"></string-list>
-                    <button class="background-normal" *ngIf="statusCodes.list.length == 0" (click)="statusCodes.add()"><i class="fa fa-plus color-active"></i><span>Add</span></button>
-                </fieldset>
-            </div>
-            <fieldset *ngIf="_isEditing" class="col-xs-12">
-                <fieldset class="inline-block"> 
-                    <label class="block">Min Request Time</label>
-                    <switch [model]="hasMinReqExecutionTime()" (modelChange)="enableRequestTime($event)">{{hasMinReqExecutionTime() ? "On" : "Off"}}</switch>
-                </fieldset>
-                <fieldset class="inline-block" *ngIf="hasMinReqExecutionTime()">
-                    <label class="block">Length <span class="units">(s)</span></label>
-                    <input class="form-control" type="number" [(ngModel)]="model.min_request_execution_time" throttle />
-                </fieldset>
-            </fieldset>
-            <fieldset *ngIf="_isEditing" class="col-xs-12">
-                <label>Event Severity</label>
-                <enum [(model)]="model.event_severity">
-                    <field name="Any" value="ignore"></field>
-                    <field name="Critical Error" value="criticalerror"></field>
-                    <field name="Error" value="error"></field>
-                    <field name="Warning" value="warning"></field>
-                </enum>
-            </fieldset>
-            <div *ngIf="_isEditing" class="col-xs-12 col-sm-12 col-md-7 col-lg-6">
-                <fieldset *ngFor="let p of _providers;">
-                    <label>{{p.name}}</label>
-                    <switch class="block" [model]="isProviderEnabled(p)" (modelChange)="enableProvider(p, $event)"></switch>
-                    <div class="trace" *ngIf="isProviderEnabled(p)">
-                        <trace [model]="getTrace(p)"></trace>
-                    </div>
-                </fieldset>
             </div>
         </div>
     `,

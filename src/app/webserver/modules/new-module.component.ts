@@ -6,6 +6,35 @@ import {LocalModule, GlobalModule, ModuleType} from './modules';
     selector: 'new-module',
     template: `
         <div class="grid-item background-editing row">
+            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6 overflow-visible">
+                <fieldset class="col-xs-8" *ngIf="isServerSetting">
+                    <enum [(model)]="moduleType">
+                        <field name="Managed" value="managed"></field>
+                        <field name="Native" value="native"></field>
+                    </enum>
+                </fieldset>
+                <div class="col-xs-12" *ngIf="isServerSetting"></div>
+                <div class="col-xs-12" *ngIf="moduleType != 'native'">
+                    <fieldset>
+                        <label>Name</label>
+                        <input autofocus class="form-control" type="text" [(ngModel)]="newManagedModule.name" throttle required />
+                    </fieldset>
+                    <fieldset>
+                        <label>Type</label>
+                        <input class="form-control" type="text" [(ngModel)]="newManagedModule.type" throttle required />
+                    </fieldset>
+                </div>
+                <div class="col-xs-12" *ngIf="moduleType == 'native'">
+                    <fieldset *ngIf="moduleType == 'native'">
+                        <label>Name</label>
+                        <input autofocus class="form-control" type="text" [(ngModel)]="newNativeModule.name" throttle required />
+                    </fieldset>
+                    <fieldset *ngIf="moduleType == 'native'">
+                        <label>Image</label>
+                        <input class="form-control" type="text" [(ngModel)]="newNativeModule.image" throttle required />
+                    </fieldset>
+                </div>
+            </div>
             <div class="actions">
                 <button class="no-border" [disabled]="!isValid()" (click)="onSave()">
                     <i class="fa fa-check color-active" title="Save"></i>
@@ -14,29 +43,6 @@ import {LocalModule, GlobalModule, ModuleType} from './modules';
                     <i class="fa fa-times red" title="Cancel"></i>
                 </button>
             </div>
-            <fieldset class="col-xs-8" *ngIf="isServerSetting">
-                <enum [(model)]="moduleType">
-                    <field name="Managed" value="managed"></field>
-                    <field name="Native" value="native"></field>
-                </enum>
-            </fieldset>
-            <div class="col-xs-12" *ngIf="isServerSetting"></div>
-            <fieldset class="col-sm-4 col-md-5" *ngIf="moduleType != 'native'">
-                <label>Name</label>
-                <input class="form-control" type="text" [(ngModel)]="newManagedModule.name" throttle required />
-            </fieldset>
-            <fieldset class="col-sm-5" *ngIf="moduleType != 'native'">
-                <label>Type</label>
-                <input class="form-control" type="text" [(ngModel)]="newManagedModule.type" throttle required />
-            </fieldset>
-            <fieldset class="col-sm-4 col-md-5" *ngIf="moduleType == 'native'">
-                <label>Name</label>
-                <input class="form-control" type="text" [(ngModel)]="newNativeModule.name" throttle required />
-            </fieldset>
-            <fieldset class="col-sm-5" *ngIf="moduleType == 'native'">
-                <label>Image</label>
-                <input class="form-control" type="text" [(ngModel)]="newNativeModule.image" throttle required />
-            </fieldset>
         </div>
     `
 })
