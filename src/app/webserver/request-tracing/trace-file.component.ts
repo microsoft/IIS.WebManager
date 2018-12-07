@@ -13,7 +13,7 @@ import { FilesService } from '../../files/files.service';
     template: `
         <div *ngIf="model" class="grid-item row" tabindex="-1">
             <div class="col-xs-8 col-sm-3 col-lg-2 valign" [ngClass]="[model.file_info.type, model.file_info.extension]">
-                    <a class="color-normal hover-color-active" [href]="url" (click)="onClickName($event)"><i></i>{{model.file_info.name}}</a>
+                <a class="color-normal hover-color-active" [href]="url" (click)="onClickName($event)"><i></i>{{model.file_info.name}}</a>
             </div>
             <div class="col-sm-4 col-lg-3 hidden-xs valign support">
                 <span *ngIf="model.url">{{model.url}}</span>

@@ -114,25 +114,27 @@ export class InboundRuleVariableComponent {
     selector: 'variable-edit',
     template: `
         <div *ngIf="variable" class="grid-item row background-editing">
+            <fieldset class="col-lg-10 col-md-10 col-sm-8 col-xs-6 overflow-visible">
+                <fieldset class="name">
+                    <label>Name</label>
+                    <input autofocus type="text" required class="form-control" list="server-vars" [(ngModel)]="variable.name" />
+                    <datalist id="server-vars">
+                        <option *ngFor="let variable of _serverVariables" value="{{variable}}">
+                    </datalist>
+                </fieldset>
+                <fieldset class="name">
+                    <label>Value</label>
+                    <input type="text" required class="form-control" [(ngModel)]="variable.value" />
+                </fieldset>
+                <fieldset>
+                    <label>Replace</label>
+                    <switch [(model)]="variable.replace">{{variable.replace ? 'Yes' : 'No'}}</switch>
+                </fieldset>
+            </fieldset>
             <div class="actions">
                 <button class="no-border ok" [disabled]="!isValid()" title="Ok" (click)="onOk()"></button>
                 <button class="no-border cancel" title="Cancel" (click)="onDiscard()"></button>
             </div>
-            <fieldset class="name">
-                <label>Name</label>
-                <input type="text" required class="form-control" list="server-vars" [(ngModel)]="variable.name" />
-                <datalist id="server-vars">
-                    <option *ngFor="let variable of _serverVariables" value="{{variable}}">
-                </datalist>
-            </fieldset>
-            <fieldset class="name">
-                <label>Value</label>
-                <input type="text" required class="form-control" [(ngModel)]="variable.value" />
-            </fieldset>
-            <fieldset>
-                <label>Replace</label>
-                <switch [(model)]="variable.replace">{{variable.replace ? 'Yes' : 'No'}}</switch>
-            </fieldset>
         </div>
     `,
     styles: [`
