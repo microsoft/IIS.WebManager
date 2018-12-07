@@ -73,7 +73,7 @@ import { Binding } from './site';
                         <selector #certSelect [hidden]="!certSelect || !certSelect.isOpen()" (hide)="onCertSelected()" class="container-fluid">
                             <certificates-list #list (itemSelected)="onCertSelected($event)"></certificates-list>
                         </selector>
-                    </div> 
+                    </div>
                     <fieldset class="certificate" *ngIf="model.is_https && model.certificate">
                         <certificate-details [model]="model.certificate"></certificate-details>
                     </fieldset>

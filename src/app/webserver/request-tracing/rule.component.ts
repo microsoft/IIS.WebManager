@@ -67,7 +67,7 @@ import { RequestTracingService } from './request-tracing.service';
                         </div>
                     </fieldset>
                 </div>
-            </div>            
+            </div>
             <div class="actions">
                 <button class="no-border no-editing" [class.inactive]="readonly" title="Edit" (click)="onEdit()">
                     <i class="fa fa-pencil color-active"></i>

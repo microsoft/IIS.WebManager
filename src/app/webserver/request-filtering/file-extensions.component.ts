@@ -177,7 +177,7 @@ export class FileExtensionComponent implements OnInit, OnChanges {
                     <file-extension [model]="fe" [locked]="locked" (enter)="onEnter()" (leave)="onLeave()"></file-extension>
                 </li>
             </ul>
-        </div> 
+        </div>
     `
 })
 export class FileExtensionsComponent implements OnInit, OnDestroy {

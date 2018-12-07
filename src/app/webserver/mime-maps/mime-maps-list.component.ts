@@ -171,7 +171,7 @@ export class MimeMapListItem implements OnInit, OnChanges {
                     <mime-map [model]="m" (enter)="onEnter()" (leave)="onLeave()"></mime-map>
                 </li>
             </ul>
-        </div>  
+        </div>
     `
 })
 export class MimeMapsListComponent implements OnInit, OnDestroy {

@@ -42,7 +42,7 @@ import {LocalModule, GlobalModule, ModuleType} from './modules';
                 <button class="no-border" (click)="onCancel()">
                     <i class="fa fa-times red" title="Cancel"></i>
                 </button>
-            </div>            
+            </div>
         </div>
     `
 })

@@ -16,7 +16,7 @@ import { FilesService } from '../../files/files.service';
             </div>
             <div class="col-sm-3 col-md-2 hidden-xs valign support">
                 <span *ngIf="model.last_modified">{{displayDate}}</span>
-            </div>     
+            </div>
             <div class="col-md-2 visible-lg visible-md valign support">
                 {{this.model.description}}
             </div>

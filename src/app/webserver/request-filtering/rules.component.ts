@@ -279,7 +279,7 @@ export class RuleComponent implements OnInit, OnChanges {
                     <rule [model]="r" [locked]="locked" (enter)="enterRule(i)" (leave)="leaveRule(i)"></rule>
                 </li>                
             </ul>
-        </div>  
+        </div>
     `,
 })
 export class RulesComponent implements OnInit, OnDestroy {
