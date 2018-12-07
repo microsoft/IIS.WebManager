@@ -23,7 +23,7 @@ import { AuthorizationService } from './authorization.service';
                     <field name="Roles or Groups" value="roles"></field>
                 </enum>
             </fieldset>
-            <fieldset class="no-label" *ngIf="_target == 'roles' || _target == 'users'">   
+            <fieldset class="no-label" *ngIf="_target == 'roles' || _target == 'users'">
                 <div *ngIf="_target == 'roles'">
                     <input placeholder="ex: Administrators, Power Users" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="_roles" />
                 </div>

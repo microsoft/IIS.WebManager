@@ -22,7 +22,7 @@ import {Provider, Trace} from './request-tracing';
             <fieldset class="inline-block" *ngIf="getKeys(model.allowed_areas).length > 0">
                 <label>Areas</label>
                 <ul>
-                    <li *ngFor="let area of getKeys(model.allowed_areas)">                        
+                    <li *ngFor="let area of getKeys(model.allowed_areas)">
                         <checkbox2 [(model)]="model.allowed_areas[area]"><span>{{area}}</span></checkbox2>
                     </li>
                 </ul>

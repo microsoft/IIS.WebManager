@@ -56,7 +56,7 @@ import { Binding } from './site';
                     <input class="form-control" type="number" max="65535" min="1" [(ngModel)]="model.port" required />
                 </fieldset>
 
-                <div class="col-xs-12 overflow-visible" *ngIf="isHttp()">   
+                <div class="col-xs-12 overflow-visible" *ngIf="isHttp()">
                     <fieldset class="inline-block">
                         <label>HTTPS</label>
                         <switch class="block" (modelChange)="model.is_https=$event" [model]="model.is_https" (modelChanged)=onHttps()>{{model.is_https ? "On" : "Off"}}</switch>

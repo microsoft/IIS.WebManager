@@ -277,7 +277,7 @@ export class RuleComponent implements OnInit, OnChanges {
                 </li>
                 <li *ngFor="let r of rules; let i = index;">
                     <rule [model]="r" [locked]="locked" (enter)="enterRule(i)" (leave)="leaveRule(i)"></rule>
-                </li>                
+                </li>
             </ul>
         </div>
     `,

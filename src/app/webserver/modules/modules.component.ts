@@ -10,7 +10,7 @@ import {Modules, LocalModule, GlobalModule} from './modules';
     selector: 'modules',
     template: `
         <loading *ngIf="!(modules || _error)"></loading>
-        <error [error]="_error"></error>        
+        <error [error]="_error"></error>
         <div *ngIf="modules">
             <override-mode class="pull-right" [metadata]="modules.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
             <module-list [enabledNativeModules] = "enabledNativeModules"
