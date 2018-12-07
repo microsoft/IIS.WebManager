@@ -31,11 +31,6 @@ import {LocalModule, GlobalModule} from './modules';
         }
 
         .switch-wrapper {
-            // outline-style: dashed;
-            // outline-color: #000;
-            // outline-width: 2px;
-            // outline-offset: -2px;
-            // text-decoration: underline;
             outline: none;
         }
     `],
