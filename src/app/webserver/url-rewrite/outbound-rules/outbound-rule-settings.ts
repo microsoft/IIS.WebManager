@@ -72,11 +72,6 @@ import { OutboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
     </div>
     `,
     styles: [`
-        .fill {
-            float: left;
-            width: 80%;
-        }
-
         table {
             width: 100%;
         }
