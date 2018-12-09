@@ -85,8 +85,11 @@ export class InstallComponent {
     public install() {
         this._inProgress = true
         var sub = this.powershell.run(
-            PowerShellScripts.install_admin_api,
-            { download: this._adminApiLocation }).subscribe(_ => {}, _ => {}, () => {
+            PowerShellScripts.admin_api_util,
+            {
+                command: 'install',
+                downloadFrom: this._adminApiLocation
+            }).subscribe(_ => {}, _ => {}, () => {
                 this.router.navigate(['/'])
                 sub.unsubscribe()
             })

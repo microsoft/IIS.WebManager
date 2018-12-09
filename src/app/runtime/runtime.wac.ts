@@ -71,19 +71,28 @@ export class WACRuntime implements Runtime {
 
     public ConnectToIISHost(): Observable<ApiConnection> {
         if (!this._connecting) {
-            this._connecting = Observable.forkJoin(
-                    this.wac.NodeName,
-                    this.GetApiKey(),
-                ).map(([nodeName, apiKey], _) => {
-                    var connection = new ApiConnection(nodeName)
-                    if (apiKey.access_token) {
-                        connection.accessToken = apiKey.access_token
-                    } else {
-                        connection.accessToken = apiKey.value
-                    }
-                    this._tokenId = apiKey.id
-                    return connection
-                }).shareReplay()
+            let getApiKey = Observable.forkJoin(
+                this.wac.NodeName,
+                this.GetApiKey(),
+            ).map(([nodeName, apiKey], _) => {
+                var connection = new ApiConnection(nodeName)
+                if (apiKey.access_token) {
+                    connection.accessToken = apiKey.access_token
+                } else {
+                    connection.accessToken = apiKey.value
+                }
+                this._tokenId = apiKey.id
+                return connection
+            })
+
+            let ensureAccess  = Observable.forkJoin(
+                getApiKey,
+                this.powershellService.run(PowerShellScripts.admin_api_util, {
+                    command: 'permission-check'
+                }),
+            ).map(([key, _], __) => key)
+
+            this._connecting = ensureAccess.shareReplay()
         }
         this._connecting.subscribe(c => {
             this.connectService.setActive(c)
