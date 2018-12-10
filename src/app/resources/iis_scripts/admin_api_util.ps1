@@ -15,7 +15,7 @@ param(
     $serviceName = "Microsoft IIS Administration",
 
     [string]
-    $iisAdminGroup = "WAC-IISAdmin"
+    $iisAdminGroup = "IISAdminAPIUsers"
 )
 
 $ErrorActionPreference = "Stop"
