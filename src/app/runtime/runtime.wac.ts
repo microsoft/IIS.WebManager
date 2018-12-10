@@ -88,7 +88,7 @@ export class WACRuntime implements Runtime {
             let ensureAccess  = Observable.forkJoin(
                 getApiKey,
                 this.powershellService.run(PowerShellScripts.admin_api_util, {
-                    command: 'permission-check'
+                    command: 'ensure-permission'
                 }),
             ).map(([key, _], __) => key)
 

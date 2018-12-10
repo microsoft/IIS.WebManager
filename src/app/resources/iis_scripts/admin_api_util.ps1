@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory=$true)]
-    [ValidateSet('install', 'permission-check')]
+    [ValidateSet('install', 'ensure-permission')]
     [string]
     $command,
 
@@ -15,7 +15,7 @@ param(
     $serviceName = "Microsoft IIS Administration",
 
     [string]
-    $iisAdminGroup = "IISAdminAPIUsers"
+    $iisAdminOwners = "IISAdminAPIOwners"
 )
 
 $ErrorActionPreference = "Stop"
@@ -28,15 +28,12 @@ if ($install -and $(!$downloadFrom)) {
 }
 
 ######################## Utilities ###############################
-function InstallAPI {
-    $installer = Join-Path $env:TEMP iis-administration-setup.exe
-    Invoke-WebRequest $downloadFrom -OutFile $installer
-    & $installer /s
 
+function WaitForServerToStart($service) {
     $waitPeriod = 1
     $remainingTime = 600
 
-    while (!(Get-Service $serviceName -ErrorAction SilentlyContinue | Where-Object {$_.Status -eq "Running"})) {
+    while (!(Get-Service $service -ErrorAction SilentlyContinue | Where-Object {$_.Status -eq "Running"})) {
         Start-Sleep -Seconds $waitPeriod
         $remainingTime -= $waitPeriod
         if ($remainingTime -lt 0) {
@@ -45,9 +42,23 @@ function InstallAPI {
     }
 }
 
-function EnsureAdminGroup($user) {
-    New-LocalGroup -Name $iisAdminGroup -ErrorAction SilentlyContinue | Out-Null
-    Add-LocalGroupMember -Group $iisAdminGroup -Member $user -ErrorAction SilentlyContinue | Out-Null
+function InstallAPI {
+    $installer = Join-Path $env:TEMP iis-administration-setup.exe
+    Invoke-WebRequest $downloadFrom -OutFile $installer
+    & $installer /s
+    WaitForServerToStart $serviceName
+}
+
+function EnsureGroup($group) {
+    if (!(Get-LocalGroup -Name $group -ErrorAction SilentlyContinue)) {
+        New-LocalGroup -Name $group | Out-Null
+    }
+}
+
+function EnsureMember($group, $userOrGroup) {
+    if (!(Get-LocalGroupMember -Group $group -Member $userOrGroup -ErrorAction SilentlyContinue)) {
+        Add-LocalGroupMember -Group $group -Member $userOrGroup | Out-Null
+    }
 }
 
 ####################### Main script ################################
@@ -57,9 +68,6 @@ function EnsureAdminGroup($user) {
 if ($install) {
     InstallAPI
 }
-
-$user = $(whoami)
-EnsureAdminGroup $user
 
 $service = Get-WmiObject win32_service | Where-Object {$_.name -eq $serviceName}
 if ($service.StartInfo.EnvironmentVariables -and $service.StartInfo.EnvironmentVariables["USE_CURRENT_DIRECTORY_AS_ROOT"] -and $service.StartInfo.WorkingDirectory) {
@@ -72,19 +80,16 @@ if ($service.StartInfo.EnvironmentVariables -and $service.StartInfo.EnvironmentV
 $configLocation = [System.IO.Path]::Combine($workingDirectory, "config", "appsettings.json")
 $config = Get-Content -Raw -Path $configLocation | ConvertFrom-Json
 
-if ($install) {
-    $config.security.users.administrators = @( $iisAdminGroup )
-    $config.security.users.owners = @( $iisAdminGroup )
+$user = $(whoami)
+EnsureGroup $iisAdminOwners
+EnsureMember $iisAdminOwners $user
+
+if (!$config.security.users.owners.Contains($iisAdminOwners)) {
+    foreach ($member in $config.security.users.owners) {
+        EnsureMember $iisAdminOwners $member
+    }
+    $config.security.users.owners = @( $iisAdminOwners )
     $updateConfig = $true
-} else {
-    if (!$config.security.users.administrators.Contains($user)) {
-        $config.security.users.administrators += $user
-        $updateConfig = $true
-    }
-    if (!$config.security.users.owners.Contains($user)) {
-        $config.security.users.owners += $user
-        $updateConfig = $true
-    }
 }
 
 if ($updateConfig) {
@@ -100,21 +105,22 @@ if ($updateConfig) {
         -bOr [System.Security.AccessControl.FileSystemRights]::Modify `
         -bOr [System.Security.AccessControl.FileSystemRights]::ChangePermissions
 
-    $dirAccessGranted = $dirAcl.Access | Where-Object {(($_.IdentityReference.Value -eq "${env:ComputerName}\${iisAdminGroup}") -and (($_.FileSystemRights -bAnd $rights) -eq $rights))}
+    $dirAccessGranted = $dirAcl.Access | Where-Object {(($_.IdentityReference.Value -eq "${env:ComputerName}\${iisAdminOwners}") -and (($_.FileSystemRights -bAnd $rights) -eq $rights))}
     if (!$dirAccessGranted) {
         $inheritFlags = [System.Security.AccessControl.InheritanceFlags]::ContainerInherit `
             -bOr [System.Security.AccessControl.InheritanceFlags]::ObjectInherit
         $propFlags = [System.Security.AccessControl.PropagationFlags]::InheritOnly
-        $ar = New-Object System.Security.AccessControl.FileSystemAccessRule($iisAdminGroup, $rights, $inheritFlags, $propFlags, "allow")
+        $ar = New-Object System.Security.AccessControl.FileSystemAccessRule($iisAdminOwners, $rights, $inheritFlags, $propFlags, "allow")
         $dirAcl.SetAccessRule($ar) | Out-Null
         $ar = New-Object System.Security.AccessControl.FileSystemAccessRule("BUILTIN\Administrators", $rights, $inheritFlags, $propFlags, "allow")
         $dirAcl.SetAccessRule($ar) | Out-Null
-        $dirAcl.SetOwner([System.Security.Principal.NTAccount]$iisAdminGroup) | Out-Null
+        $dirAcl.SetOwner([System.Security.Principal.NTAccount]$iisAdminOwners) | Out-Null
         Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
     }
 
     $config | ConvertTo-Json -depth 100 | Out-File $configLocation
     Restart-Service -Name $serviceName | Out-Null
+    WaitForServerToStart $serviceName
 }
 
 '{ "result" : "success" }'
