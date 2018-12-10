@@ -15,7 +15,7 @@ param(
     $serviceName = "Microsoft IIS Administration",
 
     [string]
-    $iisAdminOwners = "IISAdminAPIOwners"
+    $iisAdminOwners = "IIS Administration API Owners"
 )
 
 $ErrorActionPreference = "Stop"
