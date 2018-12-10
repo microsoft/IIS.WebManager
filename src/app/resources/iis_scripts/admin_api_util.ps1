@@ -87,8 +87,8 @@ if (!$config.security.users.owners.Contains($user)) {
     EnsureMember $iisAdminOwners $user
 
     if (!$config.security.users.owners.Contains($iisAdminOwners)) {
-        if (!(Get-LocalGroupMember -Group "Administrators" -Member $user)) {
-            throw "Administrator privilege is needed ot initiate IIS Administration API"
+        if (!(Get-LocalGroupMember -Group "Administrators" -Member $user -ErrorAction SilentlyContinue)) {
+            throw "Administrator privilege is needed to initiate IIS Administration API"
         }
         $apiHome = [System.IO.Path]::Combine($workingDirectory, "..")
         ## Installer added a read-only rule on current user to the directory, delete it
