@@ -114,7 +114,6 @@ if ($updateConfig) {
         $dirAcl.SetAccessRule($ar) | Out-Null
         $ar = New-Object System.Security.AccessControl.FileSystemAccessRule("BUILTIN\Administrators", $rights, $inheritFlags, $propFlags, "allow")
         $dirAcl.SetAccessRule($ar) | Out-Null
-        $dirAcl.SetOwner([System.Security.Principal.NTAccount]$iisAdminOwners) | Out-Null
         Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
     }
 
