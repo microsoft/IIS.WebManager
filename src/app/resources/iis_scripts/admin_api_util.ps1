@@ -81,45 +81,39 @@ $configLocation = [System.IO.Path]::Combine($workingDirectory, "config", "appset
 $config = Get-Content -Raw -Path $configLocation | ConvertFrom-Json
 
 $user = $(whoami)
-EnsureGroup $iisAdminOwners
-EnsureMember $iisAdminOwners $user
+if (!$config.security.users.owners.Contains($user)) {
 
-if (!$config.security.users.owners.Contains($iisAdminOwners)) {
-    foreach ($member in $config.security.users.owners) {
-        EnsureMember $iisAdminOwners $member
-    }
-    $config.security.users.owners = @( $iisAdminOwners )
-    $updateConfig = $true
-}
+    EnsureGroup $iisAdminOwners
+    EnsureMember $iisAdminOwners $user
 
-if ($updateConfig) {
-    $apiHome = [System.IO.Path]::Combine($workingDirectory, "..")
-    ## Installer added a read-only rule on current user to the directory, delete it
-    $dirAcl = Get-Acl $apiHome
-    foreach ($access in $dirAcl.Access | Where-Object { $_.IdentityReference.Value -eq $user }) {
-        $dirAcl.RemoveAccessRule($access) | Out-Null
-    }
-    Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
-
-    $rights = [System.Security.AccessControl.FileSystemRights]::Traverse `
-        -bOr [System.Security.AccessControl.FileSystemRights]::Modify `
-        -bOr [System.Security.AccessControl.FileSystemRights]::ChangePermissions
-
-    $dirAccessGranted = $dirAcl.Access | Where-Object {(($_.IdentityReference.Value -eq "${env:ComputerName}\${iisAdminOwners}") -and (($_.FileSystemRights -bAnd $rights) -eq $rights))}
-    if (!$dirAccessGranted) {
-        $inheritFlags = [System.Security.AccessControl.InheritanceFlags]::ContainerInherit `
-            -bOr [System.Security.AccessControl.InheritanceFlags]::ObjectInherit
-        $propFlags = [System.Security.AccessControl.PropagationFlags]::InheritOnly
-        $ar = New-Object System.Security.AccessControl.FileSystemAccessRule($iisAdminOwners, $rights, $inheritFlags, $propFlags, "allow")
-        $dirAcl.SetAccessRule($ar) | Out-Null
-        $ar = New-Object System.Security.AccessControl.FileSystemAccessRule("BUILTIN\Administrators", $rights, $inheritFlags, $propFlags, "allow")
-        $dirAcl.SetAccessRule($ar) | Out-Null
+    if (!$config.security.users.owners.Contains($iisAdminOwners)) {
+        if (!(Get-LocalGroupMember -Group "Administrators" -Member $user)) {
+            throw "Administrator privilege is needed ot initiate IIS Administration API"
+        }
+        $apiHome = [System.IO.Path]::Combine($workingDirectory, "..")
+        ## Installer added a read-only rule on current user to the directory, delete it
+        $dirAcl = Get-Acl $apiHome
+        foreach ($access in $dirAcl.Access | Where-Object { $_.IdentityReference.Value -eq $user }) {
+            $dirAcl.RemoveAccessRule($access) | Out-Null
+        }
         Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
+        $rights = [System.Security.AccessControl.FileSystemRights]::Traverse `
+            -bOr [System.Security.AccessControl.FileSystemRights]::Modify `
+            -bOr [System.Security.AccessControl.FileSystemRights]::ChangePermissions
+        $dirAccessGranted = $dirAcl.Access | Where-Object {(($_.IdentityReference.Value -eq "${env:ComputerName}\${iisAdminOwners}") -and (($_.FileSystemRights -bAnd $rights) -eq $rights))}
+        if (!$dirAccessGranted) {
+            $inheritFlags = [System.Security.AccessControl.InheritanceFlags]::ContainerInherit `
+                -bOr [System.Security.AccessControl.InheritanceFlags]::ObjectInherit
+            $propFlags = [System.Security.AccessControl.PropagationFlags]::InheritOnly
+            $ar = New-Object System.Security.AccessControl.FileSystemAccessRule("BUILTIN\Administrators", $rights, $inheritFlags, $propFlags, "allow")
+            $dirAcl.SetAccessRule($ar) | Out-Null
+            Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
+        }
+        $config.security.users.owners += $iisAdminOwners
+        $config | ConvertTo-Json -depth 100 | Out-File $configLocation
+        Restart-Service -Name $serviceName | Out-Null
+        WaitForServerToStart $serviceName
     }
-
-    $config | ConvertTo-Json -depth 100 | Out-File $configLocation
-    Restart-Service -Name $serviceName | Out-Null
-    WaitForServerToStart $serviceName
 }
 
 '{ "result" : "success" }'
