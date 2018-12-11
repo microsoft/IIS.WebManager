@@ -57,7 +57,7 @@ import {Module as Switch} from './switch.component';
                         </switch>
                     </fieldset>
                     <fieldset>
-                        <button *ngIf="scope" class="no-border" [disabled]="!metadata.is_local" title="Undo local settings" (click)="onRevert()">
+                        <button *ngIf="scope" class="no-border" [disabled]="!metadata.is_local" title="Undo local settings" aria-label="Undo local settings" (click)="onRevert()">
                             <i class="fa fa-undo red"></i> Reset to inherited
                         </button>
                     </fieldset>

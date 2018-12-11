@@ -115,21 +115,21 @@ button,
 
 .color-accent,
 h2 {
-    color: #907c48;
+    color: #8b4298;
 }
 
 .background-accent {
-    background-color: #907c48;
+    background-color: #8b4298;
 }
 
 .hover-accent:hover {
-    color: #907c48;
+    color: #8b4298;
 }
 
 .border-accent,
 .collapse-heading,
 hr {
-    border-color: #907c48;
+    border-color: #8b4298;
 }
 
 .hover-warning:hover {
@@ -205,7 +205,7 @@ button.inactive,
 }
 
 .placeholder {
-    color: #999;
+    color: #666;
 }
 
 /* Disabled */
