@@ -9,6 +9,9 @@ import { ApiConnection } from './api-connection';
 
 @Component({
     template: `
+    <div class="get hidden-xs" *ngIf='!_connecting'>
+        <a class="bttn bordered" [routerLink]="['/get']"><small>Get Microsoft IIS Administration</small></a>
+    </div>
     <div class="center">
         <div *ngIf='!_connecting'>
             <h1 [class.advanced]="_connectionType == 'advanced'">Connect</h1>
@@ -62,9 +65,6 @@ import { ApiConnection } from './api-connection';
             <p><i class="fa fa-spinner fa-pulse fa-3x"></i></p>
             <button class="bordered" (click)="cancel()">Cancel</button>
         </div>
-    </div>
-    <div class="get hidden-xs" *ngIf='!_connecting'>
-        <a class="bttn bordered" [routerLink]="['/get']"><small>Get Microsoft IIS Administration</small></a>
     </div>
     `,
     styles: [`
