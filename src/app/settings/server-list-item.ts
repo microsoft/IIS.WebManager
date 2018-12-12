@@ -33,42 +33,44 @@ import { NotificationService } from '../notification/notification.service';
                     </selector>
                 </div>
             </div>
+            <fieldset class="col-lg-10 col-md-10 col-sm-8 col-xs-6 overflow-visible">
+                <div *ngIf="_editing" class="name">
+                    <fieldset>
+                        <label>Display Name</label>
+                        <input autofocus type="text" class="form-control block" [(ngModel)]="model.displayName"/>
+                    </fieldset>
+                    <fieldset>
+                        <label class="inline-block">Server Url</label>
+                        <tooltip>
+                                The URL of the server to connect to. The default port for the IIS Administration API is 55539.
+                        </tooltip>
+                        <input type="text" placeholder="ex. contoso.com" class="form-control block" #urlField [ngModel]="model.url" (ngModelChange)="setUrl($event)" required throttle/>
+                    </fieldset>
+                    <fieldset>
+                        <label class="inline-block">Access Token</label>
+                        <tooltip>
+                            An access token is an auto generated value that is used to connect to the IIS Administration API. Only Administrators can create these tokens. <a class="link" title="More Information" href="https://docs.microsoft.com/en-us/IIS-Administration/management-portal/connecting#acquiring-an-access-token"></a>
+                        </tooltip>
+                        <input type="text" autocomplete="off" #tokenField
+                            class="form-control block"
+                            [ngModel]="''"
+                            (ngModelChange)="setAccessToken($event)"
+                            [attr.placeholder]="!model.accessToken ? null : '******************************'" 
+                            [attr.required]="!model.accessToken || null"/>
+                        <a class="right" [attr.disabled]="!tokenLink() ? true : null" (click)="gotoAccessToken($event)" [attr.href]="tokenLink()">Get access token</a>
+                    </fieldset>
+                    <fieldset>
+                        <checkbox2 [(model)]="model.persist"><b>Remember this server</b></checkbox2>
+                        <tooltip>
+                            Your Access Token and Connection will be stored locally.<br/>
+                            Use only if your device is trusted!
+                        </tooltip>
+                    </fieldset>
+                </div>
+            </fieldset>
             <div class="actions" *ngIf="_editing">
                 <button class="no-border ok" title="Ok" [disabled]="!isValid || null" (click)="onSave()"></button>
                 <button class="no-border cancel" title="Cancel" (click)="onCancel()"></button>
-            </div>
-            <div *ngIf="_editing" class="name">
-                <fieldset>
-                    <label>Display Name</label>
-                    <input type="text" class="form-control block" [(ngModel)]="model.displayName"/>
-                </fieldset>
-                <fieldset>
-                    <label class="inline-block">Server Url</label>
-                    <tooltip>
-                            The URL of the server to connect to. The default port for the IIS Administration API is 55539.
-                    </tooltip>
-                    <input type="text" placeholder="ex. contoso.com" class="form-control block" #urlField [ngModel]="model.url" (ngModelChange)="setUrl($event)" required throttle/>
-                </fieldset>
-                <fieldset>
-                    <label class="inline-block">Access Token</label>
-                    <tooltip>
-                        An access token is an auto generated value that is used to connect to the IIS Administration API. Only Administrators can create these tokens. <a class="link" title="More Information" href="https://docs.microsoft.com/en-us/IIS-Administration/management-portal/connecting#acquiring-an-access-token"></a>
-                    </tooltip>
-                    <input type="text" autocomplete="off" #tokenField
-                        class="form-control block"
-                        [ngModel]="''"
-                        (ngModelChange)="setAccessToken($event)"
-                        [attr.placeholder]="!model.accessToken ? null : '******************************'" 
-                        [attr.required]="!model.accessToken || null"/>
-                    <a class="right" [attr.disabled]="!tokenLink() ? true : null" (click)="gotoAccessToken($event)" [attr.href]="tokenLink()">Get access token</a>
-                </fieldset>
-                <fieldset>
-                    <checkbox2 [(model)]="model.persist"><b>Remember this server</b></checkbox2>
-                    <tooltip>
-                        Your Access Token and Connection will be stored locally.<br/>
-                        Use only if your device is trusted!
-                    </tooltip>
-                </fieldset>
             </div>
         </div>
     `,

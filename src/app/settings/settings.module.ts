@@ -7,6 +7,7 @@ import { Module as Selector } from '../common/selector';
 import { Module as CheckBox } from '../common/checkbox.component';
 import { Module as Tooltip } from '../common/tooltip.component';
 import { Module as VTabs } from '../common/vtabs.component';
+import { Module as AutoFocus } from '../common/focus';
 import { Routing } from './settings.routes';
 
 import { SettingsComponent } from './settings.component';
@@ -22,7 +23,8 @@ import { ServerListItem } from './server-list-item';
         Selector,
         CheckBox,
         Tooltip,
-        VTabs
+        VTabs,
+        AutoFocus,
     ],
     declarations: [
         SettingsComponent,
