@@ -18,15 +18,15 @@ export class Drop {
         <div>
             <button class="no-border pull-left color-active" title="Go Up" (click)="onClickUp()"><i class="fa fa-level-up"></i></button>
             <div class="fill">
-                <ul tabindex="0" *ngIf="_crumbs.length > 0" [hidden]="_typing" class="nav border-color" (keyup.space)="onClickAddress($event)" (keyup.enter)="onClickAddress($event)" (click)="onClickAddress($event)">
+                <ul aria-label="Hit the space key to select" tabindex="0" *ngIf="_crumbs.length > 0" [hidden]="_typing" class="nav border-color" (keyup.space)="onClickAddress($event)" (keyup.enter)="onClickAddress($event)" (click)="onClickAddress($event)">
                     <li *ngFor="let item of _crumbs; let i = index;" 
                         (dragover)="dragOver(i, $event)" 
                         (drop)="onDrop(i, $event)"
                         (dragleave)="_selected=-1">
                         <span class="crumb hover-active" [class.background-active]="i==_selected" (click)="onClickCrumb(i, $event)">{{item}}</span>/
                     </li>
-                </ul>
-                <input #addressBar type="text" class="form-control" *ngIf="_crumbs.length > 0" [hidden]="!_typing" [ngModel]="_path" (ngModelChange)="onPathChanged($event)" throttle  />
+                </ul> 
+            <input aria-label="Enter a Path to go" title="Path Breadcrumbs" #addressBar type="text" class="form-control" *ngIf="_crumbs.length > 0" [hidden]="!_typing" [ngModel]="_path" (ngModelChange)="onPathChanged($event)" throttle  />
             </div>
         </div>
     `,
