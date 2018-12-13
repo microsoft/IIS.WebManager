@@ -111,7 +111,9 @@ if ($install) {
 if (!$config.security.users.owners.Contains($user)) {
     EnsureGroup $iisAdminOwners
     if (EnsureMember $iisAdminOwners $user) {
-        GPUpdate /Force | Out-Null
+        # WIP:
+        # We are supposed to force a group policy update here but this command does not work as expected because of how WinRM works
+        # GPUpdate /Force | Out-Null
     }
     if (!$config.security.users.owners.Contains($iisAdminOwners)) {
         $config.security.users.owners += $iisAdminOwners
