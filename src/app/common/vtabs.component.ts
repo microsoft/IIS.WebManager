@@ -13,7 +13,16 @@ import { SectionHelper } from './section.helper';
     template: `
         <div class="vtabs">
             <ul class="items">
-                <li tabindex="0" #item class="hover-edit"  *ngFor="let tab of tabs; let i = index;" [ngClass]="{active: tab.active}" (keyup.space)="selectItem(i)" (keyup.enter)="selectItem(i)" (click)="selectItem(i)">
+                <li 
+                    tabindex="0" 
+                    #item 
+                    class="hover-edit" 
+                    *ngFor="let tab of tabs; let i = index;" 
+                    [ngClass]="{active: tab.active}" 
+                    (keyup.space)="selectItem(i); focusItem(i)" 
+                    (keyup.enter)="selectItem(i); focusItem(i)" 
+                    (click)="selectItem(i)"
+                >
                     <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
                 </li>
             </ul>
@@ -130,6 +139,12 @@ export class VTabsComponent implements OnDestroy {
         }
     }
 
+    private focusItem(index: number) {
+        let tab = this.tabs[index];
+
+        tab.focusTitle();
+    }
+
     private onSectionChange(section: string) {
         let index = this.tabs.findIndex(t => t.name === section);
 
@@ -161,7 +176,9 @@ export class VTabsComponent implements OnDestroy {
     selector: 'vtabs > item',
     template: `
         <div *ngIf="!(!active)">
-            <h1 class="border-active">{{name}}</h1>
+            <h1 class="border-active">
+                <span tabindex="0" id="vtabs-title">{{name}}</span>
+            </h1>
             <ng-content></ng-content>
         </div>
     `,
@@ -203,6 +220,10 @@ export class Item implements OnInit, OnDestroy {
         }
 
         this.active = true;
+    }
+
+    focusTitle() {
+        setTimeout(()=>document.getElementById("vtabs-title").focus());
     }
 
     deactivate() {
