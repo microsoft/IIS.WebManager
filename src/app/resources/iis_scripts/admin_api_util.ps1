@@ -15,7 +15,10 @@ param(
     $serviceName = "Microsoft IIS Administration",
 
     [string]
-    $iisAdminOwners = "IIS Administration API Owners"
+    $iisAdminOwners = "IIS Administration API Owners",
+
+    [int]
+    $adminAPIPort = 55539
 )
 
 $ErrorActionPreference = "Stop"
@@ -28,7 +31,6 @@ if ($install -and $(!$downloadFrom)) {
 }
 
 ######################## Utilities ###############################
-
 function WaitForServerToStart($service) {
     $waitPeriod = 1
     $remainingTime = 600
@@ -42,11 +44,11 @@ function WaitForServerToStart($service) {
     }
 }
 
-function InstallAPI {
+function InstallAPI($service) {
     $installer = Join-Path $env:TEMP iis-administration-setup.exe
     Invoke-WebRequest $downloadFrom -OutFile $installer
     & $installer /s
-    WaitForServerToStart $serviceName
+    WaitForServerToStart $service
 }
 
 function EnsureGroup($group) {
@@ -56,9 +58,11 @@ function EnsureGroup($group) {
 }
 
 function EnsureMember($group, $userOrGroup) {
-    if (!(Get-LocalGroupMember -Group $group -Member $userOrGroup -ErrorAction SilentlyContinue)) {
+    $modify = !(Get-LocalGroupMember -Group $group -Member $userOrGroup -ErrorAction SilentlyContinue)
+    if ($modify) {
         Add-LocalGroupMember -Group $group -Member $userOrGroup | Out-Null
     }
+    return $modify
 }
 
 ####################### Main script ################################
@@ -66,7 +70,23 @@ function EnsureMember($group, $userOrGroup) {
 ## TODO: Consider creating a lock around this script because it is not concurrency safe
 
 if ($install) {
-    InstallAPI
+    InstallAPI $serviceName
+} else {
+    try {
+        Invoke-WebRequest -UseDefaultCredentials -UseBasicParsing "https://localhost:$adminAPIPort" | Out-Null
+    } catch {
+        if ($_.Exception.Status -eq [System.Net.WebExceptionStatus]::ConnectFailure) {
+            $service = Get-Service -Name $serviceName -ErrorAction SilentlyContinue
+            if (!$service) {
+                throw "IIS Administration API is not installed"
+            }
+            if ($service.Status -eq [System.ServiceProcess.ServiceControllerStatus]::Running) {
+                throw "IIS Administration API is not found, port pinged: $adminAPIPort"
+            }
+            throw "Unexpected service status for IIS Administration API: ""$($service.Status)"""
+        }
+        throw $_
+    }
 }
 
 $service = Get-WmiObject win32_service | Where-Object {$_.name -eq $serviceName}
@@ -81,12 +101,28 @@ $configLocation = [System.IO.Path]::Combine($workingDirectory, "config", "appset
 $config = Get-Content -Raw -Path $configLocation | ConvertFrom-Json
 
 $user = $(whoami)
+
+## Install process adds $user in the config file. We don't want that, we want $iisAdminOwners in there instead
+if ($install) {
+    $config.security.users.owners = @()
+    $config.security.users.administrators = @()
+}
+
 if (!$config.security.users.owners.Contains($user)) {
-
     EnsureGroup $iisAdminOwners
-    EnsureMember $iisAdminOwners $user
-
+    if (EnsureMember $iisAdminOwners $user) {
+        GPUpdate /Force | Out-Null
+    }
     if (!$config.security.users.owners.Contains($iisAdminOwners)) {
+        $config.security.users.owners += $iisAdminOwners
+        $saveConfig = $true
+    }
+    if (!$config.security.users.administrators.Contains($iisAdminOwners)) {
+        $config.security.users.administrators += $iisAdminOwners
+        $saveConfig = $true
+    }
+
+    if ($saveConfig) {
         if (!(Get-LocalGroupMember -Group "Administrators" -Member $user -ErrorAction SilentlyContinue)) {
             throw "Administrator privilege is needed to initiate IIS Administration API"
         }
@@ -95,12 +131,15 @@ if (!$config.security.users.owners.Contains($user)) {
         $dirAcl = Get-Acl $apiHome
         foreach ($access in $dirAcl.Access | Where-Object { $_.IdentityReference.Value -eq $user }) {
             $dirAcl.RemoveAccessRule($access) | Out-Null
+            $updateAcl = $true
         }
-        Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
+        if ($updateAcl) {
+            Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
+        }
         $rights = [System.Security.AccessControl.FileSystemRights]::Traverse `
             -bOr [System.Security.AccessControl.FileSystemRights]::Modify `
             -bOr [System.Security.AccessControl.FileSystemRights]::ChangePermissions
-        $dirAccessGranted = $dirAcl.Access | Where-Object {(($_.IdentityReference.Value -eq "${env:ComputerName}\${iisAdminOwners}") -and (($_.FileSystemRights -bAnd $rights) -eq $rights))}
+        $dirAccessGranted = $dirAcl.Access | Where-Object {(($_.IdentityReference.Value -eq "BUILTIN\Administrators") -and (($_.FileSystemRights -bAnd $rights) -eq $rights))}
         if (!$dirAccessGranted) {
             $inheritFlags = [System.Security.AccessControl.InheritanceFlags]::ContainerInherit `
                 -bOr [System.Security.AccessControl.InheritanceFlags]::ObjectInherit
@@ -109,7 +148,6 @@ if (!$config.security.users.owners.Contains($user)) {
             $dirAcl.SetAccessRule($ar) | Out-Null
             Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
         }
-        $config.security.users.owners += $iisAdminOwners
         $config | ConvertTo-Json -depth 100 | Out-File $configLocation
         Restart-Service -Name $serviceName | Out-Null
         WaitForServerToStart $serviceName

@@ -71,28 +71,17 @@ export class WACRuntime implements Runtime {
 
     public ConnectToIISHost(): Observable<ApiConnection> {
         if (!this._connecting) {
-            let getApiKey = Observable.forkJoin(
-                this.wac.NodeName,
-                this.GetApiKey(),
-            ).map(([nodeName, apiKey], _) => {
-                var connection = new ApiConnection(nodeName)
-                if (apiKey.access_token) {
-                    connection.accessToken = apiKey.access_token
-                } else {
-                    connection.accessToken = apiKey.value
-                }
-                this._tokenId = apiKey.id
-                return connection
-            })
-
-            let ensureAccess  = Observable.forkJoin(
-                getApiKey,
-                this.powershellService.run(PowerShellScripts.admin_api_util, {
-                    command: 'ensure-permission'
-                }),
-            ).map(([key, _], __) => key)
-
-            this._connecting = ensureAccess.shareReplay()
+            this._connecting = this.wac.NodeName.mergeMap(nodeName =>
+                this.GetApiKey().map((apiKey, _) => {
+                    var connection = new ApiConnection(nodeName)
+                    if (apiKey.access_token) {
+                        connection.accessToken = apiKey.access_token
+                    } else {
+                        connection.accessToken = apiKey.value
+                    }
+                    this._tokenId = apiKey.id
+                    return connection
+                })).shareReplay()
         }
         this._connecting.subscribe(c => {
             this.connectService.setActive(c)
@@ -106,13 +95,17 @@ export class WACRuntime implements Runtime {
         if (this._tokenId) {
             cmdParams.tokenId = this._tokenId
         }
-        return this.powershellService.run<ApiKey>(PowerShellScripts.token_utils, cmdParams).catch((e, _) => {
-            if (e.status === 400 && e.response.exception === 'Unable to connect to the remote server') {
+        return this.powershellService.run(PowerShellScripts.admin_api_util, {
+            command: 'ensure-permission'
+        }).catch((e, _) => {
+            if (e.status === 400 && e.response.exception == "IIS Administration API is not installed") {
                 return Observable.throw(ApiErrorType.Unreachable).finally(() => {
                     this.router.navigate(['wac', 'install'])
                 })
             }
             return Observable.throw(e)
+        }).mergeMap(_ => {
+            return this.powershellService.run<ApiKey>(PowerShellScripts.token_utils, cmdParams)
         })
     }
 }
