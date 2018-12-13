@@ -65,6 +65,15 @@ function EnsureMember($group, $userOrGroup) {
     return $modify
 }
 
+function GetIISAdminHome($procs) {
+    foreach ($proc in $procs) {
+        $iisMainModule = $proc.Modules | Where-Object { $_.ModuleName -eq "Microsoft.IIS.Administration.dll" }
+        if ($iisMainModule) {
+            return Split-Path $iisMainModule.FileName
+        }
+    }
+}
+
 ####################### Main script ################################
 
 ## TODO: Consider creating a lock around this script because it is not concurrency safe
@@ -90,16 +99,24 @@ if ($install) {
 }
 
 $service = Get-WmiObject win32_service | Where-Object {$_.name -eq $serviceName}
-if ($service.StartInfo.EnvironmentVariables -and $service.StartInfo.EnvironmentVariables["USE_CURRENT_DIRECTORY_AS_ROOT"] -and $service.StartInfo.WorkingDirectory) {
-    $workingDirectory = $service.StartInfo.WorkingDirectory
+if ($service) {
+    if ($service.StartInfo.EnvironmentVariables -and $service.StartInfo.EnvironmentVariables["USE_CURRENT_DIRECTORY_AS_ROOT"] -and $service.StartInfo.WorkingDirectory) {
+        $workingDirectory = $service.StartInfo.WorkingDirectory
+    } else {
+        $proc = Get-Process -id $service.ProcessId
+        $workingDirectory = GetIISAdminHome $proc
+    }
 } else {
-    $proc = Get-Process -id $service.ProcessId
-    $workingDirectory = Split-Path ($proc.Modules | Where-Object { $_.ModuleName -eq "Microsoft.IIS.Administration.dll" }).FileName
+    ## dev-mode support, no restart can be perfomed
+    $devMode = $true
+    $workingDirectory = GetIISAdminHome (Get-Process -ProcessName dotnet)
 }
 
 $configLocation = [System.IO.Path]::Combine($workingDirectory, "config", "appsettings.json")
+if ($devMode -and !(Test-Path $configLocation)) {
+    $configLocation = [System.IO.Path]::Combine($workingDirectory, "..", "..", "..", "config", "appsettings.json")
+}
 $config = Get-Content -Raw -Path $configLocation | ConvertFrom-Json
-
 $user = $(whoami)
 
 ## Install process adds $user in the config file. We don't want that, we want $iisAdminOwners in there instead
@@ -125,6 +142,9 @@ if (!$config.security.users.owners.Contains($user)) {
     }
 
     if ($saveConfig) {
+        if ($devMode) {
+            throw "Cannot edit config file in dev mode, please add ""IIS Administration API Owners"" manually"
+        }
         if (!(Get-LocalGroupMember -Group "Administrators" -Member $user -ErrorAction SilentlyContinue)) {
             throw "Administrator privilege is needed to initiate IIS Administration API"
         }
