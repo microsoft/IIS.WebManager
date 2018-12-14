@@ -13,14 +13,14 @@ import { SectionHelper } from './section.helper';
     template: `
         <div class="vtabs">
             <ul class="items">
-                <li 
-                    tabindex="0" 
-                    #item 
-                    class="hover-edit" 
-                    *ngFor="let tab of tabs; let i = index;" 
-                    [ngClass]="{active: tab.active}" 
-                    (keyup.space)="selectItem(i); focusItem(i)" 
-                    (keyup.enter)="selectItem(i); focusItem(i)" 
+                <li
+                    tabindex="0"
+                    #item
+                    class="hover-edit"
+                    *ngFor="let tab of tabs; let i = index;"
+                    [ngClass]="{active: tab.active}"
+                    (keyup.space)="selectItem(i)"
+                    (keyup.enter)="selectItem(i)"
                     (click)="selectItem(i)"
                 >
                     <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
@@ -137,11 +137,8 @@ export class VTabsComponent implements OnDestroy {
         else {
             tab.activate();
         }
-    }
-
-    private focusItem(index: number) {
-        let tab = this.tabs[index];
-
+        
+        // set input focus to the title element of the newly activated tab
         tab.focusTitle();
     }
 
@@ -191,6 +188,14 @@ export class VTabsComponent implements OnDestroy {
             font-size: 18px;
             border-bottom-style: dotted;
             border-bottom-width: 1px;
+        }
+
+        span:focus {
+            outline-style: dashed;
+            outline-color: #000;
+            outline-width: 2px;
+            outline-offset: -2px;
+            text-decoration: underline;
         }
     `],
 })
