@@ -38,7 +38,7 @@ import { PowerShellScripts } from "../../../../generated/powershell-scripts"
     }
 
     button {
-      width: 100px;  
+        width: 100px;
     }
 
     p {

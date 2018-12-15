@@ -8,10 +8,10 @@ import { WindowService } from '../main/window.service';
 @Component({
     selector: 'tooltip',
     template: `
-        <div tabindex="-1" class="help-container"
+        <div tabindex="0" class="help-container"
             (mouseover)="onMouseOver()"
             (mouseleave)="onMouseLeave()">
-            <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+            <i class="fa fa-question-circle-o" [attr.aria-hidden]="_visible ? 'false' : 'true'"></i>
             <div #helpContent class="help-content border-color shadow" 
                 [style.visibility]="_visible ? 'visible' : 'hidden'"
                 [style.height]="_heightStyle"
@@ -42,6 +42,7 @@ import { WindowService } from '../main/window.service';
             z-index: 1;
         }
 
+        .help-container:focus .help-content,
         .help-container:hover .help-content {
             visibility: visible !important;
         }

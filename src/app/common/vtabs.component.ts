@@ -13,7 +13,16 @@ import { SectionHelper } from './section.helper';
     template: `
         <div class="vtabs">
             <ul class="items">
-                <li tabindex="0" #item class="hover-edit"  *ngFor="let tab of tabs; let i = index;" [ngClass]="{active: tab.active}" (keyup.space)="selectItem(i)" (keyup.enter)="selectItem(i)" (click)="selectItem(i)">
+                <li
+                    tabindex="0"
+                    #item
+                    class="hover-edit"
+                    *ngFor="let tab of tabs; let i = index;"
+                    [ngClass]="{active: tab.active}"
+                    (keyup.space)="selectItem(i)"
+                    (keyup.enter)="selectItem(i)"
+                    (click)="selectItem(i)"
+                >
                     <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
                 </li>
             </ul>
@@ -128,6 +137,9 @@ export class VTabsComponent implements OnDestroy {
         else {
             tab.activate();
         }
+        
+        // set input focus to the title element of the newly activated tab
+        tab.focusTitle();
     }
 
     private onSectionChange(section: string) {
@@ -161,7 +173,10 @@ export class VTabsComponent implements OnDestroy {
     selector: 'vtabs > item',
     template: `
         <div *ngIf="!(!active)">
-            <h1 class="border-active">{{name}}</h1>
+            <span id="vtabs-title" tabindex="0"></span>
+            <h1 class="border-active">
+                <span>{{name}}</span>
+            </h1>
             <ng-content></ng-content>
         </div>
     `,
@@ -174,6 +189,14 @@ export class VTabsComponent implements OnDestroy {
             font-size: 18px;
             border-bottom-style: dotted;
             border-bottom-width: 1px;
+        }
+
+        span:focus {
+            outline-style: dashed;
+            outline-color: #000;
+            outline-width: 2px;
+            outline-offset: -2px;
+            text-decoration: underline;
         }
     `],
 })
@@ -203,6 +226,10 @@ export class Item implements OnInit, OnDestroy {
         }
 
         this.active = true;
+    }
+
+    focusTitle() {
+        setTimeout(()=>document.getElementById("vtabs-title").focus());
     }
 
     deactivate() {

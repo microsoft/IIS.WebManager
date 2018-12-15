@@ -183,7 +183,7 @@ import { SectionHelper } from './section.helper';
                 </div>
             </div>
 
-            <div class='menu-btn color-active background-normal' #menuBtn tabindex='0' (click)="showMenu(true)"><span class="border-active hover-active color-normal" [class.background-active]="_menuOn"><i class="fa fa-ellipsis-h"></i></span></div>
+            <div class='menu-btn color-active background-normal' #menuBtn (click)="showMenu(true)"><span class="border-active hover-active color-normal" [class.background-active]="_menuOn"><i class="fa fa-ellipsis-h"></i></span></div>
             <div class='menu border-active background-normal' [hidden]="!_menuOn">
                 <ul>
                     <li tabindex="0" *ngFor="let tab of tabs; let i = index;" class="hover-active" [ngClass]="{'background-active': tab.active}" (keyup.space)="selectTab(i)" (keyup.enter)="selectTab(i)" (click)="selectTab(i)">{{tab.name}}</li>
@@ -261,6 +261,9 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
 
     private selectTab(index: number) {
         this._sectionHelper.selectSection(this.tabs[index].name);
+
+        // set input focus to the title element of the newly activated tab
+        this.tabs[index].focusTitle();
     }
 
     private onSectionChange(section: string) {
@@ -318,6 +321,7 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
     selector: 'tab',
     template: `
         <div *ngIf="!(!active)">
+            <span id="tabs-title" tabindex="0"></span>
             <ng-content></ng-content>
         </div>
     `
@@ -342,6 +346,10 @@ export class TabComponent implements OnInit, OnDestroy {
         }
 
         this.active = true;
+    }
+
+    focusTitle() {
+        setTimeout(()=>document.getElementById("tabs-title").focus());
     }
 
     public deactivate() {

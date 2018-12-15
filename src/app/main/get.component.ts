@@ -55,7 +55,7 @@ import { HttpFacade } from 'common/http-facade';
         }
 
         button {
-          width: 100px;  
+            width: 100px;
         }
 
         p {
@@ -70,6 +70,10 @@ import { HttpFacade } from 'common/http-facade';
         .bttn {
             padding-top: 8px;
             padding-bottom: 8px;
+        }
+
+        .bttn.background-active:focus {
+            color: #FFFFFF
         }
 
         .collapse-heading {
