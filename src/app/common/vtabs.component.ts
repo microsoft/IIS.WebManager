@@ -173,8 +173,9 @@ export class VTabsComponent implements OnDestroy {
     selector: 'vtabs > item',
     template: `
         <div *ngIf="!(!active)">
+            <span id="vtabs-title" tabindex="0"></span>
             <h1 class="border-active">
-                <span tabindex="0" id="vtabs-title">{{name}}</span>
+                <span>{{name}}</span>
             </h1>
             <ng-content></ng-content>
         </div>

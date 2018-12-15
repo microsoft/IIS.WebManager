@@ -261,6 +261,9 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
 
     private selectTab(index: number) {
         this._sectionHelper.selectSection(this.tabs[index].name);
+
+        // set input focus to the title element of the newly activated tab
+        this.tabs[index].focusTitle();
     }
 
     private onSectionChange(section: string) {
@@ -318,6 +321,7 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
     selector: 'tab',
     template: `
         <div *ngIf="!(!active)">
+            <span id="tabs-title" tabindex="0"></span>
             <ng-content></ng-content>
         </div>
     `
@@ -342,6 +346,10 @@ export class TabComponent implements OnInit, OnDestroy {
         }
 
         this.active = true;
+    }
+
+    focusTitle() {
+        setTimeout(()=>document.getElementById("tabs-title").focus());
     }
 
     public deactivate() {
