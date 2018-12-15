@@ -195,9 +195,23 @@ export class WebSiteItem {
     template: `
         <div class="container-fluid">
             <div class="hidden-xs border-active grid-list-header row" [hidden]="model.length == 0">
-                <label class="col-xs-8 col-sm-4 col-md-3 col-lg-3" [ngClass]="_orderBy.css('name')" (click)="doSort('name')">Name</label>
-                <label class="col-xs-3 col-md-1 col-lg-1" [ngClass]="_orderBy.css('status')" (click)="doSort('status')">Status</label>
-                <label class="col-lg-2 visible-lg" *ngIf="hasField('app-pool')" [ngClass]="_orderBy.css('application_pool.name')" (click)="doSort('application_pool.name')">Application Pool</label>
+                <label class="col-xs-8 col-sm-4 col-md-3 col-lg-3" [ngClass]="_orderBy.css('name')" (click)="doSort('name')">
+                    <span tabindex="0" aria-label="Name Header" role="button" 
+                        (keyup.enter)="doSort('name')" 
+                        (keyup.space)="doSort('name')">Name</span>
+                </label>
+                <label class="col-xs-8 col-md-3 col-lg-1" [ngClass]="_orderBy.css('status')" (click)="doSort('status')">
+                    <span tabindex="0" aria-label="Status Header" role="button" 
+                        (keyup.enter)="doSort('status')" 
+                        (keyup.space)="doSort('status')">Status
+                    </span>
+                </label>
+                <label class="col-lg-2 visible-lg" *ngIf="hasField('app-pool')" [ngClass]="_orderBy.css('application_pool.name')" (click)="doSort('application_pool.name')">
+                    <span tabindex="0" aria-label="Application Pool Header" role="button" 
+                        (keyup.enter)="doSort('application_pool.name')" 
+                        (keyup.space)="doSort('application_pool.name')">Application Pool
+                    </span>
+                </label>
             </div>
             <virtual-list class="grid-list"
                         *ngIf="model"
