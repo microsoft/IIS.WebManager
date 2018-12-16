@@ -40,10 +40,14 @@ import { WebSite } from '../websites/site';
             <input class="out" type="text"/>
             <div #header class="container-fluid hidden-xs">
                 <div class="border-active grid-list-header row">
-                    <label class="col-xs-8 col-sm-5 col-lg-4 hidden-xs" [ngClass]="_orderBy.css('name')" (click)="sort('name')">Name</label>
-                    <label class="col-sm-3 col-md-2 hidden-xs" [ngClass]="_orderBy.css('file_info.last_modified')" (click)="sort('file_info.last_modified')">Last Modified</label>
-                    <label class="col-md-2 visible-lg visible-md" [ngClass]="_orderBy.css('description')" (click)="sort('description')">Type</label>
-                    <label class="col-md-1 visible-lg visible-md text-right" [ngClass]="_orderBy.css('file_info.size')" (click)="sort('file_info.size')">Size</label>
+                    <label class="col-xs-8 col-sm-5 col-lg-4 hidden-xs" [ngClass]="_orderBy.css('name')" (click)="sort('name')"
+                        tabindex="0" aria-label="Name Header" role="button" (keyup.enter)="sort('name')" (keyup.space)="sort('name')">Name</label>
+                    <label class="col-sm-3 col-md-2 hidden-xs" [ngClass]="_orderBy.css('file_info.last_modified')" (click)="sort('file_info.last_modified')"
+                        tabindex="0" aria-label="Last Modified Header" role="button" (keyup.enter)="sort('file_info.last_modified')" (keyup.space)="sort('file_info.last_modified')">Last Modified</label>
+                    <label class="col-md-2 visible-lg visible-md" [ngClass]="_orderBy.css('description')" (click)="sort('description')"
+                        tabindex="0" aria-label="Type Header" role="button" (keyup.enter)="sort('description')" (keyup.space)="sort('description')">Type</label>
+                    <label class="col-md-1 visible-lg visible-md text-right" [ngClass]="_orderBy.css('file_info.size')" (click)="sort('file_info.size')"
+                        tabindex="0" aria-label="Size Header" role="button" (keyup.enter)="sort('file_info.size')" (keyup.space)="sort('file_info.size')">Size</label>
                 </div>
             </div>
             <div class="grid-list container-fluid" *ngIf="_newDir">

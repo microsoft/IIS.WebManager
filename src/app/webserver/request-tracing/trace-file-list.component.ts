@@ -26,12 +26,18 @@ import { RequestTracingService } from './request-tracing.service';
             <input class="out" type="text"/>
             <div #header class="container-fluid">
                 <div class="hidden-xs border-active grid-list-header row">
-                    <label class="col-xs-8 col-sm-3 col-lg-2" [ngClass]="_orderBy.css('file_info.name')" (click)="sort('file_info.name')">Name</label>
-                    <label class="col-sm-4 col-lg-3 hidden-xs" [ngClass]="_orderBy.css('url')" (click)="sort('url')">Url</label>
-                    <label class="col-md-1 visible-lg text-right" [ngClass]="_orderBy.css('method')" (click)="sort('method')">Method</label>
-                    <label class="col-md-1 visible-lg visible-md text-right" [ngClass]="_orderBy.css('status_code')" (click)="sort('status_code')">Status</label>
-                    <label class="col-md-1 visible-lg visible-md text-right" [ngClass]="_orderBy.css('time_taken')" (click)="sort('time_taken')">Duration</label>
-                    <label class="col-sm-3 col-md-2 hidden-xs" [ngClass]="_orderBy.css('date')" (click)="sort('date')">Date</label>
+                    <label class="col-xs-8 col-sm-3 col-lg-2" [ngClass]="_orderBy.css('file_info.name')" (click)="sort('file_info.name')"
+                        tabindex="0" aria-label="Name Header" role="button" (keyup.enter)="sort('name')" (keyup.space)="sort('name')">Name</label>
+                    <label class="col-sm-4 col-lg-3 hidden-xs" [ngClass]="_orderBy.css('url')" (click)="sort('url')"
+                        tabindex="0" aria-label="Url Header" role="button" (keyup.enter)="sort('url')" (keyup.space)="sort('url')">Url</label>
+                    <label class="col-md-1 visible-lg text-right" [ngClass]="_orderBy.css('method')" (click)="sort('method')"
+                        tabindex="0" aria-label="Method Header" role="button" (keyup.enter)="sort('method')" (keyup.space)="sort('method')">Method</label>
+                    <label class="col-md-1 visible-lg visible-md text-right" [ngClass]="_orderBy.css('status_code')" (click)="sort('status_code')"
+                        tabindex="0" aria-label="Status Header" role="button" (keyup.enter)="sort('status_code')" (keyup.space)="sort('status_code')">Status</label>
+                    <label class="col-md-1 visible-lg visible-md text-right" [ngClass]="_orderBy.css('time_taken')" (click)="sort('time_taken')"
+                        tabindex="0" aria-label="Duration Header" role="button" (keyup.enter)="sort('time_taken')" (keyup.space)="sort('time_taken')">Duration</label>
+                    <label class="col-sm-3 col-md-2 hidden-xs" [ngClass]="_orderBy.css('date')" (click)="sort('date')"
+                        tabindex="0" aria-label="Date Header" role="button" (keyup.enter)="sort('date')" (keyup.space)="sort('date')">Date</label>
                 </div>
             </div>
             <div *ngIf="_error && _error.message">
