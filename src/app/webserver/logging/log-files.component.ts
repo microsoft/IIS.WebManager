@@ -24,7 +24,7 @@ import { LoggingService } from './logging.service';
                         [selectable]="_logs"
                         [selected]="_selected"
                         (keyup.delete)="onDelete()">
-            <input class="out" type="text"/>
+            <input tabindex="-1" class="out" type="text"/>
             <div class="container-fluid">
                 <div class="hidden-xs border-active grid-list-header row">
                     <label class="col-xs-8 col-sm-5 col-lg-4 hidden-xs" [ngClass]="_orderBy.css('name')" (click)="sort('name')"

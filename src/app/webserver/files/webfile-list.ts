@@ -37,7 +37,7 @@ import { WebSite } from '../websites/site';
             (copy)="copy($event)"
             (cut)="copy($event)"
             (paste)="paste($event)">
-            <input class="out" type="text"/>
+            <input tabindex="-1" class="out" type="text"/>
             <div #header class="container-fluid hidden-xs">
                 <div class="border-active grid-list-header row">
                     <label class="col-xs-8 col-sm-5 col-lg-4 hidden-xs" [ngClass]="_orderBy.css('name')" (click)="sort('name')"

@@ -23,7 +23,7 @@ import { RequestTracingService } from './request-tracing.service';
                         [selectable]="_traces"
                         [selected]="_selected"
                         (keyup.delete)="onDelete()">
-            <input class="out" type="text"/>
+            <input tabindex="-1" class="out" type="text"/>
             <div #header class="container-fluid">
                 <div class="hidden-xs border-active grid-list-header row">
                     <label class="col-xs-8 col-sm-3 col-lg-2" [ngClass]="_orderBy.css('file_info.name')" (click)="sort('file_info.name')"
