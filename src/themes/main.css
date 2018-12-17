@@ -30,7 +30,9 @@ a:focus{
     text-decoration: none;
 }
 
-a:focus{
+label:focus,
+a:focus,
+button:focus {
     outline-style: dashed;
     outline-width: 2px;
     outline-offset: -2px;
@@ -167,14 +169,6 @@ button {
     padding: 4px 6px;
     cursor: pointer;
     font-size: 110%;
-}
-
-button:focus {
-    outline-style: dashed;
-    outline-width: 2px;
-    outline-offset: -2px;
-    outline-color: #000;
-    text-decoration: underline;
 }
 
 .bttn i.fa,

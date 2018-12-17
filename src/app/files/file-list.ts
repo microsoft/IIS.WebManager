@@ -40,13 +40,17 @@ import { FileNavService } from './file-nav.service';
             (copy)="copy($event)"
             (cut)="copy($event)"
             (paste)="paste($event)">
-            <input class="out" type="text"/>
+            <input tabindex="-1" class="out" type="text"/>
             <div #header class="container-fluid hidden-xs">
                 <div class="border-active grid-list-header row">
-                    <label class="col-xs-8 col-sm-5 col-lg-4 hidden-xs" [ngClass]="_orderBy.css('name')" (click)="sort('name')">Name</label>
-                    <label class="col-sm-3 col-md-2 hidden-xs" [ngClass]="_orderBy.css('last_modified')" (click)="sort('last_modified')">Last Modified</label>
-                    <label class="col-md-2 visible-lg visible-md" [ngClass]="_orderBy.css('description')" (click)="sort('description')">Type</label>
-                    <label class="col-md-1 visible-lg visible-md text-right" [ngClass]="_orderBy.css('size')" (click)="sort('size')">Size</label>
+                    <label class="col-xs-8 col-sm-5 col-lg-4 hidden-xs" [ngClass]="_orderBy.css('name')" (click)="sort('name')"
+                        tabindex="0" aria-label="Name Header" role="button" (keyup.enter)="sort('name')" (keyup.space)="sort('name')">Name</label>
+                    <label class="col-sm-3 col-md-2 hidden-xs" [ngClass]="_orderBy.css('last_modified')" (click)="sort('last_modified')"
+                        tabindex="0" aria-label="Last Modified Header" role="button" (keyup.enter)="sort('last_modified')" (keyup.space)="sort('last_modified')">Last Modified</label>
+                    <label class="col-md-2 visible-lg visible-md" [ngClass]="_orderBy.css('description')" (click)="sort('description')"
+                        tabindex="0" aria-label="Type Header" role="button" (keyup.enter)="sort('description')" (keyup.space)="sort('description')">Type</label>
+                    <label class="col-md-1 visible-lg visible-md text-right" [ngClass]="_orderBy.css('size')" (click)="sort('size')"
+                        tabindex="0" aria-label="Size Header" role="button" (keyup.enter)="sort('size')" (keyup.space)="sort('size')">Size</label>
                 </div>
             </div>
             <selector #editSelector [opened]="true" *ngIf="_newLocation" class="container-fluid" (hide)="_newLocation=null">

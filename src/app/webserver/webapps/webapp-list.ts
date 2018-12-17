@@ -178,9 +178,12 @@ export class WebAppItem {
     template: `
         <div class="container-fluid">
             <div class="hidden-xs border-active grid-list-header row" [hidden]="model.length == 0">
-                <label class="col-xs-8 col-sm-4" [ngClass]="css('path')" (click)="sort('path')">Path</label>
-                <label class="col-sm-2" *ngIf="field('app-pool')" [ngClass]="css('application_pool.name')" (click)="sort('application_pool.name')">Application Pool</label>
-                <label class="col-sm-2" *ngIf="field('site')" [ngClass]="css('website.name')" (click)="sort('website.name')">Web Site</label>
+                <label class="col-xs-8 col-sm-4" [ngClass]="css('path')" (click)="sort('path')"
+                    tabindex="0" aria-label="Path Header" role="button" (keyup.enter)="sort('path')" (keyup.space)="sort('path')">Path</label>
+                <label class="col-sm-2" *ngIf="field('app-pool')" [ngClass]="css('application_pool.name')" (click)="sort('application_pool.name')"
+                    tabindex="0" aria-label="Application Pool Header" role="button" (keyup.enter)="sort('application_pool.name')" (keyup.space)="sort('application_pool.name')">Application Pool</label>
+                <label class="col-sm-2" *ngIf="field('site')" [ngClass]="css('website.name')" (click)="sort('website.name')"
+                    tabindex="0" aria-label="Web Site Header" role="button" (keyup.enter)="sort('website.name')" (keyup.space)="sort('website.name')">Web Site</label>
             </div>
             
             <ul class="grid-list">

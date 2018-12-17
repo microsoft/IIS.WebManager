@@ -8,7 +8,7 @@ import { WindowService } from '../main/window.service';
 @Component({
     selector: 'tooltip',
     template: `
-        <div tabindex="0" class="help-container"
+        <div role="tooltip" tabindex="0" class="help-container"
             (mouseover)="onMouseOver()"
             (mouseleave)="onMouseLeave()">
             <i class="fa fa-question-circle-o" [attr.aria-hidden]="_visible ? 'false' : 'true'"></i>
