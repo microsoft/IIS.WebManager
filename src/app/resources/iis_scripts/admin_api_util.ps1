@@ -1,3 +1,4 @@
+[CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
     [ValidateSet('install', 'ensure-permission')]
@@ -39,21 +40,27 @@ function WaitForServerToStart($service) {
         Start-Sleep -Seconds $waitPeriod
         $remainingTime -= $waitPeriod
         if ($remainingTime -lt 0) {
-            throw "timeout waiting for service to start"
+            throw "Timeout waiting for service to start"
         }
     }
+    Write-Verbose "Server started, time remaining ${remainingTime}..."
 }
 
+$adminAPIInstalled = $false
 function InstallAPI($service) {
     $installer = Join-Path $env:TEMP iis-administration-setup.exe
     Invoke-WebRequest $downloadFrom -OutFile $installer
+    Write-Verbose "Downloaded $downloadFrom to $installer"
     & $installer /s
+    Write-Verbose "Install complete"
     WaitForServerToStart $service
+    $adminAPIInstalled = $true
 }
 
 function EnsureGroup($group) {
     if (!(Get-LocalGroup -Name $group -ErrorAction SilentlyContinue)) {
         New-LocalGroup -Name $group | Out-Null
+        Write-Verbose "Group $group added"
     }
 }
 
@@ -61,6 +68,7 @@ function EnsureMember($group, $userOrGroup) {
     $modify = !(Get-LocalGroupMember -Group $group -Member $userOrGroup -ErrorAction SilentlyContinue)
     if ($modify) {
         Add-LocalGroupMember -Group $group -Member $userOrGroup | Out-Null
+        Write-Verbose "Member $userOrGroup added"
     }
     return $modify
 }
@@ -69,6 +77,7 @@ function GetIISAdminHome($procs) {
     foreach ($proc in $procs) {
         $iisMainModule = $proc.Modules | Where-Object { $_.ModuleName -eq "Microsoft.IIS.Administration.dll" }
         if ($iisMainModule) {
+            Write-Verbose "IIS Admin module found at $($iisMainModule.FileName)"
             return Split-Path $iisMainModule.FileName
         }
     }
@@ -82,7 +91,9 @@ if ($install) {
     InstallAPI $serviceName
 } else {
     try {
-        Invoke-WebRequest -UseDefaultCredentials -UseBasicParsing "https://localhost:$adminAPIPort" | Out-Null
+        $pingEndpoint = "https://localhost:$adminAPIPort"
+        Write-Verbose "Pinging Admin API at $pingEndpoint"
+        Invoke-WebRequest -UseDefaultCredentials -UseBasicParsing $pingEndpoint | Out-Null
     } catch {
         if ($_.Exception.Status -eq [System.Net.WebExceptionStatus]::ConnectFailure) {
             $service = Get-Service -Name $serviceName -ErrorAction SilentlyContinue
@@ -108,6 +119,7 @@ if ($service) {
     }
 } else {
     ## dev-mode support, no restart can be perfomed
+    Write-Verbose "Dev mode, scanning processes for IIS Admin API"
     $devMode = $true
     $workingDirectory = GetIISAdminHome (Get-Process -ProcessName dotnet)
 }
@@ -116,8 +128,11 @@ $configLocation = [System.IO.Path]::Combine($workingDirectory, "config", "appset
 if ($devMode -and !(Test-Path $configLocation)) {
     $configLocation = [System.IO.Path]::Combine($workingDirectory, "..", "..", "..", "config", "appsettings.json")
 }
+Write-Verbose "Config Location $configLocation"
 $config = Get-Content -Raw -Path $configLocation | ConvertFrom-Json
 $user = $(whoami)
+
+$groupModified = $false
 
 ## Install process adds $user in the config file. We don't want that, we want $iisAdminOwners in there instead
 if ($install) {
@@ -127,11 +142,8 @@ if ($install) {
 
 if (!$config.security.users.owners.Contains($user)) {
     EnsureGroup $iisAdminOwners
-    if (EnsureMember $iisAdminOwners $user) {
-        # WIP:
-        # We are supposed to force a group policy update here but this command does not work as expected because of how WinRM works
-        # GPUpdate /Force | Out-Null
-    }
+    $groupModified = EnsureMember $iisAdminOwners $user
+
     if (!$config.security.users.owners.Contains($iisAdminOwners)) {
         $config.security.users.owners += $iisAdminOwners
         $saveConfig = $true
@@ -142,6 +154,7 @@ if (!$config.security.users.owners.Contains($user)) {
     }
 
     if ($saveConfig) {
+        Write-Verbose "Saving config..."
         if ($devMode) {
             throw "Cannot edit config file in dev mode, please add ""IIS Administration API Owners"" manually"
         }
@@ -156,6 +169,7 @@ if (!$config.security.users.owners.Contains($user)) {
             $updateAcl = $true
         }
         if ($updateAcl) {
+            Write-Verbose "Updating Acl to remove readonly access..."
             Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
         }
         $rights = [System.Security.AccessControl.FileSystemRights]::Traverse `
@@ -168,12 +182,18 @@ if (!$config.security.users.owners.Contains($user)) {
             $propFlags = [System.Security.AccessControl.PropagationFlags]::InheritOnly
             $ar = New-Object System.Security.AccessControl.FileSystemAccessRule("BUILTIN\Administrators", $rights, $inheritFlags, $propFlags, "allow")
             $dirAcl.SetAccessRule($ar) | Out-Null
+            Write-Verbose "Setting Acl to enable administrators' write access"
             Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
         }
+        Write-Verbose "Saving new configuration"
         $config | ConvertTo-Json -depth 100 | Out-File $configLocation
+        Write-Verbose "Restarting service"
         Restart-Service -Name $serviceName | Out-Null
         WaitForServerToStart $serviceName
     }
 }
 
-'{ "result" : "success" }'
+ConvertTo-Json @{
+    "adminAPIInstalled" = $adminAPIInstalled;
+    "groupModified" = $groupModified
+} -Compress -Depth 100

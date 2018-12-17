@@ -1,9 +1,8 @@
-import { Component } from "@angular/core"
+import { Component, Inject } from "@angular/core"
 import { AppContextService } from "@microsoft/windows-admin-center-sdk/angular"
 import { SETTINGS } from "main/settings"
 import { Router } from "@angular/router"
-import { PowershellService } from "../services/powershell-service"
-import { PowerShellScripts } from "../../../../generated/powershell-scripts"
+import { WACRuntime } from "runtime/runtime.wac";
 
 @Component({
     template: `
@@ -76,7 +75,7 @@ export class InstallComponent {
     constructor(
         private router: Router,
         private appContext: AppContextService,
-        private powershell: PowershellService,
+        @Inject("Runtime") private runtime: WACRuntime,
     ) {
         this._adminApiLocation = SETTINGS.api_download_url
         this._targetHost = this.appContext.activeConnection.nodeName
@@ -84,14 +83,12 @@ export class InstallComponent {
 
     public install() {
         this._inProgress = true
-        var sub = this.powershell.run(
-            PowerShellScripts.admin_api_util,
-            {
-                command: 'install',
-                downloadFrom: this._adminApiLocation
-            }).subscribe(_ => {}, _ => {}, () => {
-                this.router.navigate(['/'])
-                sub.unsubscribe()
-            })
+        var sub = this.runtime.PrepareIISHost({
+            command: 'install',
+            downloadFrom: SETTINGS.api_download_url,
+        }).subscribe(_ => {}, _ => {}, () => {
+            this.router.navigate(['/'])
+            sub.unsubscribe()
+        })
     }
 }

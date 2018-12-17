@@ -27,10 +27,10 @@ import { LocalHttpClient } from 'runtime/wac/services/local-http-client'
     ],
     bootstrap: [ AppComponent ],
     providers: [
-        WACInfo,
         ResourceService,
-        PowershellService,
         { provide: ErrorHandler, useClass: AppErrorHandler },
+        { provide: "Powershell", useClass: PowershellService },
+        { provide: "WACInfo", useClass: WACInfo },
         { provide: "Http", useClass: LocalHttpClient },
         { provide: "Runtime", useClass: WACRuntime },
     ],

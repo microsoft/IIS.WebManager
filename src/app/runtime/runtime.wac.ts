@@ -1,5 +1,5 @@
 import { DateTime } from '../common/primitives'
-import { Injectable } from '@angular/core'
+import { Injectable, Inject } from '@angular/core'
 import { Router } from '@angular/router'
 import {
     AppContextService,
@@ -23,6 +23,11 @@ class ApiKey {
     public value: string
 }
 
+class HostStatus {
+    public adminAPIInstalled: boolean
+    public groupModified: boolean
+}
+
 @Injectable()
 export class WACInfo {
     constructor(private appContext: AppContextService){}
@@ -37,7 +42,6 @@ export class WACInfo {
 @Injectable()
 export class WACRuntime implements Runtime {
     private _tokenId: string
-    private powershellService: PowershellService
     private _connecting: Observable<ApiConnection>
 
     constructor(
@@ -45,11 +49,9 @@ export class WACRuntime implements Runtime {
         private appContext: AppContextService,
         private navigationService: NavigationService,
         private connectService: ConnectService,
-        private wac: WACInfo,
-    ) {
-        // somehow DI was unable to create a powershellService
-        this.powershellService = new PowershellService(appContext, wac)
-    }
+        @Inject("Powershell") private powershellService: PowershellService,
+        @Inject("WACInfo") private wac: WACInfo,
+    ){}
 
     public InitContext() {
         this.appContext.ngInit({ navigationService: this.navigationService })
@@ -90,14 +92,21 @@ export class WACRuntime implements Runtime {
         return this._connecting
     }
 
+    public PrepareIISHost(p: any): Observable<any> {
+        return this.powershellService.run(PowerShellScripts.admin_api_util, p).map((status: HostStatus) => {
+            if (status.groupModified) {
+                this.powershellService.Reset()
+            }
+            return status
+        })
+    }
+
     private GetApiKey(): Observable<ApiKey> {
         var cmdParams: any = { command: 'ensure' }
         if (this._tokenId) {
             cmdParams.tokenId = this._tokenId
         }
-        return this.powershellService.run(PowerShellScripts.admin_api_util, {
-            command: 'ensure-permission'
-        }).catch((e, _) => {
+        return this.PrepareIISHost({ command: 'ensure-permission' }).catch((e, _) => {
             if (e.status === 400 && e.response.exception == "IIS Administration API is not installed") {
                 return Observable.throw(ApiErrorType.Unreachable).finally(() => {
                     this.router.navigate(['wac', 'install'])
