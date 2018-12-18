@@ -28,7 +28,6 @@ export class PowershellService {
 
   private scheduleSession() {
     this.session = this.wac.NodeName.map(nodeName => {
-      console.log(`creating session`)
       return this.appContext.powerShell.createSession(nodeName, PS_SESSION_KEY)
     }).shareReplay()
   }
@@ -36,7 +35,6 @@ export class PowershellService {
   public Reset() {
     this.session.subscribe(s => {
       s.dispose()
-      console.log(`scrapping current session`)
       this.scheduleSession()
     })
   }
