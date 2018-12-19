@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Response, RequestOptionsArgs, Headers } from '@angular/http';
-
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { Subject } from 'rxjs/Subject';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
 import { HttpClient } from '../common/httpclient';
 import { Certificate } from './certificate'
 
+export const CertificatesServiceURL: string = "/certificates/";
+
 @Injectable()
 export class CertificatesService {
-    private static URL: string = "/certificates/";
     private static FIELDS: string = "alias,name,friendly_name,issued_by,subject,thumbprint,signature_algorithm,valid_to,valid_from,intended_purposes,subject_alternative_names,store";
     private static RANGE_SIZE: number = 50;
     private _certificates: BehaviorSubject<Array<Certificate>> = new BehaviorSubject<Array<Certificate>>([]);
@@ -52,7 +51,7 @@ export class CertificatesService {
             return Promise.resolve(cached);
         }
 
-        return this._http.get(CertificatesService.URL + id)
+        return this._http.get(CertificatesServiceURL + id)
             .then(cert => {
                 cached = this._certificates.getValue().find(c => c.id === id);
                 if (!cached) {
@@ -67,7 +66,7 @@ export class CertificatesService {
 
     private getAll(): Promise<Array<Certificate>> {
         this._loading++;
-        return this._http.get(CertificatesService.URL + "?fields=" + CertificatesService.FIELDS)
+        return this._http.get(CertificatesServiceURL + "?fields=" + CertificatesService.FIELDS)
             .then(obj => {
                 this._loading--;
                 let certs = obj.certificates;
@@ -128,7 +127,7 @@ export class CertificatesService {
         args.headers = new Headers();
         args.headers.append('range', 'certificates=' + start + '-' + (start + length - 1));
 
-        return this._http.get(CertificatesService.URL + "?fields=" + CertificatesService.FIELDS, args)
+        return this._http.get(CertificatesServiceURL + "?fields=" + CertificatesService.FIELDS, args)
             .then(res => {
                 return res.certificates
             });
@@ -137,14 +136,14 @@ export class CertificatesService {
     //
     // Range not supported in 1.0.39 and below
     private supportsRange(): Promise<boolean> {
-        return this._http.head(CertificatesService.URL)
+        return this._http.head(CertificatesServiceURL)
             .then((res: Response) => {
                 return !!res.headers.get('Accept-Ranges');
             });
     }
 
     private getTotal(): Promise<number> {
-        return this._http.head(CertificatesService.URL)
+        return this._http.head(CertificatesServiceURL)
             .then((res: Response) => {
                 return Number.parseInt(res.headers.get('x-total-count'));
             });
