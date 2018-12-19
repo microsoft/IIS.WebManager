@@ -15,7 +15,7 @@ import { OptionsService } from '../../main/options.service';
         <loading *ngIf="!(site || notFound)"></loading>
         <website-header *ngIf="site" [site]="site" class="crumb-content" [class.sidebar-nav-content]="_options.active"></website-header>
         <div *ngIf="site" class="sidebar crumb" [class.nav]="_options.active">
-            <ul class="crumbs">
+            <ul class="crumbs sme-focus-zone">
                 <li><a [routerLink]="['/webserver']">Web Server</a></li>
                 <li><a [routerLink]="['/webserver/web-sites']">Web Sites</a></li>
             </ul>

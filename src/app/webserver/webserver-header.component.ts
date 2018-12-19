@@ -24,7 +24,7 @@ import { WebServer } from './webserver';
                     </selector>
                 </div>
             </div>
-            <div class="feature-title">
+            <div class="feature-title sme-focus-zone">
                 <h1 [ngClass]="model.status">Web Server</h1>
                 <span class="status" *ngIf="model.status.startsWith('stop')">{{model.status}}</span>
             </div>

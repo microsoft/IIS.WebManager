@@ -16,7 +16,7 @@ import {AppPoolsService} from './app-pools.service';
         <app-pool-header *ngIf="pool" [pool]="pool" class="crumb-content" [class.sidebar-nav-content]="_options.active"></app-pool-header>
 
         <div *ngIf="pool" class="sidebar crumb" [class.nav]="_options.active">
-            <ul class="crumbs">
+            <ul class="crumbs sme-focus-zone">
                 <li><a [routerLink]="['/webserver']">Web Server</a></li>
                 <li><a [routerLink]="['/webserver/application-pools']">Application Pools</a></li>
             </ul>
