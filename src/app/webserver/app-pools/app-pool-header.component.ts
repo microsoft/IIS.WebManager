@@ -23,7 +23,7 @@ import { AppPoolsService } from './app-pools.service';
                     </selector>
                 </div>
             </div>
-            <div class="feature-title">
+            <div class="feature-title sme-focus-zone">
                 <h1 [ngClass]="pool.status">{{pool.name}}</h1>
                 <span class="status" *ngIf="pool.status == 'stopped'">{{pool.status}}</span>
             </div>

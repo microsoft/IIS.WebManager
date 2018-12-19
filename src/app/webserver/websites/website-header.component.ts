@@ -25,7 +25,7 @@ import { WebSite } from './site';
                 </div>
             </div>
             
-            <div class="feature-title">
+            <div class="feature-title sme-focus-zone">
                 <h1 [ngClass]="site.status">{{site.name}}</h1>
                 <span class="status" *ngIf="site.status == 'stopped'">{{site.status}}</span>
             </div>

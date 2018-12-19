@@ -17,7 +17,7 @@ import {WebAppsService} from './webapps.service';
         <webapp-header *ngIf="app" [model]="app" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webapp-header>
 
         <div *ngIf="app" class="sidebar crumb" [class.nav]="_options.active">
-            <ul class="crumbs">
+            <ul class="crumbs sme-focus-zone">
                 <li><a [routerLink]="['/webserver']">Web Server</a></li>
                 <li><a [routerLink]="['/webserver/web-sites/']">Web Sites</a></li>
                 <li><a [routerLink]="['/webserver/websites/', app.website.id]">{{app.website.name}}</a></li>
