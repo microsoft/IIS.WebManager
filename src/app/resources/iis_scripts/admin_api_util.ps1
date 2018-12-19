@@ -101,7 +101,7 @@ if ($install) {
                 throw "IIS Administration API is not installed"
             }
             if ($service.Status -eq [System.ServiceProcess.ServiceControllerStatus]::Running) {
-                throw "IIS Administration API is not found, port pinged: $adminAPIPort"
+                throw "IIS Administration API is not found at: $pingEndpoint"
             }
             throw "Unexpected service status for IIS Administration API: ""$($service.Status)"""
         }
@@ -156,10 +156,10 @@ if (!$config.security.users.owners.Contains($user)) {
     if ($saveConfig) {
         Write-Verbose "Saving config..."
         if ($devMode) {
-            throw "Cannot edit config file in dev mode, please add ""IIS Administration API Owners"" manually"
+            throw "Cannot edit config file in dev mode, please add $user to ""$iisAdminOwners"" group manually"
         }
         if (!(Get-LocalGroupMember -Group "Administrators" -Member $user -ErrorAction SilentlyContinue)) {
-            throw "Administrator privilege is needed to initiate IIS Administration API"
+            throw "User $user lacks administrator privilege which is needed to initiate IIS Administration API"
         }
         $apiHome = [System.IO.Path]::Combine($workingDirectory, "..")
         ## Installer added a read-only rule on current user to the directory, delete it
