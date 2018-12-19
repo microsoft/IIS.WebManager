@@ -62,16 +62,7 @@ function TokenRequest([string] $targetEndpoint, [string]$method, [string]$subpat
 if ($tokenId) {
     $existingToken = @{ "id" = $tokenId }
 } else {
-    try {
-        $query = Invoke-WebRequest "$apiHost/security/$CreateEndpoint" -UseBasicParsing -UseDefaultCredentials -ContentType "application/json"
-    } catch {
-        if ($_.Exception.Status -eq [System.Net.WebExceptionStatus]::ConnectFailure) {
-            ## NOTE: we will be detecting this error message upstream
-            throw "Unable to connect to the remote server"
-        } else {
-            throw $_
-        }
-    }
+    $query = Invoke-WebRequest "$apiHost/security/$CreateEndpoint" -UseBasicParsing -UseDefaultCredentials -ContentType "application/json"
     VerifyResponse "query exsiting tokens" $query | Out-Null
     $existingToken = (ConvertFrom-Json $contentEncoding.GetString($query.Content)).api_keys | Where-Object { $_.purpose -eq $tokenName }
 }

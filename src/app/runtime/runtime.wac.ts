@@ -1,5 +1,5 @@
 import { DateTime } from '../common/primitives'
-import { Injectable } from '@angular/core'
+import { Injectable, Inject } from '@angular/core'
 import { Router } from '@angular/router'
 import {
     AppContextService,
@@ -23,6 +23,11 @@ class ApiKey {
     public value: string
 }
 
+class HostStatus {
+    public adminAPIInstalled: boolean
+    public groupModified: boolean
+}
+
 @Injectable()
 export class WACInfo {
     constructor(private appContext: AppContextService){}
@@ -37,7 +42,6 @@ export class WACInfo {
 @Injectable()
 export class WACRuntime implements Runtime {
     private _tokenId: string
-    private powershellService: PowershellService
     private _connecting: Observable<ApiConnection>
 
     constructor(
@@ -45,11 +49,9 @@ export class WACRuntime implements Runtime {
         private appContext: AppContextService,
         private navigationService: NavigationService,
         private connectService: ConnectService,
-        private wac: WACInfo,
-    ) {
-        // somehow DI was unable to create a powershellService
-        this.powershellService = new PowershellService(appContext, wac)
-    }
+        @Inject("Powershell") private powershellService: PowershellService,
+        @Inject("WACInfo") private wac: WACInfo,
+    ){}
 
     public InitContext() {
         this.appContext.ngInit({ navigationService: this.navigationService })
@@ -71,28 +73,17 @@ export class WACRuntime implements Runtime {
 
     public ConnectToIISHost(): Observable<ApiConnection> {
         if (!this._connecting) {
-            let getApiKey = Observable.forkJoin(
-                this.wac.NodeName,
-                this.GetApiKey(),
-            ).map(([nodeName, apiKey], _) => {
-                var connection = new ApiConnection(nodeName)
-                if (apiKey.access_token) {
-                    connection.accessToken = apiKey.access_token
-                } else {
-                    connection.accessToken = apiKey.value
-                }
-                this._tokenId = apiKey.id
-                return connection
-            })
-
-            let ensureAccess  = Observable.forkJoin(
-                getApiKey,
-                this.powershellService.run(PowerShellScripts.admin_api_util, {
-                    command: 'ensure-permission'
-                }),
-            ).map(([key, _], __) => key)
-
-            this._connecting = ensureAccess.shareReplay()
+            this._connecting = this.wac.NodeName.mergeMap(nodeName =>
+                this.GetApiKey().map((apiKey, _) => {
+                    var connection = new ApiConnection(nodeName)
+                    if (apiKey.access_token) {
+                        connection.accessToken = apiKey.access_token
+                    } else {
+                        connection.accessToken = apiKey.value
+                    }
+                    this._tokenId = apiKey.id
+                    return connection
+                })).shareReplay()
         }
         this._connecting.subscribe(c => {
             this.connectService.setActive(c)
@@ -101,18 +92,29 @@ export class WACRuntime implements Runtime {
         return this._connecting
     }
 
+    public PrepareIISHost(p: any): Observable<any> {
+        return this.powershellService.run(PowerShellScripts.admin_api_util, p).map((status: HostStatus) => {
+            if (status.groupModified) {
+                this.powershellService.Reset()
+            }
+            return status
+        })
+    }
+
     private GetApiKey(): Observable<ApiKey> {
         var cmdParams: any = { command: 'ensure' }
         if (this._tokenId) {
             cmdParams.tokenId = this._tokenId
         }
-        return this.powershellService.run<ApiKey>(PowerShellScripts.token_utils, cmdParams).catch((e, _) => {
-            if (e.status === 400 && e.response.exception === 'Unable to connect to the remote server') {
+        return this.PrepareIISHost({ command: 'ensure-permission' }).catch((e, _) => {
+            if (e.status === 400 && e.response.exception == "IIS Administration API is not installed") {
                 return Observable.throw(ApiErrorType.Unreachable).finally(() => {
                     this.router.navigate(['wac', 'install'])
                 })
             }
             return Observable.throw(e)
+        }).mergeMap(_ => {
+            return this.powershellService.run<ApiKey>(PowerShellScripts.token_utils, cmdParams)
         })
     }
 }

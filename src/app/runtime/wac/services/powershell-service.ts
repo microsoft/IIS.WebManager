@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable, Inject } from '@angular/core'
 import { AppContextService } from '@microsoft/windows-admin-center-sdk/angular'
 import { PowerShell, PowerShellSession } from '@microsoft/windows-admin-center-sdk/core'
 import 'rxjs/add/operator/catch'
@@ -16,15 +16,26 @@ export class PowershellService {
 
   constructor(
     private appContext: AppContextService,
-    private wac: WACInfo,
+    @Inject("WACInfo") private wac: WACInfo,
   ) {
-    this.session = this.wac.NodeName.map(nodeName => {
-      return this.appContext.powerShell.createSession(nodeName, PS_SESSION_KEY)
-    }).shareReplay()
+    this.scheduleSession()
     // not exactly sure why we need to force evaluate this observable here
     // but if we don't, install page would not work
     let sub = this.session.subscribe(_=>{},_=>{}, ()=>{
       sub.unsubscribe()
+    })
+  }
+
+  private scheduleSession() {
+    this.session = this.wac.NodeName.map(nodeName => {
+      return this.appContext.powerShell.createSession(nodeName, PS_SESSION_KEY)
+    }).shareReplay()
+  }
+
+  public Reset() {
+    this.session.subscribe(s => {
+      s.dispose()
+      this.scheduleSession()
     })
   }
 

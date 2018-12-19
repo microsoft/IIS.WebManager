@@ -40,6 +40,7 @@ if ($pack -and !(Get-Command "nuget" -ErrorAction SilentlyContinue)) {
 }
 
 $buildArgs = $args | Where-Object { $_ -notlike "--purge" -and $_ -notlike "--pack" }
+$buildTools = @("@angular/cli@1.7.4","gulp-cli@2.0.1")
 
 Push-Location src
 try {
@@ -47,14 +48,17 @@ try {
         git clean -xdf
     }
 
+    Write-Host "Ensure build tools are installed..."
+    foreach($pkg in $buildTools) {
+        if (!((npm list -g $pkg) | Where-Object { $_ -match "$pkg\s*$" })) {
+            npm install -g $pkg
+        }
+    }
+
     if (ShouldNPMInstall) {
         Write-Host "Installing dependencies..."
         npm install
     }
-
-    Write-Host "Ensure build tools are installed..."
-    npm install -g @angular/cli@1.7.4
-    npm install -g gulp-cli@2.0.1
 
     Write-Host "Building project..."
     gulp build $buildArgs
