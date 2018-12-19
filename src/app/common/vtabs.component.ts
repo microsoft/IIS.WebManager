@@ -7,12 +7,13 @@ import { Subscription } from 'rxjs/Subscription'
 
 import { DynamicComponent } from './dynamic.component';
 import { SectionHelper } from './section.helper';
+import { environment } from 'environments/environment';
 
 @Component({
     selector: 'vtabs',
     template: `
         <div class="vtabs">
-            <ul class="items">
+            <ul class="items sme-focus-zone">
                 <li
                     tabindex="0"
                     #item
@@ -26,7 +27,7 @@ import { SectionHelper } from './section.helper';
                     <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
                 </li>
             </ul>
-            <div class="content">
+            <div class="content sme-focus-zone">
                 <ng-content></ng-content>
             </div>
         </div>
@@ -173,7 +174,7 @@ export class VTabsComponent implements OnDestroy {
     selector: 'vtabs > item',
     template: `
         <div *ngIf="!(!active)">
-            <span id="vtabs-title" tabindex="0"></span>
+            <span id="vtabs-title" [tabindex]="isWAC() ? -1 : 0"></span>
             <h1 class="border-active">
                 <span>{{name}}</span>
             </h1>
@@ -216,6 +217,9 @@ export class Item implements OnInit, OnDestroy {
         this._tabs.addTab(this);
     }
 
+    private isWAC() {
+        return environment.WAC;
+    }
     activate() {
         if (this.dynamicChildren) {
             this.dynamicChildren.forEach(child => child.activate());
