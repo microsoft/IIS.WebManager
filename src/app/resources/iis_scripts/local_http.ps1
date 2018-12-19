@@ -18,6 +18,17 @@ function stringify($content) {
     return $content.ToString()
 }
 
+## same order as @angular/http/enums/RequestMethod
+$requestMethods = @(
+    [Microsoft.PowerShell.Commands.WebRequestMethod]::Get,
+    [Microsoft.PowerShell.Commands.WebRequestMethod]::Post,
+    [Microsoft.PowerShell.Commands.WebRequestMethod]::Put,
+    [Microsoft.PowerShell.Commands.WebRequestMethod]::Delete,
+    [Microsoft.PowerShell.Commands.WebRequestMethod]::Options,
+    [Microsoft.PowerShell.Commands.WebRequestMethod]::Head,
+    [Microsoft.PowerShell.Commands.WebRequestMethod]::Patch
+)
+
 $decoded = $contentEncoding.GetString([System.Convert]::FromBase64String($requestBase64))
 $reqObj = ConvertFrom-Json $decoded
 $uri = [System.UriBuilder]$reqObj.url
@@ -25,7 +36,7 @@ $uri.Host = "localhost"
 $req = @{ "Uri" = $uri.ToString() }
 
 if ($reqObj.method) {
-    $req.Method = [Microsoft.PowerShell.Commands.WebRequestMethod]$reqObj.method
+    $req.Method = $requestMethods[$reqObj.method]
 }
 
 if ($reqObj._body) {

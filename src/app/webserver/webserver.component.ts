@@ -8,6 +8,7 @@ import { WebServer } from './webserver';
 import { WebServerService } from './webserver.service';
 import { ComponentReference, FilesComponentName } from '../main/settings';
 import { environment } from '../environments/environment'
+import { CertificatesServiceURL } from 'certificates/certificates.service';
 
 const sidebarStyles = `
 :host >>> .sidebar > vtabs .vtabs > .items {
@@ -68,8 +69,8 @@ export class WebServerComponent {
             // Insert files global module after application pools
             let index = this.modules.findIndex(m => m.name.toLocaleLowerCase() == "application pools") + 1;
             this.modules.splice(index, 0, new ComponentReference("Files", "fa fa-files-o", FilesComponentName, "files", "/api/files/{id}"));
-            this._http.head('/certificates/', null, false)
-                .catch(res => {
+            this._http.head(CertificatesServiceURL, null, false)
+                .catch(_ => {
                     this.modules = this.modules.filter(m => m.name.toLocaleLowerCase() !== 'certificates')
                 });
         })
