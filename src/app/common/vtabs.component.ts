@@ -220,6 +220,7 @@ export class Item implements OnInit, OnDestroy {
     private isWAC() {
         return environment.WAC;
     }
+    
     activate() {
         if (this.dynamicChildren) {
             this.dynamicChildren.forEach(child => child.activate());
