@@ -9,9 +9,13 @@ import { ConnectComponent } from '../connect/connect.component';
 import { GetComponent } from './get.component';
 import { SettingsModule } from '../settings/settings.module'
 import { WebServerModule } from '../webserver/webserver.module'
+import { WACModule } from "runtime/wac/components/wac.module";
+import { environment } from '../environments/environment'
+import { WACIdleComponent } from 'runtime/wac/components/wac-idle.component';
+import { InstallComponent } from 'runtime/wac/components/install.component';
 
 // These are the basic routes that are required in order to load an extension and make service calls.
-export const commonRoutes: Routes = [
+const commonRoutes: Routes = [
     { path: 'get', component: GetComponent },
     { path: 'connect', component: ConnectComponent },
     { path: 'settings', loadChildren: LoadSettingsModule  },
@@ -21,15 +25,31 @@ export const commonRoutes: Routes = [
     { path: '**', component: NotFound }
 ];
 
-const websiteRotes: Routes = [{ path: '', component: HomeComponent }]
-const appRoutes = websiteRotes.concat(commonRoutes)
+let appRoutes: Routes
 
-export function LoadSettingsModule() {
+function LoadSettingsModule() {
     return import('../settings/settings.module').then(m => m.SettingsModule)
 }
 
-export function LoadWebServerModule() {
+function LoadWebServerModule() {
     return import('../webserver/webserver.module').then(m => m.WebServerModule)
+}
+
+function LoadWACModule() {
+    return import('../runtime/wac/components/wac.module').then(m => m.WACModule)
+}
+
+if (environment.WAC) {
+    const wacRoutes = (<Routes>[
+        { path: '', redirectTo: '/webserver', pathMatch: 'full' },
+        { path: 'idle', component: WACIdleComponent },
+        { path: 'install', component: InstallComponent },
+        { path: 'wac', loadChildren: LoadWACModule },
+    ]).concat(commonRoutes)
+    appRoutes = wacRoutes.concat(commonRoutes)
+} else {
+    const websiteRoutes: Routes = [{ path: '', component: HomeComponent }]
+    appRoutes = websiteRoutes.concat(commonRoutes)
 }
 
 @NgModule({

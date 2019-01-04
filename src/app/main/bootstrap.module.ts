@@ -49,10 +49,9 @@ import { WebSitesModule } from '../webserver/websites/websites.module';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { AppRoutingModule } from './app-routing.module';
 import { StandardRuntime } from '../runtime/runtime';
-import { environment } from 'environments/environment.wac.prod';
-import { WACAppRoutingModule } from './app-routing.wac.module';
 
 var moduleImports: any[] =  [
+    AppRoutingModule,
     BrowserModule,
     FormsModule,
     Angulartics2Module.forRoot(),
@@ -70,12 +69,6 @@ var moduleImports: any[] =  [
     MonitoringModule,
     AngularFontAwesomeModule
 ]
-
-if (environment.WAC) {
-    moduleImports.unshift(WACAppRoutingModule)
-} else {
-    moduleImports.unshift(AppRoutingModule)
-}
 
 @NgModule({
     imports: moduleImports,
