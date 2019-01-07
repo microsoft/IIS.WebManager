@@ -6,7 +6,10 @@ param(
     $command,
 
     [string]
-    $downloadFrom,
+    $adminAPILocation,
+
+    [string]
+    $dotnetCoreLocation,
 
     ## Not doing anything with this parameter yet
     [string]
@@ -27,8 +30,28 @@ $ErrorActionPreference = "Stop"
 ######################## Param checks ###############################
 $install = $command -eq 'install'
 
-if ($install -and $(!$downloadFrom)) {
-    throw "Missing download location for install command"
+function VerifySource([string] $source) {
+    if (Test-Path -IsValid $source) {
+        return "file"
+    }
+    if ([Uri]::TryCreate($source, [UriKind]::Absolute, [ref]$null)) {
+        return "uri"
+    }
+    throw "Invalid install source $source"
+}
+
+$dotnetCoreInstallType = $null
+$iisAdminInstallType = $null
+if ($install) {
+    if ($dotnetCoreLocation) {
+        $dotnetCoreInstallType = VerifySource $dotnetCoreLocation
+    }
+
+    if (!$adminAPILocation) {
+        throw "Missing admin API installer location for install command"
+    }
+
+    $iisAdminInstallType = VerifySource $adminAPILocation
 }
 
 ######################## Utilities ###############################
@@ -47,14 +70,31 @@ function WaitForServerToStart($service) {
 }
 
 $adminAPIInstalled = $false
-function InstallAPI($service) {
-    $installer = Join-Path $env:TEMP iis-administration-setup.exe
-    Invoke-WebRequest $downloadFrom -OutFile $installer
-    Write-Verbose "Downloaded $downloadFrom to $installer"
-    & $installer /s
-    Write-Verbose "Install complete"
-    WaitForServerToStart $service
+function InstallComponents {
+    if ($dotnetCoreLocation) {
+        Install "dotnet-core-runtime" $dotnetCoreInstallType $dotnetCoreLocation
+    }
+    Install "iis-administration-api" $iisAdminInstallType $adminAPILocation
+    WaitForServerToStart $serviceName
     $adminAPIInstalled = $true
+}
+
+function Install([string] $scenario, [string] $installType, [string] $location) {
+    $installer = Join-Path $env:TEMP "${scenario}.exe"
+    if ($installType -eq "file") {
+        Copy-Item -Path $location -Destination $installer -Force
+    } elseif ($installType -eq "uri") {
+        Download $location $installer
+    } else {
+        throw "Invalid install type $installType"
+    }
+    & $installer /s
+    Write-Verbose "Successfully installed $scenario"
+}
+
+function Download([string] $uri, [string] $location) {
+    Invoke-WebRequest $uri -OutFile $location
+    Write-Verbose "Downloaded $uri to $location"
 }
 
 function EnsureGroup($group) {
@@ -88,7 +128,7 @@ function GetIISAdminHome($procs) {
 ## TODO: Consider creating a lock around this script because it is not concurrency safe
 
 if ($install) {
-    InstallAPI $serviceName
+    InstallComponents
 } else {
     try {
         $pingEndpoint = "https://localhost:$adminAPIPort"
