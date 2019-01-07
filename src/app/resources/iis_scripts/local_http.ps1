@@ -34,9 +34,8 @@ $uriBuilder = [System.UriBuilder]$reqObj.url
 $uriBuilder.Host = "localhost"
 $uri = $uriBuilder.ToString()
 
-Write-Host $decoded
 try {
-    $httpMsg = New-Object System.Net.Http.HttpRequestMessage -ArgumentList $httpMethod,$uri
+    $httpMsg = New-Object System.Net.Http.HttpRequestMessage -ArgumentList $httpMethod, $uri
     if ($reqObj.Body) {
         $httpMsg.Content = $requestContent
         $requestContent = New-Object System.Net.Http.StringContent ([string] $reqObj.Body)
