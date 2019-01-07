@@ -34,8 +34,8 @@ const sidebarStyles = `
                 <a href="https://docs.microsoft.com/en-us/iis/install/installing-iis-85/installing-iis-85-on-windows-server-2012-r2" >Learn more</a>
             </p>
         </div>
+        <loading *ngIf="!webServer"></loading>
         <div *ngIf="webServer">
-            <loading *ngIf="!webServer"></loading>
             <webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
             <div class="sidebar crumb" [class.nav]="_options.active">
                 <vtabs *ngIf="webServer" [markLocation]="true" (activate)="_options.refresh()">
