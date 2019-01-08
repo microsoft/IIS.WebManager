@@ -4,70 +4,82 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+Add-Type -AssemblyName System.Net.Http
 $contentEncoding = [System.Text.Encoding]::UTF8
 
-function stringify($content) {
-    if ((!$content) -or ($content -is [System.String])) {
+function stringify([System.Byte[]]$content) {
+    if (!$content) {
         return $content
     }
-
-    if ($content -is [System.Byte[]]) {
-        return [System.Convert]::ToBase64String($content)
-    }
-
-    return $content.ToString()
+    return [System.Convert]::ToBase64String($content).ToString()
 }
 
 ## same order as @angular/http/enums/RequestMethod
+## Note that index 0 maps to GET, so if $reqObj.method is null we would default to GET
 $requestMethods = @(
-    [Microsoft.PowerShell.Commands.WebRequestMethod]::Get,
-    [Microsoft.PowerShell.Commands.WebRequestMethod]::Post,
-    [Microsoft.PowerShell.Commands.WebRequestMethod]::Put,
-    [Microsoft.PowerShell.Commands.WebRequestMethod]::Delete,
-    [Microsoft.PowerShell.Commands.WebRequestMethod]::Options,
-    [Microsoft.PowerShell.Commands.WebRequestMethod]::Head,
-    [Microsoft.PowerShell.Commands.WebRequestMethod]::Patch
+    [System.Net.Http.HttpMethod]::Get,
+    [System.Net.Http.HttpMethod]::Post,
+    [System.Net.Http.HttpMethod]::Put,
+    [System.Net.Http.HttpMethod]::Delete,
+    [System.Net.Http.HttpMethod]::Options,
+    [System.Net.Http.HttpMethod]::Head,
+    [System.Net.Http.HttpMethod]::Patch
 )
 
 $decoded = $contentEncoding.GetString([System.Convert]::FromBase64String($requestBase64))
 $reqObj = ConvertFrom-Json $decoded
-$uri = [System.UriBuilder]$reqObj.url
-$uri.Host = "localhost"
-$req = @{ "Uri" = $uri.ToString() }
 
-if ($reqObj.method) {
-    $req.Method = $requestMethods[$reqObj.method]
-}
-
-if ($reqObj._body) {
-    $req.Body = $reqObj._body
-}
-
-if ($reqObj.headers) {
-    $req.Headers = @{}
-    foreach ($prop in $reqObj.headers | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name) {
-        ## NOTE: not all http headers follow the same syntax. This delimitation logic is assumed to work for all headers we use
-        $req.Headers[$prop] = $reqObj.headers.$prop -Join ","
-    }
-}
+$httpMethod = $requestMethods[[int]$reqObj.method]
+$uriBuilder = [System.UriBuilder]$reqObj.url
+$uriBuilder.Host = "localhost"
+$uri = $uriBuilder.ToString()
 
 try {
-    $res = Invoke-WebRequest -UseBasicParsing -UseDefaultCredentials @req
-} catch {
-    $errMsg = $_.Exception.Message
-    $res = $_.Exception.Response
-} finally {
-    if (!$res) {
-        throw $errMsg
+    $httpMsg = New-Object System.Net.Http.HttpRequestMessage -ArgumentList $httpMethod, $uri
+    if ($reqObj.Body) {
+        $httpMsg.Content = $requestContent
+        $requestContent = New-Object System.Net.Http.StringContent ([string] $reqObj.Body)
     }
-    $content = stringify $res.Content
+    foreach ($prop in $reqObj.headers | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name) {
+        $httpMsg.Headers.Add($prop, $reqObj.headers.$prop)
+    }
+    $clientHandler = New-Object System.Net.Http.HttpClientHandler
+    $clientHandler.UseDefaultCredentials = $true
+    $client = New-Object System.Net.Http.HttpClient -ArgumentList $clientHandler
+    $responseMsg = $client.SendAsync($httpMsg).GetAwaiter().GetResult()
+
+    if ($responseMsg.Content) {
+        $resContent = stringify $responseMsg.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult()
+    }
+
     $result = ConvertTo-Json @{
-        "url" = $res.ResponseUri;
-        "status" = $res.StatusCode;
-        "statusText" = $res.StatusDescription;
-        "type" = $res."Content-Type";
-        "headers" = $res.Headers;
-        "body" = $content
+        "url" = $responseMsg.RequestMessage.RequestUri
+        "status" = $responseMsg.StatusCode;
+        "statusText" = $responseMsg.ReasonPhrase;
+        "type" = $responseMsg.Content.Headers.ContentType.MediaType;
+        "headers" = $responseMsg.Content.Headers;
+        "body" = $resContent
     } -Compress -Depth 100
+} finally {
+    if ($responseMsg) {
+        $responseMsg.Dispose()
+    }
+    if ($requestContent) {
+        $requestContent.Dispose()
+    }
+    if ($httpMsg) {
+        $httpMsg.Dispose()
+    }
+    if ($clientHandler) {
+        $clientHandler.Dispose()
+    }
+    if ($client) {
+        $client.Dispose()
+    }
+}
+
+if ($result) {
     $result
+} else {
+    throw "Unexpected error occured"
 }
