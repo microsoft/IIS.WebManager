@@ -83,7 +83,7 @@ export class PowershellService {
     var compiled = PowerShell.createScript(pwCmdString, psParameters)
     var name = pwCmdString.split('\n')[0]
     return this.session.mergeMap(ps => {
-      return ps.powerShell.run(compiled).logInfo(
+      return ps.powerShell.run(compiled).logDebug(
         this.logger,
         "Powershell script ${name}",
       ).mergeMap(response => {
