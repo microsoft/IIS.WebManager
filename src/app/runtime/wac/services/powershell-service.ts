@@ -1,20 +1,24 @@
 import { Injectable, Inject } from '@angular/core'
 import { AppContextService } from '@microsoft/windows-admin-center-sdk/angular'
 import { PowerShell, PowerShellSession } from '@microsoft/windows-admin-center-sdk/core'
-import 'rxjs/add/operator/catch'
 import { Observable } from 'rxjs'
-import { PowerShellScripts } from '../../../../generated/powershell-scripts'
+import { PowerShellScripts } from '../../../../generated/powershell-scripts';
 import { Request, Response, ResponseOptions, Headers } from '@angular/http'
 import { WACInfo } from 'runtime/runtime.wac';
+import { LoggerFactory, Logger } from 'diagnostics/logger';
+import '../../../diagnostics/extensions/rxjs'
+import 'rxjs/add/operator/catch'
 
 const PS_SESSION_KEY = 'wac-iis'
 
 @Injectable()
 export class PowershellService {
+  private logger: Logger
   private session: Observable<PowerShellSession>
   private sessionId = Math.random().toString(36).substring(2, 15) // TODO: modify this with WAC session ID
 
   constructor(
+    private loggerFactory: LoggerFactory,
     private appContext: AppContextService,
     @Inject("WACInfo") private wac: WACInfo,
   ) {
@@ -24,6 +28,7 @@ export class PowershellService {
     let sub = this.session.subscribe(_=>{},_=>{}, ()=>{
       sub.unsubscribe()
     })
+    this.logger = loggerFactory.Create(this)
   }
 
   private scheduleSession() {
@@ -78,7 +83,10 @@ export class PowershellService {
     var compiled = PowerShell.createScript(pwCmdString, psParameters)
     var name = pwCmdString.split('\n')[0]
     return this.session.mergeMap(ps => {
-      return ps.powerShell.run(compiled).mergeMap(response => {
+      return ps.powerShell.run(compiled).logDebug(
+        this.logger,
+        "Powershell script ${name}",
+      ).mergeMap(response => {
         if (!response) {
           throw `Powershell command ${name} returns no response`;
         }

@@ -21,7 +21,7 @@ import { LoadingService } from '../notification/loading.service';
 import { VersionService } from '../versioning/version.service';
 import { ServerAnalyticService } from '../webserver/server-analytic.service';
 import { ConnectService } from '../connect/connect.service';
-import { Logger } from '../common/logger';
+import { LoggerFactory } from '../diagnostics/logger';
 import { OptionsService } from './options.service';
 
 import { AppComponent } from './app.component';
@@ -92,7 +92,7 @@ var moduleImports: any[] =  [
         VersionService,
         ServerAnalyticService,
         ConnectService,
-        Logger,
+        LoggerFactory,
         OptionsService,
         Angulartics2GoogleAnalytics,
 

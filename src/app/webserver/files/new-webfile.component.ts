@@ -1,10 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef} from '@angular/core';
-
-import {Logger} from '../../common/logger';
-import {NotificationService} from '../../notification/notification.service';
-
-import {FilesService} from '../../files/files.service';
-import {WebFilesService} from './webfiles.service';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {WebFileType, WebFile} from './webfile';
 
 @Component({

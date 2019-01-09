@@ -6,7 +6,10 @@ param(
     $command,
 
     [string]
-    $downloadFrom,
+    $adminAPILocation,
+
+    [string]
+    $dotnetCoreLocation,
 
     ## Not doing anything with this parameter yet
     [string]
@@ -27,11 +30,47 @@ $ErrorActionPreference = "Stop"
 ######################## Param checks ###############################
 $install = $command -eq 'install'
 
-if ($install -and $(!$downloadFrom)) {
-    throw "Missing download location for install command"
+function VerifySource([string] $source) {
+    if (Test-Path -IsValid $source) {
+        return "file"
+    }
+    if ([Uri]::TryCreate($source, [UriKind]::Absolute, [ref]$null)) {
+        return "uri"
+    }
+    throw "Invalid install source $source"
+}
+
+$dotnetCoreInstallType = $null
+$iisAdminInstallType = $null
+if ($install) {
+    if ($dotnetCoreLocation) {
+        $dotnetCoreInstallType = VerifySource $dotnetCoreLocation
+    }
+
+    if (!$adminAPILocation) {
+        throw "Missing admin API installer location for install command"
+    }
+
+    $iisAdminInstallType = VerifySource $adminAPILocation
 }
 
 ######################## Utilities ###############################
+$verbose = $PSBoundParameters['verbose']
+
+if ($verbose) {
+    $logDir = Join-Path $env:UserProfile 'wac-iis-logs'
+    if (!(Test-Path $logDir)) {
+        mkdir $logDir
+    }
+    $logFile = Join-Path $logDir 'admin-api-util.log'
+}
+
+function LogVerbose([string] $msg) {
+    if ($verbose) {
+        Add-Content -Value $msg -Path $logFile -Force
+    }
+}
+
 function WaitForServerToStart($service) {
     $waitPeriod = 1
     $remainingTime = 600
@@ -43,24 +82,43 @@ function WaitForServerToStart($service) {
             throw "Timeout waiting for service to start"
         }
     }
-    Write-Verbose "Server started, time remaining ${remainingTime}..."
+    LogVerbose "Server started, time remaining ${remainingTime}..."
 }
 
 $adminAPIInstalled = $false
-function InstallAPI($service) {
-    $installer = Join-Path $env:TEMP iis-administration-setup.exe
-    Invoke-WebRequest $downloadFrom -OutFile $installer
-    Write-Verbose "Downloaded $downloadFrom to $installer"
-    & $installer /s
-    Write-Verbose "Install complete"
-    WaitForServerToStart $service
+function InstallComponents {
+    if ($dotnetCoreLocation) {
+        Install "dotnet-core-runtime" $dotnetCoreInstallType $dotnetCoreLocation
+    }
+    Install "iis-administration-api" $iisAdminInstallType $adminAPILocation
+    WaitForServerToStart $serviceName
     $adminAPIInstalled = $true
+}
+
+function Install([string] $scenario, [string] $installType, [string] $location) {
+    $installer = Join-Path $env:TEMP "${scenario}.exe"
+    LogVerbose "source: $location will be copied to $installer"
+    if ($installType -eq "file") {
+        Copy-Item -Path $location -Destination $installer -Force
+    } elseif ($installType -eq "uri") {
+        Download $location $installer
+    } else {
+        throw "Invalid install type $installType"
+    }
+    LogVerbose "Running $installer"
+    & $installer /s
+    LogVerbose "Successfully installed $scenario"
+}
+
+function Download([string] $uri, [string] $location) {
+    Invoke-WebRequest $uri -OutFile $location
+    LogVerbose "Downloaded $uri to $location"
 }
 
 function EnsureGroup($group) {
     if (!(Get-LocalGroup -Name $group -ErrorAction SilentlyContinue)) {
         New-LocalGroup -Name $group | Out-Null
-        Write-Verbose "Group $group added"
+        LogVerbose "Group $group added"
     }
 }
 
@@ -68,7 +126,7 @@ function EnsureMember($group, $userOrGroup) {
     $modify = !(Get-LocalGroupMember -Group $group -Member $userOrGroup -ErrorAction SilentlyContinue)
     if ($modify) {
         Add-LocalGroupMember -Group $group -Member $userOrGroup | Out-Null
-        Write-Verbose "Member $userOrGroup added"
+        LogVerbose "Member $userOrGroup added"
     }
     return $modify
 }
@@ -77,7 +135,7 @@ function GetIISAdminHome($procs) {
     foreach ($proc in $procs) {
         $iisMainModule = $proc.Modules | Where-Object { $_.ModuleName -eq "Microsoft.IIS.Administration.dll" }
         if ($iisMainModule) {
-            Write-Verbose "IIS Admin module found at $($iisMainModule.FileName)"
+            LogVerbose "IIS Admin module found at $($iisMainModule.FileName)"
             return Split-Path $iisMainModule.FileName
         }
     }
@@ -87,12 +145,14 @@ function GetIISAdminHome($procs) {
 
 ## TODO: Consider creating a lock around this script because it is not concurrency safe
 
+LogVerbose 'Started admin_api_util...'
+
 if ($install) {
-    InstallAPI $serviceName
+    InstallComponents
 } else {
     try {
         $pingEndpoint = "https://localhost:$adminAPIPort"
-        Write-Verbose "Pinging Admin API at $pingEndpoint"
+        LogVerbose "Pinging Admin API at $pingEndpoint"
         Invoke-WebRequest -UseDefaultCredentials -UseBasicParsing $pingEndpoint | Out-Null
     } catch {
         if ($_.Exception.Status -eq [System.Net.WebExceptionStatus]::ConnectFailure) {
@@ -119,7 +179,7 @@ if ($service) {
     }
 } else {
     ## dev-mode support, no restart can be perfomed
-    Write-Verbose "Dev mode, scanning processes for IIS Admin API"
+    LogVerbose "Dev mode, scanning processes for IIS Admin API"
     $devMode = $true
     $workingDirectory = GetIISAdminHome (Get-Process -ProcessName dotnet)
 }
@@ -128,7 +188,7 @@ $configLocation = [System.IO.Path]::Combine($workingDirectory, "config", "appset
 if ($devMode -and !(Test-Path $configLocation)) {
     $configLocation = [System.IO.Path]::Combine($workingDirectory, "..", "..", "..", "config", "appsettings.json")
 }
-Write-Verbose "Config Location $configLocation"
+LogVerbose "Config Location $configLocation"
 $config = Get-Content -Raw -Path $configLocation | ConvertFrom-Json
 $user = $(whoami)
 
@@ -154,7 +214,7 @@ if (!$config.security.users.owners.Contains($user)) {
     }
 
     if ($saveConfig) {
-        Write-Verbose "Saving config..."
+        LogVerbose "Saving config..."
         if ($devMode) {
             throw "Cannot edit config file in dev mode, please add $user to ""$iisAdminOwners"" group manually"
         }
@@ -169,7 +229,7 @@ if (!$config.security.users.owners.Contains($user)) {
             $updateAcl = $true
         }
         if ($updateAcl) {
-            Write-Verbose "Updating Acl to remove readonly access..."
+            LogVerbose "Updating Acl to remove readonly access..."
             Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
         }
         $rights = [System.Security.AccessControl.FileSystemRights]::Traverse `
@@ -182,12 +242,12 @@ if (!$config.security.users.owners.Contains($user)) {
             $propFlags = [System.Security.AccessControl.PropagationFlags]::InheritOnly
             $ar = New-Object System.Security.AccessControl.FileSystemAccessRule("BUILTIN\Administrators", $rights, $inheritFlags, $propFlags, "allow")
             $dirAcl.SetAccessRule($ar) | Out-Null
-            Write-Verbose "Setting Acl to enable administrators' write access"
+            LogVerbose "Setting Acl to enable administrators' write access"
             Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
         }
-        Write-Verbose "Saving new configuration"
+        LogVerbose "Saving new configuration"
         $config | ConvertTo-Json -depth 100 | Out-File $configLocation
-        Write-Verbose "Restarting service"
+        LogVerbose "Restarting service"
         Restart-Service -Name $serviceName | Out-Null
         WaitForServerToStart $serviceName
     }
