@@ -16,7 +16,7 @@ import { WACRuntime } from "runtime/runtime.wac";
                 </p>
             </div>
             <p>
-                <a class="bttn background-active" (click)="install()">Install on {{_targetHost}}</a>
+                <a class="bttn background-active" [attr.disabled]="installerPathsInvalid ? true : null" (click)="install()">Install on {{_targetHost}}</a>
             </p>
         </div>
         <div *ngIf='_inProgress'>
@@ -71,6 +71,7 @@ export class InstallComponent {
     private _inProgress: boolean
     private _targetHost: string
     private _adminApiLocation: string
+    installerPathsInvalid: boolean
 
     constructor(
         private router: Router,
@@ -81,6 +82,8 @@ export class InstallComponent {
         this._targetHost = this.appContext.activeConnection.nodeName
     }
 
+    public verifyLocation(location: string, allowEmpty: boolean) {
+        this.installerPathsInvalid = location ? !urlValidationRegex.test(location) && !windowsPathValidationRegex.test(location) : !allowEmpty
     public install() {
         this._inProgress = true
         var sub = this.runtime.PrepareIISHost({
