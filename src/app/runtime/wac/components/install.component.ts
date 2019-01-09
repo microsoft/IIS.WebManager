@@ -15,15 +15,20 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
             <div class="validation-container">
                 <p>
                     <label>IIS Administration API installation location</label>
-                    <input class="form-control" type="text" (ngModelChange)="verifyLocation($event, false)" [(ngModel)]="_adminAPILocation" />
+                    <input class="form-control" type="text" [(ngModel)]="_adminAPILocation" />
                 </p>
                 <p>
-                    <label>.NET Core Runtime install location(Optional)</label>
-                    <input class="form-control" type="text" placeholder="IIS Admin API installer will fetch required .NET Core Framework online" (ngModelChange)="verifyLocation($event, true)" [(ngModel)]="_dotnetCoreLocation" />
+                    <label>.NET Core Runtime install location (Optional)</label>
+                    <input class="form-control" type="text" placeholder="IIS Admin API installer will fetch required .NET Core Framework online" [(ngModel)]="_dotnetCoreLocation" />
+                </p>
+            </div>
+            <div *ngIf='userInputError'>
+                <p class="color-error">
+                    {{userInputError}}
                 </p>
             </div>
             <p>
-                <a class="bttn background-active" [attr.disabled]="invalid ? true : null" (click)="install()">Install on {{_targetHost}}</a>
+                <a class="bttn background-active" (click)="install()">Install on {{_targetHost}}</a>
             </p>
         </div>
         <div *ngIf='_inProgress'>
@@ -79,7 +84,7 @@ export class InstallComponent {
     private _targetHost: string
     private _adminAPILocation: string
     private _dotnetCoreLocation: string
-    invalid: boolean
+    userInputError: string
 
     constructor(
         private router: Router,
@@ -90,11 +95,33 @@ export class InstallComponent {
         this._targetHost = this.appContext.activeConnection.nodeName
     }
 
-    public verifyLocation(value: string, allowEmpty: boolean) {
-        this.invalid = value ? !urlValidationRegex.test(value) && !windowsPathValidationRegex.test(value) : !allowEmpty
+    private verifyLocation(fieldName: string, location: string, allowEmpty: boolean): string {
+        if (location) {
+            if (!urlValidationRegex.test(location) && !windowsPathValidationRegex.test(location)) {
+                return `Invalid ${fieldName}: ${location}`
+            }
+        } else {
+            if (!allowEmpty) {
+                return `${fieldName} cannot be empty`
+            }
+        }
+
+        // NOTE: This code is injected here to prevent user using shared drive because it would be considered double hop with WinRM and wouldn't work
+        // This needs to be revisited when Windows Admin Center completed their work on CredSSP
+        if (location && location.startsWith(`\\\\`)) {
+            return `Currently installation from shared drive is not supported, the issue is being tracked on https://github.com/Microsoft/IIS.WebManager/issues/239`
+        }
+
+        return null
     }
 
     public install() {
+        if (this.userInputError = this.verifyLocation(`IIS Administration API installation location`, this._adminAPILocation, false)) {
+            return
+        }
+        if (this.userInputError = this.verifyLocation(`.NET Core Runtime install location`, this._dotnetCoreLocation, true)) {
+            return
+        }
         this._inProgress = true
         let args: any = {
             command: 'install',

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core'
 import { ActivatedRoute, Route } from '@angular/router'
 import { ConnectService } from '../connect/connect.service'
 import { ApiConnection } from '../connect/api-connection'
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable'
 
 export interface Runtime {
     InitContext(): void

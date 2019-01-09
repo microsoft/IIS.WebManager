@@ -1,6 +1,6 @@
-import { Observable } from "rxjs"
-import { environment } from "environments/environment"
-import { Logger, LogLevel } from "diagnostics/logger"
+import { Observable } from 'rxjs'
+import { environment } from 'environments/environment'
+import { Logger, LogLevel } from 'diagnostics/logger'
 
 export enum ObservableReportLevel {
     COMPLETE = 1,

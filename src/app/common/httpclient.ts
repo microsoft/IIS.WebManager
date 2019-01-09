@@ -8,10 +8,11 @@ import {ApiError, ApiErrorType} from '../error/api-error';
 import {ConnectService} from '../connect/connect.service';
 import {Runtime} from '../runtime/runtime';
 import { HttpFacade } from './http-facade';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/observable/throw';
 
 @Injectable()
 export class HttpClient {

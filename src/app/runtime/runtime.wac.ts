@@ -10,13 +10,14 @@ import { PowershellService } from './wac/services/powershell-service'
 import { ConnectService } from '../connect/connect.service'
 import { ApiConnection } from '../connect/api-connection'
 import { PowerShellScripts } from '../../generated/powershell-scripts'
-import { Observable } from 'rxjs'
-import { ApiErrorType } from 'error/api-error';
+import { Observable } from 'rxjs/Observable'
+import { ApiErrorType } from 'error/api-error'
+import { RpcOutboundCommands, rpcVersion, RpcInitData, RpcSeekMode, RpcInitDataInternal } from '@microsoft/windows-admin-center-sdk/dist/core/rpc/rpc-base'
+import { CoreEnvironment } from '@microsoft/windows-admin-center-sdk/dist/core/data/core-environment'
 
 import 'rxjs/add/operator/take'
 import 'rxjs/add/operator/map'
-import { RpcOutboundCommands, rpcVersion, RpcInitData, RpcSeekMode, RpcInitDataInternal } from '@microsoft/windows-admin-center-sdk/dist/core/rpc/rpc-base';
-import { CoreEnvironment } from '@microsoft/windows-admin-center-sdk/dist/core/data/core-environment';
+import 'rxjs/add/observable/throw'
 
 class ApiKey {
     public id: string
