@@ -9,7 +9,7 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
 
 @Component({
     template: `
-    <div class="center">
+    <div class="center sme-focus-zone">
         <div *ngIf='!_inProgress' style="min-width:700px">
             <h4>Microsoft IIS Administration API is required to manage IIS server:</h4>
             <p #apiPrompt>
