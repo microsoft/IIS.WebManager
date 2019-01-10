@@ -1,4 +1,4 @@
-import { Component, Inject } from "@angular/core"
+import { Component, Inject, ViewChild, ElementRef } from "@angular/core"
 import { AppContextService } from "@microsoft/windows-admin-center-sdk/angular"
 import { SETTINGS } from "main/settings"
 import { Router } from "@angular/router"
@@ -13,11 +13,11 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
         <div *ngIf='!_inProgress' style="min-width:650px">
             <h3>IIS Administration API is required to manage IIS server:</h3>
             <div class="validation-container">
-                <p>
+                <p #apiPrompt>
                     <label>IIS Administration API installation location</label>
-                    <input class="form-control" type="text" [(ngModel)]="_adminAPILocation" />
+                    <input class="form-control" type="text" [(ngModel)]="_adminAPILocation"/>
                 </p>
-                <p>
+                <p #dotnetPrompt>
                     <label>.NET Core Runtime install location (Optional)</label>
                     <input class="form-control" type="text" placeholder="IIS Admin API installer will fetch required .NET Core Framework online" [(ngModel)]="_dotnetCoreLocation" />
                 </p>
@@ -84,6 +84,8 @@ export class InstallComponent {
     private _targetHost: string
     private _adminAPILocation: string
     private _dotnetCoreLocation: string
+    @ViewChild('apiPrompt') apiPrompt: ElementRef
+    @ViewChild('dotnetPrompt') dotnetPrompt: ElementRef
     userInputError: string
 
     constructor(
@@ -93,6 +95,10 @@ export class InstallComponent {
     ) {
         this._adminAPILocation = SETTINGS.api_download_url
         this._targetHost = this.appContext.activeConnection.nodeName
+    }
+
+    clearWarnings(event: Event) {
+        (<HTMLElement> event.target).classList.remove('background-warning')
     }
 
     private verifyLocation(fieldName: string, location: string, allowEmpty: boolean): string {
@@ -111,28 +117,36 @@ export class InstallComponent {
         if (location && location.startsWith(`\\\\`)) {
             return `Currently installation from shared drive is not supported, the issue is being tracked on https://github.com/Microsoft/IIS.WebManager/issues/239`
         }
+    }
 
-        return null
+    private verifyLocationPrompt(prompt: ElementRef, allowEmpty: boolean): boolean {
+        let fieldName = prompt.nativeElement.querySelector('label').textContent
+        let textBox = prompt.nativeElement.querySelector('input')
+        textBox.classList.remove('background-warning')
+        this.userInputError = this.verifyLocation(fieldName, textBox.value, allowEmpty)
+        let valid = this.userInputError == null
+        if (!valid) {
+            textBox.classList.add('background-warning')
+            textBox.focus()
+        }
+        return valid
     }
 
     public install() {
-        if (this.userInputError = this.verifyLocation(`IIS Administration API installation location`, this._adminAPILocation, false)) {
-            return
+        if (this.verifyLocationPrompt(this.apiPrompt, false)
+            && this.verifyLocationPrompt(this.dotnetPrompt, true)) {
+            this._inProgress = true
+            let args: any = {
+                command: 'install',
+                adminAPILocation: this._adminAPILocation,
+            }
+            if (this._dotnetCoreLocation) {
+                args.dotnetCoreLocation = this._dotnetCoreLocation
+            }
+            var sub = this.runtime.PrepareIISHost(args).subscribe(_ => {}, _ => {}, () => {
+                this.router.navigate(['/'])
+                sub.unsubscribe()
+            })
         }
-        if (this.userInputError = this.verifyLocation(`.NET Core Runtime install location`, this._dotnetCoreLocation, true)) {
-            return
-        }
-        this._inProgress = true
-        let args: any = {
-            command: 'install',
-            adminAPILocation: this._adminAPILocation,
-        }
-        if (this._dotnetCoreLocation) {
-            args.dotnetCoreLocation = this._dotnetCoreLocation
-        }
-        var sub = this.runtime.PrepareIISHost(args).subscribe(_ => {}, _ => {}, () => {
-            this.router.navigate(['/'])
-            sub.unsubscribe()
-        })
     }
 }
