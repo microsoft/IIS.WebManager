@@ -16,7 +16,7 @@ import { DynamicComponent } from '../common/dynamic.component';
             margin-top: 35px;
             color: #444;
             overflow: hidden;
-            font-size:16px;
+            font-size:12px;
         }
         .exit {
             cursor: pointer;

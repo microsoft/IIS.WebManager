@@ -1,23 +1,20 @@
 import { Component, OnDestroy, Optional } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
 import { LoadingService } from '../notification/loading.service';
 import { OptionsService } from '../main/options.service';
 import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-ga';
+import { environment } from 'environments/environment';
 
 @Component({
     selector: 'header',
     template: `
-        <div class="nav background-active">
-            <button class="fa fa-bars nav-item nav-options hover-primary2" [attr.title]="this.options.active ? 'Hide Sidebar' : 'Show Sidebar'" (click)="this.options.toggle()" [class.background-primary2]="this.options.active"></button>
-            <a [routerLink]="['/']" title="Home" class="nav-brand nav-item background-active hover-primary2 nav-height">
-                <span class="v-center hidden-xs">Microsoft IIS</span>
-                <span class="v-center visible-xs">IIS</span>
-            </a>
-            <div class="separator"></div>
-            <connection-picker class="nav-item"></connection-picker>
-
-            <notifications></notifications>
-            <modal class="color-normal"></modal>
+        <div *ngIf="!isWAC" class="nav background-active">
+                <button class="fa fa-bars nav-item nav-options hover-primary2" [attr.title]="this.options.active ? 'Hide Sidebar' : 'Show Sidebar'" (click)="this.options.toggle()" [class.background-primary2]="this.options.active"></button>
+                <a [routerLink]="['/']" title="Home" class="nav-brand nav-item background-active hover-primary2 nav-height">
+                    <span class="v-center hidden-xs">Microsoft IIS</span>
+                    <span class="v-center visible-xs">IIS</span>
+                </a>
+                <div class="separator"></div>
+                <connection-picker class="nav-item"></connection-picker>
             
             <div class="abs-right background-active">
                 <notification-indicator></notification-indicator>
@@ -25,6 +22,8 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
             </div>
         </div>
         <div class="progress background-normal" [class.animation]='_inProgress'></div>
+        <notifications></notifications>
+        <modal class="color-normal"></modal>
     `,
     styles: [`
         .nav {
@@ -148,6 +147,10 @@ export class HeaderComponent implements OnDestroy {
                 }
             }
         }));
+    }
+
+    get isWAC() {
+        return environment.WAC;
     }
 
     private get options() {

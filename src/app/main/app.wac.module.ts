@@ -5,7 +5,6 @@ import {
     AppContextService,
     ResourceService,
     IdleModule,
-    AppErrorHandler,
 } from '@microsoft/windows-admin-center-sdk/angular'
 
 import { WACRuntime, WACInfo } from '../runtime/runtime.wac'
@@ -15,6 +14,7 @@ import { PowershellService } from '../runtime/wac/services/powershell-service'
 import { WebServerModule } from 'webserver/webserver.module'
 import { WACModule } from 'runtime/wac/components/wac.module'
 import { LocalHttpClient } from 'runtime/wac/services/local-http-client'
+import { LogsErrorHandler } from 'diagnostics/logs-error-handler';
 
 @NgModule({
     imports: [
@@ -28,7 +28,7 @@ import { LocalHttpClient } from 'runtime/wac/services/local-http-client'
     bootstrap: [ AppComponent ],
     providers: [
         ResourceService,
-        { provide: ErrorHandler, useClass: AppErrorHandler },
+        { provide: ErrorHandler, useClass: LogsErrorHandler },
         { provide: "Powershell", useClass: PowershellService },
         { provide: "WACInfo", useClass: WACInfo },
         { provide: "Http", useClass: LocalHttpClient },

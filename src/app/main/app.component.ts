@@ -5,7 +5,6 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
 import { LoadingService } from '../notification/loading.service';
 import { WindowService } from './window.service';
 import { Runtime } from '../runtime/runtime';
-import { environment } from '../environments/environment'
 
 @Component({
     selector: 'app-root',
@@ -51,7 +50,7 @@ import { environment } from '../environments/environment'
     encapsulation: ViewEncapsulation.None,  // Use to disable CSS Encapsulation for this component
     template: `
         <div class='content' (dragover)="dragOver($event)">
-            <header *ngIf="!isWAC && showHeader()"></header>
+            <header *ngIf="showHeader()"></header>
             <div id="{{ isWAC ? 'wacFlexWrapper' : 'flexWrapper' }}">
                 <div class="container-fluid" id="mainContainer" #mainContainer>
                     <div class="row" id="mainRow">
@@ -85,10 +84,6 @@ export class AppComponent implements OnInit {
 
     showHeader() {
         return !this.isRouteActive('Get')
-    }
-
-    get isWAC() {
-        return environment.WAC
     }
 
     isRouteActive(route: string): boolean {
