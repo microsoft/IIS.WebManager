@@ -10,10 +10,10 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
 @Component({
     template: `
     <div class="center">
-        <div *ngIf='!_inProgress' style="min-width:650px">
-            <h3>IIS Administration API is required to manage IIS server:</h3>
+        <div *ngIf='!_inProgress' style="min-width:700px">
+            <h4>Microsoft IIS Administration API is required to manage IIS server:</h4>
             <p #apiPrompt>
-                <label>IIS Administration API installation location</label>
+                <label>Microsoft IIS Administration API installation location</label>
                 <input class="form-control" type="text" [(ngModel)]="_adminAPILocation"/>
             </p>
             <p #dotnetPrompt>
