@@ -12,23 +12,21 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
     <div class="center">
         <div *ngIf='!_inProgress' style="min-width:650px">
             <h3>IIS Administration API is required to manage IIS server:</h3>
-            <div class="validation-container">
-                <p #apiPrompt>
-                    <label>IIS Administration API installation location</label>
-                    <input class="form-control" type="text" [(ngModel)]="_adminAPILocation"/>
-                </p>
-                <p #dotnetPrompt>
-                    <label>.NET Core Runtime install location (Optional)</label>
-                    <input class="form-control" type="text" placeholder="IIS Admin API installer will fetch required .NET Core Framework online" [(ngModel)]="_dotnetCoreLocation" />
-                </p>
-            </div>
+            <p #apiPrompt>
+                <label>IIS Administration API installation location</label>
+                <input class="form-control" type="text" [(ngModel)]="_adminAPILocation"/>
+            </p>
+            <p #dotnetPrompt>
+                <label>.NET Core Runtime install location (Optional)</label>
+                <input class="form-control" type="text" placeholder="IIS Administration API installer will fetch required .NET Core Runtime online" [(ngModel)]="_dotnetCoreLocation" />
+            </p>
             <div *ngIf='userInputError'>
                 <p class="color-error">
                     {{userInputError}}
                 </p>
             </div>
             <p>
-                <a class="bttn background-active" (click)="install()">Install on {{_targetHost}}</a>
+                <button class="bttn background-active" (click)="install()">Install on {{_targetHost}}</button>
             </p>
         </div>
         <div *ngIf='_inProgress'>
@@ -48,10 +46,6 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
         font-size: 300%;
     }
 
-    button {
-        width: 100px;
-    }
-
     p {
         padding-top: 20px;
         padding-bottom: 20px;
@@ -64,6 +58,12 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
     .bttn {
         padding-top: 8px;
         padding-bottom: 8px;
+    }
+
+    .bttn.background-active:focus {
+        color: #000000;
+        border-style: dotted;
+        border-width: 1px;
     }
 
     .collapse-heading {
@@ -143,7 +143,14 @@ export class InstallComponent {
             if (this._dotnetCoreLocation) {
                 args.dotnetCoreLocation = this._dotnetCoreLocation
             }
-            var sub = this.runtime.PrepareIISHost(args).subscribe(_ => {}, _ => {}, () => {
+            var sub = this.runtime.PrepareIISHost(args).subscribe(_ => {}, e => {
+                let reason = 'unknown'
+                if (e.response && e.response.exception) {
+                    reason = e.response.exception
+                }
+                this.userInputError = `Installation failed. Error: ${reason}`
+                this._inProgress = false
+            }, () => {
                 this.router.navigate(['/'])
                 sub.unsubscribe()
             })
