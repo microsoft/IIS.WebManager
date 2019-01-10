@@ -1,11 +1,12 @@
 import { Injectable, Inject } from '@angular/core'
 import { AppContextService } from '@microsoft/windows-admin-center-sdk/angular'
 import { PowerShell, PowerShellSession } from '@microsoft/windows-admin-center-sdk/core'
-import { Observable } from 'rxjs'
-import { PowerShellScripts } from '../../../../generated/powershell-scripts';
+import { Observable } from 'rxjs/Observable'
+import { PowerShellScripts } from '../../../../generated/powershell-scripts'
 import { Request, Response, ResponseOptions, Headers } from '@angular/http'
-import { WACInfo } from 'runtime/runtime.wac';
-import { LoggerFactory, Logger } from 'diagnostics/logger';
+import { WACInfo } from 'runtime/runtime.wac'
+import { LoggerFactory, Logger } from 'diagnostics/logger'
+
 import '../../../diagnostics/extensions/rxjs'
 import 'rxjs/add/operator/catch'
 
@@ -83,9 +84,9 @@ export class PowershellService {
     var compiled = PowerShell.createScript(pwCmdString, psParameters)
     var name = pwCmdString.split('\n')[0]
     return this.session.mergeMap(ps => {
-      return ps.powerShell.run(compiled).logDebug(
+      return ps.powerShell.run(compiled).logInfo(
         this.logger,
-        "Powershell script ${name}",
+        `Powershell script ${name}`,
       ).mergeMap(response => {
         if (!response) {
           throw `Powershell command ${name} returns no response`;
