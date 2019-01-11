@@ -34,7 +34,8 @@ const sidebarStyles = `
                 <a href="https://docs.microsoft.com/en-us/iis/install/installing-iis-85/installing-iis-85-on-windows-server-2012-r2" >Learn more</a>
             </p>
         </div>
-        <loading *ngIf="!webServer"></loading>
+        <loading *ngIf="!webServer && !failed"></loading>
+        <span *ngIf="failed" class="color-error">An unknown error has occurred while loading WebServer Module.</span>
         <div *ngIf="webServer">
             <webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
             <div class="sidebar crumb" [class.nav]="_options.active">
@@ -54,6 +55,7 @@ const sidebarStyles = `
 export class WebServerComponent {
     webServer: WebServer;
     modules: Array<any> = [];
+    failed: boolean;
 
     constructor( @Inject('WebServerService') private _service: WebServerService,
         private _http: HttpClient,
@@ -61,7 +63,10 @@ export class WebServerComponent {
     }
 
     ngOnInit() {
-        this._service.server.then(ws => {
+        this._service.server.catch(e => {
+            this.failed = true
+            throw e;
+        }).then(ws => {
             this.webServer = ws;
             ModuleUtil.initModules(this.modules, this.webServer, "webserver");
             ModuleUtil.addModule(this.modules, "Certificates");

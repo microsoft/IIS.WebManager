@@ -12,7 +12,7 @@ import { ApiConnection } from '../connect/api-connection'
 import { PowerShellScripts } from '../../generated/powershell-scripts'
 import { Observable } from 'rxjs/Observable'
 import { ApiErrorType } from 'error/api-error'
-import { RpcOutboundCommands, rpcVersion, RpcInitData, RpcSeekMode, RpcInitDataInternal } from '@microsoft/windows-admin-center-sdk/dist/core/rpc/rpc-base'
+import { RpcOutboundCommands, rpcVersion, RpcSeekMode, RpcInitDataInternal } from '@microsoft/windows-admin-center-sdk/dist/core/rpc/rpc-base'
 import { CoreEnvironment } from '@microsoft/windows-admin-center-sdk/dist/core/data/core-environment'
 
 import 'rxjs/add/operator/take'
@@ -138,7 +138,7 @@ export class WACRuntime implements Runtime {
                     return connection
                 })).shareReplay()
         }
-        this._connecting.subscribe(c => {
+        this._connecting.do(c => {
             this.connectService.setActive(c)
             this._connecting = null
         })
