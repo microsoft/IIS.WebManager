@@ -10,13 +10,14 @@ import { PowershellService } from './wac/services/powershell-service'
 import { ConnectService } from '../connect/connect.service'
 import { ApiConnection } from '../connect/api-connection'
 import { PowerShellScripts } from '../../generated/powershell-scripts'
-import { Observable } from 'rxjs'
-import { ApiErrorType } from 'error/api-error';
+import { Observable } from 'rxjs/Observable'
+import { ApiErrorType } from 'error/api-error'
+import { RpcOutboundCommands, rpcVersion, RpcInitData, RpcSeekMode, RpcInitDataInternal } from '@microsoft/windows-admin-center-sdk/dist/core/rpc/rpc-base'
+import { CoreEnvironment } from '@microsoft/windows-admin-center-sdk/dist/core/data/core-environment'
 
 import 'rxjs/add/operator/take'
 import 'rxjs/add/operator/map'
-import { RpcOutboundCommands, rpcVersion, RpcInitData, RpcSeekMode, RpcInitDataInternal } from '@microsoft/windows-admin-center-sdk/dist/core/rpc/rpc-base';
-import { CoreEnvironment } from '@microsoft/windows-admin-center-sdk/dist/core/data/core-environment';
+import 'rxjs/add/observable/throw'
 
 class ApiKey {
     public id: string
@@ -160,9 +161,8 @@ export class WACRuntime implements Runtime {
         }
         return this.PrepareIISHost({ command: 'ensure-permission' }).catch((e, _) => {
             if (e.status === 400 && e.response.exception == "IIS Administration API is not installed") {
-                return Observable.throw(ApiErrorType.Unreachable).finally(() => {
-                    this.router.navigate(['wac', 'install'])
-                })
+                this.router.navigate(['wac', 'install'])
+                return Observable.throw(ApiErrorType.Unreachable)
             }
             return Observable.throw(e)
         }).mergeMap(_ => {

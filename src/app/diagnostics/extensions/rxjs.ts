@@ -1,6 +1,6 @@
-import { Observable } from "rxjs"
-import { environment } from "environments/environment"
-import { Logger, LogLevel } from "diagnostics/logger"
+import { Observable } from 'rxjs'
+import { environment } from 'environments/environment'
+import { Logger, LogLevel } from 'diagnostics/logger'
 
 export enum ObservableReportLevel {
     COMPLETE = 1,
@@ -64,6 +64,15 @@ declare module 'rxjs/Observable' {
     }
 }
 
+function safeDisplay(logger: Logger, obj: any): any {
+    try {
+        return JSON.stringify(obj)
+    } catch (e) {
+        logger.log(LogLevel.WARN, `unable to stringify input, exception ${e}`)
+        return obj
+    }
+}
+
 function log<T>(
     o: Observable<T>,
     logLevel: LogLevel,
@@ -77,12 +86,12 @@ function log<T>(
     return o.do(
         v => {
             if (reportLevel & ObservableReportLevel.SUCCESS) {
-                logger.log(logLevel, `${identifier} succeeded, result: ${JSON.stringify(v)}`)
+                logger.log(logLevel, `${identifier} succeeded, result: ${safeDisplay(logger, v)}`)
             }
         },
         e => {
             if (reportLevel & ObservableReportLevel.ERROR) {
-                logger.log(logLevel, `${identifier} failed, exception: ${JSON.stringify(e)}`)
+                logger.log(logLevel, `${identifier} failed, exception: ${safeDisplay(logger, e)}`)
             }
         },
         () => {
