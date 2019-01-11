@@ -9,6 +9,11 @@ import { WebServerService } from './webserver.service';
 import { ComponentReference, FilesComponentName } from '../main/settings';
 import { environment } from '../environments/environment'
 import { CertificatesServiceURL } from 'certificates/certificates.service';
+import { UnexpectedServerStatusError } from 'error/api-error';
+import { Observable } from 'rxjs';
+import { NotificationService } from 'notification/notification.service';
+import { Runtime } from 'runtime/runtime';
+import { LoggerFactory, Logger } from 'diagnostics/logger';
 
 const sidebarStyles = `
 :host >>> .sidebar > vtabs .vtabs > .items {
@@ -34,8 +39,8 @@ const sidebarStyles = `
                 <a href="https://docs.microsoft.com/en-us/iis/install/installing-iis-85/installing-iis-85-on-windows-server-2012-r2" >Learn more</a>
             </p>
         </div>
-        <loading *ngIf="!webServer && !failed"></loading>
-        <span *ngIf="failed" class="color-error">An unknown error has occurred while loading WebServer Module.</span>
+        <loading *ngIf="!webServer && !failure"></loading>
+        <span *ngIf="failure" class="color-error">{{failure}}</span>
         <div *ngIf="webServer">
             <webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
             <div class="sidebar crumb" [class.nav]="_options.active">
@@ -55,18 +60,18 @@ const sidebarStyles = `
 export class WebServerComponent {
     webServer: WebServer;
     modules: Array<any> = [];
-    failed: boolean;
+    failure: string;
 
-    constructor( @Inject('WebServerService') private _service: WebServerService,
+    constructor(
+        @Inject('WebServerService') private _service: WebServerService,
+        @Inject('Runtime') private _runtime: Runtime,
         private _http: HttpClient,
-        private _options: OptionsService) {
-    }
+        private _options: OptionsService,
+        private _notifications: NotificationService,
+    ) {}
 
     ngOnInit() {
-        this._service.server.catch(e => {
-            this.failed = true
-            throw e;
-        }).then(ws => {
+        this.server.then(ws => {
             this.webServer = ws;
             ModuleUtil.initModules(this.modules, this.webServer, "webserver");
             ModuleUtil.addModule(this.modules, "Certificates");
@@ -83,5 +88,41 @@ export class WebServerComponent {
 
     get service() {
         return this._service;
+    }
+
+    get server(): Promise<WebServer> {
+        return new Promise<WebServer>((resolve, reject) => {
+            this._service.server.catch(e => {
+                if (e instanceof UnexpectedServerStatusError) {
+                    this._notifications.confirm(
+                        `Restart IIS Administration API`,
+                        `IIS Administration API is currently ${e.Status}. Do you want to start the service?`).then(confirmed => {
+                        if (confirmed) {
+                            var sub = this._runtime.RestartIISAdministration().subscribe(
+                                _ => {
+                                    this._service.server.catch(ex => {
+                                        reject(this.failure = `Unable to restart IIS Administration API Service, error ${ex}`)
+                                        throw ex
+                                    }).then(s => {
+                                        resolve(s)
+                                    })
+                                },
+                                _ => {
+                                    reject(this.failure = `Unable to restart IIS Administration API Service, error: ${e}`)
+                                },
+                                () => { sub.unsubscribe() },
+                            )
+                        } else {
+                            reject(this.failure = `Web Server Module cannot be initialized. Current IIS Administration API Service status: ${e.Status}`)
+                        }
+                    })
+                } else {
+                    reject(this.failure = `Unknown error has occurred when trying to initialize Web Server Module: ${e}`)
+                }
+                throw e
+            }).then(ws => {
+                resolve(ws)
+            })
+        })
     }
 }

@@ -7,7 +7,7 @@ import { environment } from 'environments/environment';
 @Component({
     selector: 'header',
     template: `
-        <div *ngIf="!isWAC" class="nav background-active">
+        <div *ngIf="!isWAC" class="nav background-active sme-focus-zone">
                 <button class="fa fa-bars nav-item nav-options hover-primary2" [attr.title]="this.options.active ? 'Hide Sidebar' : 'Show Sidebar'" (click)="this.options.toggle()" [class.background-primary2]="this.options.active"></button>
                 <a [routerLink]="['/']" title="Home" class="nav-brand nav-item background-active hover-primary2 nav-height">
                     <span class="v-center hidden-xs">Microsoft IIS</span>
