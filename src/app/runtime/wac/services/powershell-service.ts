@@ -21,7 +21,7 @@ export class PowershellService {
   constructor(
     private loggerFactory: LoggerFactory,
     private appContext: AppContextService,
-    @Inject("WACInfo") private wac: WACInfo,
+    @Inject('WACInfo') private wac: WACInfo,
   ) {
     this.scheduleSession()
     // not exactly sure why we need to force evaluate this observable here
@@ -57,14 +57,14 @@ export class PowershellService {
       { requestBase64: requestEncoded },
       (k, v) => {
         switch (k) {
-          case "body":
+          case 'body':
             try {
               return atob(v)
             } catch {
               return v
             }
 
-          case "headers":
+          case 'headers':
             // we need to explicitly wrap it otherwise when we pass it to new Response(res), the header would remain a plain object
             return new Headers(v)
 
