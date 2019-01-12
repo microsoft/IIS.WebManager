@@ -68,6 +68,12 @@ try {
                 if ($prop -like "content-type") {
                     $httpMsg.Content.Headers.ContentType = New-Object System.Net.Http.Headers.MediaTypeHeaderValue $headerValue
                     $headerFixed = $true
+                } elseif ($prop -like "content-range") {
+                    $tokens = $prop.Split("/-")
+                    $from = [int]::Parse(($tokens[0].Trim() -split " ")[-1])
+                    $to = [int]::Parse($tokens[1].Trim())
+                    $length = [int]::Parse($tokens[2].Trim())
+                    $httpMsg.Content.Headers.ContentRange = New-Object System.Net.Http.Headers.ContentRangeHeaderValue -ArgumentList $from, $to,  $length
                 }
                 ## possibly add more misplaced headers
             }
