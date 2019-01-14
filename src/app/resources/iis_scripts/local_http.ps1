@@ -74,6 +74,7 @@ try {
                     $to = [int]::Parse($tokens[1].Trim())
                     $length = [int]::Parse($tokens[2].Trim())
                     $httpMsg.Content.Headers.ContentRange = New-Object System.Net.Http.Headers.ContentRangeHeaderValue -ArgumentList $from, $to,  $length
+                    $headerFixed = $true
                 }
                 ## possibly add more misplaced headers
             }
