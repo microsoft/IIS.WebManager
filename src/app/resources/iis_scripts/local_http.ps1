@@ -1,3 +1,4 @@
+[CmdletBinding()]
 param(
     [string]
     $requestBase64
@@ -6,6 +7,23 @@ param(
 $ErrorActionPreference = "Stop"
 Add-Type -AssemblyName System.Net.Http
 $contentEncoding = [System.Text.Encoding]::UTF8
+
+######################## Utilities ###############################
+$verbose = $PSBoundParameters['verbose']
+
+if ($verbose) {
+    $logDir = Join-Path $env:UserProfile 'wac-iis-logs'
+    if (!(Test-Path $logDir)) {
+        mkdir $logDir
+    }
+    $logFile = Join-Path $logDir 'local_http.log'
+}
+
+function LogVerbose([string] $msg) {
+    if ($verbose) {
+        Add-Content -Value $msg -Path $logFile -Force
+    }
+}
 
 function stringify([System.Byte[]]$content) {
     if (!$content) {
@@ -26,7 +44,9 @@ $requestMethods = @(
     [System.Net.Http.HttpMethod]::Patch
 )
 
+LogVerbose "Raw request $requestBase64"
 $decoded = $contentEncoding.GetString([System.Convert]::FromBase64String($requestBase64))
+
 $reqObj = ConvertFrom-Json $decoded
 
 $httpMethod = $requestMethods[[int]$reqObj.method]
@@ -36,12 +56,34 @@ $uri = $uriBuilder.ToString()
 
 try {
     $httpMsg = New-Object System.Net.Http.HttpRequestMessage -ArgumentList $httpMethod, $uri
-    if ($reqObj.Body) {
+    if ($reqObj._body) {
+        $requestContent = New-Object System.Net.Http.StringContent ([string] $reqObj._body)
         $httpMsg.Content = $requestContent
-        $requestContent = New-Object System.Net.Http.StringContent ([string] $reqObj.Body)
     }
     foreach ($prop in $reqObj.headers | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name) {
-        $httpMsg.Headers.Add($prop, $reqObj.headers.$prop)
+        $headerValue = $reqObj.headers.$prop
+        if (!$httpMsg.Headers.TryAddWithoutValidation($prop, $headerValue)) {
+            $headerFixed = $false
+            if ($httpMsg.Content) {
+                if ($prop -like "content-type") {
+                    $httpMsg.Content.Headers.ContentType = New-Object System.Net.Http.Headers.MediaTypeHeaderValue $headerValue
+                    $headerFixed = $true
+                } elseif ($prop -like "content-range") {
+                    $tokens = $prop.Split("/-")
+                    $from = [int]::Parse(($tokens[0].Trim() -split " ")[-1])
+                    $to = [int]::Parse($tokens[1].Trim())
+                    $length = [int]::Parse($tokens[2].Trim())
+                    $httpMsg.Content.Headers.ContentRange = New-Object System.Net.Http.Headers.ContentRangeHeaderValue -ArgumentList $from, $to,  $length
+                    $headerFixed = $true
+                }
+                ## possibly add more misplaced headers
+            }
+            if ($headerFixed) {
+                LogVerbose "Replaced header ${prop}: ${headerValue}"
+            } else {
+                LogVerbose "Failed to add header ${prop}: ${headerValue}"
+            }
+        }
     }
     $clientHandler = New-Object System.Net.Http.HttpClientHandler
     $clientHandler.UseDefaultCredentials = $true
