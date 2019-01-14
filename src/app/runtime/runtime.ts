@@ -10,7 +10,7 @@ export interface Runtime {
     DestroyContext(): void
     ConnectToIISHost(): Observable<ApiConnection>
     IsWebServerScope(): boolean
-    RestartIISAdministration(): Observable<any>
+    StartIISAdministration(): Observable<any>
 }
 
 @Injectable()
@@ -44,7 +44,7 @@ export class StandardRuntime implements Runtime {
         return this._isWebServerScope
     }
 
-    public RestartIISAdministration(): Observable<any> {
+    public StartIISAdministration(): Observable<any> {
         throw 'Restarting IIS Administration API is not supported, please manually restart the service'
     }
 }

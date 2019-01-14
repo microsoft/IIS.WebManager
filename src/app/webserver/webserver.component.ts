@@ -95,20 +95,20 @@ export class WebServerComponent {
             this._service.server.catch(e => {
                 if (e instanceof UnexpectedServerStatusError) {
                     this._notifications.confirm(
-                        `Restart IIS Administration API`,
+                        `Start IIS Administration API`,
                         `IIS Administration API is currently ${e.Status}. Do you want to start the service?`).then(confirmed => {
                         if (confirmed) {
-                            var sub = this._runtime.RestartIISAdministration().subscribe(
+                            var sub = this._runtime.StartIISAdministration().subscribe(
                                 _ => {
                                     this._service.server.catch(ex => {
-                                        reject(this.failure = `Unable to restart IIS Administration API Service, error ${ex}`)
+                                        reject(this.failure = `Unable to start IIS Administration API Service, error ${ex}`)
                                         throw ex
                                     }).then(s => {
                                         resolve(s)
                                     })
                                 },
                                 _ => {
-                                    reject(this.failure = `Unable to restart IIS Administration API Service, error: ${e}`)
+                                    reject(this.failure = `Unable to start IIS Administration API Service, error: ${e}`)
                                 },
                                 () => { sub.unsubscribe() },
                             )

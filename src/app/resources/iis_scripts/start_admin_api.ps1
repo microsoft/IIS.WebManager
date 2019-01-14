@@ -22,7 +22,7 @@ function WaitForServerToStart($service) {
     }
 }
 
-Restart-Service -Name $serviceName -Force
+Start-Service -Name $serviceName
 WaitForServerToStart $serviceName
 
 '{ "success": true }'
