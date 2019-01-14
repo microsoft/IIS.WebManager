@@ -34,6 +34,7 @@ function stringify([System.Byte[]]$content) {
 
 ## same order as @angular/http/enums/RequestMethod
 ## Note that index 0 maps to GET, so if $reqObj.method is null we would default to GET
+$patchMethod = New-Object System.Net.Http.HttpMethod "PATCH"
 $requestMethods = @(
     [System.Net.Http.HttpMethod]::Get,
     [System.Net.Http.HttpMethod]::Post,
@@ -41,13 +42,14 @@ $requestMethods = @(
     [System.Net.Http.HttpMethod]::Delete,
     [System.Net.Http.HttpMethod]::Options,
     [System.Net.Http.HttpMethod]::Head,
-    [System.Net.Http.HttpMethod]::Patch
+    $patchMethod
 )
 
 LogVerbose "Raw request $requestBase64"
 $decoded = $contentEncoding.GetString([System.Convert]::FromBase64String($requestBase64))
 
 $reqObj = ConvertFrom-Json $decoded
+LogVerbose "Request $decoded"
 
 $httpMethod = $requestMethods[[int]$reqObj.method]
 $uriBuilder = [System.UriBuilder]$reqObj.url
