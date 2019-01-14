@@ -10,6 +10,7 @@ export interface Runtime {
     DestroyContext(): void
     ConnectToIISHost(): Observable<ApiConnection>
     IsWebServerScope(): boolean
+    StartIISAdministration(): Observable<any>
 }
 
 @Injectable()
@@ -41,5 +42,9 @@ export class StandardRuntime implements Runtime {
             this._isWebServerScope = this.route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver';
         }
         return this._isWebServerScope
+    }
+
+    public StartIISAdministration(): Observable<any> {
+        throw 'Restarting IIS Administration API is not supported, please manually restart the service'
     }
 }

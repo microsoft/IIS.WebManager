@@ -19,3 +19,10 @@ export const ApiErrorType = {
     FeatureNotInstalled: "FeatureNotInstalled" as ApiErrorType,
     Unreachable: "Unreachable" as ApiErrorType
 }
+
+export class UnexpectedServerStatusError {
+    readonly Status: string
+    constructor(s: string) {
+        this.Status = s
+    }
+}

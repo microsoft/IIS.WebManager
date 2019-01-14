@@ -11,8 +11,8 @@ import { ConnectService } from '../connect/connect.service'
 import { ApiConnection } from '../connect/api-connection'
 import { PowerShellScripts } from '../../generated/powershell-scripts'
 import { Observable } from 'rxjs/Observable'
-import { ApiErrorType } from 'error/api-error'
-import { RpcOutboundCommands, rpcVersion, RpcInitData, RpcSeekMode, RpcInitDataInternal } from '@microsoft/windows-admin-center-sdk/dist/core/rpc/rpc-base'
+import { ApiErrorType, UnexpectedServerStatusError } from 'error/api-error'
+import { RpcOutboundCommands, rpcVersion, RpcSeekMode, RpcInitDataInternal } from '@microsoft/windows-admin-center-sdk/dist/core/rpc/rpc-base'
 import { CoreEnvironment } from '@microsoft/windows-admin-center-sdk/dist/core/data/core-environment'
 
 import 'rxjs/add/operator/take'
@@ -135,13 +135,11 @@ export class WACRuntime implements Runtime {
                         connection.accessToken = apiKey.value
                     }
                     this._tokenId = apiKey.id
+                    this.connectService.setActive(connection)
+                    this._connecting = null
                     return connection
                 })).shareReplay()
         }
-        this._connecting.subscribe(c => {
-            this.connectService.setActive(c)
-            this._connecting = null
-        })
         return this._connecting
     }
 
@@ -154,15 +152,26 @@ export class WACRuntime implements Runtime {
         })
     }
 
+    public StartIISAdministration(): Observable<any> {
+        return this.powershellService.run(PowerShellScripts.start_admin_api, {})
+    }
+
     private GetApiKey(): Observable<ApiKey> {
         var cmdParams: any = { command: 'ensure' }
         if (this._tokenId) {
             cmdParams.tokenId = this._tokenId
         }
         return this.PrepareIISHost({ command: 'ensure-permission' }).catch((e, _) => {
-            if (e.status === 400 && e.response.exception == "IIS Administration API is not installed") {
-                this.router.navigate(['wac', 'install'])
-                return Observable.throw(ApiErrorType.Unreachable)
+            if (e.status === 400) {
+                let errorMsg = <string> e.response.exception
+                if (errorMsg == 'IIS Administration API is not installed') {
+                    this.router.navigate(['wac', 'install'])
+                    return Observable.throw(ApiErrorType.Unreachable)
+                }
+                if (errorMsg.startsWith('Unexpected service status for IIS Administration API')) {
+                    let status = e.response.exception.split(' ').pop()
+                    return Observable.throw(new UnexpectedServerStatusError(status))
+                }
             }
             return Observable.throw(e)
         }).mergeMap(_ => {
