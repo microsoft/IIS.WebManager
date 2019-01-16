@@ -42,6 +42,7 @@ gulp.task('clean', () => {
 gulp.task('generate-angular-cli-json', (_) => {
     var override = process.argv.slice(3).find(function(s, _, __) { return s.startsWith('--env=') })
     var scenario = override ? override.split('=').pop().split('.')[0] : 'site'
+    // merge the base json with the json file specific to the scenario
     return gulp.src(['angular-cli.template.json', `angular-cli.${scenario}.json`])
         .pipe(merge({
             fileName: 'angular-cli.json'
