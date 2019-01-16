@@ -6,7 +6,6 @@ const clean = require('gulp-clean');
 const ngCompile = require('gulp-ngc');
 const gulpTslint = require('gulp-tslint');
 const tslint = require('tslint');
-const argv = require('yargs').argv;
 const runSequence = require('run-sequence');
 const inlineNg2Template = require('gulp-inline-ng2-template');
 const child_process = require('child_process');
@@ -15,6 +14,7 @@ const gulpResJson = require('./gulps/gulp-resjson');
 const gulpSvgCode = require('./gulps/gulp-svg-code');
 const gulpMergeJsonInFolders = require('./gulps/gulp-merge-json-in-folders');
 const gulpLicense = require('./tools/gulp-license');
+const merge = require('gulp-merge-json');
 
 gulp.task('license', () => {
     return gulp.src('app/**/*.*')
@@ -73,8 +73,18 @@ gulp.task('generate-resjson', (cb) => {
     runSequence(['generate-resjson-json', 'generate-resjson-interface'], 'merge-localized-json', cb);
 });
 
+gulp.task('generate-angular-cli-json', (_) => {
+    var override = process.argv.slice(3).find(function(s, _, __) { return s.startsWith('--env=') })
+    var scenario = override ? override.split('=').pop().split('.')[0] : 'site'
+    return gulp.src(['angular-cli.template.json', `angular-cli.${scenario}.json`])
+        .pipe(merge({
+            fileName: 'angular-cli.json'
+        }))
+        .pipe(gulp.dest('.'))
+});
+
 gulp.task('generate', (cb) => {
-    runSequence(['generate-powershell', 'generate-svg', 'generate-resjson'], cb);
+    runSequence(['generate-angular-cli-json', 'generate-powershell', 'generate-svg', 'generate-resjson'], cb);
 });
 
 gulp.task('lint', () => {

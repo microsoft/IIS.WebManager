@@ -1,0 +1,256 @@
+﻿.red {
+    color: #a94442;
+}
+
+.manila {
+    color: #FFE68E
+}
+
+button.delete:not([disabled]):not(:hover):not(:active)::before {
+    color: #a94442;
+}
+
+button.cancel:not([disabled]):not(:hover):not(:active)::before {
+    color: #a94442;
+}
+
+button.ok:not([disabled]):not(:hover):not(:active)::before,
+button.refresh:not([disabled]):not(:hover):not(:active)::before,
+button.save:not([disabled]):not(:hover):not(:active)::before,
+button.edit:not([disabled]):not(:hover):not(:active)::before,
+button.go:not([disabled]):not(:hover):not(:active)::before,
+.bttn.edit:not([disabled]):not(:hover):not(:active)::before {
+    color: #0077ce;
+}
+
+button.start:not([disabled]):not(:hover):not(:active)::before {
+    color: #3c763d;
+}
+
+button.stop:not([disabled]):not(:hover):not(:active)::before {
+    color: #a94442;
+}
+
+a.link:not([disabled]):not(:hover):not(:active)::before {
+    color: #0077ce;
+}
+
+.border-color,
+.form-control,
+.dataGroup {
+    border-color: #ccc;
+}
+
+.dataGroup,
+.grid-list .grid-item {
+    border-color: #d9d9d9;
+}
+
+.background-normal {
+    background-color: white;
+}
+
+.color-normal,
+.bttn,
+.form-control {
+    color: #444;
+}
+
+.hover-color-normal:hover,
+button.hover-color-normal:hover::before {
+    color: #444;
+}
+
+.bttn,
+.form-control {
+    background-color: white;
+}
+
+.hover-color-active:hover,
+.color-active,
+a {
+    color: #0077ce;
+}
+
+a:hover,
+a:focus {
+    color: inherit;
+}
+
+
+.background-active,
+.hover-active:hover,
+button:active, 
+button.active, 
+button:hover,
+button:hover::before,
+.bttn:active,
+.bttn:hover  {
+    background-color: #0077ce;
+    color: white;
+}
+
+.hover-primary2:hover,
+.background-primary2 {
+    background-color: #006dbc;
+    color: white;
+}
+
+.background-selected,
+.background-selected.hover-editing:hover {
+    background-color: #D0EBFE;
+}
+
+
+.border-active,
+button,
+.bttn.bordered {
+    border-color: #0077ce;
+}
+
+.border-bottom-normal {
+    border-bottom-color: white;
+}
+
+
+.color-accent,
+h2 {
+    color: #8b4298;
+}
+
+.background-accent {
+    background-color: #8b4298;
+}
+
+.hover-accent:hover {
+    color: #8b4298;
+}
+
+.border-accent,
+.collapse-heading,
+hr {
+    border-color: #8b4298;
+}
+
+.hover-warning:hover {
+    background-color: #FFB700;
+}
+
+.background-warning {
+    background-color: #FFB700;
+}
+
+button.background-warning:active,
+button.background-warning.active {
+    background-color: #FFB700;
+    color: white;
+}
+
+.border-warning {
+    border-color: #FFB700;
+}
+
+.color-error {
+    color: #ff0000;
+}
+
+.color-antiactive,
+.bttn:hover i.fa,
+button:hover i.fa,
+button:active i.fa,
+button.active i.fa {
+    color: white;
+}
+
+border-antiactive {
+    border-color: white;
+}
+
+.background-editing {
+    background-color: #E7F5FE;
+}
+
+.hover-editing:hover,
+button.hover-editing:hover::before {
+    background-color: #E7F5FE;
+}
+
+.background-list {
+    background-color: oldlace;
+}
+
+.background-list.odd {
+    /* #fffcf6 is similar to oldlace but a little bit lighter */
+    background-color: #fffcf6;
+}
+
+input.highlight {
+    background-color: lightgoldenrodyellow;
+}
+
+input:required:invalid:not(.unfocused),
+input:not(:required).ng-invalid,
+input:not(:required).ng-invalid:focus {
+    border-left-color: red;
+}
+
+.inactive,
+button.inactive i.fa {
+    color: #777;
+}
+
+button.inactive,
+.border-active.inactive {
+    border-color: #777;
+}
+
+.placeholder {
+    color: #666;
+}
+
+/* Disabled */
+
+[disabled] button:not([enabled]),
+[disabled] .bttn:not([enabled]),
+button[disabled],
+.bttn[disabled],
+a[disabled] {
+    border-color: #ccc;
+    color: #ccc;
+    background: none;
+}
+
+[disabled] button:not([enabled]) i.fa,
+[disabled] .bttn:not([enabled])  i.fa,
+button[disabled] i.fa,
+.bttn[disabled]  i.fa {
+    color: #ccc;
+}
+
+[disabled] input:not([enabled]) {
+    background: #eee;
+}
+
+[disabled] .background-active {
+    background-color: #eee;
+    color: #444;
+}
+
+[disabled] .border-active,
+[disabled] .bttn {
+    border-color: #ccc;
+}
+
+
+.sidebar li:hover a {
+    border-color: #0077ce;
+}
+
+.sidebar > vtabs .items:before {
+    color: #0077ce;
+}
+
+.sidebar .items,
+.sidebar hr {
+    border-color: #d4d4d4;
+}
