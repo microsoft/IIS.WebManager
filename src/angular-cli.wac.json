@@ -1,0 +1,9 @@
+{
+  "apps": [
+    {
+      "styles": [
+        "../themes/themes.wac.css"
+      ]
+    }
+  ]
+}

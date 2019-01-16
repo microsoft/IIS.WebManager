@@ -21,8 +21,7 @@
         "../node_modules/font-awesome/css/font-awesome.min.css",
         "../node_modules/bootstrap/dist/css/bootstrap.min.css",
         "../themes/main.css",
-        "../themes/themes.common.css",
-        "../themes/themes.blue.css"
+        "../themes/themes.common.css"
       ],
       "tsconfig": "tsconfig.json",
       "environmentSource": "environments/environment.ts",
