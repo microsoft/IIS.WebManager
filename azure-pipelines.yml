@@ -1,0 +1,21 @@
+resources:
+- repo: self
+
+pool:
+  name: IISAdministration
+
+steps:
+- task: PowerShell@2
+  displayName: 'PowerShell Script'
+  inputs:
+    targetType: ./
+    filePath: build.ps1
+    arguments: '--env=wac --pack'
+
+- task: NuGetCommand@2
+  displayName: 'NuGet push'
+  inputs:
+    command: push
+    packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'IIS-WAC-MyGet'
