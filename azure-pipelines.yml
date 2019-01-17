@@ -19,3 +19,4 @@ steps:
     packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'IIS-WAC-MyGet'
+
