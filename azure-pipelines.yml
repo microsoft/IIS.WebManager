@@ -2,7 +2,7 @@ resources:
 - repo: self
 
 pool:
-  name: IISAdministration
+  name: 'Hosted VS2017' # name of the pool to run this job in
 
 steps:
 - task: PowerShell@2
@@ -19,4 +19,3 @@ steps:
     packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
     nuGetFeedType: external
     publishFeedCredentials: 'IIS-WAC-MyGet'
-
