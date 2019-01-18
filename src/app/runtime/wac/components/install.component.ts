@@ -26,7 +26,7 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
                 </p>
             </div>
             <p>
-                <button class="bttn background-active" (click)="install()">Install on {{_targetHost}}</button>
+                <button class="bttn" (click)="install()">Install on {{_targetHost}}</button>
             </p>
         </div>
         <div *ngIf='_inProgress'>
