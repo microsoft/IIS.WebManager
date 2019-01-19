@@ -5,7 +5,7 @@
       <packageType name="WindowsAdminCenterExtension" />
     </packageTypes>
     <id>microsoft.iis-wac-extension</id>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <title>Microsoft IIS Extension for Windows Administration Center</title>
     <authors>Microsoft IIS Team</authors>
     <owners>iiscore@microsoft.com</owners>
