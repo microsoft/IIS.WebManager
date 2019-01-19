@@ -28,13 +28,9 @@ $purge = $args | Where-Object { $_ -like "--purge" }
 $pack = $args | Where-Object { $_ -like "--pack" }
 $pack_build = $args | Where-Object { $_.startsWith("--pack.build=") }
 if ($pack_build) {
-    Write-Host ("original pack_build: " + $pack_build)
+    Write-Host ($pack_build)
     $tokens = $pack_build.split("=")[1].trim().split("/")
-    if ($tokens.length -gt 1) {
-        $pack_build = $pack_build = $tokens[0] + "." + $tokens[1]
-    } else {
-        $pack_build = $pack_build = $tokens[0] + ".0"
-    }
+    $pack_build = $pack_build = $tokens[0]
 } else {
     $pack_build = "0.1.0"
 }
