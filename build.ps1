@@ -26,16 +26,12 @@ function ShouldNPMInstall {
 
 $purge = $args | Where-Object { $_ -like "--purge" }
 $pack = $args | Where-Object { $_ -like "--pack" }
-$pack_build = $args | Where-Object { $_.startsWith("--pack.build=") }
-if ($pack_build) {
-    # Example: --pack.build=0.1.$(Build.BuildNumber)/$(Build.SourceVersion)
-    Write-Host ($pack_build)
-    $tokens = $pack_build.split("=")[1].trim().split("/")  
-    $pack_build = $pack_build = $tokens[0]
-} else {
-    $pack_build = "0.1.0" # default value
+$version = $args | Where-Object { $_.startsWith("--version=") }
+if ($version) {
+    # Example: --version=0.1.$(Build.BuildNumber)
+    Write-Host ($version)
+    $version = $version.split("=")[1]
 }
-Write-Host ("pack_build: " + $pack_build)
 
 if (!(Get-Command "npm" -ErrorAction SilentlyContinue)) {
     throw "npm is required in PATH"
@@ -49,7 +45,7 @@ if ($pack -and !(Get-Command "nuget" -ErrorAction SilentlyContinue)) {
     throw """--pack"" operation requires nugetin PATH"
 }
 
-$buildArgs = $args | Where-Object { $_ -notlike "--purge" -and $_ -notlike "--pack" -and -not ($_.startsWith("--pack.build="))}
+$buildArgs = $args | Where-Object { $_ -notlike "--purge" -and $_ -notlike "--pack" -and -not ($_.startsWith("--version="))}
 $buildTools = @("@angular/cli@1.7.4","gulp-cli@2.0.1")
 
 Push-Location src
@@ -75,7 +71,7 @@ try {
 
     Write-Host ("OutputDirectory: " + (Resolve-Path "..\dist").Path)
     if ($pack) {
-        nuget pack . -Version $pack_build -OutputDirectory (Resolve-Path "..\dist").Path
+        nuget pack . -Version $version -OutputDirectory (Resolve-Path "..\dist").Path
     }
 } finally {
     Pop-Location
