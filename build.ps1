@@ -26,6 +26,12 @@ function ShouldNPMInstall {
 
 $purge = $args | Where-Object { $_ -like "--purge" }
 $pack = $args | Where-Object { $_ -like "--pack" }
+$version = $args | Where-Object { $_.startsWith("--version=") }
+if ($version) {
+    # Example: --version=0.1.$(Build.BuildNumber)
+    Write-Host ($version)
+    $version = $version.split("=")[1]
+}
 
 if (!(Get-Command "npm" -ErrorAction SilentlyContinue)) {
     throw "npm is required in PATH"
@@ -39,7 +45,7 @@ if ($pack -and !(Get-Command "nuget" -ErrorAction SilentlyContinue)) {
     throw """--pack"" operation requires nugetin PATH"
 }
 
-$buildArgs = $args | Where-Object { $_ -notlike "--purge" -and $_ -notlike "--pack" }
+$buildArgs = $args | Where-Object { $_ -notlike "--purge" -and $_ -notlike "--pack" -and -not ($_.startsWith("--version="))}
 $buildTools = @("@angular/cli@1.7.4","gulp-cli@2.0.1")
 
 Push-Location src
@@ -63,8 +69,9 @@ try {
     Write-Host "Building project..."
     gulp build $buildArgs
 
+    Write-Host ("OutputDirectory: " + (Resolve-Path "..\dist").Path)
     if ($pack) {
-        nuget pack . -OutputDirectory (Resolve-Path "..\dist").Path
+        nuget pack . -Version $version -OutputDirectory (Resolve-Path "..\dist").Path
     }
 } finally {
     Pop-Location
