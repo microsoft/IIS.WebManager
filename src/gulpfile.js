@@ -40,21 +40,29 @@ gulp.task('clean', () => {
         .pipe(clean({ force: true }));
 });
 
+// Check if obj is javascript primitive type
 function isPrimitive(obj) {
     return (obj !== Object(obj));
 }
 
+// Merge javascript json objects. We are not using gulp-merge-json currently because it messed up the order of css files
 function merge(obj1, obj2) {
     if (Array.isArray(obj2)) {
+        // array can only merge with array
         if (Array.isArray(obj1)) {
+            // If array is a primitive array, just concat
+            // Note that we assume that both array's element are primitive
+            // by just sampling the first element of second list
             if (obj2.length > 0) {
                 let test = obj2[0]
                 if (isPrimitive(test)) {
                     return obj1.concat(obj2)
                 }
             }
+            // merge elements of same indices
             for (let i = 0; i < obj2.length; i++) {
                 if (i >= obj1.length) {
+                    // if reached EOL for first array, just copy the rest of the second array over
                     while (i < obj2.length) {
                         obj1.push(obj2[i])
                         i++
@@ -71,6 +79,7 @@ function merge(obj1, obj2) {
             throw `lhs is array, rhs is not`
         } else {
             for (let key in obj2) {
+                // merge properties of the same name
                 if (obj1[key]) {
                     obj1[key] = merge(obj1[key], obj2[key])
                 } else {

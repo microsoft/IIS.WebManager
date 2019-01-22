@@ -239,9 +239,11 @@ if (!$config.security.users.owners.Contains($user)) {
         $private:originalAccessRule = $null
         try {
             if (!$dirAccessGranted) {
+                ## we need to grant modify access to directory to change the configuration file
                 $inheritFlags = [System.Security.AccessControl.InheritanceFlags]::ContainerInherit -bOr [System.Security.AccessControl.InheritanceFlags]::ObjectInherit
                 $propagationFlags = [System.Security.AccessControl.PropagationFlags]::InheritOnly
                 $private:minialAccess = [System.Security.AccessControl.FileSystemRights]::ReadAndExecute -bOr [System.Security.AccessControl.FileSystemRights]::Synchronize
+                ## We are about to change access rule for "BUILTIN\Administrators", save original permission so we can roll back if necessary in the finally block
                 $private:originalAccessRule = $dirAcl.Access | Where-Object { $_.IdentityReference.Value -eq "BUILTIN\Administrators" -and ($_.AccessControlType -eq $allow) }
                 if ($private:originalAccessRule) {
                     $inheritFlags = $private:originalAccessRule.InheritanceFlags
@@ -262,6 +264,7 @@ if (!$config.security.users.owners.Contains($user)) {
                 $dirAcl.RemoveAccessRule($private:tempAccessRule) | Out-Null
                 $update = $true
             }
+            ## Restore to original access rule or in the case where it didn't exist allow administrator read access
             if ($private:originalAccessRule) {
                 LogVerbose "Restoring original access rules"
                 $dirAcl.SetAccessRule($private:originalAccessRule) | Out-Null
