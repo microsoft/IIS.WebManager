@@ -85,14 +85,14 @@ function WaitForServerToStart($service) {
     LogVerbose "Server started, time remaining ${remainingTime}..."
 }
 
-$adminAPIInstalled = $false
+$script:adminAPIInstalled = $false
 function InstallComponents {
     if ($dotnetCoreLocation) {
         Install "dotnet-core-runtime" $dotnetCoreInstallType $dotnetCoreLocation
     }
     Install "iis-administration-api" $iisAdminInstallType $adminAPILocation
     WaitForServerToStart $serviceName
-    $adminAPIInstalled = $true
+    $script:adminAPIInstalled = $true
 }
 
 function Install([string] $scenario, [string] $installType, [string] $location) {
@@ -232,21 +232,49 @@ if (!$config.security.users.owners.Contains($user)) {
             LogVerbose "Updating Acl to remove readonly access..."
             Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
         }
-        $rights = [System.Security.AccessControl.FileSystemRights]::Traverse `
-            -bOr [System.Security.AccessControl.FileSystemRights]::Modify `
-            -bOr [System.Security.AccessControl.FileSystemRights]::ChangePermissions
-        $dirAccessGranted = $dirAcl.Access | Where-Object {(($_.IdentityReference.Value -eq "BUILTIN\Administrators") -and (($_.FileSystemRights -bAnd $rights) -eq $rights))}
-        if (!$dirAccessGranted) {
-            $inheritFlags = [System.Security.AccessControl.InheritanceFlags]::ContainerInherit `
-                -bOr [System.Security.AccessControl.InheritanceFlags]::ObjectInherit
-            $propFlags = [System.Security.AccessControl.PropagationFlags]::InheritOnly
-            $ar = New-Object System.Security.AccessControl.FileSystemAccessRule("BUILTIN\Administrators", $rights, $inheritFlags, $propFlags, "allow")
-            $dirAcl.SetAccessRule($ar) | Out-Null
-            LogVerbose "Setting Acl to enable administrators' write access"
-            Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
+        $modifyAcess = [System.Security.AccessControl.FileSystemRights]::Modify
+        $allow = [System.Security.AccessControl.AccessControlType]::Allow
+        $dirAccessGranted = $dirAcl.Access | Where-Object { ($_.IdentityReference.Value -eq "BUILTIN\Administrators") -and ($_.AccessControlType -eq $allow) -and (($_.FileSystemRights -bAnd $modifyAcess) -eq $modifyAcess) }
+        $private:tempAccessRule = $null
+        $private:originalAccessRule = $null
+        try {
+            if (!$dirAccessGranted) {
+                ## we need to grant modify access to directory to change the configuration file
+                $inheritFlags = [System.Security.AccessControl.InheritanceFlags]::ContainerInherit -bOr [System.Security.AccessControl.InheritanceFlags]::ObjectInherit
+                $propagationFlags = [System.Security.AccessControl.PropagationFlags]::InheritOnly
+                $private:minialAccess = [System.Security.AccessControl.FileSystemRights]::ReadAndExecute -bOr [System.Security.AccessControl.FileSystemRights]::Synchronize
+                ## We are about to change access rule for "BUILTIN\Administrators", save original permission so we can roll back if necessary in the finally block
+                $private:originalAccessRule = $dirAcl.Access | Where-Object { $_.IdentityReference.Value -eq "BUILTIN\Administrators" -and ($_.AccessControlType -eq $allow) }
+                if ($private:originalAccessRule) {
+                    $inheritFlags = $private:originalAccessRule.InheritanceFlags
+                    $propagationFlags = $private:originalAccessRule.propagationFlags
+                    $private:minialAccess = $private:originalAccessRule.FileSystemRights
+                }
+                $private:tempAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule -ArgumentList "BUILTIN\Administrators", ($private:minialAccess -bOr $modifyAcess), $inheritFlags, $propagationFlags, $allow
+                $dirAcl.SetAccessRule($private:tempAccessRule) | Out-Null
+                LogVerbose "Setting Acl to enable administrators' write access"
+                Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
+            }
+            LogVerbose "Saving new configuration"
+            $config | ConvertTo-Json -depth 100 | Out-File $configLocation
+        } finally {
+            $update = $false
+            if ($private:tempAccessRule) {
+                LogVerbose "Removing temp access rules"
+                $dirAcl.RemoveAccessRule($private:tempAccessRule) | Out-Null
+                $update = $true
+            }
+            ## Restore to original access rule or in the case where it didn't exist allow administrator read access
+            if ($private:originalAccessRule) {
+                LogVerbose "Restoring original access rules"
+                $dirAcl.SetAccessRule($private:originalAccessRule) | Out-Null
+                $update = $true
+            }
+            if ($update) {
+                LogVerbose "Revoking write access rules"
+                Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
+            }
         }
-        LogVerbose "Saving new configuration"
-        $config | ConvertTo-Json -depth 100 | Out-File $configLocation
         LogVerbose "Restarting service"
         Restart-Service -Name $serviceName | Out-Null
         WaitForServerToStart $serviceName
@@ -254,6 +282,6 @@ if (!$config.security.users.owners.Contains($user)) {
 }
 
 ConvertTo-Json @{
-    "adminAPIInstalled" = $adminAPIInstalled;
+    "adminAPIInstalled" = $script:adminAPIInstalled;
     "groupModified" = $groupModified
 } -Compress -Depth 100

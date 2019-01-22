@@ -14,7 +14,8 @@ const gulpResJson = require('./gulps/gulp-resjson');
 const gulpSvgCode = require('./gulps/gulp-svg-code');
 const gulpMergeJsonInFolders = require('./gulps/gulp-merge-json-in-folders');
 const gulpLicense = require('./tools/gulp-license');
-const merge = require('gulp-merge-json');
+const through = require('through');
+const Vinyl = require('vinyl');
 
 gulp.task('license', () => {
     return gulp.src('app/**/*.*')
@@ -39,14 +40,79 @@ gulp.task('clean', () => {
         .pipe(clean({ force: true }));
 });
 
+// Check if obj is javascript primitive type
+function isPrimitive(obj) {
+    return (obj !== Object(obj));
+}
+
+// Merge javascript json objects. We are not using gulp-merge-json currently because it messed up the order of css files
+function merge(obj1, obj2) {
+    if (Array.isArray(obj2)) {
+        // array can only merge with array
+        if (Array.isArray(obj1)) {
+            // If array is a primitive array, just concat
+            // Note that we assume that both array's element are primitive
+            // by just sampling the first element of second list
+            if (obj2.length > 0) {
+                let test = obj2[0]
+                if (isPrimitive(test)) {
+                    return obj1.concat(obj2)
+                }
+            }
+            // merge elements of same indices
+            for (let i = 0; i < obj2.length; i++) {
+                if (i >= obj1.length) {
+                    // if reached EOL for first array, just copy the rest of the second array over
+                    while (i < obj2.length) {
+                        obj1.push(obj2[i])
+                        i++
+                    }
+                } else {
+                    obj1[i] = merge(obj1[i], obj2[i])
+                }
+            }
+        } else {
+            throw `lhs is not array, rhs is`
+        }
+    } else {
+        if (Array.isArray(obj1)) {
+            throw `lhs is array, rhs is not`
+        } else {
+            for (let key in obj2) {
+                // merge properties of the same name
+                if (obj1[key]) {
+                    obj1[key] = merge(obj1[key], obj2[key])
+                } else {
+                    obj1[key] = obj2[key]
+                }
+            }
+        }
+    }
+    return obj1
+}
+
+
 gulp.task('generate-angular-cli-json', (_) => {
     var override = process.argv.slice(3).find(function(s, _, __) { return s.startsWith('--env=') })
     var scenario = override ? override.split('=').pop().split('.')[0] : 'site'
     // merge the base json with the json file specific to the scenario
     return gulp.src(['angular-cli.template.json', `angular-cli.${scenario}.json`])
-        .pipe(merge({
-            fileName: 'angular-cli.json'
-        }))
+        .pipe(function() {
+            let merged = {}
+            function parseAndMerge(file) {
+                let data = file.contents.toString('utf8')
+                let obj = JSON.parse(data)
+                merged = merge(merged, obj)
+            }
+            function endStream() {
+                this.emit('data', new Vinyl({
+                    path: 'angular-cli.json',
+                    contents: Buffer.from(JSON.stringify(merged, null, 2)),
+                })),
+                this.emit('end')
+            }
+            return through(parseAndMerge, endStream)
+        }())
         .pipe(gulp.dest('.'))
 });
 
