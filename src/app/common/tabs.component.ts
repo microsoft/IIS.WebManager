@@ -1,10 +1,8 @@
-import { NgModule, Component, AfterViewInit, Input, Output, EventEmitter, Inject, Optional, ViewChild, ViewChildren, ContentChildren, QueryList, OnInit, ElementRef, Renderer, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
+import { NgModule, Component, AfterViewInit, Input, ViewChild, ViewChildren, ContentChildren, QueryList, OnInit, ElementRef, Renderer, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-import { Subscription } from 'rxjs/Subscription'
-
+import { Subscription } from 'rxjs'
 import { DynamicComponent } from './dynamic.component';
 import { ComponentUtil } from '../utils/component';
 import { SectionHelper } from './section.helper';

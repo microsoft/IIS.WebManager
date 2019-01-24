@@ -1,8 +1,6 @@
-import { Component, Input, Output, EventEmitter, ElementRef, ViewChildren, QueryList, OnInit, OnDestroy, OnChanges, SimpleChange } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChildren, QueryList, OnInit, OnDestroy, OnChanges, SimpleChange } from '@angular/core';
 import { NgModel } from '@angular/forms';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Subscription } from 'rxjs';
 import { IpRestrictionsService } from './ip-restrictions.service';
 import { DiffUtil } from '../../utils/diff';
 import { RestrictionRule, IpRestrictions } from './ip-restrictions'

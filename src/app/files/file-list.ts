@@ -1,20 +1,14 @@
-import { Component, OnInit, OnDestroy, Output, Input, Inject, ViewChild, ElementRef } from '@angular/core';
-
-import 'rxjs/add/operator/buffer';
-import 'rxjs/add/operator/take';
-import { Subscription } from 'rxjs/Subscription';
-import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-
+import { Component, OnInit, OnDestroy, Input, Inject, ViewChild, ElementRef } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { NotificationService } from '../notification/notification.service';
 import { OrderBy, SortPipe } from '../common/sort.pipe';
-import { FilterPipe } from '../common/filter.pipe';
 import { Range } from '../common/virtual-list.component';
-
-import { ApiFile, ApiFileType, MimeTypes } from './file';
+import { ApiFile, ApiFileType } from './file';
 import { Location } from './location';
 import { FilesService } from './files.service';
 import { FileNavService } from './file-nav.service';
-
+import { IntervalObservable } from 'rxjs-compat/observable/IntervalObservable';
+import { buffer, map, filter, take } from 'rxjs/operators'
 
 @Component({
     selector: 'file-list',
@@ -141,9 +135,9 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        let fileStream = this._navSvc.files.map(items => {
+        let fileStream = this._navSvc.files.pipe(map(items => {
             return this.types.length == 0 ? items : items.filter(f => this.types.findIndex(t => t === f.type) != -1);
-        });
+        }));
 
         // 
         // Current dir change
@@ -163,9 +157,13 @@ export class FileListComponent implements OnInit, OnDestroy {
             }
         }));
 
-        this._subscriptions.push(fileStream.buffer(IntervalObservable.create(300)).filter(v => v.length > 0).subscribe(_ => {
-            this._filter = "";
-            this.filter();
+        this._subscriptions.push(
+            fileStream.pipe(
+                buffer(IntervalObservable.create(300)),
+                filter(v => v.length > 0)
+            ).subscribe(_ => {
+                this._filter = "";
+                this.filter();
         }));
     }
 
@@ -380,7 +378,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     private filter() {
-        this._navSvc.files.take(1).subscribe(files => {
+        this._navSvc.files.pipe(take(1)).subscribe(files => {
             if (this._filter) {
                 let filter = ("*" + this._filter + "*").replace("**", "*").replace("?", "");
 

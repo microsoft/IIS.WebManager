@@ -1,24 +1,14 @@
-import { Injectable, Inject, Optional } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-
-import { Subscription } from "rxjs/Subscription";
-import { Subject } from "rxjs/Subject";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { Observable } from "rxjs/Observable";
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/startWith';
-import 'rxjs/add/operator/pairwise';
-import 'rxjs/add/operator/first';
-
+import { Subscription, BehaviorSubject, Observable} from 'rxjs';
+import { startWith, pairwise } from 'rxjs/operators';
 import { HttpClient } from '../../common/httpclient';
 import { IDisposable } from '../../common/IDisposable';
 import { NotificationService } from '../../notification/notification.service';
-
 import { FilesService } from '../../files/files.service';
-import { ApiFile, ApiFileType, MimeTypes, ChangeType } from '../../files/file';
+import { ApiFile, ApiFileType, ChangeType } from '../../files/file';
 import { WebFile, WebFileType } from './webfile';
-
 import { WebSite } from '../websites/site';
 import { LocationHash } from '../../common/location-hash';
 
@@ -98,7 +88,10 @@ export class WebFilesService implements IDisposable {
 
         //
         // Hash Navigation
-        this._subscriptions.push(this._hashWatcher.hash.startWith(null).pairwise().subscribe((pair: [string, string]) => {
+        this._subscriptions.push(this._hashWatcher.hash.pipe(
+            startWith(null),
+            pairwise()
+        ).subscribe((pair: [string, string]) => {
             let previous = pair[0];
             let hash = pair[1];
 

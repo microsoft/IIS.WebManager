@@ -1,5 +1,5 @@
 import { HttpFacade } from 'common/http-facade'
-import { Observable } from 'rxjs/Observable'
+import { Observable } from 'rxjs'
 import { Request, Response, RequestMethod } from '@angular/http'
 import { PowershellService } from './powershell-service'
 import { Injectable, Inject } from '@angular/core';

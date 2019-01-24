@@ -1,8 +1,8 @@
 ﻿import { Injectable } from '@angular/core';
-import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-import { Subscription } from "rxjs/Subscription";
+import { Subscription } from "rxjs";
 import { HttpClient } from '../../common/httpclient';
 import { ServerSnapshot } from './server-snapshot';
+import { IntervalObservable } from 'rxjs-compat/observable/IntervalObservable';
 
 @Injectable()
 export class MonitoringService {

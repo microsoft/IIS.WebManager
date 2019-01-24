@@ -1,11 +1,8 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
-
+import { Subscription } from 'rxjs';
 import { WebSite } from './site';
 import { WebSitesService } from './websites.service';
-
 import { ApplicationPool } from '../app-pools/app-pool';
-
 
 @Component({
     selector: 'website-list-component',

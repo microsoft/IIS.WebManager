@@ -1,8 +1,6 @@
 ﻿import { Component, OnInit, OnDestroy, ViewChildren, QueryList } from '@angular/core';
 import { NgModel } from '@angular/forms';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Subscription } from 'rxjs';
 import { ApiFile } from '../../files/file';
 import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';

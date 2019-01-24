@@ -1,17 +1,11 @@
 import { Injectable } from '@angular/core';
 import { RequestMethod, RequestOptionsArgs, Response } from '@angular/http';
-
-import { Subject } from "rxjs/Subject";
-import { Observable } from "rxjs/Observable";
-import { Subscription } from "rxjs/Subscription";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-
+import { Subject, Observable, Subscription, BehaviorSubject } from "rxjs";
 import { HttpClient } from '../common/httpclient';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../notification/notification';
 import { Progress } from './progress';
 import { IDisposable } from '../common/idisposable';
-
 import { ApiFile, ApiFileType, FileChangeEvent, MimeTypes } from './file';
 import { Location } from './location';
 import { ParallelExecutor } from './parallel-executor';
@@ -890,7 +884,7 @@ export class FilesService implements IDisposable {
     }
 
     private updateMetadata(file: ApiFile, metaData: File): Promise<ApiFile> {
-        return this.updateInternal(file, { last_modified: metaData.lastModifiedDate })
+        return this.updateInternal(file, { last_modified: metaData.lastModified })
             .then(fileInfo => {
                 return ApiFile.fromObj(fileInfo);
             });

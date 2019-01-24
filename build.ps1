@@ -68,7 +68,7 @@ Write-Host "Dump the root source directory..."
 Get-ChildItem $Env:BUILD_SOURCESDIRECTORY
 
 $buildArgs = $args | Where-Object { $_ -notlike "--purge" -and $_ -notlike "--pack" -and -not ($_.startsWith("--version="))}
-$buildTools = @("@angular/cli@1.7.4","gulp-cli@2.0.1")
+$buildTools = @("@angular/cli@7.1.2","gulp-cli@4.0.0")
 
 Push-Location src
 try {

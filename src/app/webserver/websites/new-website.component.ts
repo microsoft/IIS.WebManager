@@ -1,8 +1,6 @@
 import { Component, ViewChild, Output, EventEmitter, Inject } from '@angular/core';
-import { Subject } from 'rxjs/Subject'
-
+import { Subject } from 'rxjs'
 import { Selector } from '../../common/selector';
-
 import { ApiFile } from '../../files/file';
 import { WebSite, Binding } from './site';
 import { WebSitesService } from './websites.service';

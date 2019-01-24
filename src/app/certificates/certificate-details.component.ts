@@ -1,8 +1,4 @@
-﻿import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
-import { DateTime } from '../common/primitives';
+﻿import { Component, Input } from '@angular/core';
 import { Certificate } from './certificate';
 
 @Component({

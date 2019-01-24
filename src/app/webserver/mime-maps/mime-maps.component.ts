@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy} from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Subscription } from 'rxjs';
 import { DiffUtil } from '../../utils/diff';
 import { StaticContentService } from '../static-content/static-content.service';
-import { StaticContent, MimeMap } from '../static-content/static-content';
+import { StaticContent } from '../static-content/static-content';
 
 @Component({
     template: `

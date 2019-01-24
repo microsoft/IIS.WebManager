@@ -1,19 +1,14 @@
 import {Injectable, Optional} from '@angular/core';
 import {RequestMethod} from '@angular/http';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/src/providers/angulartics2-ga';
-
-
 import {HttpClient} from '../common/httpclient';
 import {ConnectService} from '../connect/connect.service';
 import {SETTINGS} from '../main/settings';
 import {NotificationService} from '../notification/notification.service';
 import {Notification, NotificationType} from '../notification/notification';
-
-import {IntervalObservable} from 'rxjs/observable/IntervalObservable';
 import { ComponentReference, AppModuleName } from '../main/settings';
-
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/operator/first';
+import { first } from 'rxjs/operators'
+import { IntervalObservable } from 'rxjs-compat/observable/IntervalObservable';
 
 const AppModuleReference: ComponentReference = { name: AppModuleName, ico: null, component_name: AppModuleName, api_name: null, api_path: null };
 
@@ -78,7 +73,7 @@ export class VersionService {
 
     private notificationExists(): boolean {
         let notifications: Notification[];
-        let sub = this._notificationService.notifications.first().subscribe(n => {
+        let sub = this._notificationService.notifications.pipe(first()).subscribe(n => {
             notifications = n;
         });
         
@@ -138,7 +133,7 @@ export class VersionService {
 
     private connected() {
         let connection = null;
-        this._connectSvc.active.first().subscribe(c => {
+        this._connectSvc.active.pipe(first()).subscribe(c => {
             connection = c;
         });
         return connection != null;

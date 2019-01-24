@@ -1,7 +1,6 @@
 import { Component, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
-
+import { Subscription } from 'rxjs';
 import { Constants } from './constants';
 import { ConnectionType } from './connection-type';
 import { ConnectService } from './connect.service';

@@ -1,9 +1,8 @@
 
 import './polyfills'
 
-import { environment } from '../environments/environment'
+import { environment } from 'environments/environment'
 import { AppModule } from './app.module'
-import { WACAppModule } from './app.wac.module'
 import { CoreEnvironment } from '@microsoft/windows-admin-center-sdk/core'
 import { enableProdMode } from '@angular/core'
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic'
@@ -23,7 +22,7 @@ if (environment.WAC) {
         {
             resourcesPath: 'assets/strings'
         })
-        .then(() => platformBrowserDynamic().bootstrapModule(WACAppModule));
+        .then(() => platformBrowserDynamic().bootstrapModule(AppModule));
 } else {
     platformBrowserDynamic().bootstrapModule(AppModule);
 }

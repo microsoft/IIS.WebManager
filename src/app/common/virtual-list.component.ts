@@ -1,9 +1,7 @@
 import {NgModule, Component, OnInit, OnDestroy, OnChanges, AfterContentInit, Output, Input, EventEmitter, ViewChild, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef, SimpleChange, ContentChildren, QueryList, Directive} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-
-import {Subscription} from "rxjs/Subscription";
-
+import {Subscription} from "rxjs";
 import {WindowService} from '../main/window.service';
 import {ComponentUtil} from '../utils/component';
 

@@ -1,8 +1,7 @@
 ﻿import { NgModule, Component, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { WindowService } from '../main/window.service';
 
 @Component({

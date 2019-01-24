@@ -1,7 +1,7 @@
 
 import {Headers, Response, Request, RequestOptions, RequestOptionsArgs, RequestMethod} from '@angular/http';
 import {ApiConnection} from './api-connection';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import { HttpFacade } from 'common/http-facade';
 import { Inject, Injectable } from '@angular/core';
 

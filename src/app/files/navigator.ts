@@ -4,8 +4,7 @@ import { Location } from '@angular/common';
 import { IDisposable } from '../common/IDisposable';
 import { LocationHash } from '../common/location-hash';
 
-import { Observable } from "rxjs/Observable";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import { Observable, BehaviorSubject } from "rxjs";
 
 export class Navigator implements IDisposable {
     private _hashWatcher: LocationHash;

@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Subscription } from 'rxjs';
 import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
-import { DefaultDocument, File } from './default-documents';
+import { DefaultDocument } from './default-documents';
 import { DefaultDocumentsService } from './default-documents.service';
 import { NotificationService } from '../../notification/notification.service';
 

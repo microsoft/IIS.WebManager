@@ -1,17 +1,11 @@
-import { Component, OnInit, OnDestroy, Input, ViewChild, ElementRef } from '@angular/core';
-
-import 'rxjs/add/operator/buffer';
-import 'rxjs/add/operator/take';
-import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { NotificationService } from '../../notification/notification.service';
 import { OrderBy, SortPipe } from '../../common/sort.pipe';
 import { Range } from '../../common/virtual-list.component';
-
 import { WebFilesService } from './webfiles.service';
 import { WebFileType, WebFile } from './webfile';
-import { WebSite } from '../websites/site';
-
+import { IntervalObservable } from 'rxjs-compat/observable/IntervalObservable';
+import { buffer, filter, take } from 'rxjs/operators'
 
 @Component({
     selector: 'webfile-list',
@@ -148,7 +142,10 @@ export class WebFileListComponent implements OnInit, OnDestroy {
             }
         }));
 
-        this._subscriptions.push(this._svc.files.buffer(IntervalObservable.create(300)).filter(v => v.length > 0).subscribe(_ => {
+        this._subscriptions.push(this._svc.files.pipe(
+            buffer(IntervalObservable.create(300)),
+            filter(v => v.length > 0)
+        ).subscribe(_ => {
             this.clearSelection();
             this._filter = "";
             this.filter();
@@ -308,7 +305,7 @@ export class WebFileListComponent implements OnInit, OnDestroy {
     }
 
     private filter() {
-        this._svc.files.take(1).subscribe(files => {
+        this._svc.files.pipe(take(1)).subscribe(files => {
             if (this._filter) {
                 let filter = ("*" + this._filter + "*").replace("**", "*").replace("?", "");
 

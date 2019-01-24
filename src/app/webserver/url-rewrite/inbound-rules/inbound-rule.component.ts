@@ -1,7 +1,4 @@
 ﻿import { Component, OnChanges, EventEmitter, Input, Output, SimpleChange } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
 import { NotificationService } from '../../../notification/notification.service';
 import { UrlRewriteService } from '../service/url-rewrite.service';
 import { InboundRule, ActionTypeHelper } from '../url-rewrite';

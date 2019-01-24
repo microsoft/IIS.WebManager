@@ -1,11 +1,9 @@
 import {Component, OnDestroy, ElementRef} from '@angular/core';
-import {RouterLink, Router} from '@angular/router';
-import {Subscription}   from 'rxjs/Subscription';
+import {Router} from '@angular/router';
+import {Subscription}   from 'rxjs';
 
 import {ConnectService} from './connect.service';
 import {ApiConnection} from './api-connection';
-import {ComponentUtil} from '../utils/component';
-
 
 @Component({
     selector: 'connection-picker',

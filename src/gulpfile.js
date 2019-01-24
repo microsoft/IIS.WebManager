@@ -3,12 +3,10 @@
 const gulp = require('gulp');
 const gutil = require('gulp-util');
 const clean = require('gulp-clean');
-const ngCompile = require('gulp-ngc');
 const gulpTslint = require('gulp-tslint');
 const tslint = require('tslint');
-const runSequence = require('run-sequence');
 const inlineNg2Template = require('gulp-inline-ng2-template');
-const child_process = require('child_process');
+const spawn = require('child_process').spawn;
 const gulpPsCode = require('./gulps/gulp-ps-code');
 const gulpResJson = require('./gulps/gulp-resjson');
 const gulpSvgCode = require('./gulps/gulp-svg-code');
@@ -36,7 +34,7 @@ gulp.task('license', () => {
 });
 
 gulp.task('clean', () => {
-    return gulp.src(['../dist', '../bundle', 'generated', 'app/assets/strings', 'inlineSrc'], { read: false })
+    return gulp.src(['../dist', '../bundle', 'generated', 'app/assets/strings', 'inlineSrc'], { allowEmpty: true, read: false })
         .pipe(clean({ force: true }));
 });
 
@@ -92,11 +90,11 @@ function merge(obj1, obj2) {
 }
 
 
-gulp.task('generate-angular-cli-json', (_) => {
-    var override = process.argv.slice(3).find(function(s, _, __) { return s.startsWith('--env=') })
+gulp.task('generate-angular-json', (_) => {
+    var override = process.argv.slice(3).find(function(s, _, __) { return s.startsWith('--configuration=') || s.startsWith('-c=') })
     var scenario = override ? override.split('=').pop().split('.')[0] : 'site'
     // merge the base json with the json file specific to the scenario
-    return gulp.src(['angular-cli.template.json', `angular-cli.${scenario}.json`])
+    return gulp.src(['angular.template.json', `angular.${scenario}.json`])
         .pipe(function() {
             let merged = {}
             function parseAndMerge(file) {
@@ -106,7 +104,7 @@ gulp.task('generate-angular-cli-json', (_) => {
             }
             function endStream() {
                 this.emit('data', new Vinyl({
-                    path: 'angular-cli.json',
+                    path: 'angular.json',
                     contents: Buffer.from(JSON.stringify(merged, null, 2)),
                 })),
                 this.emit('end')
@@ -141,18 +139,14 @@ gulp.task('generate-resjson-interface', () => {
 });
 
 gulp.task('merge-localized-json', () => {
-    return gulp.src(['./node_modules/@microsoft/windows-admin-center-sdk/dist/assets/strings', './node_modules/@msft-sme/**/dist/assets/strings'])
+    return gulp.src(['./node_modules/@microsoft/windows-admin-center-sdk/core/assets/strings'])
         .pipe(gulpMergeJsonInFolders({ src: 'app/assets/strings' }))
         .pipe(gulp.dest('app/assets/strings'));
 });
 
-gulp.task('generate-resjson', (cb) => {
-    runSequence(['generate-resjson-json', 'generate-resjson-interface'], 'merge-localized-json', cb);
-});
+gulp.task('generate-resjson', gulp.series(gulp.parallel('generate-resjson-json', 'generate-resjson-interface'), 'merge-localized-json'), () => null);
 
-gulp.task('generate', (cb) => {
-    runSequence(['generate-angular-cli-json', 'generate-powershell', 'generate-svg', 'generate-resjson'], cb);
-});
+gulp.task('generate', gulp.series('generate-angular-json', 'generate-powershell', 'generate-svg', 'generate-resjson'), () => null);
 
 gulp.task('lint', () => {
     var program = tslint.Linter.createProgram("app/tsconfig.json");
@@ -176,30 +170,24 @@ gulp.task('copy', () => {
         .pipe(gulp.dest('../dist'));
 });
 
-gulp.task('compile', () => {
-    // Why does this work??
-    return ngCompile('app/tsconfig-inline.json');
-});
-
-gulp.task('bundle', cb => {
+gulp.task('bundle', () => {
     var args = process.argv.slice(3);
-    args.splice(0, 0, 'build', '-progress=false');
-    var cmd = child_process.spawn('ng.cmd', args);
-    cmd.stdout.on('data', function (data) { gutil.log(data.toString()); });
-    cmd.stderr.on('data', function (data) { gutil.log(data.toString()); });
-    cmd.on('exit', function (code) { cb(); });
+    args.unshift('build');
+    let proc = spawn('ng.cmd', args);
+    proc.stdout.on('data', function (data) { gutil.log(data.toString()); });
+    proc.stderr.on('data', function (data) { gutil.log(data.toString()); });
+    // cmd.on('exit', function (code) { cb(); });
+    return proc
 });
 
-gulp.task('serve', (cb) => {
+gulp.task('serve', () => {
     var args = process.argv.slice(3);
-    args.splice(0, 0, 'serve', '-progress=false');
-    var cmd = child_process.spawn('ng.cmd', args);
-    cmd.stdout.on('data', function (data) { gutil.log(data.toString()); });
-    cmd.stderr.on('data', function (data) { gutil.log(data.toString()); });
-    cmd.on('exit', function (code) { cb(); });
+    args.unshift('serve');
+    let proc = spawn('ng.cmd', args);
+    proc.stdout.on('data', function (data) { gutil.log(data.toString()); });
+    proc.stderr.on('data', function (data) { gutil.log(data.toString()); });
+    // cmd.on('exit', function (code) { cb(); });
+    return proc
 });
 
-gulp.task('build', (cb) => {
-    // skipping lint, inline
-    runSequence('clean', 'generate', ['compile', 'copy'], 'bundle', cb);
-});
+gulp.task('build', gulp.series('clean', 'generate', 'copy', 'bundle'), () => null);

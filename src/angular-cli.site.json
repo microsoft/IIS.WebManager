@@ -1,9 +1,0 @@
-{
-  "apps": [
-    {
-      "styles": [
-        "../themes/themes.blue.css"
-      ]
-    }
-  ]
-}

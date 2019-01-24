@@ -1,14 +1,8 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { OrderBy, SortPipe } from '../../common/sort.pipe';
 import { Range } from '../../common/virtual-list.component';
-
 import { ApiFile } from '../../files/file';
-import { FilesService } from '../../files/files.service';
-
-import { Logging } from './logging';
 import { LoggingService } from './logging.service';
 
 

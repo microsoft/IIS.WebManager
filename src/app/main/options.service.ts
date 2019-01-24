@@ -1,12 +1,6 @@
 import { Injectable } from '@angular/core';
-
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/fromEvent';
-
 import { IDisposable } from '../common/idisposable';
 import { WindowService } from './window.service';
-
 
 @Injectable()
 export class OptionsService implements IDisposable {

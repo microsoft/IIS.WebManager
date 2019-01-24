@@ -1,10 +1,7 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Subscription } from 'rxjs';
 import { CertificateListItem } from './certificate-list-item';
 import { Certificate } from './certificate';
-import { DateTime } from '../common/primitives';
 import { Range } from '../common/virtual-list.component';
 import { CertificatesService } from './certificates.service';
 

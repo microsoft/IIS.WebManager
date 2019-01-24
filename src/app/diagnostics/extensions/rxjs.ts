@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs'
 import { environment } from 'environments/environment'
 import { Logger, LogLevel } from 'diagnostics/logger'
+import { tap } from 'rxjs/operators'
 
 export enum ObservableReportLevel {
     COMPLETE = 1,
@@ -8,61 +9,61 @@ export enum ObservableReportLevel {
     ERROR = 1 << 2,
 }
 
-declare module 'rxjs/Observable' {
-    interface Observable<T> {
-        logDebug<T>(
-            this: Observable<T>,
-            logger: Logger,
-            identifier: string,
-        ): Observable<T>
+// declare module 'rxjs/Observable' {
+//     interface Observable<T> {
+//         logDebug<T>(
+//             this: Observable<T>,
+//             logger: Logger,
+//             identifier: string,
+//         ): Observable<T>
 
-        logDebug<T>(
-            this: Observable<T>,
-            logger: Logger,
-            identifier: string,
-            level: ObservableReportLevel,
-        ): Observable<T>
+//         logDebug<T>(
+//             this: Observable<T>,
+//             logger: Logger,
+//             identifier: string,
+//             level: ObservableReportLevel,
+//         ): Observable<T>
 
-        logInfo<T>(
-            this: Observable<T>,
-            logger: Logger,
-            identifier: string,
-        ): Observable<T>
+//         logInfo<T>(
+//             this: Observable<T>,
+//             logger: Logger,
+//             identifier: string,
+//         ): Observable<T>
 
-        logInfo<T>(
-            this: Observable<T>,
-            logger: Logger,
-            identifier: string,
-            level: ObservableReportLevel,
-        ): Observable<T>
+//         logInfo<T>(
+//             this: Observable<T>,
+//             logger: Logger,
+//             identifier: string,
+//             level: ObservableReportLevel,
+//         ): Observable<T>
 
-        logWarning<T>(
-            this: Observable<T>,
-            logger: Logger,
-            identifier: string,
-        ): Observable<T>
+//         logWarning<T>(
+//             this: Observable<T>,
+//             logger: Logger,
+//             identifier: string,
+//         ): Observable<T>
 
-        logWarning<T>(
-            this: Observable<T>,
-            logger: Logger,
-            identifier: string,
-            level: ObservableReportLevel,
-        ): Observable<T>
+//         logWarning<T>(
+//             this: Observable<T>,
+//             logger: Logger,
+//             identifier: string,
+//             level: ObservableReportLevel,
+//         ): Observable<T>
 
-        logError<T>(
-            this: Observable<T>,
-            logger: Logger,
-            identifier: string,
-        ): Observable<T>
+//         logError<T>(
+//             this: Observable<T>,
+//             logger: Logger,
+//             identifier: string,
+//         ): Observable<T>
 
-        logError<T>(
-            this: Observable<T>,
-            logger: Logger,
-            identifier: string,
-            level: ObservableReportLevel,
-        ): Observable<T>
-    }
-}
+//         logError<T>(
+//             this: Observable<T>,
+//             logger: Logger,
+//             identifier: string,
+//             level: ObservableReportLevel,
+//         ): Observable<T>
+//     }
+// }
 
 function safeDisplay(logger: Logger, obj: any): any {
     try {
@@ -83,7 +84,7 @@ function log<T>(
     if (environment.Production && logLevel < LogLevel.WARN) {
         return o
     }
-    return o.do(
+    return o.pipe(tap(
         v => {
             if (reportLevel & ObservableReportLevel.SUCCESS) {
                 logger.log(logLevel, `${identifier} succeeded, result: ${safeDisplay(logger, v)}`)
@@ -99,46 +100,46 @@ function log<T>(
                 logger.log(logLevel, `${identifier} completed`)
             }
         }
-    )
+    ))
 }
 
 export function debug<T>(
-    this: Observable<T>,
+    o: Observable<T>,
     logger: Logger,
     identifier: string,
     level: ObservableReportLevel = ObservableReportLevel.ERROR | ObservableReportLevel.SUCCESS,
 ): Observable<T> {
-    return log(this, LogLevel.DEBUG, logger, identifier, level)
+    return log(o, LogLevel.DEBUG, logger, identifier, level)
 }
 
 export function info<T>(
-    this: Observable<T>,
+    o: Observable<T>,
     logger: Logger,
     identifier: string,
     level: ObservableReportLevel = ObservableReportLevel.ERROR | ObservableReportLevel.SUCCESS,
 ): Observable<T> {
-    return log(this, LogLevel.INFO, logger, identifier, level)
+    return log(o, LogLevel.INFO, logger, identifier, level)
 }
 
 export function warn<T>(
-    this: Observable<T>,
+    o: Observable<T>,
     logger: Logger,
     identifier: string,
     level: ObservableReportLevel = ObservableReportLevel.ERROR,
 ): Observable<T> {
-    return log(this, LogLevel.WARN, logger, identifier, level)
+    return log(o, LogLevel.WARN, logger, identifier, level)
 }
 
 export function error<T>(
-    this: Observable<T>,
+    o: Observable<T>,
     logger: Logger,
     identifier: string,
     level: ObservableReportLevel = ObservableReportLevel.ERROR,
 ): Observable<T> {
-    return log(this, LogLevel.ERROR, logger, identifier, level)
+    return log(o, LogLevel.ERROR, logger, identifier, level)
 }
 
-Observable.prototype.logDebug = debug
-Observable.prototype.logInfo = info
-Observable.prototype.logWarning = warn
-Observable.prototype.logError = error
+// Observable.prototype.logDebug = debug
+// Observable.prototype.logInfo = info
+// Observable.prototype.logWarning = warn
+// Observable.prototype.logError = error

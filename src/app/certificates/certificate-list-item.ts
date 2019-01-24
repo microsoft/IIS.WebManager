@@ -1,9 +1,5 @@
-﻿import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+﻿import { Component, Input, ViewChild } from '@angular/core';
 import { Selector } from '../common/selector';
-import { DateTime } from '../common/primitives';
 import { Certificate } from './certificate';
 
 @Component({

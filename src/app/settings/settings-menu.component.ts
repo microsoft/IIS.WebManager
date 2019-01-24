@@ -1,9 +1,7 @@
 ﻿import { Component, Input, ViewChild, OnDestroy, Optional } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
-
 import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-ga';
-import { Subscription } from 'rxjs/Subscription';
-
+import { Subscription } from 'rxjs';
 import { Selector } from '../common/selector';
 
 @Component({

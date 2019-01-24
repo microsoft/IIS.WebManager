@@ -1,7 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Subscription } from 'rxjs';
 import { ApiFile } from '../../files/file';
 import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';

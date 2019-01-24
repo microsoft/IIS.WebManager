@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { LoadingService } from "./loading.service"
 
-import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-
 @Component({
     selector: 'loading',
     template: `
