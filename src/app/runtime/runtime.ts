@@ -1,9 +1,9 @@
 
 import { Injectable } from '@angular/core'
+import { ActivatedRoute } from '@angular/router'
 import { ConnectService } from '../connect/connect.service'
 import { ApiConnection } from '../connect/api-connection'
-import { Observable } from 'rxjs/Observable'
-import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs'
 
 export function IsWebServerScope(route: ActivatedRoute) {
     return route.snapshot.parent && route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver'
@@ -21,7 +21,6 @@ export class StandardRuntime implements Runtime {
     constructor(
         private connectService: ConnectService,
     ){}
-
     public InitContext() {}
     public DestroyContext() {}
 

@@ -1,26 +1,23 @@
 import { DateTime } from '../common/primitives'
 import { Injectable, Inject } from '@angular/core'
-import { Router } from '@angular/router'
+import { Router, ActivatedRoute } from '@angular/router'
 import {
     AppContextService,
     NavigationService
 } from '@microsoft/windows-admin-center-sdk/angular'
 import { Runtime } from './runtime'
+import { ApiErrorType, UnexpectedServerStatusError } from 'error/api-error';
 import { PowershellService } from './wac/services/powershell-service'
 import { ConnectService } from '../connect/connect.service'
 import { ApiConnection } from '../connect/api-connection'
 import { PowerShellScripts } from '../../generated/powershell-scripts'
-import { Observable } from 'rxjs/Observable'
-import { ApiErrorType, UnexpectedServerStatusError } from 'error/api-error'
-import { RpcOutboundCommands, rpcVersion, RpcSeekMode, RpcInitDataInternal } from '@microsoft/windows-admin-center-sdk/dist/core/rpc/rpc-base'
-import { CoreEnvironment } from '@microsoft/windows-admin-center-sdk/dist/core/data/core-environment'
+import { Observable, throwError } from 'rxjs'
+import { RpcOutboundCommands, rpcVersion, RpcInitDataInternal } from '@microsoft/windows-admin-center-sdk/core/rpc/rpc-base'
+import { CoreEnvironment, RpcSeekMode } from '@microsoft/windows-admin-center-sdk/core'
+import { map, shareReplay, mergeMap, catchError, finalize } from 'rxjs/operators';
 
-import 'rxjs/add/operator/take'
-import 'rxjs/add/operator/map'
-import 'rxjs/add/observable/throw'
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { SETTINGS } from 'main/settings';
-
 class ApiKey {
     public id: string
     public access_token: string
@@ -38,10 +35,10 @@ class HostStatus {
 export class WACInfo {
     constructor(private appContext: AppContextService){}
     public get NodeName(): Observable<string> {
-        return this.appContext.servicesReady.map(_ =>
-            this.appContext.activeConnection.nodeName
-        ).shareReplay();
-    };
+        return this.appContext.servicesReady.pipe(
+            map(_ => this.appContext.activeConnection.nodeName),
+            shareReplay(),
+        )
 }
 
 @Injectable()
@@ -54,7 +51,6 @@ export class WACRuntime implements Runtime {
     constructor(
         private router: Router,
         private appContext: AppContextService,
-        private navigationService: NavigationService,
         private connectService: ConnectService,
         private loggerFactory: LoggerFactory,
         @Inject("Powershell") private powershellService: PowershellService,
@@ -64,7 +60,7 @@ export class WACRuntime implements Runtime {
     }
 
     public InitContext() {
-        this.appContext.ngInit({ navigationService: this.navigationService })
+        this.appContext.ngInit({ navigationService: new NavigationService(this.appContext, this.router, this.activatedRoute) })
         let rpc = this.appContext.rpc
         // Implementation copied from rpc.register with difference noted in the comments
         rpc.rpcManager.rpcInbound.register(RpcOutboundCommands[RpcOutboundCommands.Init], (data: RpcInitDataInternal) => {
@@ -131,8 +127,9 @@ export class WACRuntime implements Runtime {
 
     public ConnectToIISHost(): Observable<ApiConnection> {
         if (!this._connecting) {
-            this._connecting = this.wac.NodeName.mergeMap(nodeName =>
-                this.GetApiKey().map((apiKey, _) => {
+            this._connecting = this.wac.NodeName.pipe(
+                mergeMap(nodeName =>
+                this.GetApiKey().pipe(map((apiKey, _) => {
                     var connection = new ApiConnection(nodeName)
                     if (apiKey.access_token) {
                         connection.accessToken = apiKey.access_token
@@ -143,20 +140,23 @@ export class WACRuntime implements Runtime {
                     this.connectService.setActive(connection)
                     this._connecting = null
                     return connection
-                })).shareReplay()
+                }))),
+                shareReplay()
+            )
         }
         return this._connecting
     }
 
     public PrepareIISHost(p: any): Observable<any> {
         p.appMinVersion = SETTINGS.api_setup_version
-        return this.powershellService.run(PowerShellScripts.admin_api_util, p).map((status: HostStatus) => {
+            map((status: HostStatus) => {
             this._apiHost = status.apiHost
-            if (status.groupModified) {
-                this.powershellService.Reset()
-            }
-            return status
-        })
+                if (status.groupModified) {
+                    this.powershellService.Reset()
+                }
+                return status}
+            ),
+        )
     }
 
     public StartIISAdministration(): Observable<any> {
@@ -192,10 +192,10 @@ export class WACRuntime implements Runtime {
                     if (error.Type == 'ADMIN_API_SERVICE_NOT_RUNNING') {
                         return Observable.throw(new UnexpectedServerStatusError(error.Status))
                     }
+                    }
                 }
-            }
-            return Observable.throw(e)
-        }).mergeMap(_ => {
+                return throwError(e)
+            }),
             var tokenUtilParams: any = {
                 command: 'ensure',
                 apiHost: this._apiHost,
@@ -204,6 +204,5 @@ export class WACRuntime implements Runtime {
                 tokenUtilParams.tokenId = this._tokenId
             }
             return this.powershellService.run<ApiKey>(PowerShellScripts.token_utils, tokenUtilParams)
-        })
     }
 }

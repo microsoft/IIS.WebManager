@@ -1,9 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Router, NavigationStart, NavigationEnd} from '@angular/router';
-
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
-
+import {BehaviorSubject, Observable} from 'rxjs';
 
 @Injectable()
 export class LoadingService {

@@ -1,7 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { Logging } from './logging';
 import { Status } from '../../common/status';
 import { HttpClient } from '../../common/httpclient';

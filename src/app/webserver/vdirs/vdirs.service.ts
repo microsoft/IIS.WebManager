@@ -1,20 +1,13 @@
 import {Injectable, Optional, Inject} from '@angular/core';
-
-import {Observable} from "rxjs/Observable";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {Subscription} from "rxjs/Subscription";
-
+import {Observable, BehaviorSubject, Subscription} from "rxjs";
 import {HttpClient} from '../../common/httpclient';
 import {ApiError} from '../../error/api-error';
 import {NotificationService} from '../../notification/notification.service';
-
 import {Vdir} from './vdir';
-
 import {WebSitesService} from '../websites/websites.service';
 import {WebSite} from '../websites/site';
 import {WebAppsService} from '../webapps/webapps.service';
 import {WebApp} from '../webapps/webapp';
-
 
 @Injectable()
 export class VdirsService {

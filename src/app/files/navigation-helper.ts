@@ -1,10 +1,10 @@
 import { Injectable, Inject } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-
+import { Observable } from 'rxjs';
 import { FileNavService } from './file-nav.service';
 import { FilesService } from './files.service';
 import { INavigation } from './inavigation';
 import { Drop } from './navigation.component';
+import { filter, map } from 'rxjs/operators';
 
 Injectable()
 export class NavigationHelper implements INavigation {
@@ -13,7 +13,10 @@ export class NavigationHelper implements INavigation {
     constructor(@Inject("FilesService") private _svc: FilesService,
                 @Inject(FileNavService) private _navSvc: FileNavService) {
 
-        this._current = this._navSvc.current.filter(dir => !!dir).map(dir => '/' + this._navSvc.toAlias(dir.physical_path));
+        this._current = this._navSvc.current.pipe(
+            filter(dir => !!dir),
+            map(dir => '/' + this._navSvc.toAlias(dir.physical_path))
+        );
     }
 
     public get path(): Observable<string> {

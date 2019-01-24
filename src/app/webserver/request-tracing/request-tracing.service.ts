@@ -1,7 +1,5 @@
 import { Injectable, Inject, Optional } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { IDisposable } from '../../common/idisposable';
 import { ChangeType } from '../../files/file';
 import { FilesService } from '../../files/files.service';
@@ -10,10 +8,6 @@ import { HttpClient } from '../../common/httpclient';
 import { RequestTracing, Provider, RequestTracingRule, TraceLog } from './request-tracing';
 import { ActivatedRoute } from '@angular/router';
 import { IsWebServerScope } from 'runtime/runtime';
-
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/toPromise';
-
 @Injectable()
 export class RequestTracingService implements IDisposable {
     private _requestTracing: BehaviorSubject<RequestTracing> = new BehaviorSubject<RequestTracing>(null);

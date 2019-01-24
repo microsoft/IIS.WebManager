@@ -3,4 +3,4 @@ src/generated/**
 .vs/
 dist
 assets
-src/app/angular-cli.json
+src/app/angular.json

@@ -1,7 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Subscription } from 'rxjs';
 import { WebFilesService } from './webfiles.service';
 import { WebFile } from './webfile';
 import { WebFileListComponent } from './webfile-list';

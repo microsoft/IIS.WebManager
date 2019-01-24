@@ -1,7 +1,5 @@
 import { Component, Input, Output, OnInit, OnDestroy, EventEmitter, QueryList, ViewChildren, OnChanges, SimpleChange, ElementRef } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Subscription } from 'rxjs';
 import { DiffUtil } from '../../utils/diff';
 import { FileExtension } from './request-filtering';
 import { ComponentUtil } from '../../utils/component';

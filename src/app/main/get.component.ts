@@ -1,8 +1,6 @@
 import { Component, OnDestroy, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/operator/toPromise';
-
+import { Subscription } from 'rxjs';
 import { ApiConnection } from '../connect/api-connection'
 import { HttpConnection } from '../connect/httpconnection'
 import { ConnectService } from '../connect/connect.service'

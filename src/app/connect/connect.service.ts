@@ -4,13 +4,11 @@ import { HttpConnection } from './httpconnection';
 import { ApiConnection } from './api-connection';
 import { ConnectionStore } from './connection-store';
 import { NotificationService } from '../notification/notification.service';
-import { Observable } from "rxjs/Observable";
-import { BehaviorSubject } from "rxjs/BehaviorSubject";
-import { environment } from '../environments/environment'
+import { Observable, BehaviorSubject } from 'rxjs';
+import { map, catchError } from 'rxjs/operators'
+import { environment } from '../environments/environment';
 import { ApiErrorType } from 'error/api-error';
 import { HttpFacade } from 'common/http-facade';
-
-import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class ConnectService {
@@ -72,19 +70,20 @@ export class ConnectService {
                 );
         }
 
-        return this._client.get(conn, "/api")
-            .map(_ => {
+        return this._client.get(conn, "/api").pipe(
+            map(_ => {
                 this.complete(conn);
                 this.save(conn);
                 return conn;
-            })
-            .catch((e, _) => {
+            }),
+            catchError(e => {
                 return new Observable<ApiConnection>(observer => {
                     this.gotoConnect(true)
                         .then(_ => this.ping(conn, new Date().getTime() + ConnectService.PING_TIMEOUT, popup)
                             .then(_ => observer.error(e)))
                 })
-            });
+            })
+        );
     }
 
     public reconnect() {

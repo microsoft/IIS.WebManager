@@ -1,7 +1,5 @@
-﻿import { Component, OnDestroy, ViewChild, Input } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+﻿import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Selector } from '../../../common/selector';
 import { UrlRewriteService } from '../service/url-rewrite.service';
 import { RewriteMapsSection, RewriteMap, RewriteMapping } from '../url-rewrite';

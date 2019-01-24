@@ -1,11 +1,8 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Subscription } from 'rxjs';
 import { WebFileListComponent } from './webfile-list';
 import { WebFilesService } from './webfiles.service';
 import { WebFile } from './webfile';
-import { WebSite } from '../websites/site';
 
 @Component({
     selector: 'webfile-explorer',

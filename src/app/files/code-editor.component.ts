@@ -1,9 +1,8 @@
 
 import { Component, ViewChild, Output, Input, EventEmitter, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { WindowService } from '../main/window.service';
 import { ApiFile } from './file';
-import 'rxjs/add/observable/fromEvent';
 
 enum CompareMode {
     None = 0,

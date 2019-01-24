@@ -7,12 +7,9 @@ import {ApiConnection} from '../connect/api-connection'
 import {ApiError, ApiErrorType} from '../error/api-error';
 import {ConnectService} from '../connect/connect.service';
 import {Runtime} from '../runtime/runtime';
-import { HttpFacade } from './http-facade';
-import { Observable } from 'rxjs/Observable';
-
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/observable/throw';
+import {HttpFacade} from './http-facade';
+import {Observable, throwError} from 'rxjs';
+import {finalize, catchError, mergeMap} from 'rxjs/operators';
 
 @Injectable()
 export class HttpClient {
@@ -104,8 +101,9 @@ export class HttpClient {
         if (this._conn) {
             return this.performRequest(this._conn, url, options, warn)
         } else {
-            return this.runtime.ConnectToIISHost().mergeMap(connection =>
+            return this.runtime.ConnectToIISHost().pipe(mergeMap(connection =>
                 this.performRequest(connection, url, options, warn))
+            )
         }
     }
 
@@ -121,36 +119,39 @@ export class HttpClient {
         //
         // Set Access-Token
         req.headers.set('Access-Token', 'Bearer ' + conn.accessToken);
-        return this._http.request(req)
-            .catch((e, _) => {
+        return this._http.request(req).pipe(
+            catchError(e => {
                 // Status code 0 possible causes:
                 // Untrusted certificate
                 // Windows auth, prevents CORS headers from being accessed
                 // Service not responding
                 if (e instanceof Response) {
                     if (e.status == 0) {
-                        return this._http.request(req)
-                            .catch((err, _) => {
+                        return this._http.request(req).pipe(
+                            catchError(err => {
                                 // Check to see if connected
-                                return this._http.options(this._conn.url)
-                                    .catch((e, _) => {
+                                return this._http.options(this._conn.url).pipe(
+                                    catchError((e, _) => {
                                         this._connectSvc.reconnect();
-                                        return Observable.throw(e)
-                                    }).finally(() => {
+                                        return throwError(e)
+                                    }),
+                                    finalize(() => {
                                         this.handleHttpError(err);
                                     })
-                                })
+                                )})
+                        )
                     }
                     this.handleHttpError(e, warn);
-                    return Observable.throw(e)
+                    return throwError(e)
                 }
                 let apiError = <ApiError>({
                     title: "unknown error",
                     detail: JSON.stringify(e),
                 })
                 this._notificationService.apiError(apiError)
-                return Observable.throw(apiError)
+                throwError(apiError)
             })
+        )
     }
 
     private handleHttpError(err, warn?: boolean) {

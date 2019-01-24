@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiConnection } from '../connect/api-connection';
-
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
+import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { ApiError, ApiErrorType } from '../error/api-error';
 import { Notification, NotificationType } from './notification';
 import { ModalArgs } from './modal';

@@ -1,15 +1,9 @@
-import { Component, OnInit, OnDestroy, Output, Input, EventEmitter, Inject, Injectable, ViewChild, ElementRef, ContentChildren, QueryList } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { OrderBy, SortPipe } from '../../common/sort.pipe';
 import { Range } from '../../common/virtual-list.component';
-
-import { FilesService } from '../../files/files.service';
-
 import { TraceLog } from './request-tracing';
 import { RequestTracingService } from './request-tracing.service';
-
 
 @Component({
     selector: 'trace-files',

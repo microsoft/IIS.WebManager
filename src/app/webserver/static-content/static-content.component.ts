@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Subscription } from 'rxjs';
 import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
-import { StaticContent, ClientCache } from './static-content';
+import { StaticContent } from './static-content';
 import { StaticContentService } from './static-content.service';
 import { NotificationService } from '../../notification/notification.service';
 

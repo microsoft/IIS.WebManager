@@ -1,8 +1,7 @@
 import { NgModule, Component, OnInit, OnDestroy, ViewChild, ElementRef, Input, Output, EventEmitter, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Observable } from "rxjs/Observable";
-import { Subscription } from "rxjs/Subscription";
+import { Observable, Subscription } from "rxjs";
 import { ComponentUtil } from '../utils/component';
 import { Module as BModel } from '../common/bmodel';
 import { INavigation } from './inavigation';

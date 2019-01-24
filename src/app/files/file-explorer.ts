@@ -1,8 +1,6 @@
 import { Component, OnDestroy, Input, Inject, ViewChild } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
-import { ApiFile, ApiFileType, ExplorerOptions } from './file';
+import { Subscription } from 'rxjs';
+import { ApiFile, ExplorerOptions } from './file';
 import { FileListComponent } from './file-list';
 import { FilesService } from './files.service';
 import { FileNavService } from './file-nav.service';

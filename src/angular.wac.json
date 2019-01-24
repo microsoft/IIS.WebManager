@@ -1,0 +1,60 @@
+{
+  "projects": {
+    "microsoft.iis.web-manager": {
+      "targets": {
+        "build": {
+          "configurations": {
+            "wac": {
+              "fileReplacements": [
+                {
+                  "replace": "app/environments/environment.ts",
+                  "with": "app/environments/environment.wac.ts"
+                },
+                {
+                  "replace": "app/main/app.addon.ts",
+                  "with": "app/main/app.addon.wac.ts"
+                }
+              ]
+            },
+            "wac.prod": {
+              "fileReplacements": [
+                {
+                  "replace": "app/environments/environment.ts",
+                  "with": "app/environments/environment.wac.prod.ts"
+                },
+                {
+                  "replace": "app/main/app.addon.ts",
+                  "with": "app/main/app.addon.wac.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          },
+          "options": {
+            "styles": [
+              "themes/themes.wac.css"
+            ]
+          }
+        },
+        "serve": {
+          "configurations": {
+            "wac": {
+              "browserTarget": "microsoft.iis.web-manager:build:wac"
+            },
+            "wac.prod": {
+              "browserTarget": "microsoft.iis.web-manager:build:wac.prod"
+            }
+          }
+        }
+      }
+    }
+  }
+}
