@@ -177,7 +177,7 @@ export class ServerListItem implements OnInit, OnDestroy {
             e.preventDefault();
         }
 
-        this._svc.connect(this.model);
+        this._svc.connect(this.model).toPromise();
     }
 
     private onDelete() {
