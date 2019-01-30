@@ -65,9 +65,12 @@ export class ConnectService {
             this._pingPopup.open(conn.url + "/ping");
 
             // Raw request to url causes certificate acceptance prompt on IE.
-            this._client.raw(conn, "/api").toPromise().then(_ => { }).catch(e => {
-                // Ignore errors
-            });
+            this._client.raw(conn, "/api")
+            .subscribe(
+                _ => {}, 
+                e => {}, // Ignore errors
+                () => { this._pingPopup.close(); } 
+            );
         }
 
         return this._client.get(conn, "/api")
