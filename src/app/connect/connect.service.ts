@@ -66,11 +66,10 @@ export class ConnectService {
 
             // Raw request to url causes certificate acceptance prompt on IE.
             this._client.raw(conn, "/api")
-            .subscribe(
-                _ => {}, 
-                e => {}, // Ignore errors
-                () => { this._pingPopup.close(); } 
-            );
+                .subscribe(
+                    _ => {},
+                    e => {} // Ignore errors
+                );
         }
 
         return this._client.get(conn, "/api")
