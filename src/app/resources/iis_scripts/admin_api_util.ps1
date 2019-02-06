@@ -244,14 +244,14 @@ if (!$config.security.users.owners.Contains($user)) {
     }
 }
 
-
+$administratorsSID = 'S-1-5-32-544';
 if ($saveConfig) {
     LogVerbose "Saving config..."
     if ($devMode) {
         throw "Cannot edit config file in dev mode, please add $user to ""$iisAdminOwners"" group manually"
     }
     ## Check the current user is a member of the Administrators local user group
-    if (!(Get-LocalGroupMember -SID 'S-1-5-32-544' -Member $user -ErrorAction SilentlyContinue)) {
+    if (!(Get-LocalGroupMember -SID $administratorsSID -Member $user -ErrorAction SilentlyContinue)) {
         throw "User $user lacks administrator privilege which is needed to initiate IIS Administration API"
     }
     $apiHome = [System.IO.Path]::Combine($workingDirectory, "..")
@@ -268,7 +268,7 @@ if ($saveConfig) {
 
     $modifyAcess = [System.Security.AccessControl.FileSystemRights]::Modify
     $allow = [System.Security.AccessControl.AccessControlType]::Allow
-    $builtInAdministrators = (ConvertTo-NTAccount 'S-1-5-32-544').value
+    $builtInAdministrators = (ConvertTo-NTAccount $administratorsSID).value
 
     $dirAccessGranted = $dirAcl.Access | Where-Object { ($_.IdentityReference.Value -eq $builtInAdministrators) -and ($_.AccessControlType -eq $allow) -and (($_.FileSystemRights -bAnd $modifyAcess) -eq $modifyAcess) }
     $private:tempAccessRule = $null
