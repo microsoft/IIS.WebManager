@@ -5,6 +5,9 @@
     "type": "git",
     "url": "http://github.com/microsoft/iis.webmanager"
   },
+  "engines": {
+    "node": ">=8.0.0 <9.11.2"
+  },
   "license": "MIT",
   "dependencies": {
     "@angular/common": "5.1.2",

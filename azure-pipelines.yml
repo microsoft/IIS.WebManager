@@ -11,6 +11,10 @@ jobs:
     clean: false
     submodules: true  # set to 'true' for a single level of submodules or 'recursive' to get submodules of submodules
 
+  - task: NodeTool@0
+    inputs:
+      versionSpec: 8.15.0
+
   - task: NuGetToolInstaller@0
     displayName: 'Install Nuget tool'
 
@@ -19,7 +23,7 @@ jobs:
     inputs:
       targetType: filePath
       filePath: ./build.ps1
-      arguments: '--env=wac --pack --version=0.1.$(Build.BuildNumber) --output-hashing all'
+      arguments: '--env=wac --pack --version=0.1.$(Build.BuildNumber) --output-hashing ALL'
 
   - task: NuGetCommand@2
     displayName: 'NuGet push'
