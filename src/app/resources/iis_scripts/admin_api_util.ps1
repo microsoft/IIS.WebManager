@@ -123,7 +123,8 @@ function EnsureGroup($group) {
 }
 
 function EnsureMember($group, $userOrGroup) {
-    $modify = !(Get-LocalGroupMember -Group $group -Member $userOrGroup -ErrorAction SilentlyContinue)
+    ## NOTE: Get-LocalGroupMember works case-insensitevly. So, as a workaround, Where-Object is used here
+    $modify = !(Get-LocalGroupMember -Group $group -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq $userOrGroup })
     if ($modify) {
         Add-LocalGroupMember -Group $group -Member $userOrGroup | Out-Null
         LogVerbose "Member $userOrGroup added"
@@ -251,7 +252,8 @@ if ($saveConfig) {
         throw "Cannot edit config file in dev mode, please add $user to ""$iisAdminOwners"" group manually"
     }
     ## Check the current user is a member of the Administrators local user group
-    if (!(Get-LocalGroupMember -SID $administratorsSID -Member $user -ErrorAction SilentlyContinue)) {
+    ## NOTE: Get-LocalGroupMember works case-insensitevly. So, as a workaround, Where-Object is used here
+    if (!(Get-LocalGroupMember -SID $administratorsSID -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq $user } )) {
         throw "User $user lacks administrator privilege which is needed to initiate IIS Administration API"
     }
     $apiHome = [System.IO.Path]::Combine($workingDirectory, "..")
