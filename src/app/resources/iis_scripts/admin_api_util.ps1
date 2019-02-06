@@ -123,7 +123,7 @@ function EnsureGroup($group) {
 }
 
 function EnsureMember($group, $userOrGroup) {
-    $modify = !(Get-LocalGroupMember -Group $group -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq $user })
+    $modify = !(Get-LocalGroupMember -Group $group -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq $userOrGroup })
     if ($modify) {
         Add-LocalGroupMember -Group $group -Member $userOrGroup | Out-Null
         LogVerbose "Member $userOrGroup added"
