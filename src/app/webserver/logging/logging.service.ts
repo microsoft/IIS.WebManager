@@ -11,7 +11,8 @@ import { FilesService } from '../../files/files.service';
 import { ApiError, ApiErrorType } from '../../error/api-error';
 import { WebSitesService } from '../websites/websites.service';
 import { NotificationService } from '../../notification/notification.service';
-import { Runtime } from 'runtime/runtime';
+import { ActivatedRoute } from '@angular/router';
+import { IsWebServerScope } from 'runtime/runtime';
 
 @Injectable()
 export class LoggingService implements IDisposable {
@@ -25,13 +26,13 @@ export class LoggingService implements IDisposable {
     private _logs: BehaviorSubject<Array<ApiFile>> = new BehaviorSubject<Array<ApiFile>>([]);
 
     constructor(
+        private _route: ActivatedRoute,
         private _http: HttpClient,
         private _notifications: NotificationService,
         @Inject('FilesService') private _filesService: FilesService,
         @Inject('WebSitesService') private _webSitesService: WebSitesService,
-        @Inject("Runtime") private runtime: Runtime,
     ) {
-        this._webserverScope = this.runtime.IsWebServerScope();
+        this._webserverScope = IsWebServerScope(this._route);
         this._subscriptions.push(this._filesService.change.subscribe(evt => {
             if (evt.type == ChangeType.Deleted) {
                 this._logs.next(this._logs.getValue().filter(log => log.id != evt.target.id));

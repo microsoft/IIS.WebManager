@@ -120,10 +120,6 @@ export class WACRuntime implements Runtime {
         }
     }
 
-    public IsWebServerScope() {
-        return true
-    }
-
     public ConnectToIISHost(): Observable<ApiConnection> {
         if (!this._connecting) {
             this._connecting = this.wac.NodeName.mergeMap(nodeName =>

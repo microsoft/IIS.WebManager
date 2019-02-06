@@ -8,11 +8,11 @@ import { FilesService } from '../../files/files.service';
 import { Status } from '../../common/status';
 import { HttpClient } from '../../common/httpclient';
 import { RequestTracing, Provider, RequestTracingRule, TraceLog } from './request-tracing';
-import { Runtime } from 'runtime/runtime';
+import { ActivatedRoute } from '@angular/router';
+import { IsWebServerScope } from 'runtime/runtime';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
-
 
 @Injectable()
 export class RequestTracingService implements IDisposable {
@@ -29,11 +29,11 @@ export class RequestTracingService implements IDisposable {
     public requestTracing: Observable<RequestTracing> = this._requestTracing.asObservable();
 
     constructor(
+        private _route: ActivatedRoute,
         private _http: HttpClient,
         @Optional() @Inject('FilesService') private _filesService: FilesService,
-        @Inject("Runtime") private runtime: Runtime,
     ){
-        this._webserverScope = this.runtime.IsWebServerScope();
+        this._webserverScope = IsWebServerScope(this._route);
         this._subscriptions.push(this._filesService.change.subscribe(evt => {
             if (evt.type == ChangeType.Deleted) {
                 this._traces.next(this._traces.getValue().filter(t => t.file_info.id != evt.target.id));
