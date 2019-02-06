@@ -19,7 +19,7 @@ jobs:
     inputs:
       targetType: filePath
       filePath: ./build.ps1
-      arguments: '--env=wac --pack --version=0.1.$(Build.BuildNumber)'
+      arguments: '--env=wac --pack --version=0.1.$(Build.BuildNumber) --output-hashing all'
 
   - task: NuGetCommand@2
     displayName: 'NuGet push'
