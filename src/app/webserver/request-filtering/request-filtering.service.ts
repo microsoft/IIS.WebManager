@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { DiffUtil } from '../../utils/diff';
@@ -10,7 +10,8 @@ import {
     FilteringRule,
     FileExtension
 } from './request-filtering';
-import { Runtime } from 'runtime/runtime';
+import { ActivatedRoute } from '@angular/router';
+import { IsWebServerScope } from 'runtime/runtime';
 
 @Injectable()
 export class RequestFilteringService {
@@ -24,10 +25,10 @@ export class RequestFilteringService {
     private _fileExtensions: BehaviorSubject<Array<FileExtension>> = new BehaviorSubject<Array<FileExtension>>([]);
 
     constructor(
+        private _route: ActivatedRoute,
         private _http: HttpClient,
-        @Inject("Runtime") private runtime: Runtime,
     ){
-        this._webserverScope = this.runtime.IsWebServerScope();
+        this._webserverScope = IsWebServerScope(this._route);
     }
 
     public get status(): Status {

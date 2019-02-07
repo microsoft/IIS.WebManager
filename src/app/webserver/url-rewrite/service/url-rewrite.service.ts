@@ -1,4 +1,4 @@
-﻿import { Injectable, Inject } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { NotificationService } from '../../../notification/notification.service';
@@ -19,7 +19,8 @@ import {
 } from '../url-rewrite';
 import { GlobalService } from './global.service';
 import { InboundService } from './inbound.service';
-import { Runtime } from 'runtime/runtime';
+import { ActivatedRoute } from '@angular/router';
+import { IsWebServerScope } from 'runtime/runtime';
 
 @Injectable()
 export class UrlRewriteService {
@@ -44,11 +45,11 @@ export class UrlRewriteService {
     private _globalService: GlobalService;
 
     constructor(
+        private _route: ActivatedRoute,
         private _http: HttpClient,
         private _notificationService: NotificationService,
-        @Inject("Runtime") private runtime: Runtime,
     ){
-        this._webserverScope = this.runtime.IsWebServerScope();
+        this._webserverScope = IsWebServerScope(this._route);
         this._inboundService = new InboundService(this._http, this._notificationService);
         this._globalService = new GlobalService(this._http, this._notificationService);
     }

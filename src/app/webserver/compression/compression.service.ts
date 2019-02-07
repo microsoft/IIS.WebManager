@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { DiffUtil } from '../../utils/diff';
@@ -6,7 +6,8 @@ import { Status } from '../../common/status';
 import { ResponseCompression } from './compression';
 import { HttpClient } from '../../common/httpclient';
 import { ApiError, ApiErrorType } from '../../error/api-error';
-import { Runtime } from 'runtime/runtime';
+import { ActivatedRoute } from '@angular/router';
+import { IsWebServerScope } from 'runtime/runtime';
 
 @Injectable()
 export class CompressionService {
@@ -18,10 +19,10 @@ export class CompressionService {
     private _compression: BehaviorSubject<ResponseCompression> = new BehaviorSubject<ResponseCompression>(null);
 
     constructor(
+        private _route: ActivatedRoute,
         private _http: HttpClient,
-        @Inject("Runtime") private runtime: Runtime,
     ){
-        this._webserverScope = this.runtime.IsWebServerScope();
+        this._webserverScope = IsWebServerScope(this._route);
     }
 
     public get status(): Status {

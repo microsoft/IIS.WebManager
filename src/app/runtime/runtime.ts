@@ -1,31 +1,28 @@
 
 import { Injectable } from '@angular/core'
-import { ActivatedRoute, Route } from '@angular/router'
 import { ConnectService } from '../connect/connect.service'
 import { ApiConnection } from '../connect/api-connection'
 import { Observable } from 'rxjs/Observable'
+import { ActivatedRoute } from '@angular/router';
+
+export function IsWebServerScope(route: ActivatedRoute) {
+    return route.snapshot.parent && route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver'
+}
 
 export interface Runtime {
     InitContext(): void
     DestroyContext(): void
     ConnectToIISHost(): Observable<ApiConnection>
-    IsWebServerScope(): boolean
     StartIISAdministration(): Observable<any>
 }
 
 @Injectable()
 export class StandardRuntime implements Runtime {
-    private _isWebServerScope = false
-
     constructor(
         private connectService: ConnectService,
-        private route: ActivatedRoute,
-    ) {
-    }
+    ){}
 
-    public InitContext() {
-    }
-
+    public InitContext() {}
     public DestroyContext() {}
 
     public ConnectToIISHost(): Observable<ApiConnection> {
@@ -34,14 +31,6 @@ export class StandardRuntime implements Runtime {
                 observer.complete()
             })
         })
-    }
-
-    public IsWebServerScope() {
-        // parent would be null if route parent was unchanged
-        if (this.route.snapshot.parent) {
-            this._isWebServerScope = this.route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver';
-        }
-        return this._isWebServerScope
     }
 
     public StartIISAdministration(): Observable<any> {

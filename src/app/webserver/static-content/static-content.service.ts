@@ -1,13 +1,13 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
 import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
 import { HttpClient } from '../../common/httpclient';
 import { ApiError, ApiErrorType } from '../../error/api-error';
 import { StaticContent, MimeMap } from './static-content';
-import { Runtime } from 'runtime/runtime';
+import { ActivatedRoute } from '@angular/router';
+import { IsWebServerScope } from 'runtime/runtime';
 
 @Injectable()
 export class StaticContentService {
@@ -20,10 +20,10 @@ export class StaticContentService {
     private _staticContent: BehaviorSubject<StaticContent> = new BehaviorSubject<StaticContent>(null);
 
     constructor(
+        private _route: ActivatedRoute,
         private _http: HttpClient,
-        @Inject("Runtime") private runtime: Runtime,
     ){
-            this._webserverScope = this.runtime.IsWebServerScope();
+        this._webserverScope = IsWebServerScope(this._route);
     }
 
     public get status(): Status {
