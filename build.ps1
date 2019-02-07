@@ -26,7 +26,7 @@ function ShouldNPMInstall {
 
 $purge = $args | Where-Object { $_ -like "--purge" }
 $pack = $args | Where-Object { $_ -like "--pack" }
-$version = $args | Where-Object { $_.startsWith("--version=") }
+$version = $args | Where-Object { $_.ToLower().startsWith("--version=") }
 if ($version) {
     # Example: --version=0.1.$(Build.BuildNumber)
     Write-Host ($version)
@@ -41,8 +41,26 @@ if ($purge -and !(Get-Command "git" -ErrorAction SilentlyContinue)) {
     throw """--purge"" operation requires git in PATH"
 }
 
-if ($pack -and !(Get-Command "nuget" -ErrorAction SilentlyContinue)) {
-    throw """--pack"" operation requires nugetin PATH"
+if ($pack) {
+    if (!(Get-Command "nuget" -ErrorAction SilentlyContinue)) {
+        throw """--pack"" operation requires nugetin PATH"
+    }
+
+    $outputHashingTag = "--output-hashing"
+    $outputHashingIndex = -1
+    foreach ($i in 0..($args.Count - 1)) {
+        if ($args[$i].ToLower() -eq $outputHashingTag) {
+            $outputHashingIndex = $i
+            break
+        }
+    }
+    if (
+        ($outputHashingIndex -eq -1) -Or
+        ($outputHashingIndex+1 -ge $args.Count) -Or
+        ($args[$outputHashingIndex+1].ToLower() -ne "all")
+    ) {
+        throw "Please include ""$outputHashingTag ALL"" option when packing"
+    }
 }
 
 Write-Host "Dump the root source directory..."

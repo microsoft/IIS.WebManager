@@ -123,7 +123,8 @@ function EnsureGroup($group) {
 }
 
 function EnsureMember($group, $userOrGroup) {
-    $modify = !(Get-LocalGroupMember -Group $group -Member $userOrGroup -ErrorAction SilentlyContinue)
+    ## NOTE: Get-LocalGroupMember works case-sensitevly. So, as a workaround, Where-Object is used here
+    $modify = !(Get-LocalGroupMember -Group $group -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq $userOrGroup })
     if ($modify) {
         Add-LocalGroupMember -Group $group -Member $userOrGroup | Out-Null
         LogVerbose "Member $userOrGroup added"
@@ -138,6 +139,30 @@ function GetIISAdminHome($procs) {
             LogVerbose "IIS Admin module found at $($iisMainModule.FileName)"
             return Split-Path $iisMainModule.FileName
         }
+    }
+}
+
+function ConvertTo-NTAccount($From)
+{
+    if ($From -is [System.Security.Principal.NTAccount]) {
+        return $From
+    }
+    if ($From -is [System.Security.Principal.SecurityIdentifier]) {
+        return ($From.Translate([System.Security.Principal.NTAccount]))
+    }
+    if (!($From -is [string])) {
+        Throw "Don't know how to convert an object of type '$($From.GetType())' to an NTAccount"
+    }
+    try {
+        # Try the symbolic format first.
+        # For the symbolic format, translate twice, to make sure that
+        # the value is valid.
+        $acc = new-object System.Security.Principal.NTAccount($From)
+        $sid = $acc.Translate([System.Security.Principal.SecurityIdentifier])
+        return ($sid.Translate([System.Security.Principal.NTAccount]))
+    } catch {
+        $sid = new-object System.Security.Principal.SecurityIdentifier($From)
+        return ($sid.Translate([System.Security.Principal.NTAccount]))
     }
 }
 
@@ -220,13 +245,15 @@ if (!$config.security.users.owners.Contains($user)) {
     }
 }
 
-
+$administratorsSID = 'S-1-5-32-544';
 if ($saveConfig) {
     LogVerbose "Saving config..."
     if ($devMode) {
         throw "Cannot edit config file in dev mode, please add $user to ""$iisAdminOwners"" group manually"
     }
-    if (!(Get-LocalGroupMember -Group "Administrators" -Member $user -ErrorAction SilentlyContinue)) {
+    ## Check the current user is a member of the Administrators local user group
+    ## NOTE: Get-LocalGroupMember works case-sensitevly. So, as a workaround, Where-Object is used here
+    if (!(Get-LocalGroupMember -SID $administratorsSID -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq $user } )) {
         throw "User $user lacks administrator privilege which is needed to initiate IIS Administration API"
     }
     $apiHome = [System.IO.Path]::Combine($workingDirectory, "..")
@@ -240,9 +267,12 @@ if ($saveConfig) {
         LogVerbose "Updating Acl to remove readonly access..."
         Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
     }
+
     $modifyAcess = [System.Security.AccessControl.FileSystemRights]::Modify
     $allow = [System.Security.AccessControl.AccessControlType]::Allow
-    $dirAccessGranted = $dirAcl.Access | Where-Object { ($_.IdentityReference.Value -eq "BUILTIN\Administrators") -and ($_.AccessControlType -eq $allow) -and (($_.FileSystemRights -bAnd $modifyAcess) -eq $modifyAcess) }
+    $builtInAdministrators = (ConvertTo-NTAccount $administratorsSID).value
+
+    $dirAccessGranted = $dirAcl.Access | Where-Object { ($_.IdentityReference.Value -eq $builtInAdministrators) -and ($_.AccessControlType -eq $allow) -and (($_.FileSystemRights -bAnd $modifyAcess) -eq $modifyAcess) }
     $private:tempAccessRule = $null
     $private:originalAccessRule = $null
     try {
@@ -252,13 +282,13 @@ if ($saveConfig) {
             $propagationFlags = [System.Security.AccessControl.PropagationFlags]::InheritOnly
             $private:minialAccess = [System.Security.AccessControl.FileSystemRights]::ReadAndExecute -bOr [System.Security.AccessControl.FileSystemRights]::Synchronize
             ## We are about to change access rule for "BUILTIN\Administrators", save original permission so we can roll back if necessary in the finally block
-            $private:originalAccessRule = $dirAcl.Access | Where-Object { $_.IdentityReference.Value -eq "BUILTIN\Administrators" -and ($_.AccessControlType -eq $allow) }
+            $private:originalAccessRule = $dirAcl.Access | Where-Object { $_.IdentityReference.Value -eq $builtInAdministrators -and ($_.AccessControlType -eq $allow) }
             if ($private:originalAccessRule) {
                 $inheritFlags = $private:originalAccessRule.InheritanceFlags
                 $propagationFlags = $private:originalAccessRule.propagationFlags
                 $private:minialAccess = $private:originalAccessRule.FileSystemRights
             }
-            $private:tempAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule -ArgumentList "BUILTIN\Administrators", ($private:minialAccess -bOr $modifyAcess), $inheritFlags, $propagationFlags, $allow
+            $private:tempAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule -ArgumentList $builtInAdministrators, ($private:minialAccess -bOr $modifyAcess), $inheritFlags, $propagationFlags, $allow
             $dirAcl.SetAccessRule($private:tempAccessRule) | Out-Null
             LogVerbose "Setting Acl to enable administrators' write access"
             Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
