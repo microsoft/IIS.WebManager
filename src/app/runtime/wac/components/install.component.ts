@@ -14,22 +14,26 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
             <h3>Internet Information Service (IIS)</h3>
             <span>To manage an IIS Server, you need to install the IIS Administration API</span>
 
-            <div>
-                <div><input type="radio" [(ngModel)]="useDefault" [value]="true" [checked]="useDefault">Install from Microsoft (internet connection required)</div>
-                <div>
+            <ul class="form">
+                <li><input type="radio" [(ngModel)]="useDefault" [value]="true" [checked]="useDefault">Install from Microsoft (internet connection required)</li>
+                <li>
                     <input type="radio" [(ngModel)]="useDefault" [value]="false" [checked]="!useDefault">Install from specific location
-                    <div *ngIf="!useDefault">
-                        <p #apiPrompt>
-                            <label>API Installer location</label>
-                            <input class="form-control" type="text" [(ngModel)]="adminAPILocation"/>
-                        </p>
-                        <p #dotnetPrompt>
-                            <label>.NET Core Runtime installer location</label>
-                            <input class="form-control" type="text" [(ngModel)]="dotnetCoreLocation" />
-                        </p>
-                    </div>
-                </div>
-            </div>
+                    <ul *ngIf="!useDefault">
+                        <li>
+                            <ul>
+                                <li #apiPrompt>
+                                    <label>API Installer location</label>
+                                    <input class="form-control" type="text" [(ngModel)]="adminAPILocation"/>
+                                </li>
+                                <li #dotnetPrompt>
+                                    <label>.NET Core Runtime installer location</label>
+                                    <input class="form-control" type="text" [(ngModel)]="dotnetCoreLocation" />
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
 
 
             <div *ngIf='userInputError'>
@@ -64,7 +68,7 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
         font-size: 300%;
     }
 
-    p {
+    .form {
         padding-top: 20px;
         padding-bottom: 20px;
     }
@@ -94,6 +98,20 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
 
     .skip {
         margin-top: 50px;
+    }
+
+    ul {
+        padding-top: 10px;
+        padding-left: 10px;
+    }
+
+    li {
+        padding-left: 10px;
+        padding-bottom: 10px;
+    }
+
+    .form-control {
+        max-width: 200ch;
     }
 `],
 })
