@@ -32,6 +32,14 @@ function VerifyResponse([string] $action, [Microsoft.Powershell.Commands.WebResp
         throw "Invalid status code $($response.StatusCode) while performing action: $action"
     }
 }
+
+function ConvertTo-SystemLocaleDateString($date)
+{
+    $culture = (Get-WinSystemLocale).name
+    $cultureInfo = New-Object system.globalization.cultureinfo($culture)
+    return (Get-date -Date $expires_on_date -Format ($cultureInfo.DateTimeFormat.ShortDatePattern))
+}
+
 function TokenRequest([string] $targetEndpoint, [string]$method, [string]$subpath, $requestBody) {
     $sessionCreate = Invoke-WebRequest "$apiHost/security/$targetEndpoint" -UseBasicParsing -UseDefaultCredentials -SessionVariable sess
     VerifyResponse "Create WSRF-TOKEN on $targetEndpoint" $sessionCreate | Out-Null
@@ -70,11 +78,14 @@ if ($tokenId) {
 if ($command -eq 'ensure') {
     if ($existingToken) {
         ## always renew token when this script is called because there was no way to query for existing token's value
-        $existingToken.expires_on = (Get-Date).AddDays($tokenExpiryDays).ToString()
+        $expires_on_date = (Get-Date).AddDays($tokenExpiryDays)
+        $existingToken.expires_on = ConvertTo-SystemLocaleDateString $expires_on_date
         ## This is an odd behavior: we need to wrap the existing token in a new object
         $output = TokenRequest -targetEndpoint $RenewEndpoint -method "POST" -requestBody @{ "api_key" = $existingToken }
     } else {
-        $output = TokenRequest -targetEndpoint $CreateEndpoint -method "POST" -requestBody @{ "expires_on" = (Get-Date).AddDays(14).ToString(); "purpose" = $tokenName }
+        $expires_on_date = (Get-Date).AddDays(14)
+        $expires_on = ConvertTo-SystemLocaleDateString $expires_on_date
+        $output = TokenRequest -targetEndpoint $CreateEndpoint -method "POST" -requestBody @{ "expires_on" = $expires_on; "purpose" = $tokenName }
     }
 } elseif ($command -eq 'delete') {
     $output = TokenRequest -targetEndpoint $DeleteEndpoint -method "DELETE" -subpath $existingToken.id
