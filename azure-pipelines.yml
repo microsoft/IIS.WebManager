@@ -1,3 +1,16 @@
+trigger:
+  branches:
+    include:
+      - dev
+      - master
+      - releases/*
+pr:
+  autoCancel: false
+  branches:
+    include:
+      - dev
+      - master
+      - releases/*
 jobs:
 - job: build
   pool:
