@@ -44,7 +44,7 @@ const sidebarStyles = `
         <div *ngIf="webServer">
             <webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
             <div class="sidebar crumb" [class.nav]="_options.active">
-                <vtabs *ngIf="webServer" [markLocation]="true" (activate)="_options.refresh()">
+                <vtabs *ngIf="webServer" [markLocation]="true" (activate)="_options.refresh()" [defaultTab]="'Web Sites'">
                     <item [name]="'General'" [ico]="'fa fa-wrench'">
                         <webserver-general [model]="webServer"></webserver-general>
                     </item>
