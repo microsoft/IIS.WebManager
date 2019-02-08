@@ -9,9 +9,11 @@ import { WebServerService } from './webserver.service';
 @Component({
     selector: 'webserver-general',
     template: `
-        <button class="refresh" title="Restart" (click)="restart()">Restart</button>
-        <button class="start" title="Start" [attr.disabled]="model.status != 'stopped' || null" (click)="start()">Start</button>
-        <button class="stop" title="Stop" [attr.disabled]="model.status != 'started' || null" (click)="stop()">Stop</button>
+        <div class="controller">
+            <button class="refresh" title="Restart" (click)="restart()">Restart</button>
+            <button class="start" title="Start" [attr.disabled]="model.status != 'stopped' || null" (click)="start()">Start</button>
+            <button class="stop" title="Stop" [attr.disabled]="model.status != 'started' || null" (click)="stop()">Stop</button>
+        </div>
         <fieldset>
             <label>Name</label>
             <span class="form-control">{{model.name}}</span>
@@ -22,8 +24,8 @@ import { WebServerService } from './webserver.service';
         </fieldset>
 `,
     styles: [`
-    .selector-wrapper {
-        position: relative;
+    .controller {
+        padding-bottom: 50px;
     }
 `],
 })
