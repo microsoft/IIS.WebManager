@@ -1,3 +1,7 @@
+variables:
+  Major: 0
+  Minor: 0
+  Patch: preview-'$(BuildID)'
 trigger:
   branches:
     include:
@@ -38,6 +42,9 @@ jobs:
       filePath: ./build.ps1
       arguments: '--env=wac --pack --version=0.1.$(Build.BuildNumber) --output-hashing ALL'
 
+- job: push
+  dependsOn: build
+  condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'))
   - task: NuGetCommand@2
     displayName: 'NuGet push'
     inputs:
@@ -45,3 +52,7 @@ jobs:
       packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
       nuGetFeedType: external
       publishFeedCredentials: 'IIS-WAC-MyGet'
+      majorVersion: '$(Major)'
+      minorVersion: '$(Minor)'
+      patchVersion: '$(Patch)'
+      allowPackageConflicts: false
