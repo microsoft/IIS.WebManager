@@ -1,6 +1,6 @@
 {
   "name": "microsoft.iis.web-manager",
-  "description": "IIS WebManager is the browser based  front end for IIS Administration API",
+  "description": "IIS WebManager is the browser based  front end for Microsoft IIS Administration API",
   "repository": {
     "type": "git",
     "url": "http://github.com/microsoft/iis.webmanager"

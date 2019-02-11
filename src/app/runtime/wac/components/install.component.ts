@@ -12,7 +12,7 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
     <div class="padded sme-focus-zone">
         <div *ngIf='!inProgress' style="min-width:700px">
             <h3>Internet Information Service (IIS)</h3>
-            <span>To manage an IIS Server, you need to install the IIS Administration API on IIS host</span>
+            <span>To manage an IIS Server, you need to install the Microsoft IIS Administration API on IIS host</span>
 
             <ul class="form">
                 <li><input type="radio" [(ngModel)]="useDefault" [value]="true" [checked]="useDefault">Install from Microsoft (internet connection required)</li>

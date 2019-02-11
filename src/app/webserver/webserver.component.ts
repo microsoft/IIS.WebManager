@@ -95,25 +95,25 @@ export class WebServerComponent {
             this._service.server.catch(e => {
                 if (e instanceof UnexpectedServerStatusError) {
                     this._notifications.confirm(
-                        `Start IIS Administration API`,
-                        `IIS Administration API is currently ${e.Status}. Do you want to start the service?`).then(confirmed => {
+                        `Start Microsoft IIS Administration API`,
+                        `Microsoft IIS Administration API is currently ${e.Status}. Do you want to start the service?`).then(confirmed => {
                         if (confirmed) {
                             var sub = this._runtime.StartIISAdministration().subscribe(
                                 _ => {
                                     this._service.server.catch(ex => {
-                                        reject(this.failure = `Unable to start IIS Administration API Service, error ${ex}`)
+                                        reject(this.failure = `Unable to start Microsoft IIS Administration API Service, error ${ex}`)
                                         throw ex
                                     }).then(s => {
                                         resolve(s)
                                     })
                                 },
                                 _ => {
-                                    reject(this.failure = `Unable to start IIS Administration API Service, error: ${e}`)
+                                    reject(this.failure = `Unable to start Microsoft IIS Administration API Service, error: ${e}`)
                                 },
                                 () => { sub.unsubscribe() },
                             )
                         } else {
-                            reject(this.failure = `Web Server Module cannot be initialized. Current IIS Administration API Service status: ${e.Status}`)
+                            reject(this.failure = `Web Server Module cannot be initialized. Current Microsoft IIS Administration API Service status: ${e.Status}`)
                         }
                     })
                 } else {

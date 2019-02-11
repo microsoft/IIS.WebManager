@@ -160,11 +160,11 @@ export class WACRuntime implements Runtime {
         return this.PrepareIISHost({ command: 'ensure-permission' }).catch((e, _) => {
             if (e.status === 400) {
                 let errorMsg = <string> e.response.exception
-                if (errorMsg == 'IIS Administration API is not installed') {
+                if (errorMsg == 'Microsoft IIS Administration API is not installed') {
                     this.router.navigate(['wac', 'install'])
                     return Observable.throw(ApiErrorType.Unreachable)
                 }
-                if (errorMsg.startsWith('Unexpected service status for IIS Administration API')) {
+                if (errorMsg.startsWith('Unexpected service status for Microsoft IIS Administration API')) {
                     let status = e.response.exception.split(' ').pop()
                     return Observable.throw(new UnexpectedServerStatusError(status))
                 }

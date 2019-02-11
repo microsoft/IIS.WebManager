@@ -34,6 +34,6 @@ export class StandardRuntime implements Runtime {
     }
 
     public StartIISAdministration(): Observable<any> {
-        throw 'Restarting IIS Administration API is not supported, please manually restart the service'
+        throw 'Restarting Microsoft IIS Administration API is not supported, please manually restart the service'
     }
 }

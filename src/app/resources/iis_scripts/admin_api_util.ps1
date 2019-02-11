@@ -183,12 +183,12 @@ if ($install) {
         if ($_.Exception.Status -eq [System.Net.WebExceptionStatus]::ConnectFailure) {
             $service = Get-Service -Name $serviceName -ErrorAction SilentlyContinue
             if (!$service) {
-                throw "IIS Administration API is not installed"
+                throw "Microsoft IIS Administration API is not installed"
             }
             if ($service.Status -eq [System.ServiceProcess.ServiceControllerStatus]::Running) {
-                throw "IIS Administration API is not found at: $pingEndpoint"
+                throw "Microsoft IIS Administration API is not found at: $pingEndpoint"
             }
-            throw "Unexpected service status for IIS Administration API: ""$($service.Status)"""
+            throw "Unexpected service status for Microsoft IIS Administration API: ""$($service.Status)"""
         }
         throw $_
     }
@@ -254,7 +254,7 @@ if ($saveConfig) {
     ## Check the current user is a member of the Administrators local user group
     ## NOTE: Get-LocalGroupMember works case-sensitevly. So, as a workaround, Where-Object is used here
     if (!(Get-LocalGroupMember -SID $administratorsSID -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq $user } )) {
-        throw "User $user lacks administrator privilege which is needed to initiate IIS Administration API"
+        throw "User $user lacks administrator privilege which is needed to initiate Microsoft IIS Administration API"
     }
     $apiHome = [System.IO.Path]::Combine($workingDirectory, "..")
     ## Installer added a read-only rule on current user to the directory, delete it
