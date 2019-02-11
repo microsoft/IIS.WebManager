@@ -11,7 +11,7 @@
     <owners>iiscore@microsoft.com</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <projectUrl>https://github.com/Microsoft/IIS.WebManager</projectUrl>
-    <license type="expression">MIT</license>
+    <licenseUrl>https://github.com/Microsoft/IIS.WebManager/blob/dev/LICENSE.md</licenseUrl>
     <description>IIS management extension for Widows Admin Center</description>
     <copyright>Copyright (c) Microsoft Corporation</copyright>
     <tags>IIS</tags>
