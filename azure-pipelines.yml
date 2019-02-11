@@ -1,12 +1,13 @@
 variables:
   Major: 0
   Minor: 0
-  Patch: preview-'$(BuildID)'
+  Patch: '$(Build.SourceBranchName)'-'$(BuildID)'
 trigger:
   branches:
     include:
       - dev
       - master
+      - preview/*
       - releases/*
 pr:
   autoCancel: false
@@ -14,6 +15,7 @@ pr:
     include:
       - dev
       - master
+      - preview/*
       - releases/*
 jobs:
 - job: build
@@ -44,7 +46,7 @@ jobs:
 
 - job: push
   dependsOn: build
-  condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'))
+  condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'), startsWith(variables['Build.SourceBranch'], 'refs/heads/preview'))
   - task: NuGetCommand@2
     displayName: 'NuGet push'
     inputs:
