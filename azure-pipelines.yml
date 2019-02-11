@@ -44,11 +44,9 @@ jobs:
       filePath: ./build.ps1
       arguments: '--env=wac --pack --version=0.1.$(Build.BuildNumber) --output-hashing ALL'
 
-- job: push
-  dependsOn: build
-  condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'), startsWith(variables['Build.SourceBranch'], 'refs/heads/preview'))
   - task: NuGetCommand@2
     displayName: 'NuGet push'
+    condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'), startsWith(variables['Build.SourceBranch'], 'refs/heads/preview'))
     inputs:
       command: push
       packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
