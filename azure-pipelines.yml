@@ -1,4 +1,4 @@
-name: 0.0.$(Build.SourceBranchName)-$(Build.BuildID)
+name: $(Build.SourceBranchName)-$(Build.BuildID)
 variables:
   Major: 0
   Minor: 0
