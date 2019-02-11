@@ -53,7 +53,7 @@ jobs:
       packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
       nuGetFeedType: external
       publishFeedCredentials: 'IIS-WAC-MyGet'
-      versioningScheme: byPrereleaseNumber
+      versioningScheme: byBuildNumber
       majorVersion: '$(Major)'
       minorVersion: '$(Minor)'
       patchVersion: '$(Patch)'
