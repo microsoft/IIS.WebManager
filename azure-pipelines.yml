@@ -1,7 +1,7 @@
 variables:
   Major: 0
   Minor: 0
-  Patch: '$(Build.SourceBranchName)'-'$(BuildID)'
+  Patch: $(Build.SourceBranchName)-$(Build.BuildID)
 trigger:
   branches:
     include:
