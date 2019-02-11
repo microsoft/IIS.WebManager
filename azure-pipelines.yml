@@ -2,6 +2,7 @@ variables:
   Major: 0
   Minor: 0
   Patch: $(Build.SourceBranchName)-$(Build.BuildID)
+  PKGVersion: $(Major).$(Minor).$(Patch)
 trigger:
   branches:
     include:
@@ -52,6 +53,8 @@ jobs:
       packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
       nuGetFeedType: external
       publishFeedCredentials: 'IIS-WAC-MyGet'
+      versioningScheme: byEnvVar
+      versionEnvVar: PKGVersion
       majorVersion: '$(Major)'
       minorVersion: '$(Minor)'
       patchVersion: '$(Patch)'
