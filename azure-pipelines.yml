@@ -1,8 +1,10 @@
-name: $(Build.BuildID)-$(Build.SourceBranchName)
+name: $(Build.SourceBranch)-$(Build.BuildID)
 variables:
-  Major: 0
-  Minor: 0
-  Patch: $(Build.BuildID)
+  MajorVersion: 0
+  MinorVersion: 1
+  NuGetVersionSimple: $(MajorVersion).$(MinorVersion).$(Build.BuildID)
+  NuGetVersionFull: $(MajorVersion).$(MinorVersion).$(Build.BuildID)-$(Build.SourceBranchName)
+
 trigger:
   branches:
     include:
@@ -43,18 +45,32 @@ jobs:
     inputs:
       targetType: filePath
       filePath: ./build.ps1
-      arguments: '--env=wac --pack --version=0.1.$(Build.BuildNumber) --output-hashing ALL'
+      arguments: '--env=wac --output-hashing ALL'
+
+  - task: NuGetCommand@2
+    displayName: 'NuGet pack (development)'
+    condition: not(startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'))
+    inputs:
+      command: pack
+      packagesToPack: '$(Build.SourcesDirectory)/**/*.nuspec'
+      versioningScheme: byEnvVar
+      versionEnvVar: NuGetVersionFull
+
+  - task: NuGetCommand@2
+    displayName: 'NuGet pack (release)'
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/releases')
+    inputs:
+      command: pack
+      packagesToPack: '$(Build.SourcesDirectory)/**/*.nuspec'
+      versioningScheme: byEnvVar
+      versionEnvVar: NuGetVersionSimple
 
   - task: NuGetCommand@2
     displayName: 'NuGet push'
-    condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'), startsWith(variables['Build.SourceBranch'], 'refs/heads/preview'))
+    condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/preview'), startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'))
     inputs:
       command: push
-      packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
       nuGetFeedType: external
       publishFeedCredentials: 'IIS-WAC-MyGet'
-      versioningScheme: byBuildNumber
-      majorVersion: '$(Major)'
-      minorVersion: '$(Minor)'
-      patchVersion: '$(Patch)'
       allowPackageConflicts: false
