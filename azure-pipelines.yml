@@ -1,7 +1,8 @@
 name: $(Build.SourceBranch)-$(Build.BuildID)
 variables:
-  NuGetVersionFull: $(Build.BuildID)-$(Build.SourceBranchName)
-  NuGetVersionSimple: $(Build.BuildID)
+  MajorVersion: 0
+  MinorVersion: 1
+
 trigger:
   branches:
     include:
@@ -42,11 +43,33 @@ jobs:
     inputs:
       targetType: filePath
       filePath: ./build.ps1
-      arguments: '--env=wac --pack --version=0.1.$(Build.BuildNumber) --output-hashing ALL'
+      arguments: '--env=wac --output-hashing ALL'
 
   - task: NuGetCommand@2
-    displayName: 'NuGet push (staging)'
+    displayName: 'NuGet pack (development)'
     condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/preview'))
+    inputs:
+      command: pack
+      packagesToPack: '$(Build.SourcesDirectory)/**/*.nuspec'
+      versioningScheme: byPrereleaseNumber
+      MajorVersion: $(MajorVersion)
+      MinorVersion: $(MinorVersion)
+      PatchVersion: $(Build.BuildID)-$(Build.SourceBranch)
+
+  - task: NuGetCommand@2
+    displayName: 'NuGet pack (release)'
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/releases')
+    inputs:
+      command: pack
+      packagesToPack: '$(Build.SourcesDirectory)/**/*.nuspec'
+      versioningScheme: byPrereleaseNumber
+      MajorVersion: $(MajorVersion)
+      MinorVersion: $(MinorVersion)
+      PatchVersion: $(Build.BuildID)
+
+  - task: NuGetCommand@2
+    displayName: 'NuGet push'
+    condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/preview'), startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'))
     inputs:
       command: push
       packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
@@ -54,16 +77,4 @@ jobs:
       publishFeedCredentials: 'IIS-WAC-MyGet'
       versioningScheme: byEnvVar
       versionEnvVar: NuGetVersionFull
-      allowPackageConflicts: false
-
-  - task: NuGetCommand@2
-    displayName: 'NuGet push (official)'
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/releases')
-    inputs:
-      command: push
-      packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
-      nuGetFeedType: external
-      publishFeedCredentials: 'IIS-WAC-MyGet'
-      versioningScheme: byEnvVar
-      versionEnvVar: NuGetVersionSimple
       allowPackageConflicts: false
