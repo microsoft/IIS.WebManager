@@ -1,7 +1,7 @@
-name: $(Build.SourceBranchName)-$(Build.BuildID)
+name: $(Build.SourceBranch)-$(Build.BuildID)
 variables:
   NuGetVersionFull: $(Build.BuildID)-$(Build.SourceBranchName)
-  NuGetVersionSimple: $(Build.BuildID)-$(Build.SourceBranchName)
+  NuGetVersionSimple: $(Build.BuildID)
 trigger:
   branches:
     include:
