@@ -2,6 +2,8 @@ name: $(Build.SourceBranch)-$(Build.BuildID)
 variables:
   MajorVersion: 0
   MinorVersion: 1
+  NuGetVersionSimple: $(MajorVersion).$(MinorVersion).$(Build.BuildID)
+  NuGetVersionFull: $(MajorVersion).$(MinorVersion).$(Build.BuildID)-$(Build.SourceBranch)
 
 trigger:
   branches:
@@ -47,13 +49,12 @@ jobs:
 
   - task: NuGetCommand@2
     displayName: 'NuGet pack (development)'
+    condition: not(startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'))
     inputs:
       command: pack
       packagesToPack: '$(Build.SourcesDirectory)/**/*.nuspec'
-      versioningScheme: byPrereleaseNumber
-      MajorVersion: $(MajorVersion)
-      MinorVersion: $(MinorVersion)
-      PatchVersion: $(Build.BuildID)-$(Build.SourceBranchName)
+      versioningScheme: byEnvVar
+      versionEnvVar: NuGetVersionFull
 
   - task: NuGetCommand@2
     displayName: 'NuGet pack (release)'
@@ -61,10 +62,8 @@ jobs:
     inputs:
       command: pack
       packagesToPack: '$(Build.SourcesDirectory)/**/*.nuspec'
-      versioningScheme: byPrereleaseNumber
-      MajorVersion: $(MajorVersion)
-      MinorVersion: $(MinorVersion)
-      PatchVersion: $(Build.BuildID)
+      versioningScheme: byEnvVar
+      versionEnvVar: NuGetVersionSimple
 
   - task: NuGetCommand@2
     displayName: 'NuGet push'
@@ -74,6 +73,4 @@ jobs:
       packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
       nuGetFeedType: external
       publishFeedCredentials: 'IIS-WAC-MyGet'
-      versioningScheme: byEnvVar
-      versionEnvVar: NuGetVersionFull
       allowPackageConflicts: false
