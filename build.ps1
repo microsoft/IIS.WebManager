@@ -64,7 +64,7 @@ if ($pack) {
 }
 
 Write-Host "Dump the root source directory..."
-gci $Env:BUILD_SOURCESDIRECTORY
+Get-ChildItem $Env:BUILD_SOURCESDIRECTORY
 
 $buildArgs = $args | Where-Object { $_ -notlike "--purge" -and $_ -notlike "--pack" -and -not ($_.startsWith("--version="))}
 $buildTools = @("@angular/cli@1.7.4","gulp-cli@2.0.1")

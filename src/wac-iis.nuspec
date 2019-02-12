@@ -6,7 +6,7 @@
     </packageTypes>
     <id>microsoft.iis-wac-extension</id>
     <version>$version$</version>
-    <title>Microsoft IIS Extension for Windows Administration Center</title>
+    <title>Microsoft IIS</title>
     <authors>Microsoft IIS Team</authors>
     <owners>iiscore@microsoft.com</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
