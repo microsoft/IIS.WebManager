@@ -52,8 +52,8 @@ jobs:
       packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
       nuGetFeedType: external
       publishFeedCredentials: 'IIS-WAC-MyGet'
-      versionEnvVar: NuGetVersionFull
       versioningScheme: byEnvVar
+      versionEnvVar: NuGetVersionFull
       allowPackageConflicts: false
 
   - task: NuGetCommand@2
@@ -64,6 +64,6 @@ jobs:
       packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
       nuGetFeedType: external
       publishFeedCredentials: 'IIS-WAC-MyGet'
-      versionEnvVar: NuGetVersionSimple
       versioningScheme: byEnvVar
+      versionEnvVar: NuGetVersionSimple
       allowPackageConflicts: false
