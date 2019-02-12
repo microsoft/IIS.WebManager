@@ -71,7 +71,7 @@ jobs:
     condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/preview'), startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'))
     inputs:
       command: push
-      packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
       nuGetFeedType: external
       publishFeedCredentials: 'IIS-WAC-MyGet'
       versioningScheme: byEnvVar
