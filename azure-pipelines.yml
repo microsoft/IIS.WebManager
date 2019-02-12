@@ -1,8 +1,7 @@
-name: $(Build.BuildID)-$(Build.SourceBranchName)
+name: $(Build.SourceBranchName)-$(Build.BuildID)
 variables:
-  Major: 0
-  Minor: 0
-  Patch: $(Build.BuildID)
+  NuGetVersionFull: $(Build.BuildID)-$(Build.SourceBranchName)
+  NuGetVersionSimple: $(Build.BuildID)-$(Build.SourceBranchName)
 trigger:
   branches:
     include:
@@ -46,15 +45,25 @@ jobs:
       arguments: '--env=wac --pack --version=0.1.$(Build.BuildNumber) --output-hashing ALL'
 
   - task: NuGetCommand@2
-    displayName: 'NuGet push'
-    condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'), startsWith(variables['Build.SourceBranch'], 'refs/heads/preview'))
+    displayName: 'NuGet push (staging)'
+    condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/preview'))
     inputs:
       command: push
       packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
       nuGetFeedType: external
       publishFeedCredentials: 'IIS-WAC-MyGet'
-      versioningScheme: byBuildNumber
-      majorVersion: '$(Major)'
-      minorVersion: '$(Minor)'
-      patchVersion: '$(Patch)'
+      versionEnvVar: NuGetVersionFull
+      versioningScheme: byEnvVar
+      allowPackageConflicts: false
+
+  - task: NuGetCommand@2
+    displayName: 'NuGet push (official)'
+    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/releases')
+    inputs:
+      command: push
+      packagesToPush: '$(Build.SourcesDirectory)/**/*.nupkg;!$(Build.SourcesDirectory)/**/*.symbols.nupkg'
+      nuGetFeedType: external
+      publishFeedCredentials: 'IIS-WAC-MyGet'
+      versionEnvVar: NuGetVersionSimple
+      versioningScheme: byEnvVar
       allowPackageConflicts: false
