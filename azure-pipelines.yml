@@ -47,7 +47,6 @@ jobs:
 
   - task: NuGetCommand@2
     displayName: 'NuGet pack (development)'
-    condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/dev'), eq(variables['Build.SourceBranch'], 'refs/heads/master'), startsWith(variables['Build.SourceBranch'], 'refs/heads/preview'))
     inputs:
       command: pack
       packagesToPack: '$(Build.SourcesDirectory)/**/*.nuspec'
