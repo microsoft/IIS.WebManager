@@ -53,7 +53,7 @@ jobs:
       versioningScheme: byPrereleaseNumber
       MajorVersion: $(MajorVersion)
       MinorVersion: $(MinorVersion)
-      PatchVersion: $(Build.BuildID)-$(Build.SourceBranch)
+      PatchVersion: $(Build.BuildID)-$(Build.SourceBranchName)
 
   - task: NuGetCommand@2
     displayName: 'NuGet pack (release)'
