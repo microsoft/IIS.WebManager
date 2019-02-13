@@ -5,6 +5,7 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
 import { LoadingService } from '../notification/loading.service';
 import { WindowService } from './window.service';
 import { Runtime } from '../runtime/runtime';
+import { environment } from 'environments/environment';
 
 @Component({
     selector: 'app-root',
@@ -94,6 +95,10 @@ export class AppComponent implements OnInit {
     beforeUnloadHander(_) {
         this._loadingSvc.destroy()
         this.runtime.DestroyContext()
+    }
+
+    get isWAC() {
+        return environment.WAC;
     }
 
     private dragOver(e: DragEvent) {
