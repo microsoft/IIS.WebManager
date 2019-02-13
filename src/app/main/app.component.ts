@@ -98,7 +98,6 @@ export class AppComponent implements OnInit {
     }
 
     get isWAC() {
-        console.log('isWac', environment.WAC);
         return environment.WAC;
     }
 
