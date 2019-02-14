@@ -1,3 +1,4 @@
+#Requires -RunAsAdministrator
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
@@ -142,30 +143,6 @@ function GetIISAdminHome($procs) {
     }
 }
 
-function ConvertTo-NTAccount($From)
-{
-    if ($From -is [System.Security.Principal.NTAccount]) {
-        return $From
-    }
-    if ($From -is [System.Security.Principal.SecurityIdentifier]) {
-        return ($From.Translate([System.Security.Principal.NTAccount]))
-    }
-    if (!($From -is [string])) {
-        Throw "Don't know how to convert an object of type '$($From.GetType())' to an NTAccount"
-    }
-    try {
-        # Try the symbolic format first.
-        # For the symbolic format, translate twice, to make sure that
-        # the value is valid.
-        $acc = new-object System.Security.Principal.NTAccount($From)
-        $sid = $acc.Translate([System.Security.Principal.SecurityIdentifier])
-        return ($sid.Translate([System.Security.Principal.NTAccount]))
-    } catch {
-        $sid = new-object System.Security.Principal.SecurityIdentifier($From)
-        return ($sid.Translate([System.Security.Principal.NTAccount]))
-    }
-}
-
 ####################### Main script ################################
 
 ## TODO: Consider creating a lock around this script because it is not concurrency safe
@@ -245,34 +222,17 @@ if (!$config.security.users.owners.Contains($user)) {
     }
 }
 
-$administratorsSID = 'S-1-5-32-544';
 if ($saveConfig) {
     LogVerbose "Saving config..."
     if ($devMode) {
         throw "Cannot edit config file in dev mode, please add $user to ""$iisAdminOwners"" group manually"
     }
-    ## Check the current user is a member of the Administrators local user group
-    ## NOTE: Get-LocalGroupMember works case-sensitevly. So, as a workaround, Where-Object is used here
-    if (!(Get-LocalGroupMember -SID $administratorsSID -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq $user } )) {
-        throw "User $user lacks administrator privilege which is needed to initiate Microsoft IIS Administration API"
-    }
     $apiHome = [System.IO.Path]::Combine($workingDirectory, "..")
     ## Installer added a read-only rule on current user to the directory, delete it
     $dirAcl = Get-Acl $apiHome
-    foreach ($access in $dirAcl.Access | Where-Object { $_.IdentityReference.Value -eq $user }) {
-        $dirAcl.RemoveAccessRule($access) | Out-Null
-        $updateAcl = $true
-    }
-    if ($updateAcl) {
-        LogVerbose "Updating Acl to remove readonly access..."
-        Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
-    }
-
     $modifyAcess = [System.Security.AccessControl.FileSystemRights]::Modify
     $allow = [System.Security.AccessControl.AccessControlType]::Allow
-    $builtInAdministrators = (ConvertTo-NTAccount $administratorsSID).value
-
-    $dirAccessGranted = $dirAcl.Access | Where-Object { ($_.IdentityReference.Value -eq $builtInAdministrators) -and ($_.AccessControlType -eq $allow) -and (($_.FileSystemRights -bAnd $modifyAcess) -eq $modifyAcess) }
+    $dirAccessGranted = $dirAcl.Access | Where-Object { ($_.IdentityReference.Value -eq $user) -and ($_.AccessControlType -eq $allow) -and (($_.FileSystemRights -bAnd $modifyAcess) -eq $modifyAcess) }
     $private:tempAccessRule = $null
     $private:originalAccessRule = $null
     try {
@@ -282,13 +242,13 @@ if ($saveConfig) {
             $propagationFlags = [System.Security.AccessControl.PropagationFlags]::InheritOnly
             $private:minialAccess = [System.Security.AccessControl.FileSystemRights]::ReadAndExecute -bOr [System.Security.AccessControl.FileSystemRights]::Synchronize
             ## We are about to change access rule for "BUILTIN\Administrators", save original permission so we can roll back if necessary in the finally block
-            $private:originalAccessRule = $dirAcl.Access | Where-Object { $_.IdentityReference.Value -eq $builtInAdministrators -and ($_.AccessControlType -eq $allow) }
+            $private:originalAccessRule = $dirAcl.Access | Where-Object { $_.IdentityReference.Value -eq $user -and ($_.AccessControlType -eq $allow) }
             if ($private:originalAccessRule) {
                 $inheritFlags = $private:originalAccessRule.InheritanceFlags
                 $propagationFlags = $private:originalAccessRule.propagationFlags
                 $private:minialAccess = $private:originalAccessRule.FileSystemRights
             }
-            $private:tempAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule -ArgumentList $builtInAdministrators, ($private:minialAccess -bOr $modifyAcess), $inheritFlags, $propagationFlags, $allow
+            $private:tempAccessRule = New-Object System.Security.AccessControl.FileSystemAccessRule -ArgumentList $user, ($private:minialAccess -bOr $modifyAcess), $inheritFlags, $propagationFlags, $allow
             $dirAcl.SetAccessRule($private:tempAccessRule) | Out-Null
             LogVerbose "Setting Acl to enable administrators' write access"
             Set-Acl -Path $apiHome -AclObject $dirAcl | Out-Null
@@ -297,16 +257,26 @@ if ($saveConfig) {
         $config | ConvertTo-Json -depth 100 | Out-File $configLocation
     } finally {
         $update = $false
-        if ($private:tempAccessRule) {
-            LogVerbose "Removing temp access rules"
-            $dirAcl.RemoveAccessRule($private:tempAccessRule) | Out-Null
-            $update = $true
-        }
-        ## Restore to original access rule or in the case where it didn't exist allow administrator read access
-        if ($private:originalAccessRule) {
-            LogVerbose "Restoring original access rules"
-            $dirAcl.SetAccessRule($private:originalAccessRule) | Out-Null
-            $update = $true
+        LogVerbose "Cleaning up"
+        if ($script:adminAPIInstalled) {
+            ## Remove any user specific acl the installer or the script had added
+            foreach ($access in $dirAcl.Access | Where-Object { $_.IdentityReference.Value -eq $user }) {
+                LogVerbose "Removing access rules for $user"
+                $dirAcl.RemoveAccessRule($access) | Out-Null
+                $update = $true
+            }
+        } else {
+            ## If we didn't install the admin api, we will simply restore any access that the user already have on the file
+            if ($private:tempAccessRule) {
+                LogVerbose "Removing temp access rules"
+                $dirAcl.RemoveAccessRule($private:tempAccessRule) | Out-Null
+                $update = $true
+            }
+            if ($private:originalAccessRule) {
+                LogVerbose "Restoring original access rules"
+                $dirAcl.SetAccessRule($private:originalAccessRule) | Out-Null
+                $update = $true
+            }
         }
         if ($update) {
             LogVerbose "Revoking write access rules"
