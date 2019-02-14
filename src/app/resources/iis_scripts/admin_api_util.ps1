@@ -143,30 +143,6 @@ function GetIISAdminHome($procs) {
     }
 }
 
-function ConvertTo-NTAccount($From)
-{
-    if ($From -is [System.Security.Principal.NTAccount]) {
-        return $From
-    }
-    if ($From -is [System.Security.Principal.SecurityIdentifier]) {
-        return ($From.Translate([System.Security.Principal.NTAccount]))
-    }
-    if (!($From -is [string])) {
-        Throw "Don't know how to convert an object of type '$($From.GetType())' to an NTAccount"
-    }
-    try {
-        # Try the symbolic format first.
-        # For the symbolic format, translate twice, to make sure that
-        # the value is valid.
-        $acc = new-object System.Security.Principal.NTAccount($From)
-        $sid = $acc.Translate([System.Security.Principal.SecurityIdentifier])
-        return ($sid.Translate([System.Security.Principal.NTAccount]))
-    } catch {
-        $sid = new-object System.Security.Principal.SecurityIdentifier($From)
-        return ($sid.Translate([System.Security.Principal.NTAccount]))
-    }
-}
-
 ####################### Main script ################################
 
 ## TODO: Consider creating a lock around this script because it is not concurrency safe
