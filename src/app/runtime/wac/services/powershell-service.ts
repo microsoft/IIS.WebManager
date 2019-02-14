@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable'
 import { PowerShellScripts } from '../../../../generated/powershell-scripts'
 import { Request, Response, ResponseOptions, Headers } from '@angular/http'
 import { WACInfo } from 'runtime/runtime.wac'
-import { LoggerFactory, Logger } from 'diagnostics/logger'
+import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger'
 
 import '../../../diagnostics/extensions/rxjs'
 import 'rxjs/add/operator/catch'
@@ -97,7 +97,11 @@ export class PowershellService {
           throw `Powershell command ${name} returns empty response`;
         }
         return response.results.map(result => {
-          return JSON.parse(result, reviver)
+          let rtnObject = JSON.parse(result, reviver);
+          if (rtnObject && rtnObject.error) {
+            this.logger.log(LogLevel.ERROR, `Unexpected error from powershell script ${name}, it is deemed to be critical. The application will continue:\n${rtnObject.error}`);
+          }
+          return rtnObject
         })
       })})
   }
