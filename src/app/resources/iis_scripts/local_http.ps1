@@ -1,6 +1,9 @@
 [CmdletBinding()]
 param(
     [string]
+    $sessionId,
+
+    [string]
     $requestBase64
 )
 
@@ -16,11 +19,12 @@ if ($verbose) {
     if (!(Test-Path $logDir)) {
         mkdir $logDir
     }
-    $logFile = Join-Path $logDir 'local_http.log'
+    $timestamp = Get-Date -Format "yyyyMMddTHHmmssffffZ"
+    $logFile = Join-Path $logDir "local_http-${timestamp}-${sessionId}.log"
 }
 
 function LogVerbose([string] $msg) {
-    $msg = "[$(Get-Date -Format HH:mm:ss.fffffff)] $msg"
+    $msg = "[$(Get-Date -Format ""yyyy/MM/dd HH:mm:ss:ffff"")] $msg"
     if ($verbose) {
         Write-Verbose $msg
         Add-Content -Value $msg -Path $logFile -Force | Out-Null

@@ -2,6 +2,9 @@
 #Requires -RunAsAdministrator
 [CmdletBinding()]
 param(
+    [string]
+    $sessionId,
+
     [Parameter(Mandatory=$true)]
     [ValidateSet('install', 'ensure-permission')]
     [string]
@@ -12,10 +15,6 @@ param(
 
     [string]
     $dotnetCoreLocation,
-
-    ## Not doing anything with this parameter yet
-    [string]
-    $sessionId,
 
     [string]
     $serviceName = "Microsoft IIS Administration",
@@ -72,11 +71,12 @@ if ($verbose) {
     if (!(Test-Path $logDir)) {
         mkdir $logDir
     }
-    $logFile = Join-Path $logDir 'admin-api-util.log'
+    $timestamp = Get-Date -Format "yyyyMMddTHHmmssffffZ"
+    $logFile = Join-Path $logDir "admin_api_util-${timestamp}-${sessionId}.log"
 }
 
 function LogVerbose([string] $msg) {
-    $msg = "[$(Get-Date -Format HH:mm:ss.fffffff)] $msg"
+    $msg = "[$(Get-Date -Format ""yyyy/MM/dd HH:mm:ss:ffff"")] $msg"
     if ($verbose) {
         Write-Verbose $msg
         Add-Content -Value $msg -Path $logFile -Force | Out-Null
@@ -133,7 +133,7 @@ function Download([string] $uri, [string] $location) {
 function EnsureGroup($group) {
     if (!(Get-LocalGroup -Name $group -ErrorAction SilentlyContinue)) {
         New-LocalGroup -Name $group | Out-Null
-        LogVerbose "Group $group added"
+        LogVerbose "Local group $group created"
     }
 }
 
@@ -142,7 +142,9 @@ function EnsureMember($group, $userOrGroup) {
     $modify = !(Get-LocalGroupMember -Group $group -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq $userOrGroup })
     if ($modify) {
         Add-LocalGroupMember -Group $group -Member $userOrGroup | Out-Null
-        LogVerbose "Member $userOrGroup added"
+        LogVerbose "Member $userOrGroup added to local group $group"
+    } else {
+        LogVerbose "Member $userOrGroup is already in local group $group"
     }
     return $modify
 }
@@ -179,8 +181,6 @@ function LoadAndEnsureConfig($configLocation, $user) {
     }
 
     if (!$config.security.users.owners.Contains($user)) {
-        EnsureGroup $iisAdminOwners | Out-Null
-        $script:groupModified = EnsureMember $iisAdminOwners $user
         if (!$config.security.users.owners.Contains($iisAdminOwners)) {
             $config.security.users.owners += $iisAdminOwners
             $saveConfig = $true
@@ -192,15 +192,18 @@ function LoadAndEnsureConfig($configLocation, $user) {
     }
 
     if ($saveConfig) {
+        LogVerbose "Potential config change will be required"
         return $config
     } else {
+        LogVerbose "No config change required"
         return $null
     }
 }
 
 $lockLocation = "HKLM:\SOFTWARE\Microsoft\IIS-WAC"
 $lockName = "installerLock"
-$spinLockWait = 0.5
+$spinLockWait = 1
+$spinLockTime = 1200
 function ObtainLock() {
 	if (!(Test-Path $lockLocation)) {
 		New-Item -Path $lockLocation -Force | Out-Null
@@ -211,8 +214,16 @@ function ObtainLock() {
             New-ItemProperty -Path $lockLocation -Name $lockName -Value 1 -PropertyType DWORD | Out-Null
             $script:lockOwned = $true
         } catch {
-            LogVerbose "Waiting $spinLockWait seconds to obtain lock"
-            Start-Sleep $spinLockWait
+            ## TODO: check if it is internationalized
+            if ($_.Exception.Message -eq "The property already exists.") {
+                Start-Sleep $spinLockWait
+                $spinLockTime -= $spinLockWait
+                if (($spinLockTime % 10) -eq 0) {
+                    LogVerbose "Waiting to obtain lock, time remaining: $spinLockTime"
+                }
+            } else {
+                throw "Unexpected error while waiting for spin lock $_"
+            }
         }
     }
     LogVerbose "Lock obtained"
@@ -233,35 +244,6 @@ function ReleaseLock() {
     } else {
         LogVerbose "No lock was released"
     }
-}
-
-
-## Workaround a very odd issue: only reproduced when the IIS Admin API Owner group is newly created
-## Looks like the policy are not immediately updated
-function ConfirmPolicyUpdate($apiHost) {
-    LogVerbose "Confirming service policy is updated"
-    $CreateEndpoint = "api-keys"
-    $success = $false
-    $policyWaitTime = 600
-    $policyWaitPeriod = 1
-    while (!$success) {
-        try {
-            Invoke-WebRequest "$apiHost/security/$CreateEndpoint" -UseBasicParsing -UseDefaultCredentials -ContentType "application/json" | Out-Null
-            $success = $true
-        } catch {
-            if ($_.Exception.Response.StatusCode -eq [System.Net.HttpStatusCode]::Unauthorized) {
-                LogVerbose "Policy is not updated, wait $policyWaitPeriod seconds, remaing time $policyWaitTime"
-                Start-Sleep $policyWaitPeriod
-                $policyWaitTime -= $policyWaitPeriod
-                if ($policyWaitTime -lt 0) {
-                    throw "Timeout waiting for service police to update"
-                }
-            } else {
-                throw "Unexpected error while confirming policy update: $_"
-            }
-        }
-    }
-    LogVerbose "Policy is confirmed to be updated"
 }
 
 ####################### Main script ################################
@@ -317,6 +299,8 @@ try {
     }
 
     $user = $(whoami)
+    EnsureGroup $iisAdminOwners | Out-Null
+    $script:groupModified = EnsureMember $iisAdminOwners $user
     $config = LoadAndEnsureConfig $configLocation $user
     if ($config) {
         ObtainLock
@@ -385,7 +369,6 @@ try {
             LogVerbose "Restarting service"
             Restart-Service -Name $serviceName | Out-Null
             WaitForServerToStart $serviceName
-            ConfirmPolicyUpdate $apiHost
         } else {
             LogVerbose "Config file is determined to be valid upon second check, no changes will be made"
         }

@@ -36,11 +36,12 @@ if ($verbose) {
     if (!(Test-Path $logDir)) {
         mkdir $logDir
     }
-    $logFile = Join-Path $logDir 'token-util.log'
+    $timestamp = Get-Date -Format "yyyyMMddTHHmmssffffZ"
+    $logFile = Join-Path $logDir "token_utils-${timestamp}-${sessionId}.log"
 }
 
 function LogVerbose([string] $msg) {
-    $msg = "[$(Get-Date -Format HH:mm:ss.fffffff)] $msg"
+    $msg = "[$(Get-Date -Format ""yyyy/MM/dd HH:mm:ss:ffff"")] $msg"
     if ($verbose) {
         Write-Verbose $msg
         Add-Content -Value $msg -Path $logFile -Force | Out-Null
@@ -49,7 +50,9 @@ function LogVerbose([string] $msg) {
 
 function VerifyResponse([string] $action, [Microsoft.Powershell.Commands.WebResponseObject] $response) {
     if ($response.StatusCode -ge 300) {
-        throw "Invalid status code $($response.StatusCode) while performing action: $action"
+        $msg = "Invalid status code $($response.StatusCode) while performing action: $action"
+        LogVerbose $msg
+        throw $msg
     }
 }
 

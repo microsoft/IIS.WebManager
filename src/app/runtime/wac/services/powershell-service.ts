@@ -46,7 +46,6 @@ export class PowershellService {
   }
 
   public run<T>(pwCmdString: string, psParameters: any): Observable<T> {
-    psParameters.sessionId = this.sessionId
     return this.invoke(pwCmdString, psParameters, null)
   }
 
@@ -81,7 +80,9 @@ export class PowershellService {
   }
 
   private invoke<T>(pwCmdString: string, psParameters: any, reviver: (key: any, value: any) => any = null): Observable<T> {
-    var compiled = PowerShell.createScript(pwCmdString, psParameters, [ 'verbose' ])
+    psParameters.sessionId = this.sessionId
+    var flags = []  // Use ['verbose'] to debug
+    var compiled = PowerShell.createScript(pwCmdString, psParameters, flags)
     var name = pwCmdString.split('\n')[0]
     return this.session.mergeMap(ps => {
       return ps.powerShell.run(compiled).mergeMap(response => {
