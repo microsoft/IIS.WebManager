@@ -1,6 +1,6 @@
-#Requires -RunAsAdministrator
 #Requires -Version 4.0
-
+#Requires -RunAsAdministrator
+[CmdletBinding()]
 Param(
     [Parameter(Mandatory=$true)]
     [string]
@@ -27,6 +27,26 @@ $tokenName = "WAC/${sessionId}"
 $RenewEndpoint = "access-tokens"
 $CreateEndpoint = "api-keys"
 $DeleteEndpoint = "api-keys"
+
+######################## Utilities ###############################
+$verbose = $PSBoundParameters['verbose']
+
+if ($verbose) {
+    $logDir = Join-Path $env:UserProfile 'wac-iis-logs'
+    if (!(Test-Path $logDir)) {
+        mkdir $logDir
+    }
+    $logFile = Join-Path $logDir 'token-util.log'
+}
+
+function LogVerbose([string] $msg) {
+    $msg = "[$(Get-Date -Format HH:mm:ss.fffffff)] $msg"
+    if ($verbose) {
+        Write-Verbose $msg
+        Add-Content -Value $msg -Path $logFile -Force | Out-Null
+    }
+}
+
 function VerifyResponse([string] $action, [Microsoft.Powershell.Commands.WebResponseObject] $response) {
     if ($response.StatusCode -ge 300) {
         throw "Invalid status code $($response.StatusCode) while performing action: $action"
@@ -41,14 +61,16 @@ function ConvertTo-SystemLocaleDateString($date)
 }
 
 function TokenRequest([string] $targetEndpoint, [string]$method, [string]$subpath, $requestBody) {
-    $sessionCreate = Invoke-WebRequest "$apiHost/security/$targetEndpoint" -UseBasicParsing -UseDefaultCredentials -SessionVariable sess
+    $endpoint = "$apiHost/security/$targetEndpoint"
+    LogVerbose "Reaching out to endpoint $endpoint"
+    $sessionCreate = Invoke-WebRequest $endpoint -UseBasicParsing -UseDefaultCredentials -SessionVariable sess
     VerifyResponse "Create WSRF-TOKEN on $targetEndpoint" $sessionCreate | Out-Null
     $hTok = $sessionCreate.headers."XSRF-TOKEN"
     if ($hTok -is [array]) {
         $hTok = $hTok[0]
     }
     $requestParams = @{
-        "Uri" = "$apiHost/security/$targetEndpoint";
+        "Uri" = $endpoint;
         "Headers" = @{ 'XSRF-TOKEN' = $htok };
         "Method" = $method;
         "UseDefaultCredentials" = $true;
@@ -70,9 +92,11 @@ function TokenRequest([string] $targetEndpoint, [string]$method, [string]$subpat
 if ($tokenId) {
     $existingToken = @{ "id" = $tokenId }
 } else {
+    LogVerbose "Creating new token"
     $query = Invoke-WebRequest "$apiHost/security/$CreateEndpoint" -UseBasicParsing -UseDefaultCredentials -ContentType "application/json"
     VerifyResponse "query exsiting tokens" $query | Out-Null
     $existingToken = (ConvertFrom-Json $contentEncoding.GetString($query.Content)).api_keys | Where-Object { $_.purpose -eq $tokenName }
+    LogVerbose "New token $tokenId created"
 }
 
 if ($command -eq 'ensure') {

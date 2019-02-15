@@ -81,7 +81,7 @@ export class PowershellService {
   }
 
   private invoke<T>(pwCmdString: string, psParameters: any, reviver: (key: any, value: any) => any = null): Observable<T> {
-    var compiled = PowerShell.createScript(pwCmdString, psParameters)
+    var compiled = PowerShell.createScript(pwCmdString, psParameters, [ 'verbose' ])
     var name = pwCmdString.split('\n')[0]
     return this.session.mergeMap(ps => {
       return ps.powerShell.run(compiled).mergeMap(response => {
@@ -98,8 +98,8 @@ export class PowershellService {
         }
         return response.results.map(result => {
           let rtnObject = JSON.parse(result, reviver);
-          if (rtnObject && rtnObject.error) {
-            this.logger.log(LogLevel.ERROR, `Unexpected error from powershell script ${name}, it is deemed to be critical. The application will continue:\n${rtnObject.error}`);
+          if (rtnObject && rtnObject.errorsReported) {
+            this.logger.log(LogLevel.ERROR, `Unexpected error from powershell script ${name}, it is deemed to be critical. The application will continue:\n${rtnObject.errorsReported}`);
           }
           return rtnObject
         })

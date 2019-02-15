@@ -20,8 +20,10 @@ if ($verbose) {
 }
 
 function LogVerbose([string] $msg) {
+    $msg = "[$(Get-Date -Format HH:mm:ss.fffffff)] $msg"
     if ($verbose) {
-        Add-Content -Value $msg -Path $logFile -Force
+        Write-Verbose $msg
+        Add-Content -Value $msg -Path $logFile -Force | Out-Null
     }
 }
 

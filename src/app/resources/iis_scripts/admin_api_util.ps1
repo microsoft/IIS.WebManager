@@ -1,3 +1,4 @@
+#Requires -Version 4.0
 #Requires -RunAsAdministrator
 [CmdletBinding()]
 param(
@@ -34,7 +35,7 @@ $ErrorActionPreference = "Stop"
 $script:adminAPIInstalled = $false
 $script:groupModified = $false
 $script:lockOwned = $false
-$script:error = $null
+$script:errorsReported = $null
 
 ######################## Param checks ###############################
 $install = $command -eq 'install'
@@ -75,6 +76,7 @@ if ($verbose) {
 }
 
 function LogVerbose([string] $msg) {
+    $msg = "[$(Get-Date -Format HH:mm:ss.fffffff)] $msg"
     if ($verbose) {
         Write-Verbose $msg
         Add-Content -Value $msg -Path $logFile -Force | Out-Null
@@ -223,7 +225,7 @@ function ReleaseLock() {
             Remove-ItemProperty -Path $lockLocation -Name $lockName | Out-Null
         } catch {
             LogVerbose "Error releasing lock $_"
-            $script:error = $_
+            $script:errorsReported = $_
         } finally {
             $script:lockOwned = $lockOwned
             LogVerbose "Lock released"
@@ -233,10 +235,40 @@ function ReleaseLock() {
     }
 }
 
+
+## Workaround a very odd issue: only reproduced when the IIS Admin API Owner group is newly created
+## Looks like the policy are not immediately updated
+function ConfirmPolicyUpdate($apiHost) {
+    LogVerbose "Confirming service policy is updated"
+    $CreateEndpoint = "api-keys"
+    $success = $false
+    $policyWaitTime = 600
+    $policyWaitPeriod = 1
+    while (!$success) {
+        try {
+            Invoke-WebRequest "$apiHost/security/$CreateEndpoint" -UseBasicParsing -UseDefaultCredentials -ContentType "application/json" | Out-Null
+            $success = $true
+        } catch {
+            if ($_.Exception.Response.StatusCode -eq [System.Net.HttpStatusCode]::Unauthorized) {
+                LogVerbose "Policy is not updated, wait $policyWaitPeriod seconds, remaing time $policyWaitTime"
+                Start-Sleep $policyWaitPeriod
+                $policyWaitTime -= $policyWaitPeriod
+                if ($policyWaitTime -lt 0) {
+                    throw "Timeout waiting for service police to update"
+                }
+            } else {
+                throw "Unexpected error while confirming policy update: $_"
+            }
+        }
+    }
+    LogVerbose "Policy is confirmed to be updated"
+}
+
 ####################### Main script ################################
 
-LogVerbose 'Started admin_api_util...'
-
+LogVerbose "Started admin_api_util, command $command..."
+$apiHost = "https://localhost:$adminAPIPort"
+$pingEndpoint = $apiHost
 try {
     if ($install) {
         if (!(IsIISAdminInstalled)) {
@@ -247,7 +279,6 @@ try {
         }
     } else {
         try {
-            $pingEndpoint = "https://localhost:$adminAPIPort"
             LogVerbose "Pinging Admin API at $pingEndpoint"
             Invoke-WebRequest -UseDefaultCredentials -UseBasicParsing $pingEndpoint | Out-Null
         } catch {
@@ -354,6 +385,7 @@ try {
             LogVerbose "Restarting service"
             Restart-Service -Name $serviceName | Out-Null
             WaitForServerToStart $serviceName
+            ConfirmPolicyUpdate $apiHost
         } else {
             LogVerbose "Config file is determined to be valid upon second check, no changes will be made"
         }
@@ -365,5 +397,5 @@ try {
 ConvertTo-Json @{
     "adminAPIInstalled" = $script:adminAPIInstalled;
     "groupModified" = $script:groupModified;
-    "error" = $script:error
+    "errorsReported" = $script:errorsReported
 } -Compress -Depth 100
