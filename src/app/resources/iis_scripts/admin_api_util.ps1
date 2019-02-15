@@ -203,7 +203,7 @@ function LoadAndEnsureConfig($configLocation, $user) {
 $lockLocation = "HKLM:\SOFTWARE\Microsoft\IIS-WAC"
 $lockName = "installerLock"
 $spinLockWait = 1
-$spinLockTime = 1200
+$spinLockTime = 600
 function ObtainLock() {
 	if (!(Test-Path $lockLocation)) {
 		New-Item -Path $lockLocation -Force | Out-Null
@@ -218,6 +218,9 @@ function ObtainLock() {
             if ($_.Exception.Message -eq "The property already exists.") {
                 Start-Sleep $spinLockWait
                 $spinLockTime -= $spinLockWait
+                if ($spinLockTime -lt 0) {
+                    throw "Timeout waiting to initialize IIS management, please ensure there is no other process trying to modify the system and then remove registry entry $lockLocation to enable IIS management"
+                }
                 if (($spinLockTime % 10) -eq 0) {
                     LogVerbose "Waiting to obtain lock, time remaining: $spinLockTime"
                 }
