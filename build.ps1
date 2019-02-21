@@ -57,7 +57,7 @@ if ($pack) {
     if (
         ($outputHashingIndex -eq -1) -Or
         ($outputHashingIndex+1 -ge $args.Count) -Or
-        ($args[$outputHashingIndex+1].Equals("all"))
+        -not ($args[$outputHashingIndex+1].Equals("all"))
     ) {
         throw "Please include ""$outputHashingTag all"" option when packing"
     }
