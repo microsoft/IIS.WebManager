@@ -54,6 +54,7 @@ if ($pack) {
             break
         }
     }
+
     if (
         ($outputHashingIndex -eq -1) -Or
         ($outputHashingIndex+1 -ge $args.Count) -Or
