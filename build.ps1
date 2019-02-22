@@ -54,12 +54,13 @@ if ($pack) {
             break
         }
     }
+
     if (
         ($outputHashingIndex -eq -1) -Or
         ($outputHashingIndex+1 -ge $args.Count) -Or
-        ($args[$outputHashingIndex+1].ToLower() -ne "all")
+        -not ($args[$outputHashingIndex+1].Equals("all"))
     ) {
-        throw "Please include ""$outputHashingTag ALL"" option when packing"
+        throw "Please include ""$outputHashingTag all"" option when packing"
     }
 }
 
