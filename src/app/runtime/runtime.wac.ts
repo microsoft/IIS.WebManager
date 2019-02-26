@@ -18,6 +18,7 @@ import { CoreEnvironment } from '@microsoft/windows-admin-center-sdk/dist/core/d
 import 'rxjs/add/operator/take'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/observable/throw'
+import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 
 class ApiKey {
     public id: string
@@ -29,32 +30,37 @@ class ApiKey {
 class HostStatus {
     public adminAPIInstalled: boolean
     public groupModified: boolean
+    public apiHost: string
 }
 
 @Injectable()
 export class WACInfo {
     constructor(private appContext: AppContextService){}
-
     public get NodeName(): Observable<string> {
         return this.appContext.servicesReady.map(_ =>
             this.appContext.activeConnection.nodeName
-        ).shareReplay()
-    }
+        ).shareReplay();
+    };
 }
 
 @Injectable()
 export class WACRuntime implements Runtime {
-    private _tokenId: string
-    private _connecting: Observable<ApiConnection>
+    private _tokenId: string;
+    private _apiHost: string;
+    private _connecting: Observable<ApiConnection>;
+    private _logger: Logger;
 
     constructor(
         private router: Router,
         private appContext: AppContextService,
         private navigationService: NavigationService,
         private connectService: ConnectService,
+        private loggerFactory: LoggerFactory,
         @Inject("Powershell") private powershellService: PowershellService,
         @Inject("WACInfo") private wac: WACInfo,
-    ){}
+    ){
+        this._logger = loggerFactory.Create(this);
+    }
 
     public InitContext() {
         this.appContext.ngInit({ navigationService: this.navigationService })
@@ -112,9 +118,11 @@ export class WACRuntime implements Runtime {
 
     public DestroyContext() {
         if (this._tokenId) {
-            this.powershellService.run(PowerShellScripts.token_utils, { command: 'delete', tokenId: this._tokenId }).finally(() =>
-                this.appContext.ngDestroy()
-            ).subscribe()
+            this.powershellService.run(PowerShellScripts.token_utils, {
+                command: 'delete',
+                tokenId: this._tokenId,
+                apiHost: this._apiHost,
+            }).finally(() => this.appContext.ngDestroy()).subscribe()
         } else {
             this.appContext.ngDestroy()
         }
@@ -141,6 +149,7 @@ export class WACRuntime implements Runtime {
 
     public PrepareIISHost(p: any): Observable<any> {
         return this.powershellService.run(PowerShellScripts.admin_api_util, p).map((status: HostStatus) => {
+            this._apiHost = status.apiHost
             if (status.groupModified) {
                 this.powershellService.Reset()
             }
@@ -153,25 +162,46 @@ export class WACRuntime implements Runtime {
     }
 
     private GetApiKey(): Observable<ApiKey> {
-        var cmdParams: any = { command: 'ensure' }
-        if (this._tokenId) {
-            cmdParams.tokenId = this._tokenId
-        }
-        return this.PrepareIISHost({ command: 'ensure-permission' }).catch((e, _) => {
+        return this.PrepareIISHost({ command: 'ensure' }).catch((e, _) => {
             if (e.status === 400) {
-                let errorMsg = <string> e.response.exception
-                if (errorMsg == 'Microsoft IIS Administration API is not installed') {
-                    this.router.navigate(['wac', 'install'])
-                    return Observable.throw(ApiErrorType.Unreachable)
+                let error: any
+                try {
+                    error = JSON.parse(e.response.exception)
+                } catch (e) {
+                    this._logger.log(LogLevel.INFO, `Unable to parse error message ${e.response.exception}, the error must be unexpected`)
                 }
-                if (errorMsg.startsWith('Unexpected service status for Microsoft IIS Administration API')) {
-                    let status = e.response.exception.split(' ').pop()
-                    return Observable.throw(new UnexpectedServerStatusError(status))
+                if (error) {
+                    if (error.Type == 'PREREQ_BELOW_MIN_VERSION') {
+                        this.router.navigate(['wac', 'install'], {
+                            queryParams: {
+                                details: `To manage IIS Server, you need to install ${error.App} version ${error.Required} or higher. Current version detected: ${error.Actual}`,
+                            },
+                        })
+                        return Observable.throw(ApiErrorType.Unreachable)
+                    }
+                    if (error.Type == 'ADMIN_API_SERVICE_NOT_FOUND') {
+                        this.router.navigate(['wac', 'install'], {
+                            queryParams: {
+                                details: `To manage an IIS Server, you need to install ${error.App} on IIS host`,
+                            },
+                        })
+                        return Observable.throw(ApiErrorType.Unreachable)
+                    }
+                    if (error.Type == 'ADMIN_API_SERVICE_NOT_RUNNING') {
+                        return Observable.throw(new UnexpectedServerStatusError(error.Status))
+                    }
                 }
             }
             return Observable.throw(e)
         }).mergeMap(_ => {
-            return this.powershellService.run<ApiKey>(PowerShellScripts.token_utils, cmdParams)
+            var tokenUtilParams: any = {
+                command: 'ensure',
+                apiHost: this._apiHost,
+            }
+            if (this._tokenId) {
+                tokenUtilParams.tokenId = this._tokenId
+            }
+            return this.powershellService.run<ApiKey>(PowerShellScripts.token_utils, tokenUtilParams)
         })
     }
 }
