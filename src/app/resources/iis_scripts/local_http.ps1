@@ -1,7 +1,13 @@
 [CmdletBinding()]
 param(
+    [Parameter(Mandatory=$true)]
     [string]
-    $requestBase64
+    $requestBase64,
+
+    [Parameter(Mandatory=$true)]
+    [string]
+    $sessionId
+
 )
 
 $ErrorActionPreference = "Stop"

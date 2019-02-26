@@ -20,7 +20,7 @@ param(
     $appName = "Microsoft IIS Administration",
 
     [Version]
-    $appMinVersion = [Version]::Parse("2.2.1"),
+    $appMinVersion,
 
     [string]
     $serviceName = "Microsoft IIS Administration",

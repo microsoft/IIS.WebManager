@@ -19,6 +19,7 @@ import 'rxjs/add/operator/take'
 import 'rxjs/add/operator/map'
 import 'rxjs/add/observable/throw'
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
+import { SETTINGS } from 'main/settings';
 
 class ApiKey {
     public id: string
@@ -148,6 +149,7 @@ export class WACRuntime implements Runtime {
     }
 
     public PrepareIISHost(p: any): Observable<any> {
+        p.appMinVersion = SETTINGS.api_setup_version
         return this.powershellService.run(PowerShellScripts.admin_api_util, p).map((status: HostStatus) => {
             this._apiHost = status.apiHost
             if (status.groupModified) {
