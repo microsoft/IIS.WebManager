@@ -165,7 +165,7 @@ export class WACRuntime implements Runtime {
 
     private GetApiKey(): Observable<ApiKey> {
         return this.PrepareIISHost({ command: 'ensure' }).catch((e, _) => {
-            if (e.status === 400) {
+            if (e.status === 400 && e.response) {
                 let error: any
                 try {
                     error = JSON.parse(e.response.exception)
