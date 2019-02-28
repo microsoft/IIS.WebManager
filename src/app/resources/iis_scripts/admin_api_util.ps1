@@ -125,6 +125,7 @@ function Install([string] $scenario, [string] $installType, [string] $location) 
     }
     LogVerbose "Running $installer"
     & $installer /s DefaultCors=false | Out-Null
+    $script:groupModified = $true
     LogVerbose "Successfully installed $scenario"
 }
 
@@ -188,6 +189,7 @@ function VerifyCOMErrorCode($thrown, $code) {
             ($thrown.Exception.InnerException.HResult -eq $code -or $thrown.Exception.InnerException.ErrorCode -eq $code))
 }
 
+$script:groupModified = $false
 ## Precondition: group should already exist. Note that the installer would create the group
 function EnsureUserGroup($groupName) {
     $userAD = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
@@ -197,6 +199,7 @@ function EnsureUserGroup($groupName) {
         (Get-Command "Add-LocalGroupMember" -ErrorAction SilentlyContinue)) {
         if (!(Get-LocalGroupMember -Group $groupName -Member $userAD -ErrorAction SilentlyContinue)) {
             Add-LocalGroupMember -Group $groupName -Member $userAD | Out-Null
+            $script:groupModified = $true
         }
     } else {
         $userPath = 'WinNT://' + $userAD.Replace("\", "/")
@@ -212,6 +215,7 @@ function EnsureUserGroup($groupName) {
         }
         try {
             $group.Invoke('Add', @($userPath)) | Out-Null
+            $script:groupModified = $true
         } catch {
             if (VerifyCOMErrorCode $_ 0x80070562) {
                 # Expected excaption when specified account name is already a member of the group.
@@ -234,13 +238,13 @@ if ($install) {
     if ($app) {
         EnsureMinVersion $app $appMinVersion
     }
+    EnsureIISAdminStarted
     ## If we can't find the app, it might be ok because we may be in dev mode and the server is not installed
 }
 EnsureUserGroup $iisAdminOwners
-EnsureIISAdminStarted
 
 ConvertTo-Json @{
     "adminAPIInstalled" = $script:adminAPIInstalled;
     "apiHost" = $apiHost;
-    "groupModified" = $groupModified
+    "groupModified" = $script:groupModified
 } -Compress -Depth 100
