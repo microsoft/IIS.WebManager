@@ -1,19 +1,18 @@
-import { Component, Inject, ViewChild, ElementRef } from "@angular/core"
-import { AppContextService } from "@microsoft/windows-admin-center-sdk/angular"
-import { SETTINGS } from "main/settings"
-import { Router } from "@angular/router"
+import { Component, Inject, ViewChild, ElementRef, OnInit } from "@angular/core";
+import { AppContextService } from "@microsoft/windows-admin-center-sdk/angular";
+import { SETTINGS } from "main/settings";
+import { Router, ActivatedRoute } from "@angular/router";
 import { WACRuntime } from "runtime/runtime.wac";
 
-const urlValidationRegex = new RegExp('^((http[s]?|ftp):\\/)?\\/?([^:\\/\\s]+)((\\/\\w+)*\\/)([\\w\\-\\.]+[^#?\\s]+)(.*)?(#[\\w\\-]+)?$', "i")
-const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-]+(\\\\[a-z]\\$)?)\\\\(?:[^\\\\/:*?"<>|\\r\\n]+\\\\)*[^\\\\/:*?"<>|\\r\\n]*$', "i")
+const urlValidationRegex = new RegExp('^((http[s]?|ftp):\\/)?\\/?([^:\\/\\s]+)((\\/\\w+)*\\/)([\\w\\-\\.]+[^#?\\s]+)(.*)?(#[\\w\\-]+)?$', "i");
+const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-]+(\\\\[a-z]\\$)?)\\\\(?:[^\\\\/:*?"<>|\\r\\n]+\\\\)*[^\\\\/:*?"<>|\\r\\n]*$', "i");
 
 @Component({
     template: `
     <div class="padded sme-focus-zone">
         <div *ngIf='!inProgress' style="min-width:700px">
             <h3>Internet Information Service (IIS)</h3>
-            <span>To manage an IIS Server, you need to install the Microsoft IIS Administration API on IIS host</span>
-
+            <span>{{details}}</span>
             <ul class="form">
                 <li><input type="radio" [(ngModel)]="useDefault" [value]="true" [checked]="useDefault">Install from Microsoft (internet connection required)</li>
                 <li>
@@ -34,8 +33,6 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
                     </ul>
                 </li>
             </ul>
-
-
             <div *ngIf='userInputError'>
                 <p class="color-error">
                     {{userInputError}}
@@ -115,17 +112,20 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
     }
 `],
 })
-export class InstallComponent {
+export class InstallComponent implements OnInit {
     useDefault: boolean = true;
     inProgress: boolean;
     targetHost: string;
     adminAPILocation: string;
     dotnetCoreLocation: string;
     userInputError: string;
+    details: string;
 
     @ViewChild('apiPrompt') apiPrompt: ElementRef;
     @ViewChild('dotnetPrompt') dotnetPrompt: ElementRef;
+
     constructor(
+        private route: ActivatedRoute,
         private router: Router,
         private appContext: AppContextService,
         @Inject("Runtime") private runtime: WACRuntime,
@@ -133,12 +133,19 @@ export class InstallComponent {
         this.targetHost = this.appContext.activeConnection.nodeName;
     }
 
+    ngOnInit() {
+        let sub = this.route.queryParams.subscribe(params => {
+            this.details = params['details'];
+            sub.unsubscribe();
+        });
+    }
+
     clearWarnings(event: Event) {
         (<HTMLElement> event.target).classList.remove('background-warning');
     }
 
     onSelectionChanged(event) {
-        console.log(event)
+        console.log(event);
     }
 
     private verifyLocation(fieldName: string, location: string, allowEmpty: boolean): string {
@@ -155,7 +162,7 @@ export class InstallComponent {
         // NOTE: This code is injected here to prevent user using shared drive because it would be considered double hop with WinRM and wouldn't work
         // This needs to be revisited when Windows Admin Center completed their work on CredSSP
         if (location && location.startsWith(`\\\\`)) {
-            return `Currently installation from shared drive is not supported, the issue is being tracked on https://github.com/Microsoft/IIS.WebManager/issues/239`
+            return `Currently installation from shared drive is not supported, the issue is being tracked on https://github.com/Microsoft/IIS.WebManager/issues/239`;
         }
     }
 

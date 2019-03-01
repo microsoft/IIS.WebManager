@@ -1,7 +1,13 @@
 [CmdletBinding()]
 param(
+    [Parameter(Mandatory=$true)]
     [string]
-    $requestBase64
+    $requestBase64,
+
+    [Parameter(Mandatory=$true)]
+    [string]
+    $sessionId
+
 )
 
 $ErrorActionPreference = "Stop"
@@ -14,14 +20,17 @@ $verbose = $PSBoundParameters['verbose']
 if ($verbose) {
     $logDir = Join-Path $env:UserProfile 'wac-iis-logs'
     if (!(Test-Path $logDir)) {
-        mkdir $logDir
+        mkdir $logDir | Out-Null
     }
-    $logFile = Join-Path $logDir 'local_http.log'
+    $timestamp = Get-Date -Format "yyyyMMddTHHmmssffffZ"
+    $logFile = Join-Path $logDir "local_http-${timestamp}-${sessionId}.log"
 }
 
 function LogVerbose([string] $msg) {
+    $msg = "[$(Get-Date -Format ""yyyy/MM/dd HH:mm:ss:ffff"")] $msg"
     if ($verbose) {
-        Add-Content -Value $msg -Path $logFile -Force
+        Write-Verbose $msg
+        Add-Content -Value $msg -Path $logFile -Force | Out-Null
     }
 }
 
