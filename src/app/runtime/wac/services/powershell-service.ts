@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable'
 import { PowerShellScripts } from '../../../../generated/powershell-scripts'
 import { Request, Response, ResponseOptions, Headers } from '@angular/http'
 import { WACInfo } from 'runtime/runtime.wac'
-import { LoggerFactory, Logger } from 'diagnostics/logger'
+import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger'
 
 import '../../../diagnostics/extensions/rxjs'
 import 'rxjs/add/operator/catch'
@@ -46,7 +46,6 @@ export class PowershellService {
   }
 
   public run<T>(pwCmdString: string, psParameters: any): Observable<T> {
-    psParameters.sessionId = this.sessionId
     return this.invoke(pwCmdString, psParameters, null)
   }
 
@@ -81,7 +80,9 @@ export class PowershellService {
   }
 
   private invoke<T>(pwCmdString: string, psParameters: any, reviver: (key: any, value: any) => any = null): Observable<T> {
-    var compiled = PowerShell.createScript(pwCmdString, psParameters)
+    psParameters.sessionId = this.sessionId
+    var flags = []  // Use ['verbose'] to debug
+    var compiled = PowerShell.createScript(pwCmdString, psParameters, flags)
     var name = pwCmdString.split('\n')[0]
     return this.session.mergeMap(ps => {
       return ps.powerShell.run(compiled).mergeMap(response => {
@@ -97,7 +98,11 @@ export class PowershellService {
           throw `Powershell command ${name} returns empty response`;
         }
         return response.results.map(result => {
-          return JSON.parse(result, reviver)
+          let rtnObject = JSON.parse(result, reviver);
+          if (rtnObject && rtnObject.errorsReported) {
+            this.logger.log(LogLevel.ERROR, `Unexpected error from powershell script ${name}, it is deemed to be critical. The application will continue:\n${rtnObject.errorsReported}`);
+          }
+          return rtnObject;
         })
       })})
   }

@@ -1,8 +1,8 @@
 export var SETTINGS : { [key:string]: string} = {
-    "version": "2.2.2",
-    "api_version": "2.2.0",
-    "api_setup_version": "2.2.0",
-    "api_download_url": "http://go.microsoft.com/fwlink/?LinkId=829373",
+    "version": "3.0.0",
+    "api_version": "2.2.1",
+    "api_setup_version": "2.2.1",
+    "api_download_url": "https://go.microsoft.com/fwlink/?linkid=2080134",
     "iis_admin_api_service_name": "Microsoft IIS Administration",
     "ga_track": "UA-XXXXXXXX-X",
 }
