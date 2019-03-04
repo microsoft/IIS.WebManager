@@ -180,7 +180,7 @@ export class WACRuntime implements Runtime {
                     }
                     if (errContent) {
                         if (errContent.Type === 'PREREQ_BELOW_MIN_VERSION') {
-                            this.router.navigate(['wac', 'install'], {
+                            this.router.navigate(['install'], {
                                 queryParams: {
                                     details: `To manage IIS Server, you need to install ${errContent.App} version ${errContent.Required} or higher. Current version detected: ${errContent.Actual}`,
                                 },
@@ -188,7 +188,7 @@ export class WACRuntime implements Runtime {
                             return throwError(ApiErrorType.Unreachable);
                         }
                         if (errContent.Type === 'ADMIN_API_SERVICE_NOT_FOUND') {
-                            this.router.navigate(['wac', 'install'], {
+                            this.router.navigate(['install'], {
                                 queryParams: {
                                     details: `To manage an IIS Server, you need to install ${errContent.App} on IIS host`,
                                 },
