@@ -1,23 +1,24 @@
-import { DateTime } from '../common/primitives'
-import { Injectable, Inject } from '@angular/core'
-import { Router, ActivatedRoute } from '@angular/router'
+import { DateTime } from '../common/primitives';
+import { Injectable, Inject } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import {
     AppContextService,
     NavigationService
-} from '@microsoft/windows-admin-center-sdk/angular'
-import { Runtime } from './runtime'
+} from '@microsoft/windows-admin-center-sdk/angular';
+import { Runtime } from './runtime';
 import { ApiErrorType, UnexpectedServerStatusError } from 'error/api-error';
-import { PowershellService } from './wac/services/powershell-service'
-import { ConnectService } from '../connect/connect.service'
-import { ApiConnection } from '../connect/api-connection'
-import { PowerShellScripts } from '../../generated/powershell-scripts'
-import { Observable, throwError } from 'rxjs'
-import { RpcOutboundCommands, rpcVersion, RpcInitDataInternal } from '@microsoft/windows-admin-center-sdk/core/rpc/rpc-base'
-import { CoreEnvironment, RpcSeekMode } from '@microsoft/windows-admin-center-sdk/core'
+import { PowershellService } from './wac/services/powershell-service';
+import { ConnectService } from '../connect/connect.service';
+import { ApiConnection } from '../connect/api-connection';
+import { PowerShellScripts } from '../../generated/powershell-scripts';
+import { Observable } from 'rxjs/Observable';
+import { RpcOutboundCommands, rpcVersion, RpcInitDataInternal } from '@microsoft/windows-admin-center-sdk/core/rpc/rpc-base';
+import { CoreEnvironment, RpcSeekMode } from '@microsoft/windows-admin-center-sdk/core';
 import { map, shareReplay, mergeMap, catchError, finalize } from 'rxjs/operators';
 
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { SETTINGS } from 'main/settings';
+import { throwError } from 'rxjs';
 class ApiKey {
     public id: string
     public access_token: string
@@ -38,7 +39,8 @@ export class WACInfo {
         return this.appContext.servicesReady.pipe(
             map(_ => this.appContext.activeConnection.nodeName),
             shareReplay(),
-        )
+        );
+    }
 }
 
 @Injectable()
@@ -53,6 +55,7 @@ export class WACRuntime implements Runtime {
         private appContext: AppContextService,
         private connectService: ConnectService,
         private loggerFactory: LoggerFactory,
+        private activatedRoute: ActivatedRoute,
         @Inject("Powershell") private powershellService: PowershellService,
         @Inject("WACInfo") private wac: WACInfo,
     ){
@@ -119,9 +122,9 @@ export class WACRuntime implements Runtime {
                 command: 'delete',
                 tokenId: this._tokenId,
                 apiHost: this._apiHost,
-            }).finally(() => this.appContext.ngDestroy()).subscribe()
+            }).subscribe(null, null, () => this.appContext.ngDestroy());
         } else {
-            this.appContext.ngDestroy()
+            this.appContext.ngDestroy();
         }
     }
 
@@ -148,15 +151,16 @@ export class WACRuntime implements Runtime {
     }
 
     public PrepareIISHost(p: any): Observable<any> {
-        p.appMinVersion = SETTINGS.api_setup_version
+        p.appMinVersion = SETTINGS.api_setup_version;
+        return this.powershellService.run(PowerShellScripts.admin_api_util, p).pipe(
             map((status: HostStatus) => {
-            this._apiHost = status.apiHost
+                this._apiHost = status.apiHost;
                 if (status.groupModified) {
-                    this.powershellService.Reset()
+                    this.powershellService.Reset();
                 }
-                return status}
-            ),
-        )
+                return status;
+            }),
+        );
     }
 
     public StartIISAdministration(): Observable<any> {
@@ -164,45 +168,50 @@ export class WACRuntime implements Runtime {
     }
 
     private GetApiKey(): Observable<ApiKey> {
-        return this.PrepareIISHost({ command: 'ensure' }).catch((e, _) => {
-            if (e.status === 400 && e.response) {
-                let error: any
-                try {
-                    error = JSON.parse(e.response.exception)
-                } catch (e) {
-                    this._logger.log(LogLevel.INFO, `Unable to parse error message ${e.response.exception}, the error must be unexpected`)
+        return this.PrepareIISHost({ command: 'ensure' }).pipe(
+            catchError((e, _) => {
+                if (e.status === 400 && e.response) {
+                    let errContent: any;
+                    try {
+                        errContent = JSON.parse(e.response.exception);
+                    } catch (e) {
+                        this._logger.log(LogLevel.INFO,
+                            `Unable to parse error message ${e.response.exception}, the error must be unexpected`);
+                    }
+                    if (errContent) {
+                        if (errContent.Type === 'PREREQ_BELOW_MIN_VERSION') {
+                            this.router.navigate(['wac', 'install'], {
+                                queryParams: {
+                                    details: `To manage IIS Server, you need to install ${errContent.App} version ${errContent.Required} or higher. Current version detected: ${errContent.Actual}`,
+                                },
+                            })
+                            return throwError(ApiErrorType.Unreachable);
+                        }
+                        if (errContent.Type === 'ADMIN_API_SERVICE_NOT_FOUND') {
+                            this.router.navigate(['wac', 'install'], {
+                                queryParams: {
+                                    details: `To manage an IIS Server, you need to install ${errContent.App} on IIS host`,
+                                },
+                            });
+                            return throwError(ApiErrorType.Unreachable);
+                        }
+                        if (errContent.Type === 'ADMIN_API_SERVICE_NOT_RUNNING') {
+                            return throwError(new UnexpectedServerStatusError(errContent.Status));
+                        }
+                    }
                 }
-                if (error) {
-                    if (error.Type == 'PREREQ_BELOW_MIN_VERSION') {
-                        this.router.navigate(['wac', 'install'], {
-                            queryParams: {
-                                details: `To manage IIS Server, you need to install ${error.App} version ${error.Required} or higher. Current version detected: ${error.Actual}`,
-                            },
-                        })
-                        return Observable.throw(ApiErrorType.Unreachable)
-                    }
-                    if (error.Type == 'ADMIN_API_SERVICE_NOT_FOUND') {
-                        this.router.navigate(['wac', 'install'], {
-                            queryParams: {
-                                details: `To manage an IIS Server, you need to install ${error.App} on IIS host`,
-                            },
-                        })
-                        return Observable.throw(ApiErrorType.Unreachable)
-                    }
-                    if (error.Type == 'ADMIN_API_SERVICE_NOT_RUNNING') {
-                        return Observable.throw(new UnexpectedServerStatusError(error.Status))
-                    }
-                    }
-                }
-                return throwError(e)
+                return throwError(e);
             }),
-            var tokenUtilParams: any = {
-                command: 'ensure',
-                apiHost: this._apiHost,
-            }
-            if (this._tokenId) {
-                tokenUtilParams.tokenId = this._tokenId
-            }
-            return this.powershellService.run<ApiKey>(PowerShellScripts.token_utils, tokenUtilParams)
+            mergeMap(_ => {
+                var tokenUtilParams: any = {
+                    command: 'ensure',
+                    apiHost: this._apiHost,
+                };
+                if (this._tokenId) {
+                    tokenUtilParams.tokenId = this._tokenId;
+                }
+                return this.powershellService.run<ApiKey>(PowerShellScripts.token_utils, tokenUtilParams);
+            })
+        );
     }
 }

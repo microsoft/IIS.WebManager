@@ -79,21 +79,22 @@ export class PowershellService {
   }
 
   private invoke<T>(pwCmdString: string, psParameters: any, reviver: (key: any, value: any) => any = null): Observable<T> {
-    psParameters.sessionId = this.sessionId
-    var flags = []  // Use ['verbose'] to debug
-    var compiled = PowerShell.createScript(pwCmdString, psParameters, flags)
+    psParameters.sessionId = this.sessionId;
+    var flags: string[] = [];  // use ['verbose'] to debug
+    var compiled: string = PowerShell.createScript(pwCmdString, psParameters, flags);
+    var scriptName: string = pwCmdString.split("\n")[0]
     return this.session.pipe(
       mergeMap(ps => ps.powerShell.run(compiled)),
-      logError(this.logger, LogLevel.WARN),
+      logError(this.logger, LogLevel.WARN, `Script ${scriptName} failed`),
       mergeMap(response => {
         if (!response) {
-          throw `Powershell command ${name} returns no response`;
+          throw `Powershell command ${scriptName} returns no response`;
         }
         if (!response.results) {
-          throw `Powershell command ${name} returns null response`;
+          throw `Powershell command ${scriptName} returns null response`;
         }
         if (response.results.length <= 0) {
-          throw `Powershell command ${name} returns empty response`;
+          throw `Powershell command ${scriptName} returns empty response`;
         }
         return response.results.map(result => {
           let rtnObject: any = JSON.parse(result, reviver);
@@ -102,5 +103,8 @@ export class PowershellService {
               `Unexpected error from powershell script ${name}:\n${rtnObject.errorsReported}`);
           }
           return rtnObject;
+        });
+      }),
+    );
   }
 }

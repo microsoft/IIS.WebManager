@@ -44,11 +44,12 @@ class ConsoleLogger implements Logger {
     }
 }
 
-export function logError<T>(logger: Logger, level: LogLevel): OperatorFunction<T, T> {
+export function logError<T>(logger: Logger, level: LogLevel, message: string): OperatorFunction<T, T> {
     return (o: Observable<T>): Observable<T> => {
         return o.pipe(tap(
             null,
             err => {
+                logger.log(level, message);
                 logger.log(level, err);
             },
         ));
