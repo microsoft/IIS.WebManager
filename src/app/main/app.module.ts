@@ -66,7 +66,7 @@ function LoadWebServerModule() {
                 { path: '**', component: NotFound }
             ),
             {
-                enableTracing: false,
+                enableTracing: true,
                 initialNavigation: true,
             }),
         NgbModule,

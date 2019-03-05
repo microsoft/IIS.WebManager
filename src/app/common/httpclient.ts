@@ -8,7 +8,7 @@ import {ApiError, ApiErrorType} from '../error/api-error';
 import {ConnectService} from '../connect/connect.service';
 import {Runtime} from '../runtime/runtime';
 import {HttpFacade} from './http-facade';
-import {Observable, throwError} from 'rxjs';
+import {Observable, throwError, Subscription} from 'rxjs';
 import {finalize, catchError, mergeMap} from 'rxjs/operators';
 
 @Injectable()
@@ -80,7 +80,18 @@ export class HttpClient {
     }
 
     public request(url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<Response> {
-        return this.requestOnConnection(url, options, warn).toPromise()
+        return new Promise((resolve, reject) => {
+            let sub: Subscription = this.requestOnConnection(url, options, warn).subscribe(
+                v => resolve(v),
+                e => {
+                    let err: any = this.runtime.HandleConnectError(e);
+                    if (err) {
+                        reject(err);
+                    }
+                },
+                () => sub.unsubscribe(),
+            );
+        });
     }
 
     private setJsonContentType(options?: RequestOptionsArgs) {

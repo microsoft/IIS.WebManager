@@ -1,7 +1,9 @@
 import { Provider, ErrorHandler } from "@angular/core";
-import { CoreServiceModule, IdleModule, ResourceService } from "@microsoft/windows-admin-center-sdk/angular";
+import { IdleModule,
+    ResourceService,
+    CoreServiceModule,
+} from "@microsoft/windows-admin-center-sdk/angular";
 import { CommonModule } from "@angular/common";
-import { WebServerModule } from "webserver/webserver.module";
 import { WACModule } from "runtime/wac/components/wac.module";
 import { LogsErrorHandler } from "diagnostics/logs-error-handler";
 import { PowershellService } from "runtime/wac/services/powershell-service";
@@ -14,10 +16,9 @@ import { InstallComponent } from "runtime/wac/components/install.component";
 export const ModulesAddon: any[] = [
     CommonModule,
     IdleModule,
-    WebServerModule,
     WACModule,
     CoreServiceModule,
-]
+];
 
 export const ProvidersAddon: Provider[] = [
     ResourceService,
@@ -26,10 +27,10 @@ export const ProvidersAddon: Provider[] = [
     { provide: "WACInfo", useClass: WACInfo },
     { provide: "Http", useClass: LocalHttpClient },
     { provide: "Runtime", useClass: WACRuntime },
-]
+];
 
 function LoadWACModule() {
-    return import('../runtime/wac/components/wac.module').then(m => m.WACModule)
+    return import('../runtime/wac/components/wac.module').then(m => m.WACModule);
 }
 
 export const RoutesAddon: Routes = <Routes>[

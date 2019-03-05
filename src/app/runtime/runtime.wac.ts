@@ -1,6 +1,6 @@
 import { DateTime } from '../common/primitives';
-import { Injectable, Inject } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Injectable, Inject, Injector, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import {
     AppContextService,
     NavigationService
@@ -14,7 +14,7 @@ import { PowerShellScripts } from '../../generated/powershell-scripts';
 import { Observable } from 'rxjs/Observable';
 import { RpcOutboundCommands, rpcVersion, RpcInitDataInternal } from '@microsoft/windows-admin-center-sdk/core/rpc/rpc-base';
 import { CoreEnvironment, RpcSeekMode } from '@microsoft/windows-admin-center-sdk/core';
-import { map, shareReplay, mergeMap, catchError, finalize } from 'rxjs/operators';
+import { map, shareReplay, mergeMap, catchError } from 'rxjs/operators';
 
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { SETTINGS } from 'main/settings';
@@ -51,20 +51,27 @@ export class WACRuntime implements Runtime {
     private _logger: Logger;
 
     constructor(
+        private injector: Injector,
         private router: Router,
         private appContext: AppContextService,
         private connectService: ConnectService,
         private loggerFactory: LoggerFactory,
-        private activatedRoute: ActivatedRoute,
         @Inject("Powershell") private powershellService: PowershellService,
         @Inject("WACInfo") private wac: WACInfo,
     ){
         this._logger = loggerFactory.Create(this);
     }
 
-    public InitContext() {
-        this.appContext.ngInit({ navigationService: new NavigationService(this.appContext, this.router, this.activatedRoute) })
-        let rpc = this.appContext.rpc
+    public InitContext(): void {
+        let router: Router = this.injector.get(Router);
+        if (!router) {
+            console.warn(`no router`);
+        } else {
+            console.warn(`yes router`);
+        }
+        let navigationService: NavigationService = this.injector.get(NavigationService);
+        this.appContext.ngInit({ navigationService: navigationService });
+        let rpc = this.appContext.rpc;
         // Implementation copied from rpc.register with difference noted in the comments
         rpc.rpcManager.rpcInbound.register(RpcOutboundCommands[RpcOutboundCommands.Init], (data: RpcInitDataInternal) => {
             // node context is used before passing request to handler.
@@ -116,7 +123,7 @@ export class WACRuntime implements Runtime {
         })
     }
 
-    public DestroyContext() {
+    public DestroyContext(): void {
         if (this._tokenId) {
             this.powershellService.run(PowerShellScripts.token_utils, {
                 command: 'delete',
@@ -180,20 +187,16 @@ export class WACRuntime implements Runtime {
                     }
                     if (errContent) {
                         if (errContent.Type === 'PREREQ_BELOW_MIN_VERSION') {
-                            this.router.navigate(['install'], {
-                                queryParams: {
-                                    details: `To manage IIS Server, you need to install ${errContent.App} version ${errContent.Required} or higher. Current version detected: ${errContent.Actual}`,
-                                },
-                            })
-                            return throwError(ApiErrorType.Unreachable);
+                            return throwError({
+                                type: ApiErrorType.Unreachable,
+                                details: `To manage IIS Server, you need to install ${errContent.App} version ${errContent.Required} or higher. Current version detected: ${errContent.Actual}`,
+                            });
                         }
                         if (errContent.Type === 'ADMIN_API_SERVICE_NOT_FOUND') {
-                            this.router.navigate(['install'], {
-                                queryParams: {
-                                    details: `To manage an IIS Server, you need to install ${errContent.App} on IIS host`,
-                                },
+                            return throwError({
+                                type: ApiErrorType.Unreachable,
+                                details: `To manage an IIS Server, you need to install ${errContent.App} on IIS host`,
                             });
-                            return throwError(ApiErrorType.Unreachable);
                         }
                         if (errContent.Type === 'ADMIN_API_SERVICE_NOT_RUNNING') {
                             return throwError(new UnexpectedServerStatusError(errContent.Status));
@@ -213,5 +216,16 @@ export class WACRuntime implements Runtime {
                 return this.powershellService.run<ApiKey>(PowerShellScripts.token_utils, tokenUtilParams);
             })
         );
+    }
+
+    public HandleConnectError(err: any): any {
+        if (err.type && err.type === ApiErrorType.Unreachable) {
+            this._logger.log(LogLevel.INFO, "Navigating to install page...");
+            this.router.navigate(['install'], { queryParams: {
+                details: err.details,
+            }});
+            return null;
+        }
+        return err;
     }
 }
