@@ -165,12 +165,13 @@ export class WACRuntime implements Runtime {
 
     private GetApiKey(): Observable<ApiKey> {
         return this.PrepareIISHost({ command: 'ensure' }).catch((e, _) => {
+            debugger
             if (e.status === 400 && e.response) {
                 let error: any
                 try {
                     error = JSON.parse(e.response.exception)
                 } catch (e) {
-                    this._logger.log(LogLevel.INFO, `Unable to parse error message ${e.response.exception}, the error must be unexpected`)
+                    this._logger.log(LogLevel.INFO, `Unable to parse error message ${e.response}, the error must be unexpected`)
                 }
                 if (error) {
                     if (error.Type == 'PREREQ_BELOW_MIN_VERSION') {
