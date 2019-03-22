@@ -6,7 +6,7 @@
         "experimentalDecorators": true,
         "noImplicitAny": false,
         "lib": [
-            "es6",
+            "es2018",
             "dom"
         ],
         "mapRoot": "./",

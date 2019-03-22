@@ -142,7 +142,7 @@ export class FilesService implements IDisposable {
         return this._http.request(url, opts);
     }
 
-    public setFileContent(file: ApiFile, content: ArrayBuffer | string): Promise<any> {
+    public setFileContent(file: ApiFile, content: ArrayBuffer | SharedArrayBuffer | string): Promise<any> {
         if (typeof (content) === 'string') {
             content = FilesService.str2utf8(<string>content);
         }
@@ -999,7 +999,7 @@ export class FilesService implements IDisposable {
         this._progress.next(this._progress.getValue().filter(p => p !== progress));
     }
 
-    private static str2utf8(s: string): ArrayBuffer {
+    private static str2utf8(s: string): ArrayBuffer | SharedArrayBuffer {
         if (s == null) {
             return null;
         }
