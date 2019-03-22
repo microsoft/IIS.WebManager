@@ -4,6 +4,7 @@ import { WebFilesService } from './webfiles.service';
 import { WebFile } from './webfile';
 import { WebFileListComponent } from './webfile-list';
 import { WebSite } from '../websites/site';
+import { filter } from 'rxjs/operators';
 
 @Component({
     template: `
@@ -19,7 +20,9 @@ export class WebFilesComponent implements OnInit, OnDestroy {
     public website: WebSite;
 
     constructor(private _svc: WebFilesService) {
-        this._subscriptions.push(_svc.current.filter(dir => !!dir).subscribe(dir => this._current = dir));
+        this._subscriptions.push(_svc.current.pipe(
+            filter(dir => !!dir)
+        ).subscribe(dir => this._current = dir));
     }
 
     public ngOnInit() {

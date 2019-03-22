@@ -1,10 +1,9 @@
 import { NgModule, Component, Inject, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, interval } from 'rxjs';
 import { Progress } from './progress';
 import { FilesService } from './files.service';
-import { IntervalObservable } from 'rxjs-compat/observable/IntervalObservable';
 import { buffer, filter } from 'rxjs/operators';
 
 @Component({
@@ -94,7 +93,7 @@ export class UploadComponent implements OnDestroy {
         }));
 
         this._subscriptions.push(this._filesService.progress.pipe(
-            buffer(IntervalObservable.create(100)),
+            buffer(interval(100)),
             filter(v => v.length > 0)
         ).subscribe(p => {
             this._changeDetector.markForCheck();

@@ -10,7 +10,8 @@ export function IsWebServerScope(route: ActivatedRoute): boolean {
 }
 
 export interface Runtime {
-    InitContext(): void;
+    OnModuleCreate(): void;
+    OnAppInit(): void;
     DestroyContext(): void;
     ConnectToIISHost(): Observable<ApiConnection>;
     StartIISAdministration(): Observable<any>;
@@ -22,7 +23,8 @@ export class StandardRuntime implements Runtime {
     constructor(
         private connectService: ConnectService,
     ){}
-    public InitContext(): void {}
+    public OnModuleCreate(): void {}
+    public OnAppInit(): void {}
     public DestroyContext(): void {}
 
     public ConnectToIISHost(): Observable<ApiConnection> {

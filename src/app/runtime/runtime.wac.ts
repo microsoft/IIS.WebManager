@@ -1,5 +1,5 @@
 import { DateTime } from '../common/primitives';
-import { Injectable, Inject, Injector, inject } from '@angular/core';
+import { Injectable, Inject, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import {
     AppContextService,
@@ -11,14 +11,13 @@ import { PowershellService } from './wac/services/powershell-service';
 import { ConnectService } from '../connect/connect.service';
 import { ApiConnection } from '../connect/api-connection';
 import { PowerShellScripts } from '../../generated/powershell-scripts';
-import { Observable } from 'rxjs/Observable';
 import { RpcOutboundCommands, rpcVersion, RpcInitDataInternal } from '@microsoft/windows-admin-center-sdk/core/rpc/rpc-base';
 import { CoreEnvironment, RpcSeekMode } from '@microsoft/windows-admin-center-sdk/core';
 import { map, shareReplay, mergeMap, catchError } from 'rxjs/operators';
-
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { SETTINGS } from 'main/settings';
-import { throwError } from 'rxjs';
+import { throwError, Observable } from 'rxjs';
+
 class ApiKey {
     public id: string
     public access_token: string
@@ -62,13 +61,11 @@ export class WACRuntime implements Runtime {
         this._logger = loggerFactory.Create(this);
     }
 
-    public InitContext(): void {
-        let router: Router = this.injector.get(Router);
-        if (!router) {
-            console.warn(`no router`);
-        } else {
-            console.warn(`yes router`);
-        }
+    public OnModuleCreate(): void {
+        this.appContext.initializeModule({});
+    }
+
+    public OnAppInit(): void {
         let navigationService: NavigationService = this.injector.get(NavigationService);
         this.appContext.ngInit({ navigationService: navigationService });
         let rpc = this.appContext.rpc;

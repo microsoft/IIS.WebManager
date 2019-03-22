@@ -6,7 +6,7 @@ import { PowerShellScripts } from '../../../../generated/powershell-scripts'
 import { Request, Response, ResponseOptions, Headers } from '@angular/http'
 import { WACInfo } from 'runtime/runtime.wac'
 import { LoggerFactory, Logger, LogLevel, logError } from 'diagnostics/logger'
-import { map, mergeMap, shareReplay, tap } from 'rxjs/operators'
+import { map, mergeMap, shareReplay } from 'rxjs/operators'
 
 const PS_SESSION_KEY = 'wac-iis'
 

@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from "rxjs";
+import { Observable, BehaviorSubject, interval } from "rxjs";
 import { Status } from '../common/status';
 import { HttpClient } from '../common/httpclient';
 import { ApiError, ApiErrorType } from '../error/api-error';
 import { WebServer } from './webserver';
-import { IntervalObservable } from 'rxjs-compat/observable/IntervalObservable';
 
 @Injectable()
 export class WebServerService {
@@ -40,7 +39,7 @@ export class WebServerService {
             if (ws.status == Status.Starting) {
                 //
                 // Ping
-                let ob = IntervalObservable.create(1000).subscribe(i => {
+                let ob = interval(1000).subscribe(i => {
                     this.get().then(s => {
                         if (s.status != Status.Starting || i >= 90) {
                             ob.unsubscribe();
@@ -60,10 +59,10 @@ export class WebServerService {
             this.triggerStatusUpdate();
 
             if (ws.status == Status.Stopping) {
-                return new Promise<WebServer>((resolve, reject) => {
+                return new Promise<WebServer>((resolve, _) => {
                     //
                     // Ping
-                    let ob = IntervalObservable.create(1000).subscribe(i => {
+                    let ob = interval(1000).subscribe(i => {
                         this.get().then(s => {
                             if (s.status != Status.Stopping || i >= 90) {
                                 ob.unsubscribe();

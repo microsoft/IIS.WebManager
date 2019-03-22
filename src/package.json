@@ -22,7 +22,7 @@
     "@ng-bootstrap/ng-bootstrap": "4.0.1",
     "@types/jquery": "3.3.22",
     "angular-font-awesome": "3.1.2",
-    "angulartics2": "1.1.12",
+    "angulartics2": "7.4.1",
     "bootstrap": "4.3.1",
     "popper.js": "1.14.7",
     "chart.js": "2.7.3",
@@ -35,8 +35,6 @@
     "ng2-charts": "1.6.0",
     "reflect-metadata": "0.1.10",
     "rxjs": "6.3.3",
-    "rxjs-compat": "6.3.3",
-    "systemjs": "0.19.40",
     "zone.js": "0.8.26"
   },
   "devDependencies": {

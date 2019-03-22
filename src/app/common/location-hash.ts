@@ -5,6 +5,7 @@ import { IDisposable } from '../common/IDisposable';
 import { UrlUtil } from '../utils/url';
 
 import { Observable, Subscription, BehaviorSubject } from "rxjs";
+import { filter } from 'rxjs/operators';
 
 export class LocationHash implements IDisposable {
     private _serviceRoot: string;
@@ -25,7 +26,9 @@ export class LocationHash implements IDisposable {
     }
 
     public get hash(): Observable<string> {
-        return this._hash.asObservable().filter(h => this._location.path(false) == this._serviceRoot);
+        return this._hash.asObservable().pipe(
+            filter(h => this._location.path(false) == this._serviceRoot)
+        );
     }
 
     public dispose() {
