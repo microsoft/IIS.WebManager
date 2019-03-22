@@ -5,6 +5,7 @@ import { FilesService } from './files.service';
 import { FileNavService } from './file-nav.service';
 import { NavigationHelper } from './navigation-helper';
 import { FileExplorer } from './file-explorer';
+import { filter } from 'rxjs/operators';
 
 @Component({
     selector: 'file-viewer',
@@ -30,7 +31,9 @@ export class FilesComponent implements OnInit, OnDestroy {
     constructor(@Inject("FilesService") private _svc: FilesService,
                 private _navSvc: FileNavService) {
         
-        this._subscriptions.push(this._navSvc.current.filter(dir => !!dir).subscribe(dir => this._current = dir));
+        this._subscriptions.push(this._navSvc.current.pipe(
+            filter(dir => !!dir)
+        ).subscribe(dir => this._current = dir));
     }
 
     public get selected(): Array<ApiFile> {

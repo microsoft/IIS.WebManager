@@ -1,6 +1,6 @@
 import {Injectable, Optional} from '@angular/core';
 import {RequestMethod} from '@angular/http';
-import {Angulartics2GoogleAnalytics} from 'angulartics2/src/providers/angulartics2-ga';
+import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
 import {HttpClient} from '../common/httpclient';
 import {ConnectService} from '../connect/connect.service';
 import {SETTINGS} from '../main/settings';
@@ -8,7 +8,7 @@ import {NotificationService} from '../notification/notification.service';
 import {Notification, NotificationType} from '../notification/notification';
 import { ComponentReference, AppModuleName } from '../main/settings';
 import { first } from 'rxjs/operators'
-import { IntervalObservable } from 'rxjs-compat/observable/IntervalObservable';
+import { interval } from 'rxjs';
 
 const AppModuleReference: ComponentReference = { name: AppModuleName, ico: null, component_name: AppModuleName, api_name: null, api_path: null };
 
@@ -26,7 +26,7 @@ export class VersionService {
     private initialize() {
 
         let startAfter = 30 * 1000; // 30 seconds
-        let interval = 2 * 3600000; // 2 hours
+        let delay = 2 * 3600000; // 2 hours
 
         // Wait for an initial period then check the api version on an interval
         setTimeout(() => {
@@ -35,7 +35,7 @@ export class VersionService {
                 this.checkVersions();
             }
 
-            IntervalObservable.create(interval).subscribe(_ => {
+            interval(delay).subscribe(_ => {
                 if (this.connected()) {
                     this.checkVersions();
                 }

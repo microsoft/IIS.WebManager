@@ -2,8 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '../../common/httpclient';
 import {Status} from '../../common/status';
 import {ApplicationPool} from './app-pool';
-import {BehaviorSubject, Observable} from "rxjs";
-import { IntervalObservable } from 'rxjs-compat/observable/IntervalObservable';
+import {BehaviorSubject, Observable, interval} from "rxjs";
 
 @Injectable()
 export class AppPoolsService {
@@ -90,7 +89,7 @@ export class AppPoolsService {
             //
             // Ping
             if (pool.status == Status.Starting) {
-                let ob = IntervalObservable.create(1000).subscribe(i => {
+                let ob = interval(1000).subscribe(i => {
                     this.loadAppPool(pool.id, "status").then(p => {
                         pool.status = p.status;
 
@@ -112,7 +111,7 @@ export class AppPoolsService {
             //
             // Ping
             if (pool.status == Status.Stopping) {
-                let ob = IntervalObservable.create(1000).subscribe(i => {
+                let ob = interval(1000).subscribe(i => {
                     this.loadAppPool(pool.id, "status").then(p => {
                         pool.status = p.status;
 
@@ -134,7 +133,7 @@ export class AppPoolsService {
         this.stop(pool);
 
         if (pool.status == Status.Stopping) {
-            let ob = IntervalObservable.create(200).subscribe(i => {
+            let ob = interval(200).subscribe(i => {
                 if (pool.status == Status.Stopped || i >= 450) {
                     ob.unsubscribe();
                     this.start(pool);

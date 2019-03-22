@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Inject, ViewChild, ElementRef } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, interval } from 'rxjs';
 import { NotificationService } from '../notification/notification.service';
 import { OrderBy, SortPipe } from '../common/sort.pipe';
 import { Range } from '../common/virtual-list.component';
@@ -7,7 +7,6 @@ import { ApiFile, ApiFileType } from './file';
 import { Location } from './location';
 import { FilesService } from './files.service';
 import { FileNavService } from './file-nav.service';
-import { IntervalObservable } from 'rxjs-compat/observable/IntervalObservable';
 import { buffer, map, filter, take } from 'rxjs/operators'
 
 @Component({
@@ -159,7 +158,7 @@ export class FileListComponent implements OnInit, OnDestroy {
 
         this._subscriptions.push(
             fileStream.pipe(
-                buffer(IntervalObservable.create(300)),
+                buffer(interval(300)),
                 filter(v => v.length > 0)
             ).subscribe(_ => {
                 this._filter = "";

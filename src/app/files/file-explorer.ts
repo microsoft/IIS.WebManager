@@ -4,6 +4,7 @@ import { ApiFile, ExplorerOptions } from './file';
 import { FileListComponent } from './file-list';
 import { FilesService } from './files.service';
 import { FileNavService } from './file-nav.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
     selector: 'file-explorer',
@@ -44,7 +45,9 @@ export class FileExplorer implements OnDestroy {
     constructor(@Inject("FilesService") private _svc: FilesService,
                 private _navSvc: FileNavService) {
 
-        this._subscriptions.push(this._navSvc.current.filter(f => !!f).subscribe(f => this._current = f));
+        this._subscriptions.push(this._navSvc.current.pipe(
+            filter(f => !!f)
+        ).subscribe(f => this._current = f));
     }
 
     public get selected(): Array<ApiFile> {

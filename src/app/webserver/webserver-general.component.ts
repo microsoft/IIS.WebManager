@@ -2,9 +2,8 @@
 import { Component, Input, ViewChild, Inject } from '@angular/core';
 import { WebServer } from './webserver';
 import { Selector } from 'common/selector';
-import { Subscription } from 'rxjs/Subscription';
 import { WebServerService } from './webserver.service';
-
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'webserver-general',

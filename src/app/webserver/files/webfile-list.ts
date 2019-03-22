@@ -4,8 +4,8 @@ import { OrderBy, SortPipe } from '../../common/sort.pipe';
 import { Range } from '../../common/virtual-list.component';
 import { WebFilesService } from './webfiles.service';
 import { WebFileType, WebFile } from './webfile';
-import { IntervalObservable } from 'rxjs-compat/observable/IntervalObservable';
 import { buffer, filter, take } from 'rxjs/operators'
+import { interval } from 'rxjs';
 
 @Component({
     selector: 'webfile-list',
@@ -143,7 +143,7 @@ export class WebFileListComponent implements OnInit, OnDestroy {
         }));
 
         this._subscriptions.push(this._svc.files.pipe(
-            buffer(IntervalObservable.create(300)),
+            buffer(interval(300)),
             filter(v => v.length > 0)
         ).subscribe(_ => {
             this.clearSelection();

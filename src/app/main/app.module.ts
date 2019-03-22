@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Inject } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Angulartics2Module } from 'angulartics2';
-import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-ga';
+import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
 import { Module as BModel } from '../common/bmodel';
 import { Module as NotFound } from '../common/notfound.component';
 import { Module as CheckBox } from '../common/checkbox.component';
@@ -44,6 +44,7 @@ import { WebSitesModule } from '../webserver/websites/websites.module';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ModulesAddon, ProvidersAddon, RoutesAddon } from './app.addon';
+import { Runtime } from 'runtime/runtime';
 
 function LoadSettingsModule() {
     return import('../settings/settings.module').then(m => m.SettingsModule)
@@ -66,7 +67,7 @@ function LoadWebServerModule() {
                 { path: '**', component: NotFound }
             ),
             {
-                enableTracing: true,
+                enableTracing: false,
                 initialNavigation: true,
             }),
         NgbModule,
@@ -126,4 +127,10 @@ function LoadWebServerModule() {
         RouterModule,
     ]
 })
-export class AppModule{}
+export class AppModule{
+    constructor(
+        @Inject("Runtime") private runtime: Runtime,
+    ) {
+        this.runtime.OnModuleCreate();
+    }
+}
