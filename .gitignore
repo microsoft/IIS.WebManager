@@ -5,8 +5,8 @@
 
 # compiled output
 /bundle
-/src/generated
-/src/assets/strings/**/*.json
+/src/app/generated
+/src/app/assets/strings/**/*.json
 /dist
 /inlineSrc
 /inlineDist
