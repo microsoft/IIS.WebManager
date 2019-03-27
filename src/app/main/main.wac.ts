@@ -1,11 +1,15 @@
-import "./polyfills";
-import { environment } from "environments/environment";
-import { AppModule } from "./app.module";
-import { CoreEnvironment } from "@microsoft/windows-admin-center-sdk/core";
-import { enableProdMode } from "@angular/core";
-import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
 
-if (environment.Production) {
+import './polyfills.ts';
+import { environment } from 'environments/environment';
+import { AppModule } from './app.module';
+import { CoreEnvironment } from '@microsoft/windows-admin-center-sdk/core';
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { PowerShellScripts } from '../generated/powershell-scripts';
+
+if (environment.production) {
     enableProdMode();
 }
 
@@ -13,10 +17,11 @@ if (environment.Production) {
 CoreEnvironment.initialize(
     {
         name: "microsoft.iis-wac-extension",
-        isProduction: environment.Production,
-        shellOrigin: "*",
+        powerShellModuleName: PowerShellScripts.module,
+        isProduction: environment.production,
+        shellOrigin: '*'
     },
     {
-        resourcesPath: "assets/strings",
+        resourcesPath: 'assets/strings',
     })
     .then(() => platformBrowserDynamic().bootstrapModule(AppModule));

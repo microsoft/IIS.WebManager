@@ -12,20 +12,20 @@ export function IsWebServerScope(route: ActivatedRoute): boolean {
 export interface Runtime {
     OnModuleCreate(): void;
     OnAppInit(): void;
-    DestroyContext(): void;
+    OnAppDestroy(): void;
     ConnectToIISHost(): Observable<ApiConnection>;
     StartIISAdministration(): Observable<any>;
     HandleConnectError(err: any): any;
 }
 
 @Injectable()
-export class StandardRuntime implements Runtime {
+export class SiteRuntime implements Runtime {
     constructor(
         private connectService: ConnectService,
     ){}
     public OnModuleCreate(): void {}
     public OnAppInit(): void {}
-    public DestroyContext(): void {}
+    public OnAppDestroy(): void {}
 
     public ConnectToIISHost(): Observable<ApiConnection> {
         return Observable.create(observer => {

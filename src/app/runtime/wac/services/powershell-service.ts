@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core'
 import { AppContextService } from '@microsoft/windows-admin-center-sdk/angular'
 import { PowerShell, PowerShellSession } from '@microsoft/windows-admin-center-sdk/core'
 import { Observable } from 'rxjs'
-import { PowerShellScripts } from '../../../../generated/powershell-scripts'
+import { PowerShellScripts } from 'generated/powershell-scripts'
 import { Request, Response, ResponseOptions, Headers } from '@angular/http'
 import { WACInfo } from 'runtime/runtime.wac'
 import { LoggerFactory, Logger, LogLevel, logError } from 'diagnostics/logger'
@@ -51,7 +51,7 @@ export class PowershellService {
   public invokeHttp(req: Request): Observable<Response> {
     let requestEncoded = btoa(JSON.stringify(req))
     return this.invoke<ResponseOptions>(
-      PowerShellScripts.local_http,
+      PowerShellScripts.local_http.script,
       { requestBase64: requestEncoded },
       (k, v) => {
         switch (k) {

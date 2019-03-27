@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist-app",
+    "types": []
+  },
+  "exclude": [
+    "test-util/**/*",
+    "test.ts",
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ]
+}
