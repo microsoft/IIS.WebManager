@@ -6,6 +6,9 @@
     "type": "git",
     "url": "http://github.com/microsoft/iis.webmanager"
   },
+  "engines": {
+    "node": ">10.0.0 <11.0.0"
+  },
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
@@ -60,6 +63,7 @@
     "gulp-autoprefixer": "6.0.0",
     "gulp-batch": "1.0.5",
     "gulp-clean": "0.3.2",
+    "gulp-cli": "2.1.0",
     "gulp-inline-ng2-template": "5.0.1",
     "gulp-jasmine": "4.0.0",
     "gulp-plumber": "1.1.0",
