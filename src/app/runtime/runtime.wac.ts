@@ -10,7 +10,7 @@ import { ApiErrorType, UnexpectedServerStatusError } from 'error/api-error';
 import { PowershellService } from './wac/services/powershell-service';
 import { ConnectService } from '../connect/connect.service';
 import { ApiConnection } from '../connect/api-connection';
-import { PowerShellScripts } from '../../generated/powershell-scripts';
+import { PowerShellScripts } from 'generated/powershell-scripts'
 import { RpcOutboundCommands, rpcVersion, RpcInitDataInternal } from '@microsoft/windows-admin-center-sdk/core/rpc/rpc-base';
 import { CoreEnvironment, RpcSeekMode } from '@microsoft/windows-admin-center-sdk/core';
 import { map, shareReplay, mergeMap, catchError } from 'rxjs/operators';
@@ -120,9 +120,9 @@ export class WACRuntime implements Runtime {
         })
     }
 
-    public DestroyContext(): void {
+    public OnAppDestroy(): void {
         if (this._tokenId) {
-            this.powershellService.run(PowerShellScripts.token_utils, {
+            this.powershellService.run(PowerShellScripts.token_utils.script, {
                 command: 'delete',
                 tokenId: this._tokenId,
                 apiHost: this._apiHost,
@@ -156,7 +156,7 @@ export class WACRuntime implements Runtime {
 
     public PrepareIISHost(p: any): Observable<any> {
         p.appMinVersion = SETTINGS.api_setup_version;
-        return this.powershellService.run(PowerShellScripts.admin_api_util, p).pipe(
+        return this.powershellService.run(PowerShellScripts.admin_api_util.script, p).pipe(
             map((status: HostStatus) => {
                 this._apiHost = status.apiHost;
                 if (status.groupModified) {
@@ -168,7 +168,7 @@ export class WACRuntime implements Runtime {
     }
 
     public StartIISAdministration(): Observable<any> {
-        return this.powershellService.run(PowerShellScripts.start_admin_api, {})
+        return this.powershellService.run(PowerShellScripts.start_admin_api.script, {})
     }
 
     private GetApiKey(): Observable<ApiKey> {
@@ -210,7 +210,7 @@ export class WACRuntime implements Runtime {
                 if (this._tokenId) {
                     tokenUtilParams.tokenId = this._tokenId;
                 }
-                return this.powershellService.run<ApiKey>(PowerShellScripts.token_utils, tokenUtilParams);
+                return this.powershellService.run<ApiKey>(PowerShellScripts.token_utils.script, tokenUtilParams);
             })
         );
     }

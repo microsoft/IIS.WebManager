@@ -9,14 +9,10 @@
       "projectType": "application",
       "schematics": {},
       "prefix": "app",
-      "targets": {
+      "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "aot": false,
-            "outputHashing": "all",
-            "sourceMap": true,
-            "vendorSourceMap": true,
             "outputPath": "../dist/app",
             "index": "app/index.html",
             "main": "app/main/main.ts",

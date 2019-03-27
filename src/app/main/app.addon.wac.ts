@@ -1,5 +1,13 @@
 import { Provider, ErrorHandler } from "@angular/core";
-import { ResourceService, IdleModule, CoreServiceModule } from "@microsoft/windows-admin-center-sdk/angular";
+import {
+    ResourceService,
+    IdleModule,
+    CoreServiceModule,
+    GuidedPanelModule,
+    LoadingWheelModule,
+    IconModule,
+    SmeUxModule,
+} from "@microsoft/windows-admin-center-sdk/angular";
 import { LogsErrorHandler } from "diagnostics/logs-error-handler";
 import { PowershellService } from "runtime/wac/services/powershell-service";
 import { WACInfo, WACRuntime } from "runtime/runtime.wac";
@@ -11,6 +19,10 @@ export const ModulesAddon: any[] = [
     CommonModule,
     IdleModule,
     WACModule,
+    SmeUxModule,
+    IconModule,
+    LoadingWheelModule,
+    GuidedPanelModule,
     CoreServiceModule,
 ];
 

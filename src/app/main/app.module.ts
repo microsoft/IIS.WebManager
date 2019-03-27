@@ -1,4 +1,4 @@
-import { NgModule, Inject, Injector } from "@angular/core";
+import { NgModule, Inject } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
@@ -110,7 +110,6 @@ import { ProvidersAddon, ModulesAddon } from "./app.addon";
 })
 export class AppModule{
     constructor(
-        private _injector: Injector,
         @Inject("Runtime") private runtime: Runtime,
     ) {
         this.runtime.OnModuleCreate();

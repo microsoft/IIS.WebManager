@@ -1,0 +1,45 @@
+{
+    "compilerOptions": {
+      "baseUrl": "",
+      "sourceRoot": "./inlineSrc",
+      "outDir": "./inlineDist",
+      "target": "es2015",
+      "module": "es2015",
+      "moduleResolution": "node",
+      "declaration": true,
+      "sourceMap": true,
+      "inlineSources": true,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "importHelpers": true,
+      "typeRoots": [
+        "node_modules/@types"
+      ],
+      "lib": [
+        "dom",
+        "es2018"
+      ]
+    },
+    "angularCompilerOptions": {
+      "annotateForClosureCompiler": true,
+      "skipTemplateCodegen": true,
+      "strictMetadataEmit": true,
+      "fullTemplateTypeCheck": true,
+      "strictInjectionParameters": true,
+      "enableResourceInlining": true
+    },
+    "exclude": [
+      "inlineSrc/environment",
+      "inlineSrc/test-util",
+      "inlineSrc/main.ts",
+      "inlineSrc/public_api.ts",
+      "inlineSrc/test.ts",
+      "src",
+      "e2e",
+      "bundle",
+      "tools",
+      "index.d.ts",
+      "**/*.test.ts",
+      "**/*.spec.ts"
+    ]
+  }

@@ -1,5 +1,0 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="VerifyChecksum" AfterTargets="NpmInstall">
-    <Exec Command="powershell.exe Set-ExecutionPolicy Unrestricted -Scope Process; $(MSBuildProjectDirectory)\build\scripts\Verify-Modules.ps1" />
-  </Target>
-</Project>
