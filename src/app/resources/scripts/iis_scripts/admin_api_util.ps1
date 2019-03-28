@@ -192,12 +192,15 @@ function VerifyCOMErrorCode($thrown, $code) {
 $script:groupModified = $false
 ## Precondition: group should already exist. Note that the installer would create the group
 function EnsureUserGroup($groupName) {
-    $userAD = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-
+    $user = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+    $userAD = $user.Name
+    $userSid = $user.User
     ## TODO: we might want to check membership recursively. It might not be necessary if the user is already in a subgroup
     if ((Get-Command "Get-LocalGroupMember" -ErrorAction SilentlyContinue) -and
         (Get-Command "Add-LocalGroupMember" -ErrorAction SilentlyContinue)) {
-        if (!(Get-LocalGroupMember -Group $groupName -Member $userAD -ErrorAction SilentlyContinue)) {
+        ## Note: Powershell Get-LocalGroupMember's implementation has some issue and passing SID would be required for desired behavior
+        ## However, Add-LocalGroupMember always require the AD Path
+        if (!(Get-LocalGroupMember -Group $groupName -Member $userSid -ErrorAction SilentlyContinue)) {
             Add-LocalGroupMember -Group $groupName -Member $userAD | Out-Null
             $script:groupModified = $true
         }
