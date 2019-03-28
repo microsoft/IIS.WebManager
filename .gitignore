@@ -52,3 +52,4 @@ testem.log
 Thumbs.db
 
 .vscode/launch.json
+src/angular.json

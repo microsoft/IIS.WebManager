@@ -45,7 +45,7 @@ jobs:
     inputs:
       targetType: filePath
       filePath: ./build.ps1
-      arguments: '-c=wac --output-hashing all'
+      arguments: '--configuration=wac --output-hashing all'
 
   - task: NuGetCommand@2
     displayName: 'NuGet pack (development)'
