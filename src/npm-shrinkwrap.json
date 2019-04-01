@@ -746,9 +746,9 @@
       }
     },
     "@ng-bootstrap/ng-bootstrap": {
-      "version": "4.0.1",
-      "resolved": "https://registry.npmjs.org/@ng-bootstrap/ng-bootstrap/-/ng-bootstrap-4.0.1.tgz",
-      "integrity": "sha512-COQ6MgZ+HD27pGz2sVPB2ttCZozrjHPs0sayuZkleMvzTllYX/eQEPAOiS+yRsXNkDApi5/XGlIFVWBjxTtwoA==",
+      "version": "4.1.1",
+      "resolved": "https://registry.npmjs.org/@ng-bootstrap/ng-bootstrap/-/ng-bootstrap-4.1.1.tgz",
+      "integrity": "sha512-OgbmPVhbDdNpIwogEXsycUJG0caNtb2+wCABfLUClgi9YcfNXhZ9Phu2GQq7Pk/LO66okth6s77RBQnbTJuysg==",
       "requires": {
         "tslib": "^1.9.0"
       }
