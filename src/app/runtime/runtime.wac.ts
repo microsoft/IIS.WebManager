@@ -55,6 +55,7 @@ export class WACRuntime implements Runtime {
         private appContext: AppContextService,
         private connectService: ConnectService,
         private loggerFactory: LoggerFactory,
+        private navigationService: NavigationService,
         @Inject("Powershell") private powershellService: PowershellService,
         @Inject("WACInfo") private wac: WACInfo,
     ){
@@ -66,8 +67,7 @@ export class WACRuntime implements Runtime {
     }
 
     public OnAppInit(): void {
-        let navigationService: NavigationService = this.injector.get(NavigationService);
-        this.appContext.ngInit({ navigationService: navigationService });
+        this.appContext.ngInit({ navigationService: this.navigationService });
         let rpc = this.appContext.rpc;
         // Implementation copied from rpc.register with difference noted in the comments
         rpc.rpcManager.rpcInbound.register(RpcOutboundCommands[RpcOutboundCommands.Init], (data: RpcInitDataInternal) => {
