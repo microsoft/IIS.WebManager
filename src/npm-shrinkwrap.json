@@ -727,9 +727,9 @@
       }
     },
     "@microsoft/windows-admin-center-sdk": {
-      "version": "1.97.0",
-      "resolved": "https://registry.npmjs.org/@microsoft/windows-admin-center-sdk/-/windows-admin-center-sdk-1.97.0.tgz",
-      "integrity": "sha512-G4suGImDJs2izLIpAb7HTfPZFXUh/hYOQfk11kltRZ0LGxkcAOxNF/TyyhEiblWSwNZfg5zHVbYTs+BDwecMRw==",
+      "version": "1.262.0",
+      "resolved": "https://registry.npmjs.org/@microsoft/windows-admin-center-sdk/-/windows-admin-center-sdk-1.262.0.tgz",
+      "integrity": "sha512-oUoZTuTgs4zQdF+1hkHpYOS9gt3FCgRESmePftiVFor86No7IN/KYNRVbdw8Naml/pihtIypc3+bgzjF9o9oPQ==",
       "requires": {
         "@angular/animations": "7.1.1",
         "@angular/common": "7.1.1",
@@ -741,6 +741,7 @@
         "@angular/router": "7.1.1",
         "chart.js": "2.7.3",
         "core-js": "2.6.0",
+        "marked": "0.6.1",
         "rxjs": "6.3.3",
         "zone.js": "0.8.26"
       }
@@ -9889,6 +9890,12 @@
       "requires": {
         "object-visit": "^1.0.0"
       }
+    },
+    "marked": {
+      "version": "0.6.1",
+      "resolved": "https://registry.npmjs.org/marked/-/marked-0.6.1.tgz",
+      "integrity": "sha512-+H0L3ibcWhAZE02SKMqmvYsErLo4EAVJxu5h3bHBBDvvjeWXtl92rGUSBYHL2++5Y+RSNgl8dYOAXcYe7lp1fA==",
+      "optional": true
     },
     "matchdep": {
       "version": "2.0.0",

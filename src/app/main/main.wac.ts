@@ -23,5 +23,8 @@ CoreEnvironment.initialize(
     },
     {
         resourcesPath: 'assets/strings',
+    },
+    {
+        disableStyleInjection: true,
     })
     .then(() => platformBrowserDynamic().bootstrapModule(AppModule));
