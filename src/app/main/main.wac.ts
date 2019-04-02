@@ -16,7 +16,7 @@ if (environment.production) {
 // initialize SME module environment with localization settings.
 CoreEnvironment.initialize(
     {
-        name: "microsoft.iis-wac-extension",
+        name: "microsoft.iis",
         powerShellModuleName: PowerShellScripts.module,
         isProduction: environment.production,
         shellOrigin: '*'

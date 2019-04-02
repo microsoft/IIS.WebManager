@@ -27,7 +27,6 @@ const ngc = require('@angular/compiler-cli/src/main');
 const through = require('through');
 const Vinyl = require('vinyl');
 
-const projectName = 'microsoft.iis.web-manager';
 const args = {
     verbose: !!argv['verbose'],
     junit: !!argv['junit']
@@ -232,7 +231,7 @@ gulp.task('copy', () => {
 
 gulp.task('bundle', cb => {
     var args = process.argv.slice(3);
-    args.unshift('build', projectName);
+    args.unshift('build', "microsoft.iis.web-manager");
     // '--aot', '--progress=false', '--extract-licenses=false', '--output-hashing=all'];
     // if (argv['verbose']) { args.push('--verbose'); }
     // if (argv['prod']) { args.push('--prod'); }

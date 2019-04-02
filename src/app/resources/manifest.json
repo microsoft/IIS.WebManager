@@ -1,18 +1,18 @@
 {
-  "$schema": "../node_modules/@microsoft/windows-admin-center-sdk/core/manifest/module-schema.json#",
-  "name": "microsoft.iis-wac-extension",
+  "$schema": "../../node_modules/@microsoft/windows-admin-center-sdk/core/manifest/module-schema.json#",
+  "name": "microsoft.iis",
   "displayName": "resources:strings:displayName",
   "description": "resources:strings:description",
-  "target": "/modules/microsoft.iis-wac-extension",
+  "target": "/modules/microsoft.iis",
   "icon": "sme-icon:icon-win-powerShell",
   "keywords": [
-    "resources:strings:iis"
+    "resources:strings:keywords"
   ],
   "entryPoints": [
     {
       "entryPointType": "tool",
       "name": "main",
-      "urlName": "IIS",
+      "urlName": "iis",
       "displayName": "resources:strings:displayName",
       "description": "resources:strings:description",
       "icon": "sme-icon:icon-win-powerShell",
@@ -36,7 +36,7 @@
     {
       "locale": "default",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -44,7 +44,7 @@
     {
       "locale": "cs-CZ",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -52,7 +52,7 @@
     {
       "locale": "de-DE",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -60,7 +60,7 @@
     {
       "locale": "en-US",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -68,7 +68,7 @@
     {
       "locale": "es-ES",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -76,7 +76,7 @@
     {
       "locale": "fr-FR",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -84,7 +84,7 @@
     {
       "locale": "hu-HU",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -92,7 +92,7 @@
     {
       "locale": "it-IT",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -100,7 +100,7 @@
     {
       "locale": "ja-JP",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -108,7 +108,7 @@
     {
       "locale": "ko-KR",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -116,7 +116,7 @@
     {
       "locale": "nl-NL",
       "strings": {
-        "keyword-example": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -124,7 +124,7 @@
     {
       "locale": "pl-PL",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -132,7 +132,7 @@
     {
       "locale": "pl-PL",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -140,7 +140,7 @@
     {
       "locale": "pt-BR",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -148,7 +148,7 @@
     {
       "locale": "pt-PT",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -156,7 +156,7 @@
     {
       "locale": "ru-RU",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -164,7 +164,7 @@
     {
       "locale": "sv-SE",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -172,7 +172,7 @@
     {
       "locale": "tr-TR",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -180,7 +180,7 @@
     {
       "locale": "zh-CN",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }
@@ -188,7 +188,7 @@
     {
       "locale": "zh-TW",
       "strings": {
-        "keywords": "example",
+        "keywords": "IIS,Web Server",
         "description": "{!product-description}",
         "displayName": "IIS"
       }

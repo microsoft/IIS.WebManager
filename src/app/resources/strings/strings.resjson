@@ -1,13 +1,13 @@
 {
     "//": "manifest section",
-    "Manifest_displayName": "waciis",
-    "Manifest_description": "{!product-description}",
-    "Manifest_category": "SME",
+    "MicrosoftIIS_Manifest_displayName": "IIS",
+    "MicrosoftIIS_Manifest_description": "{!product-description}",
+    "MicrosoftIIS_Manifest_category": "SME",
 
-    "//": "waciis",
-    "waciis_title": "waciis",
+    "//": "IIS",
+    "MicrosoftIIS_title": "IIS",
 
     "//": "about",
-    "waciis_about": "{!product-about}",
-    "waciis_aboutDescription": "{!product-about-description}"
+    "MicrosoftIIS_about": "{!product-about}",
+    "MicrosoftIIS_aboutDescription": "{!product-about-description}"
 }
