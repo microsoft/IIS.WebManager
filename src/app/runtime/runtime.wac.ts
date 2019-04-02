@@ -1,5 +1,5 @@
 import { DateTime } from '../common/primitives';
-import { Injectable, Inject, Injector } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
     AppContextService,
@@ -11,8 +11,6 @@ import { PowershellService } from './wac/services/powershell-service';
 import { ConnectService } from '../connect/connect.service';
 import { ApiConnection } from '../connect/api-connection';
 import { PowerShellScripts } from 'generated/powershell-scripts'
-import { RpcOutboundCommands, rpcVersion, RpcInitDataInternal } from '@microsoft/windows-admin-center-sdk/core/rpc/rpc-base';
-import { CoreEnvironment, RpcSeekMode } from '@microsoft/windows-admin-center-sdk/core';
 import { map, shareReplay, mergeMap, catchError } from 'rxjs/operators';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { SETTINGS } from 'main/settings';
