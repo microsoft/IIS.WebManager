@@ -1,39 +1,45 @@
 
-import { Injectable } from '@angular/core'
-import { ConnectService } from '../connect/connect.service'
-import { ApiConnection } from '../connect/api-connection'
-import { Observable } from 'rxjs/Observable'
+import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ConnectService } from '../connect/connect.service';
+import { ApiConnection } from '../connect/api-connection';
+import { Observable } from 'rxjs';
 
-export function IsWebServerScope(route: ActivatedRoute) {
-    return route.snapshot.parent && route.snapshot.parent.url[0].path.toLocaleLowerCase() == 'webserver'
+export function IsWebServerScope(route: ActivatedRoute): boolean {
+    return route.snapshot.parent && route.snapshot.parent.url[0].path.toLocaleLowerCase() === 'webserver';
 }
 
 export interface Runtime {
-    InitContext(): void
-    DestroyContext(): void
-    ConnectToIISHost(): Observable<ApiConnection>
-    StartIISAdministration(): Observable<any>
+    OnModuleCreate(): void;
+    OnAppInit(): void;
+    OnAppDestroy(): void;
+    ConnectToIISHost(): Observable<ApiConnection>;
+    StartIISAdministration(): Observable<any>;
+    HandleConnectError(err: any): any;
 }
 
 @Injectable()
-export class StandardRuntime implements Runtime {
+export class SiteRuntime implements Runtime {
     constructor(
         private connectService: ConnectService,
     ){}
-
-    public InitContext() {}
-    public DestroyContext() {}
+    public OnModuleCreate(): void {}
+    public OnAppInit(): void {}
+    public OnAppDestroy(): void {}
 
     public ConnectToIISHost(): Observable<ApiConnection> {
         return Observable.create(observer => {
             this.connectService.gotoConnect(false).then(_ => {
-                observer.complete()
-            })
-        })
+                observer.complete();
+            });
+        });
     }
 
     public StartIISAdministration(): Observable<any> {
-        throw 'Restarting Microsoft IIS Administration API is not supported, please manually restart the service'
+        throw 'Restarting Microsoft IIS Administration API is not supported, please manually restart the service';
+    }
+
+    public HandleConnectError(err: any): any {
+        return err;
     }
 }

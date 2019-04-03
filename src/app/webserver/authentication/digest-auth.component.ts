@@ -1,7 +1,5 @@
-import { Component, Input, Output, OnDestroy } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Component, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
 import { DigestAuthentication } from './authentication'

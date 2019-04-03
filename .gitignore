@@ -1,6 +1,55 @@
+#
+# THIS FILE WAS GENERATED FROM msft-sme-build. DO NOT MODIFY. To change this file, make the appropriate changes in build
+#
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/bundle
+/src/app/generated
+/src/app/assets/strings/**/*.json
+/dist
+/inlineSrc
+/inlineDist
+/tmp
+
+# dependencies
 node_modules
-src/generated/**
-.vs/
-dist
-assets
-src/app/angular-cli.json
+/bower_components
+
+# IDEs and editors
+/.idea
+/.vs
+/obj
+/*ntvs_analysis*
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+/ssl
+*.log
+
+# test
+**/*junit*.xml
+unittests/*
+scenariotestresults/*
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage/*
+/libpeerconnection.log
+npm-debug.log
+testem.log
+/typings
+
+# e2e
+/e2e/*.js
+/e2e/*.map
+
+#System Files
+.DS_Store
+Thumbs.db
+
+.vscode/launch.json
+src/angular.json

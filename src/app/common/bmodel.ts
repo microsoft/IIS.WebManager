@@ -1,16 +1,9 @@
 import {NgModule, Directive, Input, Output, EventEmitter, ElementRef, Optional, Self, Inject, forwardRef, Renderer, OnDestroy} from '@angular/core';
-import {NgModel, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, DefaultValueAccessor} from '@angular/forms';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-
-import {Observable} from 'rxjs/Observable'
-import {Subscription} from 'rxjs/Subscription'
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/debounceTime'
-import 'rxjs/add/operator/distinctUntilChanged'
-
+import {fromEvent, Subscription} from 'rxjs';
+import {filter, map, debounceTime, distinctUntilChanged} from 'rxjs/operators';
 
 @Directive({
     selector: '[throttle][ngModel]',
@@ -44,18 +37,20 @@ export class Throttle implements ControlValueAccessor, OnDestroy {
             self._modified = false;
         }
 
-        var keyupEnter = Observable.fromEvent(this.el.nativeElement, 'keyup')
-            .filter(e => {
+        var keyupEnter = fromEvent(this.el.nativeElement, 'keyup').pipe(
+            filter(e => {
                 // 13 is the keycode for enter
                 // 'which' is the recommended way to access the keycode
                 return ((<any>e).which == 13) || !!this.delay;
-            })
-            .map(val => this.el.nativeElement.value)
-            .debounceTime(this.delay)
-            .distinctUntilChanged();
+            }),
+            map(val => this.el.nativeElement.value),
+            debounceTime(this.delay),
+            distinctUntilChanged()
+        );
 
-        var blur = Observable.fromEvent(this.el.nativeElement, 'blur')
-            .map(val => this.el.nativeElement.value);
+        var blur = fromEvent(this.el.nativeElement, 'blur').pipe(
+            map(val => this.el.nativeElement.value)
+        );
 
         // Default Value Accessor calls onChange whenever user types into text box
         // We limit it to pressing the enter key and blur

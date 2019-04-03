@@ -1,6 +1,6 @@
 import { Component, OnDestroy, ViewChildren, QueryList } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { NotificationService } from './notification.service';
 import { Notification, NotificationType } from './notification';
 import { DynamicComponent } from '../common/dynamic.component';

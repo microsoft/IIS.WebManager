@@ -1,9 +1,7 @@
-import { Component, Input } from '@angular/core';
-import { NotificationComponent } from './notification.component';
+import { Component } from '@angular/core';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../notification/notification';
-
-import 'rxjs/add/operator/first';
+import { first } from 'rxjs/operators'
 
 @Component({
     selector: 'notification-indicator',
@@ -35,7 +33,7 @@ export class NotificationIndicator {
 
     toggleNotifications() {
         let active: boolean;
-        this._service.activate.first().subscribe(a => {
+        this._service.activate.pipe(first()).subscribe(a => {
             active = a;
         })
 

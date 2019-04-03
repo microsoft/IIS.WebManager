@@ -1,27 +1,22 @@
 {
-    "compilerOptions": {
-        "baseUrl": "",
-        "declaration": true,
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "noImplicitAny": false,
-        "lib": [
-            "es6",
-            "dom"
-        ],
-        "mapRoot": "./",
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "rootDir": "app",
-        "sourceMap": true,
-        "target": "es5",
-        "noEmitOnError": true,
-        "types": ["node"],
-        "typeRoots": [
-          "node_modules/@types"
-        ]
-    },
-    "include": [
-      "./**/*.ts"
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist",
+    "sourceMap": true,
+    "declaration": false,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "types": ["node"],
+    "lib": [
+      "es2018",
+      "dom"
     ]
+  }
 }

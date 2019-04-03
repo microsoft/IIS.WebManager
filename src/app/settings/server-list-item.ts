@@ -1,7 +1,5 @@
-﻿import { Component, OnInit, OnDestroy, Output, Input, Inject, ViewChild, ElementRef, EventEmitter } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+﻿import { Component, OnInit, OnDestroy, Output, Input, ViewChild, EventEmitter } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Selector } from '../common/selector';
 import { ApiConnection } from '../connect/api-connection';
 import { ConnectService } from '../connect/connect.service';

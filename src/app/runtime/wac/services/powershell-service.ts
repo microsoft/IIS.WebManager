@@ -1,14 +1,12 @@
 import { Injectable, Inject } from '@angular/core'
 import { AppContextService } from '@microsoft/windows-admin-center-sdk/angular'
 import { PowerShell, PowerShellSession } from '@microsoft/windows-admin-center-sdk/core'
-import { Observable } from 'rxjs/Observable'
-import { PowerShellScripts } from '../../../../generated/powershell-scripts'
+import { Observable } from 'rxjs'
+import { PowerShellScripts } from 'generated/powershell-scripts'
 import { Request, Response, ResponseOptions, Headers } from '@angular/http'
 import { WACInfo } from 'runtime/runtime.wac'
-import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger'
-
-import '../../../diagnostics/extensions/rxjs'
-import 'rxjs/add/operator/catch'
+import { LoggerFactory, Logger, LogLevel, logError } from 'diagnostics/logger'
+import { map, mergeMap, shareReplay } from 'rxjs/operators'
 
 const PS_SESSION_KEY = 'wac-iis'
 
@@ -33,9 +31,10 @@ export class PowershellService {
   }
 
   private scheduleSession() {
-    this.session = this.wac.NodeName.map(nodeName => {
-      return this.appContext.powerShell.createSession(nodeName, PS_SESSION_KEY)
-    }).shareReplay()
+    this.session = this.wac.NodeName.pipe(
+      map(nodeName => this.appContext.powerShell.createSession(nodeName, PS_SESSION_KEY)),
+      shareReplay()
+    )
   }
 
   public Reset() {
@@ -52,7 +51,7 @@ export class PowershellService {
   public invokeHttp(req: Request): Observable<Response> {
     let requestEncoded = btoa(JSON.stringify(req))
     return this.invoke<ResponseOptions>(
-      PowerShellScripts.local_http,
+      PowerShellScripts.local_http.script,
       { requestBase64: requestEncoded },
       (k, v) => {
         switch (k) {
@@ -70,40 +69,42 @@ export class PowershellService {
           default:
             return v
         }
-      }).map(res => {
+      }).pipe(map(res => {
         let response = new Response(res)
         if (res.status < 200 || res.status >= 400) {
           throw response
         }
         return response
-    })
+    }))
   }
 
   private invoke<T>(pwCmdString: string, psParameters: any, reviver: (key: any, value: any) => any = null): Observable<T> {
-    psParameters.sessionId = this.sessionId
-    var flags = []  // Use ['verbose'] to debug
-    var compiled = PowerShell.createScript(pwCmdString, psParameters, flags)
-    var name = pwCmdString.split('\n')[0]
-    return this.session.mergeMap(ps => {
-      return ps.powerShell.run(compiled).mergeMap(response => {
+    psParameters.sessionId = this.sessionId;
+    var flags: string[] = [];  // use ['verbose'] to debug
+    var compiled: string = PowerShell.createScript(pwCmdString, psParameters, flags);
+    var scriptName: string = pwCmdString.split("\n")[0]
+    return this.session.pipe(
+      mergeMap(ps => ps.powerShell.run(compiled)),
+      logError(this.logger, LogLevel.WARN, `Script ${scriptName} failed`),
+      mergeMap(response => {
         if (!response) {
-          throw `Powershell command ${name} returns no response`;
+          throw `Powershell command ${scriptName} returns no response`;
         }
-
         if (!response.results) {
-          throw `Powershell command ${name} returns null response`;
+          throw `Powershell command ${scriptName} returns null response`;
         }
-
         if (response.results.length <= 0) {
-          throw `Powershell command ${name} returns empty response`;
+          throw `Powershell command ${scriptName} returns empty response`;
         }
         return response.results.map(result => {
-          let rtnObject = JSON.parse(result, reviver);
+          let rtnObject: any = JSON.parse(result, reviver);
           if (rtnObject && rtnObject.errorsReported) {
-            this.logger.log(LogLevel.ERROR, `Unexpected error from powershell script ${name}, it is deemed to be critical. The application will continue:\n${rtnObject.errorsReported}`);
+            this.logger.log(LogLevel.ERROR,
+              `Unexpected error from powershell script ${name}:\n${rtnObject.errorsReported}`);
           }
           return rtnObject;
-        })
-      })})
+        });
+      }),
+    );
   }
 }

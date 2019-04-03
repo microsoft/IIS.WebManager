@@ -1,13 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Subscription } from 'rxjs';
 import { Status } from '../../common/status';
 import { NotificationService } from '../../notification/notification.service';
 import { DiffUtil } from '../../utils/diff';
 import { AuthorizationService } from './authorization.service';
-import { RuleComponent } from './rule.component';
-import { Authorization, AuthRule } from './authorization'
+import { Authorization } from './authorization'
 
 @Component({
     template: `

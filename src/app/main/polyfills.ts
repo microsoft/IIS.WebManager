@@ -9,7 +9,8 @@
  *
  * The current setup is for so-called "evergreen" browsers; the last versions of browsers that
  * automatically update themselves. This includes Safari >= 10, Chrome >= 55 (including Opera),
- * Edge >= 13 on the desktop, and iOS 10 and Chrome on mobile.
+ * Microsoft Edge >= 13 on the desktop, and iOS 10 and Chrome on mobile.
+
  *
  * Learn more in https://angular.io/docs/ts/latest/guide/browser-support.html
  */
@@ -59,11 +60,11 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
  * APPLICATION IMPORTS
  */
 // Server management tools specific polyfills
-import '@microsoft/windows-admin-center-sdk/dist/core/polyfills';
+import '@microsoft/windows-admin-center-sdk/core/polyfills';
 
 /**
  * Date, currency, decimal and percent pipes.
- * Needed for: All but Chrome, Firefox, Edge, IE11 and Safari 10
+ * Needed for: All but Chrome, Firefox, Microsoft Edge, IE11 and Safari 10
  */
 // import 'intl';  // Run `npm install --save intl`.
 /**

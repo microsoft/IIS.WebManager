@@ -1,0 +1,84 @@
+{
+  "projects": {
+    "microsoft.iis.web-manager": {
+      "architect": {
+        "build": {
+          "configurations": {
+            "wac": {
+              "fileReplacements": [
+                {
+                  "replace": "app/main/app-routing.module.ts",
+                  "with": "app/main/app-routing.module.wac.ts"
+                },
+                {
+                  "replace": "app/main/app.addon.ts",
+                  "with": "app/main/app.addon.wac.ts"
+                },
+                {
+                  "replace": "app/main/main.ts",
+                  "with": "app/main/main.wac.ts"
+                },
+                {
+                  "replace": "app/main/app.component.html",
+                  "with": "app/main/app.component.wac.html"
+                },
+                {
+                  "replace": "app/environments/environment.ts",
+                  "with": "app/environments/environment.wac.ts"
+                }
+              ]
+            },
+            "wac.prod": {
+              "fileReplacements": [
+                {
+                  "replace": "app/main/app-routing.module.ts",
+                  "with": "app/main/app-routing.module.wac.ts"
+                },
+                {
+                  "replace": "app/main/app.addon.ts",
+                  "with": "app/main/app.addon.wac.ts"
+                },
+                {
+                  "replace": "app/main/main.ts",
+                  "with": "app/main/main.wac.ts"
+                },
+                {
+                  "replace": "app/main/app.component.html",
+                  "with": "app/main/app.component.wac.html"
+                },
+                {
+                  "replace": "app/environments/environment.ts",
+                  "with": "app/environments/environment.wac.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": false,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          },
+          "options": {
+            "styles": [
+              "themes/themes.wac.css"
+            ]
+          }
+        },
+        "serve": {
+          "configurations": {
+            "wac": {
+              "browserTarget": "microsoft.iis.web-manager:build:wac"
+            },
+            "wac.prod": {
+              "browserTarget": "microsoft.iis.web-manager:build:wac.prod"
+            }
+          }
+        }
+      }
+    }
+  }
+}

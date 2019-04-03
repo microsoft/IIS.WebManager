@@ -1,5 +1,5 @@
-import 'rxjs/add/operator/take';
-import {Subject} from "rxjs/Subject";
+import {Subject} from 'rxjs';
+import {take} from 'rxjs/operators'
 
 class Executable {
     executor: () => Promise<any>;
@@ -51,7 +51,7 @@ export class ParallelExecutor {
 
         return new Promise((resolve, reject) => {
 
-            notifier.asObservable().take(1).subscribe(p => {
+            notifier.asObservable().pipe(take(1)).subscribe(p => {
                 p.then(res => resolve(res)).catch(e => reject(e));
             });
 

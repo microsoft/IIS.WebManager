@@ -1,10 +1,10 @@
 import { Inject, Component, ViewEncapsulation, OnInit, ViewChild, ElementRef, Renderer, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { Angulartics2 } from 'angulartics2';
-import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-ga';
 import { LoadingService } from '../notification/loading.service';
 import { WindowService } from './window.service';
 import { Runtime } from '../runtime/runtime';
+import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
 import { environment } from 'environments/environment';
 
 @Component({
@@ -49,22 +49,7 @@ import { environment } from 'environments/environment';
         }
     `],
     encapsulation: ViewEncapsulation.None,  // Use to disable CSS Encapsulation for this component
-    template: `
-        <div class='content' (dragover)="dragOver($event)">
-            <header *ngIf="showHeader()"></header>
-            <div id="{{ isWAC ? 'wacFlexWrapper' : 'flexWrapper' }}">
-                <div class="container-fluid" id="mainContainer" #mainContainer>
-                    <div class="row" id="mainRow">
-                        <div class="col-xs-12">
-                            <div id="bodyContent">
-                                <router-outlet></router-outlet>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `
+    templateUrl: "./app.component.html",
 })
 export class AppComponent implements OnInit {
     constructor(private _router: Router,
@@ -79,7 +64,7 @@ export class AppComponent implements OnInit {
     @ViewChild('mainContainer') mainContainer: ElementRef;
 
     ngOnInit() {
-        this.runtime.InitContext()
+        this.runtime.OnAppInit()
         this._windowService.initialize(this.mainContainer, this._renderer)
     }
 
@@ -94,7 +79,7 @@ export class AppComponent implements OnInit {
     @HostListener('window:beforeunload', ['$event'])
     beforeUnloadHander(_) {
         this._loadingSvc.destroy()
-        this.runtime.DestroyContext()
+        this.runtime.OnAppDestroy()
     }
 
     get isWAC() {

@@ -1,7 +1,5 @@
-import { Component, OnInit, OnChanges, OnDestroy, SimpleChange, Input, Output, EventEmitter, ViewChildren, QueryList, ElementRef, ViewChild } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Component, OnInit, OnChanges, OnDestroy, SimpleChange, Input, Output, EventEmitter, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { DiffUtil } from '../../utils/diff';
 import { ComponentUtil } from '../../utils/component';
 import { MimeMap } from '../static-content/static-content';

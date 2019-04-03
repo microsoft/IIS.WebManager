@@ -1,7 +1,7 @@
 import { HttpFacade } from "./http-facade";
 import { Injectable } from "@angular/core";
 import { Http, Request, Response } from "@angular/http"
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 
 @Injectable()
 export class HttpImpl implements HttpFacade {

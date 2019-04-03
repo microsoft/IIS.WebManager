@@ -1,6 +1,9 @@
 import { Injectable } from "@angular/core";
+import { Observable, ObservableInput, OperatorFunction } from "rxjs";
+import { tap } from "rxjs/operators";
 
 export enum LogLevel {
+    NONE = -1,
     DEBUG = 0,
     INFO,
     WARN,
@@ -39,6 +42,18 @@ class ConsoleLogger implements Logger {
                 throw `Unexpected log level ${level}`
         }
     }
+}
+
+export function logError<T>(logger: Logger, level: LogLevel, message: string): OperatorFunction<T, T> {
+    return (o: Observable<T>): Observable<T> => {
+        return o.pipe(tap(
+            null,
+            err => {
+                logger.log(level, message);
+                logger.log(level, err);
+            },
+        ));
+    };
 }
 
 @Injectable()

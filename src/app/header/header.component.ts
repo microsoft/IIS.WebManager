@@ -1,7 +1,7 @@
 import { Component, OnDestroy, Optional } from '@angular/core';
 import { LoadingService } from '../notification/loading.service';
 import { OptionsService } from '../main/options.service';
-import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulartics2-ga';
+import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
 import { environment } from 'environments/environment';
 
 @Component({

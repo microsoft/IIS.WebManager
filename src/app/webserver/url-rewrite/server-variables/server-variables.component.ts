@@ -1,7 +1,5 @@
 ﻿import { Component, OnDestroy } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Subscription } from 'rxjs';
 import { UrlRewriteService } from '../service/url-rewrite.service';
 import { AllowedServerVariablesSection } from '../url-rewrite';
 

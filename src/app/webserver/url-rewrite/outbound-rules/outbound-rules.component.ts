@@ -1,10 +1,8 @@
 ﻿import { Component, OnDestroy, ViewChild } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Subscription } from 'rxjs';
 import { Selector } from '../../../common/selector';
 import { UrlRewriteService } from '../service/url-rewrite.service';
-import { OutboundSection, OutboundRule, PatternSyntax, OutboundTags, ActionType, ConditionMatchConstraints, Condition, MatchType, OutboundMatchType } from '../url-rewrite';
+import { OutboundSection, OutboundRule, PatternSyntax, OutboundTags, ConditionMatchConstraints, OutboundMatchType } from '../url-rewrite';
 
 @Component({
     selector: 'outbound-rules',

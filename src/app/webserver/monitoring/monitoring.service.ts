@@ -1,6 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
-import { IntervalObservable } from 'rxjs/observable/IntervalObservable';
-import { Subscription } from "rxjs/Subscription";
+import { Subscription, interval } from "rxjs";
 import { HttpClient } from '../../common/httpclient';
 import { ServerSnapshot } from './server-snapshot';
 
@@ -90,7 +89,7 @@ export class MonitoringService {
 
         let requesting = false;
 
-        this._subscription = IntervalObservable.create(this._requestInterval).subscribe(() => {
+        this._subscription = interval(this._requestInterval).subscribe(() => {
 
             if (!this.apiInstalled || !this._active) {
                 return;

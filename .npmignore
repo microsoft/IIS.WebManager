@@ -1,0 +1,28 @@
+#
+# THIS FILE WAS GENERATED FROM msft-sme-build. DO NOT MODIFY. To change this file, make the appropriate changes in build
+#
+
+#excluding everything by default
+**/*
+
+#include dist
+!dist
+!dist/**/*
+
+#include bundle
+!bundle
+!bundle/**/*
+
+//exclude test files
+dist/**/*.test.js
+dist/**/*.test.d.ts
+dist/**/*.test.helper.js
+dist/**/*.test.helper.d.ts
+
+#include index
+!index.js
+!index.d.ts
+
+#include e2e
+!e2e
+!e2e/**/*

@@ -1,15 +1,8 @@
 import {Injectable} from '@angular/core';
-
-// 
-// Don't import rxjs/Rx. Loading is too slow!
-// Import only needed operators
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {HttpClient} from '../../common/httpclient';
 import {Status} from '../../common/status';
 import {ApplicationPool} from './app-pool';
-import {IntervalObservable} from 'rxjs/observable/IntervalObservable';
-import {Observable} from "rxjs/Observable";
-
+import {BehaviorSubject, Observable, interval} from "rxjs";
 
 @Injectable()
 export class AppPoolsService {
@@ -96,7 +89,7 @@ export class AppPoolsService {
             //
             // Ping
             if (pool.status == Status.Starting) {
-                let ob = IntervalObservable.create(1000).subscribe(i => {
+                let ob = interval(1000).subscribe(i => {
                     this.loadAppPool(pool.id, "status").then(p => {
                         pool.status = p.status;
 
@@ -118,7 +111,7 @@ export class AppPoolsService {
             //
             // Ping
             if (pool.status == Status.Stopping) {
-                let ob = IntervalObservable.create(1000).subscribe(i => {
+                let ob = interval(1000).subscribe(i => {
                     this.loadAppPool(pool.id, "status").then(p => {
                         pool.status = p.status;
 
@@ -140,7 +133,7 @@ export class AppPoolsService {
         this.stop(pool);
 
         if (pool.status == Status.Stopping) {
-            let ob = IntervalObservable.create(200).subscribe(i => {
+            let ob = interval(200).subscribe(i => {
                 if (pool.status == Status.Stopped || i >= 450) {
                     ob.unsubscribe();
                     this.start(pool);

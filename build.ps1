@@ -68,7 +68,7 @@ Write-Host "Dump the root source directory..."
 Get-ChildItem $Env:BUILD_SOURCESDIRECTORY
 
 $buildArgs = $args | Where-Object { $_ -notlike "--purge" -and $_ -notlike "--pack" -and -not ($_.startsWith("--version="))}
-$buildTools = @("@angular/cli@1.7.4","gulp-cli@2.0.1")
+$buildTools = @("@angular/cli","gulp-cli")
 
 Push-Location src
 try {
@@ -77,9 +77,14 @@ try {
     }
 
     Write-Host "Ensure build tools are installed..."
+    $allDependencies = Get-Content "package.json" | ConvertFrom-Json
+
     foreach($pkg in $buildTools) {
-        if (!((npm list -g $pkg) | Where-Object { $_ -match "$pkg\s*$" })) {
-            npm install -g $pkg
+        $version = $allDependencies.devDependencies."$pkg"
+        $pkgVersion = "${pkg}@${version}"
+        Write-Verbose "Dev dependency found: ${pkgVersion}"
+        if (!((npm list -g $pkgVersion) | Where-Object { $_ -match "$pkgVersion\s*$" })) {
+            npm install -g $pkgVersion
         }
     }
 

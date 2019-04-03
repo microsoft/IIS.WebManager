@@ -1,10 +1,6 @@
 import { Router, NavigationStart } from '@angular/router';
 import { Location } from '@angular/common';
-
-import { Observable } from 'rxjs/Observable'
-import { Subscription } from 'rxjs/Subscription'
-import { BehaviorSubject } from 'rxjs/BehaviorSubject'
-
+import { Observable, Subscription, BehaviorSubject } from 'rxjs'
 import { IDisposable } from './IDisposable';
 import { UrlUtil } from '../utils/url';
 

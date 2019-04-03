@@ -1,0 +1,16 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "target": "es6",                          
+    "module": "commonjs",                     
+    "strict": true,                           
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "declaration": false,
+    "strictNullChecks": false,
+    "removeComments": false,
+    "noImplicitAny": false,
+    "outDir": "dist/e2e",
+    "types": ["jasmine", "node"]    
+  }
+}

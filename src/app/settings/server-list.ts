@@ -1,7 +1,5 @@
 ﻿import { Component, OnDestroy, ViewChild } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Subscription } from 'rxjs';
 import { OrderBy, SortPipe } from '../common/sort.pipe';
 import { Constants } from '../connect/constants';
 import { Selector } from '../common/selector';

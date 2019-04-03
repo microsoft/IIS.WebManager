@@ -1,0 +1,44 @@
+{
+  "projects": {
+    "microsoft.iis.web-manager": {
+      "architect": {
+        "build": {
+          "configurations": {
+            "wac": {
+              "fileReplacements": [
+                {
+                  "replace": "app/environments/environment.ts",
+                  "with": "app/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": false,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          },
+          "options": {
+            "styles": [
+              "../themes/themes.blue.css"
+            ]
+          }
+        },
+        "serve": {
+          "configurations": {
+            "wac": {
+              "browserTarget": "microsoft.iis.web-manager:build"
+            },
+            "wac.prod": {
+              "browserTarget": "microsoft.iis.web-manager:build:prod"
+            }
+          }
+        }
+      }
+    }
+  }
+}

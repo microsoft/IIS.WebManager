@@ -1,12 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
+import { Subscription } from 'rxjs';
 import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
 import { RequestFilteringService } from './request-filtering.service';
 import { NotificationService } from '../../notification/notification.service';
-import { RequestFilteringSettings, RequestFilteringChildType, RequestFiltering } from './request-filtering';
+import { RequestFilteringSettings, RequestFiltering } from './request-filtering';
 
 @Component({
     template: `

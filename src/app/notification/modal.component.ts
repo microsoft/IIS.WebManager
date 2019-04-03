@@ -1,8 +1,5 @@
-import { NgModule, Component, OnDestroy } from '@angular/core';
-
-import { Subscription } from 'rxjs/Subscription';
-
-import { ModalArgs } from './modal';
+import { Component, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { NotificationService } from './notification.service';
 
 @Component({

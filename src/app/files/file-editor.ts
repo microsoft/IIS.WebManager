@@ -1,12 +1,9 @@
 import { NgModule, Component, Input, Output, EventEmitter, Inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-
+import { Observable, BehaviorSubject } from 'rxjs';
 import { ApiFile } from './file';
 import { FilesService } from './files.service';
-
 import { Module as Loading } from '../notification/loading.component';
 import { Module as Navigation } from './navigation.component';
 import { CodeEditorComponent } from "./code-editor.component";

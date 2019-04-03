@@ -1,23 +1,14 @@
 
 import {Injectable, Inject, Optional} from '@angular/core';
-// 
-// Don't import rxjs/Rx. Loading is too slow!
-// Import only needed operators
-import {Observable} from "rxjs/Observable";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {Subscription} from "rxjs/Subscription";
-
+import {BehaviorSubject, Observable, Subscription} from "rxjs";
 import {HttpClient} from '../../common/httpclient';
 import {WebSite} from '../websites/site'
 import {WebSitesService} from '../websites/websites.service';
 import {AppPoolsService} from '../app-pools/app-pools.service';
 import {ApplicationPool} from '../app-pools/app-pool';
-
 import {WebApp} from './webapp'
-
 import {ApiError} from '../../error/api-error';
 import {NotificationService} from '../../notification/notification.service';
-
 
 @Injectable()
 export class WebAppsService {

@@ -1,11 +1,8 @@
 import {Component, OnInit, OnDestroy, Input, Output, EventEmitter, Inject} from '@angular/core';
 import {Router} from '@angular/router';
-import {Subscription} from 'rxjs/Subscription';
-
+import {Subscription} from 'rxjs';
 import {AppPoolsService} from './app-pools.service';
 import {ApplicationPool} from './app-pool';
-import {AppPoolList} from './app-pool-list';
-
 
 @Component({
     selector: 'app-pools',
