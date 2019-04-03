@@ -69,11 +69,14 @@ export class WACRuntime implements Runtime {
 
     public OnAppDestroy(): void {
         if (this._tokenId) {
-            this.powershellService.run(PowerShellScripts.token_utils.script, {
+            let sub = this.powershellService.run(PowerShellScripts.token_utils.script, {
                 command: 'delete',
                 tokenId: this._tokenId,
                 apiHost: this._apiHost,
-            }).subscribe(null, null, () => this.appContext.ngDestroy());
+            }).subscribe(null, null, () => {
+                sub.unsubscribe();
+                this.appContext.ngDestroy();
+            });
         } else {
             this.appContext.ngDestroy();
         }
