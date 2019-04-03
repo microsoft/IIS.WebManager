@@ -1,15 +1,14 @@
 
 import {Inject, Injectable} from '@angular/core';
 import {Headers, Request, RequestOptions, RequestOptionsArgs, RequestMethod, Response} from '@angular/http';
-
 import {NotificationService} from '../notification/notification.service';
 import {ApiConnection} from '../connect/api-connection'
 import {ApiError, ApiErrorType} from '../error/api-error';
 import {ConnectService} from '../connect/connect.service';
 import {Runtime} from '../runtime/runtime';
 import {HttpFacade} from './http-facade';
-import {Observable, throwError, Subscription} from 'rxjs';
-import {finalize, catchError, mergeMap} from 'rxjs/operators';
+import {Observable, throwError} from 'rxjs';
+import {finalize, catchError, mergeMap, take} from 'rxjs/operators';
 
 @Injectable()
 export class HttpClient {
@@ -80,18 +79,14 @@ export class HttpClient {
     }
 
     public request(url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<Response> {
-        return new Promise((resolve, reject) => {
-            let sub: Subscription = this.requestOnConnection(url, options, warn).subscribe(
-                v => resolve(v),
-                e => {
-                    let err: any = this.runtime.HandleConnectError(e);
-                    if (err) {
-                        reject(err);
-                    }
-                },
-                () => sub.unsubscribe(),
-            );
-        });
+        return this.requestOnConnection(url, options, warn).pipe(
+            take(1),
+            catchError(e => {
+                if (this.runtime.HandleConnectError(e)) {
+                    return throwError(e);
+                }
+            }),
+        ).toPromise();
     }
 
     private setJsonContentType(options?: RequestOptionsArgs) {

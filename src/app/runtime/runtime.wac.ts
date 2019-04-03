@@ -11,7 +11,7 @@ import { PowershellService } from './wac/services/powershell-service';
 import { ConnectService } from '../connect/connect.service';
 import { ApiConnection } from '../connect/api-connection';
 import { PowerShellScripts } from 'generated/powershell-scripts'
-import { map, shareReplay, mergeMap, catchError } from 'rxjs/operators';
+import { map, shareReplay, mergeMap, catchError, finalize } from 'rxjs/operators';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { SETTINGS } from 'main/settings';
 import { throwError, Observable } from 'rxjs';
@@ -69,14 +69,13 @@ export class WACRuntime implements Runtime {
 
     public OnAppDestroy(): void {
         if (this._tokenId) {
-            let sub = this.powershellService.run(PowerShellScripts.token_utils.script, {
+            this.powershellService.run(PowerShellScripts.token_utils.script, {
                 command: 'delete',
                 tokenId: this._tokenId,
                 apiHost: this._apiHost,
-            }).subscribe(null, null, () => {
-                sub.unsubscribe();
-                this.appContext.ngDestroy();
-            });
+            }).pipe(
+                finalize(() => this.appContext.ngDestroy())
+            ).subscribe();
         } else {
             this.appContext.ngDestroy();
         }
