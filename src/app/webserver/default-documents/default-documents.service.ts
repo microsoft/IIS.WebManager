@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from "rxjs";
 import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
-import { HttpClient } from '../../common/httpclient';
+import { HttpClient } from '../../common/http-client';
 import { DefaultDocument, File } from './default-documents';
 import { ApiErrorType } from '../../error/api-error';
 import { ActivatedRoute } from '@angular/router';

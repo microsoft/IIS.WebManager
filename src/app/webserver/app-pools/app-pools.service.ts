@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '../../common/httpclient';
+import {HttpClient} from '../../common/http-client';
 import {Status} from '../../common/status';
 import {ApplicationPool} from './app-pool';
 import {BehaviorSubject, Observable, interval} from "rxjs";

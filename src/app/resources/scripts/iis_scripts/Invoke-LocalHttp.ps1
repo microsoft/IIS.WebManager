@@ -71,7 +71,7 @@ try {
         $requestContent = New-Object System.Net.Http.StringContent ([string] $reqObj._body)
         $httpMsg.Content = $requestContent
     }
-    foreach ($prop in $reqObj.headers | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name) {
+    foreach ($prop in $reqObj.headers | Get-Member -MemberType NoteProperty | Microsoft.PowerShell.Utility\Select-Object -ExpandProperty Name) {
         $headerValue = $reqObj.headers.$prop
         if (!$httpMsg.Headers.TryAddWithoutValidation($prop, $headerValue)) {
             $headerFixed = $false

@@ -155,7 +155,7 @@ export class HttpClient {
                     detail: JSON.stringify(e),
                 })
                 this._notificationService.apiError(apiError)
-                throwError(apiError)
+                return throwError(apiError)
             })
         )
     }

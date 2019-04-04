@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { Logging } from './logging';
 import { Status } from '../../common/status';
-import { HttpClient } from '../../common/httpclient';
+import { HttpClient } from '../../common/http-client';
 import { ApiFile, ChangeType } from '../../files/file';
 import { IDisposable } from '../../common/idisposable';
 import { FilesService } from '../../files/files.service';

@@ -19,10 +19,6 @@
                   "with": "app/main/main.wac.ts"
                 },
                 {
-                  "replace": "app/main/app.component.html",
-                  "with": "app/main/app.component.wac.html"
-                },
-                {
                   "replace": "app/environments/environment.ts",
                   "with": "app/environments/environment.wac.ts"
                 }
@@ -41,10 +37,6 @@
                 {
                   "replace": "app/main/main.ts",
                   "with": "app/main/main.wac.ts"
-                },
-                {
-                  "replace": "app/main/app.component.html",
-                  "with": "app/main/app.component.wac.html"
                 },
                 {
                   "replace": "app/environments/environment.ts",

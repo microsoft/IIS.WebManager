@@ -2,7 +2,7 @@ import { Component, Input, Inject, ViewChild } from '@angular/core';
 
 import { Selector } from '../../common/selector';
 import { Humanizer } from '../../common/primitives';
-import { HttpClient } from '../../common/httpclient';
+import { HttpClient } from '../../common/http-client';
 import { ApiFile } from '../../files/file';
 import { LoggingService } from './logging.service';
 import { FilesService } from '../../files/files.service';

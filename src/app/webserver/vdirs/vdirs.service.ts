@@ -1,6 +1,6 @@
 import {Injectable, Optional, Inject} from '@angular/core';
 import {Observable, BehaviorSubject, Subscription} from "rxjs";
-import {HttpClient} from '../../common/httpclient';
+import {HttpClient} from '../../common/http-client';
 import {ApiError} from '../../error/api-error';
 import {NotificationService} from '../../notification/notification.service';
 import {Vdir} from './vdir';

@@ -1,19 +1,17 @@
 import { Component, Inject } from '@angular/core';
-
 import { ModuleUtil } from '../utils/module';
 import { OptionsService } from '../main/options.service';
-
-import { HttpClient } from '../common/httpclient';
+import { HttpClient } from '../common/http-client';
 import { WebServer } from './webserver';
 import { WebServerService } from './webserver.service';
 import { ComponentReference, FilesComponentName } from '../main/settings';
 import { environment } from '../environments/environment'
 import { CertificatesServiceURL } from 'certificates/certificates.service';
 import { UnexpectedServerStatusError } from 'error/api-error';
-import { Observable } from 'rxjs';
 import { NotificationService } from 'notification/notification.service';
 import { Runtime } from 'runtime/runtime';
-import { LoggerFactory, Logger } from 'diagnostics/logger';
+import { BreadcrumbsService } from 'header/breadcrumbs.service';
+import { BreadcrumbsRoot, WebServerCrumb } from 'header/breadcrumb';
 
 const sidebarStyles = `
 :host >>> .sidebar > vtabs .vtabs > .items {
@@ -65,6 +63,7 @@ export class WebServerComponent {
     constructor(
         @Inject('WebServerService') private _service: WebServerService,
         @Inject('Runtime') private _runtime: Runtime,
+        private _crumbs: BreadcrumbsService,
         private _http: HttpClient,
         private _options: OptionsService,
         private _notifications: NotificationService,
@@ -83,7 +82,8 @@ export class WebServerComponent {
                 .catch(_ => {
                     this.modules = this.modules.filter(m => m.name.toLocaleLowerCase() !== 'certificates')
                 });
-        })
+            this._crumbs.load(BreadcrumbsRoot.concat(WebServerCrumb));
+        });
     }
 
     get service() {
@@ -98,7 +98,7 @@ export class WebServerComponent {
                         `Start Microsoft IIS Administration API`,
                         `Microsoft IIS Administration API is currently ${e.Status}. Do you want to start the service?`).then(confirmed => {
                         if (confirmed) {
-                            var sub = this._runtime.StartIISAdministration().subscribe(
+                            this._runtime.StartIISAdministration().subscribe(
                                 _ => {
                                     this._service.server.catch(ex => {
                                         reject(this.failure = `Unable to start Microsoft IIS Administration API Service, error ${ex}`)
@@ -110,7 +110,6 @@ export class WebServerComponent {
                                 _ => {
                                     reject(this.failure = `Unable to start Microsoft IIS Administration API Service, error: ${e}`)
                                 },
-                                () => { sub.unsubscribe() },
                             )
                         } else {
                             reject(this.failure = `Web Server Module cannot be initialized. Current Microsoft IIS Administration API Service status: ${e.Status}`)

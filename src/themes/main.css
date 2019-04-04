@@ -781,7 +781,7 @@ a.link:before {
     padding: 0;
     margin: 0;
     margin-right: 10px;
-    position: fixed;
+    position: sticky;
     padding-bottom: 5px;
     display: inline-block;
     overflow: hidden;
@@ -792,10 +792,10 @@ a.link:before {
     border-right-width: 1px;
 }
 
-.sidebar vtabs .vtabs > .items,
+/* .sidebar vtabs .vtabs > .items,
 .sidebar > .items {
     padding-top: 10px;
-}
+} */
 
 .sidebar vtabs .items {
     padding-left: 10px;
@@ -915,4 +915,27 @@ a.link:before {
     opacity: .7;
     padding: 0 6px;
     content: ">";
+}
+
+.breadcrumbs {
+    display: inline;
+    position: sticky;
+    display: inline-block;
+    font-family: 'Segoe UI';
+    line-height: 30px;
+    padding-left: 10px;
+    margin-block-end: 0%;
+}
+
+.breadcrumbs li {
+    float: left;
+}
+
+.breadcrumbs .separator {
+    margin-right: 0.2em;
+    margin-left: 0.2em;
+}
+
+.breadcrumbs .pointer:hover {
+    text-decoration: underline;
 }

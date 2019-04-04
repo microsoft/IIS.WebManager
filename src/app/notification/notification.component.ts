@@ -53,7 +53,7 @@ export class NotificationComponent implements OnDestroy {
     private _notifications: Array<Notification> = [];
     private _warningTimer: NodeJS.Timer;
     private _subscriptions: Subscription[] = [];
-    private _warningTimeout: number = 1 * 1000; // ms
+    private _warningTimeout: number = 30 * 1000; // ms
     private _showNext: boolean = true;
 
     @ViewChildren(DynamicComponent) private _dynamics: QueryList<DynamicComponent>;
@@ -63,7 +63,6 @@ export class NotificationComponent implements OnDestroy {
     }
 
     private initialize() {
-
         this._subscriptions.push(this._service.notifications.subscribe(notifications => {
             this._notifications = notifications.filter(notification => {
                 return notification.type == NotificationType.Information;

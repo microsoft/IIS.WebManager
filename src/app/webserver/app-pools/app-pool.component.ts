@@ -7,6 +7,8 @@ import {OptionsService} from '../../main/options.service';
 
 import {ApplicationPool} from './app-pool';
 import {AppPoolsService} from './app-pools.service';
+import { BreadcrumbsService } from 'header/breadcrumbs.service';
+import { BreadcrumbsRoot, AppPoolsCrumb, Breadcrumb } from 'header/breadcrumb';
 
 
 @Component({
@@ -16,10 +18,6 @@ import {AppPoolsService} from './app-pools.service';
         <app-pool-header *ngIf="pool" [pool]="pool" class="crumb-content" [class.sidebar-nav-content]="_options.active"></app-pool-header>
 
         <div *ngIf="pool" class="sidebar crumb" [class.nav]="_options.active">
-            <ul class="crumbs sme-focus-zone">
-                <li><a [routerLink]="['/webserver']">Web Server</a></li>
-                <li><a [routerLink]="['/webserver/application-pools']">Application Pools</a></li>
-            </ul>
             <vtabs [markLocation]="true" (activate)="_options.refresh()">
                 <item [name]="'General'" [ico]="'fa fa-wrench'">
                     <app-pool-general [pool]="pool" (modelChanged)="onModelChanged()"></app-pool-general>
@@ -46,11 +44,13 @@ export class AppPoolComponent implements OnInit {
     private modules: Array<any> = [];
     private _original: ApplicationPool;
 
-    constructor(private _route: ActivatedRoute,
-                @Inject("AppPoolsService") private _service: AppPoolsService,
-                private _options: OptionsService,
-                private _router: Router) {
-
+    constructor(
+        private _route: ActivatedRoute,
+        private _options: OptionsService,
+        private _router: Router,
+        private crumbs: BreadcrumbsService,
+        @Inject("AppPoolsService") private _service: AppPoolsService,
+    ){
         this.id = this._route.snapshot.params['id'];
     }
 
@@ -59,6 +59,17 @@ export class AppPoolComponent implements OnInit {
             .then(p => {
                 this.setAppPool(p);
                 ModuleUtil.initModules(this.modules, this.pool, "appPool");
+                let crumbs = BreadcrumbsRoot.concat(
+                    AppPoolsCrumb,
+                    <Breadcrumb>{ Label: p.name },
+                );
+                debugger
+
+                this.crumbs.load(
+                    BreadcrumbsRoot.concat(
+                        AppPoolsCrumb,
+                        <Breadcrumb>{ Label: p.name },
+                    ));
             })
             .catch(s => {
                 if (s && s.status == '404') {

@@ -3,7 +3,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
 import { ApiErrorType } from '../../error/api-error';
-import { HttpClient } from '../../common/httpclient';
+import { HttpClient } from '../../common/http-client';
 import { NotificationService } from '../../notification/notification.service';
 import { CentralCertificateConfiguration } from './central-certificates';
 

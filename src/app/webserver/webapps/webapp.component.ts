@@ -8,6 +8,8 @@ import {OptionsService} from '../../main/options.service';
 
 import {WebApp} from './webapp';
 import {WebAppsService} from './webapps.service';
+import { BreadcrumbsService } from 'header/breadcrumbs.service';
+import { BreadcrumbsRoot, WebServerCrumb, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
 
 
 @Component({
@@ -17,11 +19,6 @@ import {WebAppsService} from './webapps.service';
         <webapp-header *ngIf="app" [model]="app" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webapp-header>
 
         <div *ngIf="app" class="sidebar crumb" [class.nav]="_options.active">
-            <ul class="crumbs sme-focus-zone">
-                <li><a [routerLink]="['/webserver']">Web Server</a></li>
-                <li><a [routerLink]="['/webserver/web-sites/']">Web Sites</a></li>
-                <li><a [routerLink]="['/webserver/websites/', app.website.id]">{{app.website.name}}</a></li>
-            </ul>
             <vtabs [markLocation]="true" (activate)="_options.refresh()">
                 <item [name]="'General'" [ico]="'fa fa-wrench'">
                     <webapp-general [model]="app" (modelChanged)="onModelChanged()"></webapp-general>
@@ -49,10 +46,13 @@ export class WebAppComponent implements OnInit {
     
     private _original: any;
 
-    constructor(private _route: ActivatedRoute,
-                @Inject("WebAppsService") private _service: WebAppsService,
-                private _options: OptionsService,
-                private _router: Router) {
+    constructor(
+        private _route: ActivatedRoute,
+        private _options: OptionsService,
+        private _router: Router,
+        private crumbs: BreadcrumbsService,
+        @Inject("WebAppsService") private _service: WebAppsService,
+    ) {
         this.id = this._route.snapshot.params["id"];
     }
 
@@ -61,6 +61,14 @@ export class WebAppComponent implements OnInit {
             .then(app => {
                 this.setApp(app);
                 ModuleUtil.initModules(this.modules, this.app, "webapp");
+                this.crumbs.load(
+                    BreadcrumbsRoot.concat(
+                        WebServerCrumb,
+                        WebSitesCrumb,
+                        <Breadcrumb>{ Label: app.website.name, RouterLink: ['/webserver/websites/', app.website.id] },
+                        <Breadcrumb>{ Label: app.path },
+                    )
+                );
             })
             .catch(s => {
                 if (s && s.status == '404') {

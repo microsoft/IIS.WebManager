@@ -1,0 +1,9 @@
+
+<ul class="sme-focus-zone breadcrumbs">
+    <li *ngFor="let crumb of Crumbs; index as i">
+        <h1>
+            <span [ngClass]="{pointer: !!(crumb.RouterLink)}" (click)="onClick(crumb)">{{crumb.Label}}</span>
+            <span class="separator" *ngIf="i != Crumbs.length - 1">&gt;</span>
+        </h1>
+    </li>
+</ul>

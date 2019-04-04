@@ -69,7 +69,7 @@ export class WACRuntime implements Runtime {
 
     public OnAppDestroy(): void {
         if (this._tokenId) {
-            this.powershellService.run(PowerShellScripts.token_utils.script, {
+            this.powershellService.run(PowerShellScripts.Get_Token.script, {
                 command: 'delete',
                 tokenId: this._tokenId,
                 apiHost: this._apiHost,
@@ -105,7 +105,7 @@ export class WACRuntime implements Runtime {
 
     public PrepareIISHost(p: any): Observable<any> {
         p.appMinVersion = SETTINGS.api_setup_version;
-        return this.powershellService.run(PowerShellScripts.admin_api_util.script, p).pipe(
+        return this.powershellService.run(PowerShellScripts.Initialize_AdminAPI.script, p).pipe(
             map((status: HostStatus) => {
                 this._apiHost = status.apiHost;
                 if (status.groupModified) {
@@ -117,7 +117,7 @@ export class WACRuntime implements Runtime {
     }
 
     public StartIISAdministration(): Observable<any> {
-        return this.powershellService.run(PowerShellScripts.start_admin_api.script, {})
+        return this.powershellService.run(PowerShellScripts.Initialize_AdminAPI.script, {})
     }
 
     private GetApiKey(): Observable<ApiKey> {
@@ -159,7 +159,7 @@ export class WACRuntime implements Runtime {
                 if (this._tokenId) {
                     tokenUtilParams.tokenId = this._tokenId;
                 }
-                return this.powershellService.run<ApiKey>(PowerShellScripts.token_utils.script, tokenUtilParams);
+                return this.powershellService.run<ApiKey>(PowerShellScripts.Get_Token.script, tokenUtilParams);
             })
         );
     }

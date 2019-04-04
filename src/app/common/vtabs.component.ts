@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs'
 import { DynamicComponent } from './dynamic.component';
 import { SectionHelper } from './section.helper';
 import { environment } from 'environments/environment';
+import { BreadcrumbsService } from 'header/breadcrumbs.service';
 
 @Component({
     selector: 'vtabs',
@@ -64,12 +65,14 @@ export class VTabsComponent implements OnDestroy {
     @ViewChildren('item') private _tabList: QueryList<ElementRef>;
     @ContentChildren(forwardRef(() => Item)) its: QueryList<Item>;
 
-    constructor(private _elem: ElementRef,
+    constructor(
+        private _elem: ElementRef,
         private _renderer: Renderer,
         private _activatedRoute: ActivatedRoute,
         private _location: Location,
-        private _router: Router) {
-
+        private _router: Router,
+        private crumbs: BreadcrumbsService,
+    ) {
         this.tabs = [];
         this._default = this._activatedRoute.snapshot.params["section"];
     }

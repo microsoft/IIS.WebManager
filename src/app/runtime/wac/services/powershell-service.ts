@@ -24,9 +24,7 @@ export class PowershellService {
     this.scheduleSession()
     // not exactly sure why we need to force evaluate this observable here
     // but if we don't, install page would not work
-    let sub = this.session.subscribe(_=>{},_=>{}, ()=>{
-      sub.unsubscribe()
-    })
+    this.session.subscribe()
     this.logger = loggerFactory.Create(this)
   }
 
@@ -51,7 +49,7 @@ export class PowershellService {
   public invokeHttp(req: Request): Observable<Response> {
     let requestEncoded = btoa(JSON.stringify(req))
     return this.invoke<ResponseOptions>(
-      PowerShellScripts.local_http.script,
+      PowerShellScripts.Invoke_LocalHttp.script,
       { requestBase64: requestEncoded },
       (k, v) => {
         switch (k) {

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Modules, LocalModule, GlobalModule} from './modules';
-import {HttpClient} from '../../common/httpclient';
+import {HttpClient} from '../../common/http-client';
 
 @Injectable()
 export class ModuleService {
