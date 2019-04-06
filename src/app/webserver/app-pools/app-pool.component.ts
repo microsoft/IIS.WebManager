@@ -8,7 +8,7 @@ import {OptionsService} from '../../main/options.service';
 import {ApplicationPool} from './app-pool';
 import {AppPoolsService} from './app-pools.service';
 import { BreadcrumbsService } from 'header/breadcrumbs.service';
-import { BreadcrumbsRoot, AppPoolsCrumb, Breadcrumb } from 'header/breadcrumb';
+import { BreadcrumbsRoot, AppPoolsCrumb, Breadcrumb, WebServerCrumb } from 'header/breadcrumb';
 
 
 @Component({
@@ -59,14 +59,9 @@ export class AppPoolComponent implements OnInit {
             .then(p => {
                 this.setAppPool(p);
                 ModuleUtil.initModules(this.modules, this.pool, "appPool");
-                let crumbs = BreadcrumbsRoot.concat(
-                    AppPoolsCrumb,
-                    <Breadcrumb>{ Label: p.name },
-                );
-                debugger
-
                 this.crumbs.load(
                     BreadcrumbsRoot.concat(
+                        WebServerCrumb,
                         AppPoolsCrumb,
                         <Breadcrumb>{ Label: p.name },
                     ));

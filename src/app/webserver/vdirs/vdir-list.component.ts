@@ -4,14 +4,8 @@ import { RouterLink } from '@angular/router';
 
 import { Vdir, LogonMethod } from './vdir';
 import { VdirsService } from './vdirs.service';
-
 import { NotificationService } from '../../notification/notification.service';
-import { DiffUtil } from '../../utils/diff';
-import { SortPipe } from '../../common/sort.pipe';
-import { EqualValidator } from '../../common/validators';
-import { NavigatorComponent } from '../websites/navigator.component';
 import { ApiFile } from '../../files/file';
-
 import { WebSite } from '../websites/site';
 import { WebApp } from '../webapps/webapp';
 

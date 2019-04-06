@@ -4,7 +4,7 @@ import { OptionsService } from '../main/options.service';
 import { HttpClient } from '../common/http-client';
 import { WebServer } from './webserver';
 import { WebServerService } from './webserver.service';
-import { ComponentReference, FilesComponentName } from '../main/settings';
+import { ComponentReference, FilesComponentName, WebSitesModuleName } from '../main/settings';
 import { environment } from '../environments/environment'
 import { CertificatesServiceURL } from 'certificates/certificates.service';
 import { UnexpectedServerStatusError } from 'error/api-error';
@@ -42,7 +42,7 @@ const sidebarStyles = `
         <div *ngIf="webServer">
             <webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
             <div class="sidebar crumb" [class.nav]="_options.active">
-                <vtabs *ngIf="webServer" [markLocation]="true" (activate)="_options.refresh()" [defaultTab]="'Web Sites'">
+                <vtabs *ngIf="webServer" [markLocation]="true" (activate)="_options.refresh()" [defaultTab]="defaultTab">
                     <item [name]="'Web Server'" [ico]="'fa fa-wrench'">
                         <webserver-general [model]="webServer"></webserver-general>
                     </item>
@@ -59,6 +59,7 @@ export class WebServerComponent {
     webServer: WebServer;
     modules: Array<any> = [];
     failure: string;
+    defaultTab: string = WebSitesModuleName;
 
     constructor(
         @Inject('WebServerService') private _service: WebServerService,

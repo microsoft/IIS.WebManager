@@ -13,7 +13,6 @@ import { DynamicComponent } from '../common/dynamic.component';
             width: 100%;
             position: absolute;
             top: 0;
-            margin-top: 35px;
             color: #444;
             overflow: hidden;
             font-size:12px;
@@ -21,9 +20,8 @@ import { DynamicComponent } from '../common/dynamic.component';
         .exit {
             cursor: pointer;
             position: absolute;
-            right: 15px;
-            top: 10px;
-            font-size: 120%;
+            right: 2em;
+            top: 0.5em;
         }
         .entry {
             position:relative;
@@ -40,7 +38,7 @@ import { DynamicComponent } from '../common/dynamic.component';
             </div>
             <div [hidden]="!_active">
                 <div *ngFor="let notification of _notifications; let i = index;" [hidden]="notification._hidden" class="entry background-normal border-active">
-                    <i class="fa fa-times exit" (click)="dismiss(i)" title="Dismiss"></i>
+                    <i class="fa fa-times fa-lg exit" (click)="dismiss(i)" title="Dismiss"></i>
                     <dynamic [name]="notification.componentName" [module]="notification.module" [data]="notification.data" [eager]="true"></dynamic>
                 </div>
             </div>
@@ -53,7 +51,7 @@ export class NotificationComponent implements OnDestroy {
     private _notifications: Array<Notification> = [];
     private _warningTimer: NodeJS.Timer;
     private _subscriptions: Subscription[] = [];
-    private _warningTimeout: number = 30 * 1000; // ms
+    private _warningTimeout: number = 30 * 1000; // warning is shown for 30 seconds unless closed manually
     private _showNext: boolean = true;
 
     @ViewChildren(DynamicComponent) private _dynamics: QueryList<DynamicComponent>;

@@ -35,7 +35,7 @@ export class BreadcrumbsComponent implements OnDestroy {
     }
 
     onClick(crumb: Breadcrumb) {
-        this.router.navigate(crumb.RouterLink, { replaceUrl: true });
+        this.router.navigate(crumb.RouterLink, {});
     }
     
     ngOnDestroy(): void {
