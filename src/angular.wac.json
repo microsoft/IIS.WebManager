@@ -15,8 +15,8 @@
                   "with": "app/main/app.addon.wac.ts"
                 },
                 {
-                  "replace": "app/main/main.ts",
-                  "with": "app/main/main.wac.ts"
+                  "replace": "app/main/bootstrap.ts",
+                  "with": "app/main/bootstrap.wac.ts"
                 },
                 {
                   "replace": "app/environments/environment.ts",
@@ -35,8 +35,8 @@
                   "with": "app/main/app.addon.wac.ts"
                 },
                 {
-                  "replace": "app/main/main.ts",
-                  "with": "app/main/main.wac.ts"
+                  "replace": "app/main/bootstrap.ts",
+                  "with": "app/main/bootstrap.wac.ts"
                 },
                 {
                   "replace": "app/environments/environment.ts",
