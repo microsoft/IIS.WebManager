@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core'
 import { AppContextService } from '@microsoft/windows-admin-center-sdk/angular'
-import { PowerShell, PowerShellSession } from '@microsoft/windows-admin-center-sdk/core'
+import { PowerShell, PowerShellSession, PowerShellResult } from '@microsoft/windows-admin-center-sdk/core'
 import { Observable } from 'rxjs'
 import { PowerShellScripts } from 'generated/powershell-scripts'
 import { Request, Response, ResponseOptions, Headers } from '@angular/http'
@@ -86,9 +86,21 @@ export class PowershellService {
       mergeMap(ps => ps.powerShell.run(compiled)),
       // instrument(this.logger, `${scriptName} => ${JSON.stringify(psParameters)}`),
       logError(this.logger, LogLevel.WARN, `Script ${scriptName} failed`),
-      mergeMap(response => {
+      mergeMap((response: PowerShellResult) => {
         if (!response) {
           throw `Powershell command ${scriptName} returns no response`;
+        }
+        if (response.warning) {
+          this.logger.log(LogLevel.WARN, `Powershell command ${scriptName} returns the following warnings`)
+          for (const line of response.warning) {
+            this.logger.log(LogLevel.WARN, line);
+          }
+        }
+        if (response.errors) {
+          this.logger.log(LogLevel.ERROR, `Powershell command ${scriptName} returns the following errors`)
+          for (const line of response.errors) {
+            this.logger.log(LogLevel.ERROR, line);
+          }
         }
         if (!response.results) {
           throw `Powershell command ${scriptName} returns null response`;

@@ -129,7 +129,7 @@ export class WACRuntime implements Runtime {
                         errContent = JSON.parse(e.response.exception);
                     } catch (e) {
                         this._logger.log(LogLevel.INFO,
-                            `Unable to parse error message ${e.response.exception}, the error must be unexpected`);
+                            `Unable to parse error message ${e}, the error must be unexpected`);
                     }
                     if (errContent) {
                         if (errContent.Type === 'PREREQ_BELOW_MIN_VERSION') {

@@ -67,14 +67,14 @@ export class VTabsComponent implements OnDestroy {
         private _router: Router,
     ) {
         this.tabs = [];
-        this._default = this._activatedRoute.snapshot.params["section"];
-        if (this._default && this._default.startsWith(":")) {
-            this._default = this._default.substring(1);
-        }
     }
 
     public ngAfterViewInit() {
-        this._sectionHelper = new SectionHelper(this.tabs.map(t => t.name), this.defaultTab ? this.defaultTab : this._default, this.markLocation, this._location, this._router);
+        this._default = this._activatedRoute.snapshot.params["section"];
+        if (!this._default) {
+            this._default = this.defaultTab;
+        }
+        this._sectionHelper = new SectionHelper(this.tabs.map(t => t.name), this._default, this.markLocation, this._location, this._router);
 
         this._subscriptions.push(this._sectionHelper.active.subscribe(sec => this.onSectionChange(sec)));
 

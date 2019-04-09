@@ -150,7 +150,7 @@ function EnsureMinVersion($appName, $appInfo, $minVersion) {
             }
         }
     } else {
-        LogVerbose "Unable to determine app version, skipping..."
+        Write-Warning "Unable to determine app version, skipping..."
     }
 }
 
@@ -242,7 +242,7 @@ LogVerbose 'Started admin_api_util...'
 if ($install) {
     InstallComponents
 } else {
-    $appInfo = Get-Item "HKLM:\SYSTEM\CurrentControlSet\Services\$serviceName"
+    $appInfo = Get-Item "HKLM:\SYSTEM\CurrentControlSet\Services\$serviceName" -ErrorAction SilentlyContinue
     if ($appInfo) {
         EnsureMinVersion $serviceName $appInfo $appMinVersion
     }
