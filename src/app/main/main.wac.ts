@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import './polyfills.ts';
-import { environment } from 'environments/environment';
+import { IsProduction } from 'environments/environment';
 import { AppModule } from './app.module';
 import { CoreEnvironment } from '@microsoft/windows-admin-center-sdk/core';
 import { enableProdMode, ApplicationRef } from '@angular/core';
@@ -10,10 +10,10 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { PowerShellScripts } from '../generated/powershell-scripts';
 import { enableDebugTools } from '@angular/platform-browser';
 
-function bootstrapModule() {
-    var moduleTask = platformBrowserDynamic().bootstrapModule(AppModule);
-    if (!environment.Production) {
-        moduleTask.then(moduleRef => {
+function loadApp() {
+    const loadAppTask = platformBrowserDynamic().bootstrapModule(AppModule)
+    if (!IsProduction) {
+        loadAppTask.then(moduleRef => {
             const applicationRef = moduleRef.injector.get(ApplicationRef);
             const componentRef = applicationRef.components[0];
             // allows to run `ng.profiler.timeChangeDetection();`
@@ -22,7 +22,7 @@ function bootstrapModule() {
     }
 }
 
-if (environment.Production) {
+if (IsProduction) {
     enableProdMode();
 }
 
@@ -31,7 +31,7 @@ CoreEnvironment.initialize(
     {
         name: "microsoft.iis",
         powerShellModuleName: PowerShellScripts.module,
-        isProduction: environment.production,
+        isProduction: IsProduction,
         shellOrigin: '*'
     },
     {
@@ -40,4 +40,4 @@ CoreEnvironment.initialize(
     {
         disableStyleInjection: true,
     })
-    .then(bootstrapModule);
+    .then(loadApp);

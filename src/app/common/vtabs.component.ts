@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs'
 import { DynamicComponent } from './dynamic.component';
 import { SectionHelper } from './section.helper';
-import { environment } from 'environments/environment';
+import { IsWAC } from 'environments/environment'
 
 @Component({
     selector: 'vtabs',
@@ -212,7 +212,7 @@ export class Item implements OnInit, OnDestroy {
     }
 
     private isWAC() {
-        return environment.WAC;
+        return IsWAC;
     }
     
     activate() {

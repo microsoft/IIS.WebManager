@@ -5,7 +5,7 @@ import { LoadingService } from '../notification/loading.service';
 import { WindowService } from './window.service';
 import { Runtime } from '../runtime/runtime';
 import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
-import { environment } from 'environments/environment';
+import { IsWAC } from 'environments/environment';
 import { BreadcrumbsService } from 'header/breadcrumbs.service';
 
 @Component({
@@ -76,7 +76,7 @@ export class AppComponent implements OnInit {
     }
 
     get isWAC() {
-        return environment.WAC;
+        return IsWAC;
     }
 
     private dragOver(e: DragEvent) {

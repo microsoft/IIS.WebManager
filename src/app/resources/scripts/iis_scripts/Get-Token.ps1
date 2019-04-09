@@ -38,7 +38,7 @@ if ($verbose) {
         mkdir $logDir | Out-Null
     }
     $timestamp = Get-Date -Format "yyyyMMddTHHmmssffffZ"
-    $logFile = Join-Path $logDir "token_utils-${timestamp}-${sessionId}.log"
+    $logFile = Join-Path $logDir "Get-Token-${timestamp}-${sessionId}.log"
 }
 
 function LogVerbose([string] $msg) {

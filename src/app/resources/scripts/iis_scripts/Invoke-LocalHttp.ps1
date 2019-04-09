@@ -23,7 +23,7 @@ if ($verbose) {
         mkdir $logDir | Out-Null
     }
     $timestamp = Get-Date -Format "yyyyMMddTHHmmssffffZ"
-    $logFile = Join-Path $logDir "local_http-${timestamp}-${sessionId}.log"
+    $logFile = Join-Path $logDir "Invoke-LocalHttp-${timestamp}-${sessionId}.log"
 }
 
 function LogVerbose([string] $msg) {

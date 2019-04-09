@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
-import { Observable, ObservableInput, OperatorFunction } from "rxjs";
+import { Observable, OperatorFunction } from "rxjs";
 import { tap } from "rxjs/operators";
+import { IsProduction } from "environments/environment";
 
 export enum LogLevel {
     NONE = -1,
@@ -44,16 +45,34 @@ class ConsoleLogger implements Logger {
     }
 }
 
+export function instrument<T>(logger: Logger, name: string): OperatorFunction<T, T> {
+    if (IsProduction) {
+        return (o: Observable<T>): Observable<T> => o;
+    } else {
+        logger.log(LogLevel.DEBUG, `${new Date().toISOString()}: ${name} scheduled`);
+        return (o: Observable<T>): Observable<T> => o.pipe(tap(
+            _ => {
+                logger.log(LogLevel.DEBUG, `${new Date().toISOString()}: ${name} returned value`);
+            },
+            _ => {
+                logger.log(LogLevel.DEBUG, `${new Date().toISOString()}: ${name} returned error`);
+            },
+            () => {
+                logger.log(LogLevel.DEBUG, `${new Date().toISOString()}: ${name} completed`);
+            }
+        ));
+    }
+}
+
 export function logError<T>(logger: Logger, level: LogLevel, message: string): OperatorFunction<T, T> {
-    return (o: Observable<T>): Observable<T> => {
-        return o.pipe(tap(
+    return (o: Observable<T>): Observable<T> =>
+        o.pipe(tap(
             null,
             err => {
                 logger.log(level, message);
                 logger.log(level, err);
             },
         ));
-    };
 }
 
 @Injectable()

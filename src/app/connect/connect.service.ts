@@ -6,7 +6,7 @@ import { ConnectionStore } from './connection-store';
 import { NotificationService } from '../notification/notification.service';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map, catchError } from 'rxjs/operators'
-import { environment } from '../environments/environment';
+import { IsWAC } from 'environments/environment';
 import { ApiErrorType } from 'error/api-error';
 import { HttpFacade } from 'common/http-facade';
 
@@ -59,7 +59,7 @@ export class ConnectService {
         this._pingPopup.close();
 
         // Open ping popup window which can only be opened as the result of a user click event
-        if (!environment.WAC && popup) {
+        if (!IsWAC && popup) {
             this._pingPopup.open(conn.url + "/ping");
 
             // Raw request to url causes certificate acceptance prompt on IE.
@@ -150,7 +150,7 @@ export class ConnectService {
                     this.error(conn, _ => this._notificationSvc.invalidAccessToken());
                     return Promise.reject("Could not connect: Unauthorized.");
                 }
-                else if (environment.WAC && e.status == 0) {
+                else if (IsWAC && e.status == 0) {
                     return Promise.reject(ApiErrorType.Unreachable);
                 }
                 else {

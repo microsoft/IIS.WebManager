@@ -5,17 +5,17 @@ import { HttpClient } from '../common/http-client';
 import { WebServer } from './webserver';
 import { WebServerService } from './webserver.service';
 import { ComponentReference, FilesComponentName, WebSitesModuleName } from '../main/settings';
-import { environment } from '../environments/environment'
 import { CertificatesServiceURL } from 'certificates/certificates.service';
 import { UnexpectedServerStatusError } from 'error/api-error';
 import { NotificationService } from 'notification/notification.service';
 import { Runtime } from 'runtime/runtime';
 import { BreadcrumbsService } from 'header/breadcrumbs.service';
 import { BreadcrumbsRoot, WebServerCrumb } from 'header/breadcrumb';
+import { IsWAC } from 'environments/environment';
 
 const sidebarStyles = `
 :host >>> .sidebar > vtabs .vtabs > .items {
-    top: ` + (environment.WAC ? 0 : 35) + `px;
+    top: ` + (IsWAC ? 0 : 35) + `px;
 }
 
 :host >>> .sidebar > vtabs .vtabs > .content {

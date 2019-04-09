@@ -2,7 +2,7 @@ import { Component, OnDestroy, Optional } from '@angular/core';
 import { LoadingService } from 'notification/loading.service';
 import { OptionsService } from 'main/options.service';
 import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
-import { environment } from 'environments/environment';
+import { IsWAC } from 'environments/environment';
 import { HomeModuleName } from './breadcrumb';
 
 @Component({
@@ -151,7 +151,7 @@ export class HeaderComponent implements OnDestroy {
     }
 
     get isWAC() {
-        return environment.WAC;
+        return IsWAC;
     }
 
     private get options() {
