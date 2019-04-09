@@ -87,8 +87,9 @@ function merge(obj1, obj2) {
 gulp.task('generate-angular-json', (_) => {
     var override = process.argv.slice(3).find(function(s, _, __) { return s.startsWith('--configuration=') || s.startsWith('-c=') })
     var scenario = override ? override.split('=').pop().split('.')[0] : 'site'
+    var mode = override.trim().endsWith('prod') ? 'prod' : 'debug'
     // merge the base json with the json file specific to the scenario
-    return gulp.src(['angular.template.json', `angular.${scenario}.json`])
+    return gulp.src(['angular.common.json', `angular.${scenario}.json`, `angular.${mode}.json`])
         .pipe(function() {
             let merged = {}
             function parseAndMerge(file) {

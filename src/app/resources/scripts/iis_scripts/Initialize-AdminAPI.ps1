@@ -170,7 +170,7 @@ function EnsureIISAdminStarted {
             }
             ThrowExpectedError @{
                 "Type" = "ADMIN_API_SERVICE_NOT_RUNNING";
-                "Status" = $service.Status
+                "Status" = $service.Status.ToString()
             }
         }
         throw

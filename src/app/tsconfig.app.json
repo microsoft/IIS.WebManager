@@ -1,8 +1,8 @@
 {
-  "extends": "../tsconfig.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "dist-app",
-    "types": []
+    "outDir": "./dist",
+    "types": ["node"],
   },
   "exclude": [
     "test-util/**/*",

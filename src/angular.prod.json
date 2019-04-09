@@ -1,0 +1,13 @@
+{"projects":
+  {
+    "microsoft.iis.web-manager": {
+      "architect": {
+        "build": {
+          "options": {
+            "tsConfig": "app/tsconfig.app.json"
+          }
+        }
+      }
+    }
+  }
+}

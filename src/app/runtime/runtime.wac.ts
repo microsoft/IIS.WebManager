@@ -117,7 +117,7 @@ export class WACRuntime implements Runtime {
     }
 
     public StartIISAdministration(): Observable<any> {
-        return this.powershellService.run(PowerShellScripts.Initialize_AdminAPI.script, {})
+        return this.powershellService.run(PowerShellScripts.Start_AdminAPI.script, {})
     }
 
     private GetApiKey(): Observable<ApiKey> {

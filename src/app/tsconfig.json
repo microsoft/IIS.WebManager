@@ -2,7 +2,6 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
-    "outDir": "./dist",
     "sourceMap": true,
     "declaration": false,
     "module": "commonjs",
@@ -13,7 +12,6 @@
     "typeRoots": [
       "node_modules/@types"
     ],
-    "types": ["node"],
     "lib": [
       "es2018",
       "dom"
