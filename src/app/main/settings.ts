@@ -34,17 +34,26 @@ export const UploadComponentName = "UploadComponent"
 export const WarningComponentName = "WarningComponent"
 export const AppModuleName = "AppModule"
 
+export const WebServerModuleName = "Web Server"
 export const WebSitesModuleName = "Web Sites"
 export const AppPoolsModuleName = "Application Pools"
+export const FilesModuleName = "Files"
+
+export const WebSitesApiName= "websites";
+export const AppPoolsApiName = "app_pools";
+export const FilesApiName = "files";
 
 export class ComponentReference {
     constructor(public name: string, public ico: string, public component_name: string, public api_name: string, public api_path: string) {}
 }
 
-export var GLOBAL_MODULES = [
-    new ComponentReference(WebSitesModuleName, "fa fa-globe", WebSiteListComponentName, "websites", "/api/webserver/websites?application_pool.id={appPoolId}"),
-    new ComponentReference(AppPoolsModuleName, "fa fa-cogs", AppPoolComponentName, "app_pools", "/api/webserver/application-pools"),
-    new ComponentReference("Files", "fa fa-files-o", WebFilesComponentName, "files", "/api/webserver/files/{id}"),
+const WebSitesContext = new ComponentReference(WebSitesModuleName, "fa fa-globe", WebSiteListComponentName, WebSitesApiName, "/api/webserver/websites");
+const AppPoolsContext = new ComponentReference(AppPoolsModuleName, "fa fa-cogs", AppPoolComponentName, "app_pools", "/api/webserver/application-pools");
+
+export const CONTEXT_MODULES: ComponentReference[] = [ WebSitesContext, AppPoolsContext ];
+
+const managementModules: ComponentReference[] = [
+    new ComponentReference(WebSitesModuleName, "fa fa-globe", WebSiteListComponentName, WebSitesApiName, "/api/webserver/websites?application_pool.id={appPoolId}"),
     new ComponentReference("Web Applications", "fa fa-code", WebAppListComponentName, "webapps", "/api/webserver/webapps?website.id={websiteid}&application_pool.id={apppoolid}"),
     new ComponentReference("Virtual Directories", "fa fa-folder-o", VdirListComponentName, "vdirs", "/api/webserver/virtual-directories?website.id={siteId}&webapp.id={appId}"),
     new ComponentReference("Authentication", "fa fa-sign-in", AuthenticationComponentName, "authentication", "/api/webserver/authentication/{id}"),
@@ -63,5 +72,14 @@ export var GLOBAL_MODULES = [
     new ComponentReference("Response Headers", "fa fa-arrow-down", HttpResponseHeadersComponentName, "response_headers", "/api/webserver/http-response-headers/{id}"),
     new ComponentReference("Request Tracing", "fa fa-flag-o", RequestTracingComponentName, "request_tracing", "/api/webserver/http-request-tracing/{id}"),
     new ComponentReference("Static Content", "fa fa-file-o", StaticContentComponentName, "static_content", "/api/webserver/static-content/{id}"),
-    new ComponentReference("Url Rewrite", "fa fa-exchange", UrlRewriteComponentName, "url_rewrite", "/api/webserver/url-rewrite/{id}")
+    new ComponentReference("Url Rewrite", "fa fa-exchange", UrlRewriteComponentName, "url_rewrite", "/api/webserver/url-rewrite/{id}"),
+    new ComponentReference(FilesModuleName, "fa fa-files-o", WebFilesComponentName, FilesApiName, "/api/webserver/files/{id}"),
 ]
+
+function toMap(components: ComponentReference[]) {
+    return components.reduce(
+        (map, ref, _) => map.set(ref.api_name, ref), new Map<string, ComponentReference>()
+    );
+}
+
+export const GLOBAL_MODULES = toMap(managementModules);

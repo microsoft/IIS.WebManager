@@ -1,47 +1,24 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-
-import {ModuleUtil} from '../../utils/module';
 import {DiffUtil} from '../../utils/diff';
 import {OptionsService} from '../../main/options.service';
-
 import {ApplicationPool} from './app-pool';
 import {AppPoolsService} from './app-pools.service';
 import { BreadcrumbsService } from 'header/breadcrumbs.service';
 import { BreadcrumbsRoot, AppPoolsCrumb, Breadcrumb, WebServerCrumb } from 'header/breadcrumb';
-
 
 @Component({
     template: `
         <not-found *ngIf="notFound"></not-found>
         <loading *ngIf="!(pool || notFound)"></loading>
         <app-pool-header *ngIf="pool" [pool]="pool" class="crumb-content" [class.sidebar-nav-content]="_options.active"></app-pool-header>
-
-        <div *ngIf="pool" class="sidebar crumb" [class.nav]="_options.active">
-            <vtabs [markLocation]="true" (activate)="_options.refresh()">
-                <item [name]="'General'" [ico]="'fa fa-wrench'">
-                    <app-pool-general [pool]="pool" (modelChanged)="onModelChanged()"></app-pool-general>
-                </item>
-                <item *ngFor="let module of modules" [name]="module.name" [ico]="module.ico">
-                    <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
-                </item>
-            </vtabs>
-        </div>
+        <feature-vtabs *ngIf="pool" [model]="pool" [resource]="'appPool'"></feature-vtabs>
         `,
-        styles: [`
-            :host >>> .sidebar > vtabs .vtabs > .items {
-                top: 35px;
-            }
-            :host >>> .sidebar > vtabs .vtabs > .content {
-                top: 96px;
-            }
-        `]
 })
 export class AppPoolComponent implements OnInit {
     private id: string;
     private pool: ApplicationPool;
     private notFound: boolean;
-    private modules: Array<any> = [];
     private _original: ApplicationPool;
 
     constructor(
@@ -58,12 +35,11 @@ export class AppPoolComponent implements OnInit {
         this._service.get(this.id)
             .then(p => {
                 this.setAppPool(p);
-                ModuleUtil.initModules(this.modules, this.pool, "appPool");
                 this.crumbs.load(
                     BreadcrumbsRoot.concat(
                         WebServerCrumb,
                         AppPoolsCrumb,
-                        <Breadcrumb>{ Label: p.name },
+                        <Breadcrumb>{ label: p.name },
                     ));
             })
             .catch(s => {

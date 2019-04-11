@@ -284,7 +284,7 @@ export class WebSitesService implements OnDestroy {
         else {
             // Update existing
             // Keep all _links
-            let links = site._links;
+            let links = site.links;
 
             if (s.application_pool && site.application_pool) {
                 DiffUtil.merge(s.application_pool, site.application_pool);
@@ -294,11 +294,11 @@ export class WebSitesService implements OnDestroy {
                 site[p] = s[p];
             }
 
-            for (var p in s._links) {
-                links[p] = s._links[p];
+            for (var p in s.links) {
+                links[p] = s.links[p];
             }
 
-            site._links = links;
+            site.links = links;
         }
 
         return false;

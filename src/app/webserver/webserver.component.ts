@@ -1,5 +1,4 @@
-import { Component, Inject } from '@angular/core';
-import { ModuleUtil } from '../utils/module';
+import { Component, Inject, OnInit } from '@angular/core';
 import { OptionsService } from '../main/options.service';
 import { HttpClient } from '../common/http-client';
 import { WebServer } from './webserver';
@@ -11,22 +10,6 @@ import { NotificationService } from 'notification/notification.service';
 import { Runtime } from 'runtime/runtime';
 import { BreadcrumbsService } from 'header/breadcrumbs.service';
 import { BreadcrumbsRoot, WebServerCrumb } from 'header/breadcrumb';
-import { IsWAC } from 'environments/environment';
-
-const sidebarStyles = `
-:host >>> .sidebar > vtabs .vtabs > .items {
-    top: ` + (IsWAC ? 0 : 35) + `px;
-}
-
-:host >>> .sidebar > vtabs .vtabs > .content {
-    top: 96px;
-}
-
-.not-installed {
-    text-align: center;
-    margin-top: 50px;
-}
-`
 
 @Component({
     template: `
@@ -41,23 +24,18 @@ const sidebarStyles = `
         <span *ngIf="failure" class="color-error">{{failure}}</span>
         <div *ngIf="webServer">
             <webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
-            <div class="sidebar crumb" [class.nav]="_options.active">
-                <vtabs *ngIf="webServer" [markLocation]="true" (activate)="_options.refresh()" [defaultTab]="defaultTab">
-                    <item [name]="'Web Server'" [ico]="'fa fa-wrench'">
-                        <webserver-general [model]="webServer"></webserver-general>
-                    </item>
-                    <item *ngFor="let module of modules" [name]="module.name" [ico]="module.ico">
-                        <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
-                    </item>
-                </vtabs>
-            </div>
+            <feature-vtabs [model]="webServer" [resource]="'webserver'" [default]="defaultTab"></feature-vtabs>
         </div>
     `,
-    styles: [ sidebarStyles ]
+    styles: [ `
+.not-installed {
+    text-align: center;
+    margin-top: 50px;
+}
+`],
 })
-export class WebServerComponent {
+export class WebServerComponent implements OnInit {
     webServer: WebServer;
-    modules: Array<any> = [];
     failure: string;
     defaultTab: string = WebSitesModuleName;
 
@@ -73,16 +51,16 @@ export class WebServerComponent {
     ngOnInit() {
         this.server.then(ws => {
             this.webServer = ws;
-            ModuleUtil.initModules(this.modules, this.webServer, "webserver");
-            ModuleUtil.addModule(this.modules, "Certificates");
+            // TODO: add back certificate and files module
+            // ModuleUtil.addModule(this.modules, "Certificates");
 
-            // Insert files global module after application pools
-            let index = this.modules.findIndex(m => m.name.toLocaleLowerCase() == "application pools") + 1;
-            this.modules.splice(index, 0, new ComponentReference("Files", "fa fa-files-o", FilesComponentName, "files", "/api/files/{id}"));
-            this._http.head(CertificatesServiceURL, null, false)
-                .catch(_ => {
-                    this.modules = this.modules.filter(m => m.name.toLocaleLowerCase() !== 'certificates')
-                });
+            // // Insert files global module after application pools
+            // let index = this.modules.findIndex(m => m.name.toLocaleLowerCase() == "application pools") + 1;
+            // this.modules.splice(index, 0, new ComponentReference("Files", "fa fa-files-o", FilesComponentName, "files", "/api/files/{id}"));
+            // this._http.head(CertificatesServiceURL, null, false)
+            //     .catch(_ => {
+            //         this.modules = this.modules.filter(m => m.name.toLocaleLowerCase() !== 'certificates')
+            //     });
             this._crumbs.load(BreadcrumbsRoot.concat(WebServerCrumb));
         });
     }

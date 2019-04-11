@@ -1,6 +1,7 @@
-import {Status} from '../../common/status';
+import { Status } from 'common/status';
+import { FeatureContext } from 'common/feature-vtabs.component';
 
-export class ApplicationPool {
+export class ApplicationPool implements FeatureContext {
     name: string;
     id: string;
     status: Status;
@@ -15,7 +16,7 @@ export class ApplicationPool {
     recycling: Recycling;
     rapid_fail_protection: RapidFailProtection;
     process_orphaning: ProcessOrphaning;
-    _links: any;
+    links: any;
 }
 
 export type PipelineMode = "integrated" | "classic";

@@ -1,9 +1,9 @@
 
-import {NgModule, Directive, Input, ReflectiveInjector, ModuleWithComponentFactories, ComponentFactory, ViewContainerRef, NgModuleRef, ComponentRef, Compiler, OnInit, Injector} from '@angular/core';
+import {NgModule, Directive, Input, ReflectiveInjector, ViewContainerRef, NgModuleRef, ComponentRef, Compiler, OnInit, Injector} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {ComponentLoader} from './component-loader';
-import { ComponentReference } from '../main/settings';
+import { ComponentReference } from 'main/settings';
 
 @Directive({
     selector: 'dynamic',

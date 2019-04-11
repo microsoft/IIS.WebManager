@@ -178,17 +178,17 @@ export class AppPoolsService {
         else {
             // Update all properties
             // Keep all _links
-            let links = pool._links;
+            let links = pool.links;
 
             for (var k in p) {
                 pool[k] = p[k];
             }
 
-            for (var k in p._links) {
-                links[k] = p._links[k];
+            for (var k in p.links) {
+                links[k] = p.links[k];
             }
 
-            pool._links = links;
+            pool.links = links;
         }
 
         return false;

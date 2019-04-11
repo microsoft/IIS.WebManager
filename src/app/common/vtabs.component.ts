@@ -1,4 +1,4 @@
-import { NgModule, Component, Input, Output, ViewChildren, forwardRef, ContentChildren, QueryList, OnInit, ElementRef, Renderer, OnDestroy, EventEmitter } from '@angular/core';
+import { NgModule, Component, Input, Output, ViewChildren, forwardRef, ContentChildren, QueryList, OnInit, ElementRef, OnDestroy, EventEmitter, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -6,6 +6,8 @@ import { Subscription } from 'rxjs'
 import { DynamicComponent } from './dynamic.component';
 import { SectionHelper } from './section.helper';
 import { IsWAC } from 'environments/environment'
+import { Module as DynamicModule } from './dynamic.component'
+import { FeatureVTabsComponent } from './feature-vtabs.component';
 
 @Component({
     selector: 'vtabs',
@@ -46,7 +48,7 @@ import { IsWAC } from 'environments/environment'
         '(window:resize)': 'refresh()'
     }
 })
-export class VTabsComponent implements OnDestroy {
+export class VTabsComponent implements OnDestroy, AfterViewInit {
     @Input() markLocation: boolean;
     @Input() defaultTab: string;
     @Output() activate: EventEmitter<Item> = new EventEmitter();
@@ -70,10 +72,7 @@ export class VTabsComponent implements OnDestroy {
     }
 
     public ngAfterViewInit() {
-        this._default = this._activatedRoute.snapshot.params["section"];
-        if (!this._default) {
-            this._default = this.defaultTab;
-        }
+        this._default = this._activatedRoute.snapshot.params["section"] || this.defaultTab;
         this._sectionHelper = new SectionHelper(this.tabs.map(t => t.name), this._default, this.markLocation, this._location, this._router);
 
         this._subscriptions.push(this._sectionHelper.active.subscribe(sec => this.onSectionChange(sec)));
@@ -165,7 +164,15 @@ export class VTabsComponent implements OnDestroy {
 }
 
 @Component({
-    selector: 'vtabs > item',
+    selector: 'vtabs > category',
+    template: '<div></div>',
+})
+export class Category {
+    @Input() name: string;
+}
+
+@Component({
+    selector: '[vtabs > item][vtabs > category > item]',
     template: `
         <div *ngIf="!(!active)">
             <span id="vtabs-title" [tabindex]="isWAC() ? -1 : 0"></span>
@@ -249,14 +256,17 @@ export class Item implements OnInit, OnDestroy {
 }
 
 export const TABS: any[] = [
+    FeatureVTabsComponent,
     VTabsComponent,
-    Item
+    Category,
+    Item,
 ];
 
 @NgModule({
     imports: [
         FormsModule,
-        CommonModule
+        CommonModule,
+        DynamicModule,
     ],
     exports: [
         TABS

@@ -1,6 +1,7 @@
-import {WebSite} from '../websites/site';
+import { WebSite } from '../websites/site';
+import { FeatureContext } from 'common/feature-vtabs.component';
 
-export class WebApp {
+export class WebApp implements FeatureContext {
     id: string;
     path: string;
     location: string;
@@ -8,5 +9,5 @@ export class WebApp {
     enabled_protocols: string;
     website: WebSite;
     application_pool: any;
-    _links: any;
+    links: any;
 }

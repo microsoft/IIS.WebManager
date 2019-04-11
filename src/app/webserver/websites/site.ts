@@ -1,8 +1,8 @@
-import {Status} from '../../common/status';
-import {Certificate} from '../../certificates/certificate'
+import {Status} from 'common/status';
+import {Certificate} from 'certificates/certificate'
+import { FeatureContext } from 'common/feature-vtabs.component';
 
-
-export class WebSite {
+export class WebSite implements FeatureContext {
     name: string;
     id: string;
     physical_path: string;
@@ -15,7 +15,7 @@ export class WebSite {
     bindings: Array<Binding>;
     application_pool: any;
 
-    _links: any;
+    links: any;
 }
 
 export class Limits {
