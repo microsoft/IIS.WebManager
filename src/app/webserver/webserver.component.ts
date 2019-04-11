@@ -1,23 +1,21 @@
 import { Component, Inject } from '@angular/core';
-
 import { ModuleUtil } from '../utils/module';
 import { OptionsService } from '../main/options.service';
-
-import { HttpClient } from '../common/httpclient';
+import { HttpClient } from '../common/http-client';
 import { WebServer } from './webserver';
 import { WebServerService } from './webserver.service';
-import { ComponentReference, FilesComponentName } from '../main/settings';
-import { environment } from '../environments/environment'
+import { ComponentReference, FilesComponentName, WebSitesModuleName } from '../main/settings';
 import { CertificatesServiceURL } from 'certificates/certificates.service';
 import { UnexpectedServerStatusError } from 'error/api-error';
-import { Observable } from 'rxjs';
 import { NotificationService } from 'notification/notification.service';
 import { Runtime } from 'runtime/runtime';
-import { LoggerFactory, Logger } from 'diagnostics/logger';
+import { BreadcrumbsService } from 'header/breadcrumbs.service';
+import { BreadcrumbsRoot, WebServerCrumb } from 'header/breadcrumb';
+import { IsWAC } from 'environments/environment';
 
 const sidebarStyles = `
 :host >>> .sidebar > vtabs .vtabs > .items {
-    top: ` + (environment.WAC ? 0 : 35) + `px;
+    top: ` + (IsWAC ? 0 : 35) + `px;
 }
 
 :host >>> .sidebar > vtabs .vtabs > .content {
@@ -44,7 +42,7 @@ const sidebarStyles = `
         <div *ngIf="webServer">
             <webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
             <div class="sidebar crumb" [class.nav]="_options.active">
-                <vtabs *ngIf="webServer" [markLocation]="true" (activate)="_options.refresh()" [defaultTab]="'Web Sites'">
+                <vtabs *ngIf="webServer" [markLocation]="true" (activate)="_options.refresh()" [defaultTab]="defaultTab">
                     <item [name]="'Web Server'" [ico]="'fa fa-wrench'">
                         <webserver-general [model]="webServer"></webserver-general>
                     </item>
@@ -61,10 +59,12 @@ export class WebServerComponent {
     webServer: WebServer;
     modules: Array<any> = [];
     failure: string;
+    defaultTab: string = WebSitesModuleName;
 
     constructor(
         @Inject('WebServerService') private _service: WebServerService,
         @Inject('Runtime') private _runtime: Runtime,
+        private _crumbs: BreadcrumbsService,
         private _http: HttpClient,
         private _options: OptionsService,
         private _notifications: NotificationService,
@@ -83,7 +83,8 @@ export class WebServerComponent {
                 .catch(_ => {
                     this.modules = this.modules.filter(m => m.name.toLocaleLowerCase() !== 'certificates')
                 });
-        })
+            this._crumbs.load(BreadcrumbsRoot.concat(WebServerCrumb));
+        });
     }
 
     get service() {
@@ -98,7 +99,7 @@ export class WebServerComponent {
                         `Start Microsoft IIS Administration API`,
                         `Microsoft IIS Administration API is currently ${e.Status}. Do you want to start the service?`).then(confirmed => {
                         if (confirmed) {
-                            var sub = this._runtime.StartIISAdministration().subscribe(
+                            this._runtime.StartIISAdministration().subscribe(
                                 _ => {
                                     this._service.server.catch(ex => {
                                         reject(this.failure = `Unable to start Microsoft IIS Administration API Service, error ${ex}`)
@@ -110,7 +111,6 @@ export class WebServerComponent {
                                 _ => {
                                     reject(this.failure = `Unable to start Microsoft IIS Administration API Service, error: ${e}`)
                                 },
-                                () => { sub.unsubscribe() },
                             )
                         } else {
                             reject(this.failure = `Web Server Module cannot be initialized. Current Microsoft IIS Administration API Service status: ${e.Status}`)

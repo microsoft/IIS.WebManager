@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs'
 import { DynamicComponent } from './dynamic.component';
 import { SectionHelper } from './section.helper';
-import { environment } from 'environments/environment';
+import { IsWAC } from 'environments/environment'
 
 @Component({
     selector: 'vtabs',
@@ -20,8 +20,7 @@ import { environment } from 'environments/environment';
                     [ngClass]="{active: tab.active}"
                     (keyup.space)="selectItem(i)"
                     (keyup.enter)="selectItem(i)"
-                    (click)="selectItem(i)"
-                >
+                    (click)="selectItem(i)">
                     <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
                 </li>
             </ul>
@@ -56,26 +55,26 @@ export class VTabsComponent implements OnDestroy {
 
     private _default: string;
     private _selectedIndex = -1;
-    private _menuOn: boolean = false;
     private _tabsItems: Array<ElementRef>;
-    private _hashCache: Array<string> = [];
     private _sectionHelper: SectionHelper;
     private _subscriptions: Array<Subscription> = [];
     @ViewChildren('item') private _tabList: QueryList<ElementRef>;
     @ContentChildren(forwardRef(() => Item)) its: QueryList<Item>;
 
-    constructor(private _elem: ElementRef,
-        private _renderer: Renderer,
+    constructor(
         private _activatedRoute: ActivatedRoute,
         private _location: Location,
-        private _router: Router) {
-
+        private _router: Router,
+    ) {
         this.tabs = [];
-        this._default = this._activatedRoute.snapshot.params["section"];
     }
 
     public ngAfterViewInit() {
-        this._sectionHelper = new SectionHelper(this.tabs.map(t => t.name), this.defaultTab ? this.defaultTab : this._default, this.markLocation, this._location, this._router);
+        this._default = this._activatedRoute.snapshot.params["section"];
+        if (!this._default) {
+            this._default = this.defaultTab;
+        }
+        this._sectionHelper = new SectionHelper(this.tabs.map(t => t.name), this._default, this.markLocation, this._location, this._router);
 
         this._subscriptions.push(this._sectionHelper.active.subscribe(sec => this.onSectionChange(sec)));
 
@@ -156,10 +155,6 @@ export class VTabsComponent implements OnDestroy {
         this.activate.emit(this.tabs[index]);
     }
 
-    private showMenu(show: boolean) {
-        this._menuOn = (show == null) ? true : show;
-    }
-
     private refresh() {
         if (!this._tabsItems || this._selectedIndex < 0) {
             return;
@@ -217,7 +212,7 @@ export class Item implements OnInit, OnDestroy {
     }
 
     private isWAC() {
-        return environment.WAC;
+        return IsWAC;
     }
     
     activate() {

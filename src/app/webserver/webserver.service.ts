@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, interval } from "rxjs";
 import { Status } from '../common/status';
-import { HttpClient } from '../common/httpclient';
+import { HttpClient } from '../common/http-client';
 import { ApiError, ApiErrorType } from '../error/api-error';
 import { WebServer } from './webserver';
 

@@ -1,4 +1,2 @@
-export const environment: any = {
-    Production: false,
-    WAC: true,
-}
+export const IsProduction = false;
+export const IsWAC = true;

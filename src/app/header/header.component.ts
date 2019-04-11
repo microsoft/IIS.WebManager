@@ -1,15 +1,16 @@
 import { Component, OnDestroy, Optional } from '@angular/core';
-import { LoadingService } from '../notification/loading.service';
-import { OptionsService } from '../main/options.service';
+import { LoadingService } from 'notification/loading.service';
+import { OptionsService } from 'main/options.service';
 import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
-import { environment } from 'environments/environment';
+import { IsWAC } from 'environments/environment';
+import { HomeModuleName } from './breadcrumb';
 
 @Component({
     selector: 'header',
     template: `
         <div *ngIf="!isWAC" class="nav background-active sme-focus-zone">
                 <button class="fa fa-bars nav-item nav-options hover-primary2" [attr.title]="this.options.active ? 'Hide Sidebar' : 'Show Sidebar'" (click)="this.options.toggle()" [class.background-primary2]="this.options.active"></button>
-                <a [routerLink]="['/']" title="Home" class="nav-brand nav-item background-active hover-primary2 nav-height">
+                <a [routerLink]="['/']" title="${HomeModuleName}" class="nav-brand nav-item background-active hover-primary2 nav-height">
                     <span class="v-center hidden-xs">Microsoft IIS</span>
                     <span class="v-center visible-xs">IIS</span>
                 </a>
@@ -150,7 +151,7 @@ export class HeaderComponent implements OnDestroy {
     }
 
     get isWAC() {
-        return environment.WAC;
+        return IsWAC;
     }
 
     private get options() {

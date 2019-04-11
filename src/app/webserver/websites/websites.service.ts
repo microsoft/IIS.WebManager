@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy, Inject, Optional } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
 import { DiffUtil } from '../../utils/diff';
-import { HttpClient } from '../../common/httpclient';
+import { HttpClient } from '../../common/http-client';
 import { Status } from '../../common/status';
 import { WebSite, Binding } from './site';
 import { WebServerService } from '../webserver.service';

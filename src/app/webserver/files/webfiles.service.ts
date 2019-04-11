@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Subscription, BehaviorSubject, Observable} from 'rxjs';
 import { startWith, pairwise } from 'rxjs/operators';
-import { HttpClient } from '../../common/httpclient';
+import { HttpClient } from '../../common/http-client';
 import { IDisposable } from '../../common/IDisposable';
 import { NotificationService } from '../../notification/notification.service';
 import { FilesService } from '../../files/files.service';

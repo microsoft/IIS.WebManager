@@ -4,7 +4,7 @@ import { IDisposable } from '../../common/idisposable';
 import { ChangeType } from '../../files/file';
 import { FilesService } from '../../files/files.service';
 import { Status } from '../../common/status';
-import { HttpClient } from '../../common/httpclient';
+import { HttpClient } from '../../common/http-client';
 import { RequestTracing, Provider, RequestTracingRule, TraceLog } from './request-tracing';
 import { ActivatedRoute } from '@angular/router';
 import { IsWebServerScope } from 'runtime/runtime';

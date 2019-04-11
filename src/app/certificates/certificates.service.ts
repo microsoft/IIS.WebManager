@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Response, RequestOptionsArgs, Headers } from '@angular/http';
 import { Observable, Subscription, Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
-import { HttpClient } from '../common/httpclient';
+import { HttpClient } from '../common/http-client';
 import { Certificate } from './certificate'
 
 export const CertificatesServiceURL: string = "/certificates/";

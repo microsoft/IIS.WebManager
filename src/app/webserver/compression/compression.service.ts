@@ -3,7 +3,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
 import { ResponseCompression } from './compression';
-import { HttpClient } from '../../common/httpclient';
+import { HttpClient } from '../../common/http-client';
 import { ApiError, ApiErrorType } from '../../error/api-error';
 import { ActivatedRoute } from '@angular/router';
 import { IsWebServerScope } from 'runtime/runtime';

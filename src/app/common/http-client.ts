@@ -7,8 +7,8 @@ import {ApiError, ApiErrorType} from '../error/api-error';
 import {ConnectService} from '../connect/connect.service';
 import {Runtime} from '../runtime/runtime';
 import {HttpFacade} from './http-facade';
-import {Observable, throwError} from 'rxjs';
-import {finalize, catchError, mergeMap, take} from 'rxjs/operators';
+import {Observable, throwError, of} from 'rxjs';
+import {finalize, catchError, mergeMap } from 'rxjs/operators';
 
 @Injectable()
 export class HttpClient {
@@ -80,11 +80,13 @@ export class HttpClient {
 
     public request(url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<Response> {
         return this.requestOnConnection(url, options, warn).pipe(
-            take(1),
-            catchError(e => {
-                if (this.runtime.HandleConnectError(e)) {
-                    return throwError(e);
+            catchError((e, _) => {
+                var unhandled = this.runtime.HandleConnectError(e);
+                if (unhandled) {
+                    return throwError(unhandled);
                 }
+                // HandleConnectError should have handled the error such as navigating away, no result is emitted.
+                return of(null);
             }),
         ).toPromise();
     }
@@ -107,8 +109,8 @@ export class HttpClient {
         if (this._conn) {
             return this.performRequest(this._conn, url, options, warn)
         } else {
-            return this.runtime.ConnectToIISHost().pipe(mergeMap(connection =>
-                this.performRequest(connection, url, options, warn))
+            return this.runtime.ConnectToIISHost().pipe(
+                mergeMap(connection => this.performRequest(connection, url, options, warn))
             )
         }
     }
@@ -155,7 +157,7 @@ export class HttpClient {
                     detail: JSON.stringify(e),
                 })
                 this._notificationService.apiError(apiError)
-                throwError(apiError)
+                return throwError(apiError)
             })
         )
     }

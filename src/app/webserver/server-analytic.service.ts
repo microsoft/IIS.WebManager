@@ -1,6 +1,6 @@
 ﻿import { Injectable, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { HttpClient } from '../common/httpclient';
+import { HttpClient } from '../common/http-client';
 import { ApiConnection } from '../connect/api-connection';
 import { ConnectService } from '../connect/connect.service';
 import { SETTINGS } from '../main/settings';

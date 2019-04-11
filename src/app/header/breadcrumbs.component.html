@@ -1,0 +1,8 @@
+
+<ul class="breadcrumbs sme-focus-zone">
+    <li *ngFor="let crumb of Crumbs; index as i">
+        <span *ngIf="!(crumb.RouterLink)">{{crumb.Label}}</span>
+        <a *ngIf="crumb.RouterLink" [routerLink]="crumb.RouterLink">{{crumb.Label}}</a>
+        <span class="separator" *ngIf="i != Crumbs.length - 1">&gt;</span>
+    </li>
+</ul>

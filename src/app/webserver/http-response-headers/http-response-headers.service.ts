@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { HttpClient } from '../../common/httpclient';
+import { HttpClient } from '../../common/http-client';
 import { HttpResponseHeaders, CustomHeader, RedirectHeader } from './http-response-headers';
 
 @Injectable()

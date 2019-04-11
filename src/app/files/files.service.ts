@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RequestMethod, RequestOptionsArgs, Response } from '@angular/http';
 import { Subject, Observable, Subscription, BehaviorSubject } from "rxjs";
-import { HttpClient } from '../common/httpclient';
+import { HttpClient } from '../common/http-client';
 import { NotificationService } from '../notification/notification.service';
 import { NotificationType } from '../notification/notification';
 import { Progress } from './progress';

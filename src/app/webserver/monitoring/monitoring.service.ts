@@ -1,6 +1,6 @@
 ﻿import { Injectable } from '@angular/core';
 import { Subscription, interval } from "rxjs";
-import { HttpClient } from '../../common/httpclient';
+import { HttpClient } from '../../common/http-client';
 import { ServerSnapshot } from './server-snapshot';
 
 @Injectable()

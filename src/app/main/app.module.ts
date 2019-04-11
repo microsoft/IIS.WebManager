@@ -13,7 +13,7 @@ import { Module as AutoFocus } from "../common/focus";
 import { Module as Tooltip } from "../common/tooltip.component";
 import { Module as Enum } from "../common/enum.component";
 import { Module as Selector } from "../common/selector";
-import { HttpClient } from "../common/httpclient";
+import { HttpClient } from "../common/http-client";
 import { NotificationService } from "../notification/notification.service";
 import { LoadingService } from "../notification/loading.service";
 import { VersionService } from "../versioning/version.service";
@@ -46,6 +46,8 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { Runtime } from "runtime/runtime";
 import { AppRoutingModule } from "./app-routing.module";
 import { ProvidersAddon, ModulesAddon } from "./app.addon";
+import { BreadcrumbsComponent } from "header/breadcrumbs.component";
+import { BreadcrumbsService } from "header/breadcrumbs.service";
 
 @NgModule({
     imports: [
@@ -82,7 +84,8 @@ import { ProvidersAddon, ModulesAddon } from "./app.addon";
         NotificationIndicator,
         ModalComponent,
         InformationComponent,
-        NewVersionNotificationComponent
+        NewVersionNotificationComponent,
+        BreadcrumbsComponent,
     ],
     providers: [
         HttpClient,
@@ -95,6 +98,7 @@ import { ProvidersAddon, ModulesAddon } from "./app.addon";
         LoggerFactory,
         OptionsService,
         Angulartics2GoogleAnalytics,
+        BreadcrumbsService,
 
         { provide: "WebServerService", useClass: WebServerService },
         { provide: "WebSitesService", useClass: WebSitesService },

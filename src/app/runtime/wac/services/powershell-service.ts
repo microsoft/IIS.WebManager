@@ -1,12 +1,13 @@
 import { Injectable, Inject } from '@angular/core'
 import { AppContextService } from '@microsoft/windows-admin-center-sdk/angular'
-import { PowerShell, PowerShellSession } from '@microsoft/windows-admin-center-sdk/core'
+import { PowerShell, PowerShellSession, PowerShellResult } from '@microsoft/windows-admin-center-sdk/core'
 import { Observable } from 'rxjs'
 import { PowerShellScripts } from 'generated/powershell-scripts'
 import { Request, Response, ResponseOptions, Headers } from '@angular/http'
 import { WACInfo } from 'runtime/runtime.wac'
-import { LoggerFactory, Logger, LogLevel, logError } from 'diagnostics/logger'
+import { LoggerFactory, Logger, LogLevel, logError, instrument } from 'diagnostics/logger'
 import { map, mergeMap, shareReplay } from 'rxjs/operators'
+import { IsProduction } from 'environments/environment';
 
 const PS_SESSION_KEY = 'wac-iis'
 
@@ -24,9 +25,7 @@ export class PowershellService {
     this.scheduleSession()
     // not exactly sure why we need to force evaluate this observable here
     // but if we don't, install page would not work
-    let sub = this.session.subscribe(_=>{},_=>{}, ()=>{
-      sub.unsubscribe()
-    })
+    this.session.subscribe()
     this.logger = loggerFactory.Create(this)
   }
 
@@ -51,7 +50,7 @@ export class PowershellService {
   public invokeHttp(req: Request): Observable<Response> {
     let requestEncoded = btoa(JSON.stringify(req))
     return this.invoke<ResponseOptions>(
-      PowerShellScripts.local_http.script,
+      PowerShellScripts.Invoke_LocalHttp.script,
       { requestBase64: requestEncoded },
       (k, v) => {
         switch (k) {
@@ -80,15 +79,28 @@ export class PowershellService {
 
   private invoke<T>(pwCmdString: string, psParameters: any, reviver: (key: any, value: any) => any = null): Observable<T> {
     psParameters.sessionId = this.sessionId;
-    var flags: string[] = [];  // use ['verbose'] to debug
+    var flags: string[] = IsProduction ? [] : [ 'verbose' ];
     var compiled: string = PowerShell.createScript(pwCmdString, psParameters, flags);
     var scriptName: string = pwCmdString.split("\n")[0]
     return this.session.pipe(
       mergeMap(ps => ps.powerShell.run(compiled)),
+      // instrument(this.logger, `${scriptName} => ${JSON.stringify(psParameters)}`),
       logError(this.logger, LogLevel.WARN, `Script ${scriptName} failed`),
-      mergeMap(response => {
+      mergeMap((response: PowerShellResult) => {
         if (!response) {
           throw `Powershell command ${scriptName} returns no response`;
+        }
+        if (response.warning) {
+          this.logger.log(LogLevel.WARN, `Powershell command ${scriptName} returns the following warnings`)
+          for (const line of response.warning) {
+            this.logger.log(LogLevel.WARN, line);
+          }
+        }
+        if (response.errors) {
+          this.logger.log(LogLevel.ERROR, `Powershell command ${scriptName} returns the following errors`)
+          for (const line of response.errors) {
+            this.logger.log(LogLevel.ERROR, line);
+          }
         }
         if (!response.results) {
           throw `Powershell command ${scriptName} returns null response`;

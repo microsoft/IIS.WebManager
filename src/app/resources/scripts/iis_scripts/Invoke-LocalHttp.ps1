@@ -23,7 +23,7 @@ if ($verbose) {
         mkdir $logDir | Out-Null
     }
     $timestamp = Get-Date -Format "yyyyMMddTHHmmssffffZ"
-    $logFile = Join-Path $logDir "local_http-${timestamp}-${sessionId}.log"
+    $logFile = Join-Path $logDir "Invoke-LocalHttp-${timestamp}-${sessionId}.log"
 }
 
 function LogVerbose([string] $msg) {
@@ -71,7 +71,7 @@ try {
         $requestContent = New-Object System.Net.Http.StringContent ([string] $reqObj._body)
         $httpMsg.Content = $requestContent
     }
-    foreach ($prop in $reqObj.headers | Get-Member -MemberType NoteProperty | Select-Object -ExpandProperty Name) {
+    foreach ($prop in $reqObj.headers | Get-Member -MemberType NoteProperty | Microsoft.PowerShell.Utility\Select-Object -ExpandProperty Name) {
         $headerValue = $reqObj.headers.$prop
         if (!$httpMsg.Headers.TryAddWithoutValidation($prop, $headerValue)) {
             $headerFixed = $false

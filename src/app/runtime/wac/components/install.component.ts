@@ -134,9 +134,8 @@ export class InstallComponent implements OnInit {
     }
 
     ngOnInit() {
-        let sub = this.route.queryParams.subscribe(params => {
+        this.route.queryParams.subscribe(params => {
             this.details = params['details'];
-            sub.unsubscribe();
         });
     }
 
@@ -194,7 +193,7 @@ export class InstallComponent implements OnInit {
         }
         
         this.inProgress = true;
-        var sub = this.runtime.PrepareIISHost(args).subscribe(_ => {}, e => {
+        this.runtime.PrepareIISHost(args).subscribe(_ => {}, e => {
             let reason = 'unknown';
             if (e.response && e.response.exception) {
                 reason = e.response.exception;
@@ -203,7 +202,6 @@ export class InstallComponent implements OnInit {
             this.inProgress = false;
         }, () => {
             this.router.navigate(['/']);
-            sub.unsubscribe();
         });
     }
 }

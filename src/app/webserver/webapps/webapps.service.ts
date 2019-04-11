@@ -1,7 +1,7 @@
 
 import {Injectable, Inject, Optional} from '@angular/core';
 import {BehaviorSubject, Observable, Subscription} from "rxjs";
-import {HttpClient} from '../../common/httpclient';
+import {HttpClient} from '../../common/http-client';
 import {WebSite} from '../websites/site'
 import {WebSitesService} from '../websites/websites.service';
 import {AppPoolsService} from '../app-pools/app-pools.service';

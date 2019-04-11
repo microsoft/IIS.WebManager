@@ -1,7 +1,7 @@
 import {Injectable, Optional} from '@angular/core';
 import {RequestMethod} from '@angular/http';
 import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
-import {HttpClient} from '../common/httpclient';
+import {HttpClient} from '../common/http-client';
 import {ConnectService} from '../connect/connect.service';
 import {SETTINGS} from '../main/settings';
 import {NotificationService} from '../notification/notification.service';

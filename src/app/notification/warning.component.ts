@@ -7,34 +7,29 @@ import { FormsModule } from '@angular/forms';
     selector: 'warning',
     styles: [`
         .warning {
-            padding-left: 45px;
+            padding-left: 2em;
             padding-right: 45px;
-            min-height: 80px;
-            line-height: 80px;
-            text-align: center;
-            background-color: #ffff7f;
+            background-color: #ffffcf;
         }
-        .v-center {
-            text-align: center;
+        .warning-text {
+            text-align: left;
             line-height: normal;
             display: inline-block;
             vertical-align: middle;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+            padding-left: 0.5em;
         }
         .symbol {
             display: inline-block;
-            font-size: 34px;
-            position: absolute;
-            left: 0;
-            width: 45px;
-            text-align: center;
         }
     `],
     template: `
         <div class="warning" *ngIf="warning">
             <div class="symbol">
-                <i class="fa fa-exclamation" aria-hidden="true"></i>
+                <i class="fa fa-exclamation-circle fa-lg" aria-hidden="true"></i>
             </div>
-            <span class="v-center">
+            <span class="warning-text">
                 <div *ngFor="let line of getLines(_warning)">
                     {{line}}
                 </div>

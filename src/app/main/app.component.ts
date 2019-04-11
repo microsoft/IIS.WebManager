@@ -5,27 +5,13 @@ import { LoadingService } from '../notification/loading.service';
 import { WindowService } from './window.service';
 import { Runtime } from '../runtime/runtime';
 import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
-import { environment } from 'environments/environment';
+import { IsWAC } from 'environments/environment';
+import { BreadcrumbsService } from 'header/breadcrumbs.service';
 
 @Component({
     selector: 'app-root',
     styles: [`
         .content {
-            height: 100%;
-        }
-
-        #flexWrapper {
-             padding-top:35px;
-             overflow-x:hidden;
-             width:100%;
-             display: flex;
-             height: 100%;
-        }
-
-        #wacFlexWrapper {
-            overflow-x:hidden;
-            width:100%;
-            display: flex;
             height: 100%;
         }
 
@@ -56,6 +42,7 @@ export class AppComponent implements OnInit {
         private _loadingSvc: LoadingService,
         private _windowService: WindowService,
         private _renderer: Renderer,
+        private _crumbsSrv: BreadcrumbsService,
         @Inject("Runtime") private runtime: Runtime,
         angulartics2: Angulartics2,
         angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
@@ -76,6 +63,14 @@ export class AppComponent implements OnInit {
         return this._router.isActive(route, true);
     }
 
+    onActivate(component) {
+        // If the component does not have a breadcrumb service, clean up the breadcrumb
+        // otherwise the component itself is responsible for loading breadcrumb on itself
+        if (!Object.getOwnPropertyNames(component).find(name => component[name] instanceof BreadcrumbsService)) {
+            this._crumbsSrv.load([]);
+        }
+    }
+
     @HostListener('window:beforeunload', ['$event'])
     beforeUnloadHander(_) {
         this._loadingSvc.destroy()
@@ -83,7 +78,7 @@ export class AppComponent implements OnInit {
     }
 
     get isWAC() {
-        return environment.WAC;
+        return IsWAC;
     }
 
     private dragOver(e: DragEvent) {

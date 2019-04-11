@@ -16,9 +16,6 @@ param(
     [string]
     $sessionId,
 
-    [string]
-    $appName = "Microsoft IIS Administration",
-
     [Version]
     $appMinVersion,
 
@@ -73,7 +70,7 @@ if ($verbose) {
         mkdir $logDir | Out-Null
     }
     $timestamp = Get-Date -Format "yyyyMMddTHHmmssffffZ"
-    $logFile = Join-Path $logDir "admin_api_util-${timestamp}-${sessionId}.log"
+    $logFile = Join-Path $logDir "Initialize-AdminAPI-${timestamp}-${sessionId}.log"
 }
 
 function LogVerbose([string] $msg) {
@@ -129,23 +126,31 @@ function Install([string] $scenario, [string] $installType, [string] $location) 
     LogVerbose "Successfully installed $scenario"
 }
 
-function GetIISAdminAPIApp {
-    return Get-WMIObject -Class Win32_Product | Where-Object { $_.Name -eq $appName }
-}
-
 function ThrowExpectedError($err) {
     throw (ConvertTo-Json $err -Compress -Depth 100)
 }
 
-function EnsureMinVersion($app, $minVersion) {
-    $version = [Version]::Parse($app.Version)
-    if ($version -lt $minVersion) {
-        ThrowExpectedError @{
-            "Type" = "PREREQ_BELOW_MIN_VERSION";
-            "App" = $app.Name;
-            "Actual" = $version.ToString();
-            "Required" = $minVersion.ToString()
+function EnsureMinVersion($appName, $appInfo, $minVersion) {
+    $appCmdChunks = $appInfo.GetValue("ImagePath").split([System.IO.Path]::DirectorySeparatorChar)
+    $appVersion = $null
+    for ($i = $appCmdChunks.length - 1; $i -ge 0; $i--) {
+        try {
+            $appVersion = [Version]::Parse($appCmdChunks[$i])
+            break
+        } catch {}
+    }
+    if ($appVersion) {
+        LogVerbose "$appName installed, version: $appVersion"
+        if ($appVersion -lt $minVersion) {
+            ThrowExpectedError @{
+                "Type" = "PREREQ_BELOW_MIN_VERSION";
+                "App" = $appName;
+                "Actual" = $appVersion.ToString();
+                "Required" = $minVersion.ToString()
+            }
         }
+    } else {
+        Write-Warning "Unable to determine app version, skipping..."
     }
 }
 
@@ -159,7 +164,7 @@ function EnsureIISAdminStarted {
             if (!$service) {
                 ThrowExpectedError @{
                     "Type" = "ADMIN_API_SERVICE_NOT_FOUND";
-                    "App" = $appName
+                    "App" = $serviceName
                 }
             }
             if ($service.Status -eq [System.ServiceProcess.ServiceControllerStatus]::Running) {
@@ -170,7 +175,7 @@ function EnsureIISAdminStarted {
             }
             ThrowExpectedError @{
                 "Type" = "ADMIN_API_SERVICE_NOT_RUNNING";
-                "Status" = $service.Status
+                "Status" = $service.Status.ToString()
             }
         }
         throw
@@ -237,9 +242,9 @@ LogVerbose 'Started admin_api_util...'
 if ($install) {
     InstallComponents
 } else {
-    $app = GetIISAdminAPIApp
-    if ($app) {
-        EnsureMinVersion $app $appMinVersion
+    $appInfo = Get-Item "HKLM:\SYSTEM\CurrentControlSet\Services\$serviceName" -ErrorAction SilentlyContinue
+    if ($appInfo) {
+        EnsureMinVersion $serviceName $appInfo $appMinVersion
     }
     EnsureIISAdminStarted
     ## If we can't find the app, it might be ok because we may be in dev mode and the server is not installed
