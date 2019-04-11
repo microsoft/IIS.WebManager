@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "firefox",
+            "request": "launch",
+            "reAttach": true,
+            "name": "Firefox: Windows Admin Center",
+            "url": "http://localhost:6516",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome: Windows Admin Center",
+            "url": "http://localhost:6516",
+            "webRoot": "${workspaceFolder}"
+        }
+    ]
+}

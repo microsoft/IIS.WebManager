@@ -64,6 +64,8 @@ export class AppComponent implements OnInit {
     }
 
     onActivate(component) {
+        // If the component does not have a breadcrumb service, clean up the breadcrumb
+        // otherwise the component itself is responsible for loading breadcrumb on itself
         if (!Object.getOwnPropertyNames(component).find(name => component[name] instanceof BreadcrumbsService)) {
             this._crumbsSrv.load([]);
         }

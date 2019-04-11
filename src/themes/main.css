@@ -916,26 +916,3 @@ a.link:before {
     padding: 0 6px;
     content: ">";
 }
-
-.breadcrumbs {
-    display: inline;
-    position: sticky;
-    display: inline-block;
-    font-family: 'Segoe UI';
-    line-height: 30px;
-    padding-left: 10px;
-    margin-block-end: 0%;
-}
-
-.breadcrumbs li {
-    float: left;
-}
-
-.breadcrumbs .separator {
-    margin-right: 0.2em;
-    margin-left: 0.2em;
-}
-
-.breadcrumbs .pointer:hover {
-    text-decoration: underline;
-}

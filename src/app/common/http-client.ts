@@ -85,6 +85,7 @@ export class HttpClient {
                 if (unhandled) {
                     return throwError(unhandled);
                 }
+                // HandleConnectError should have handled the error such as navigating away, no result is emitted.
                 return of(null);
             }),
         ).toPromise();

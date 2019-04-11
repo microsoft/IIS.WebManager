@@ -45,6 +45,7 @@ class ConsoleLogger implements Logger {
     }
 }
 
+// Debug method: pipe a observable to this method to instrument its performance
 export function instrument<T>(logger: Logger, name: string): OperatorFunction<T, T> {
     if (IsProduction) {
         return (o: Observable<T>): Observable<T> => o;
