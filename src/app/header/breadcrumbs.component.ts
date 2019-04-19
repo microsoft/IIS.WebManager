@@ -70,15 +70,7 @@ export class BreadcrumbsComponent implements OnInit, OnDestroy {
             // close the observable on destroy, the subscription would be unsubscribed
             takeUntil(this.destroy),
         ).subscribe(
-            v => {
-                console.log(v);
-                // var thiss = this;
-                // if (v.length) {
-                //     debugger;
-                // }
-                this.Crumbs = v;
-                this.cd.detectChanges();
-            },
+            v => this.Crumbs = v,
             e => this.logger.log(LogLevel.WARN, `Error receiving crumb ${e}`),
         );
     }

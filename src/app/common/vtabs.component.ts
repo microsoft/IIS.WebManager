@@ -14,17 +14,19 @@ import { FeatureVTabsComponent } from './feature-vtabs.component';
     template: `
         <div class="vtabs">
             <ul class="items sme-focus-zone">
-                <li
-                    tabindex="0"
-                    #item
-                    class="hover-edit"
-                    *ngFor="let tab of tabs; let i = index;"
-                    [ngClass]="{active: tab.active}"
-                    (keyup.space)="selectItem(i)"
-                    (keyup.enter)="selectItem(i)"
-                    (click)="selectItem(i)">
-                    <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
-                </li>
+                <ng-container *ngFor="let category of getCategories()">
+                    <li *ngIf="!!category" class="separator"><div class="horizontal-strike"><span>{{category}}</span></div></li>
+                    <li tabindex="0"
+                        #item
+                        class="hover-edit"
+                        *ngFor="let tab of getTabs(category)"
+                        [ngClass]="{active: tab.active}"
+                        (keyup.space)="selectItem(tab)"
+                        (keyup.enter)="selectItem(tab)"
+                        (click)="selectItem(tab)">
+                        <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
+                    </li>
+                </ng-container>
             </ul>
             <div class="content sme-focus-zone">
                 <ng-content></ng-content>
@@ -60,8 +62,10 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     private _tabsItems: Array<ElementRef>;
     private _sectionHelper: SectionHelper;
     private _subscriptions: Array<Subscription> = [];
+    @Input() categories: string[];
+    categorizedTabs: Map<string, Item[]> = new Map<string, Item[]>();
+
     @ViewChildren('item') private _tabList: QueryList<ElementRef>;
-    @ContentChildren(forwardRef(() => Item)) its: QueryList<Item>;
 
     constructor(
         private _activatedRoute: ActivatedRoute,
@@ -74,18 +78,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     public ngAfterViewInit() {
         this._default = this._activatedRoute.snapshot.params["section"] || this.defaultTab;
         this._sectionHelper = new SectionHelper(this.tabs.map(t => t.name), this._default, this.markLocation, this._location, this._router);
-
         this._subscriptions.push(this._sectionHelper.active.subscribe(sec => this.onSectionChange(sec)));
-
-        this._subscriptions.push(this.its.changes.subscribe(change => {
-            let arr: Array<Item> = change.toArray();
-            arr.forEach(item => {
-                if (!this.tabs.find(t => t == item)) {
-                    this.addTab(item);
-                }
-            });
-        }));
-
         this._tabsItems = this._tabList.toArray();
         window.setTimeout(() => {
             this.refresh();
@@ -104,6 +97,11 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     }
 
     public addTab(tab: Item) {
+        const category = tab.category || "";
+        if (!this.categorizedTabs[category]) {
+            this.categorizedTabs[category] = [];
+        }
+        this.categorizedTabs[category].push(tab);
         if (this._selectedIndex === -1 && (this.tabs.length === 0 && !this._default || SectionHelper.normalize(tab.name) == this._default)) {
             tab.activate();
             this._selectedIndex = this.tabs.length;
@@ -126,16 +124,21 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         }
     }
 
-    private selectItem(index: number) {
-        let tab = this.tabs[index];
+    public getCategories() {
+        return this.categories || this.categorizedTabs.keys();
+    }
 
+    public getTabs(category: string) {
+        return this.categorizedTabs[category];
+    }
+
+    selectItem(tab: Item) {
         if (!tab.routerLink) {
             this._sectionHelper.selectSection(tab.name);
         }
         else {
             tab.activate();
         }
-        
         // set input focus to the title element of the newly activated tab
         tab.focusTitle();
     }
@@ -164,15 +167,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
 }
 
 @Component({
-    selector: 'vtabs > category',
-    template: '<div></div>',
-})
-export class Category {
-    @Input() name: string;
-}
-
-@Component({
-    selector: '[vtabs > item][vtabs > category > item]',
+    selector: 'vtabs > item',
     template: `
         <div *ngIf="!(!active)">
             <span id="vtabs-title" [tabindex]="isWAC() ? -1 : 0"></span>
@@ -203,6 +198,7 @@ export class Category {
     `],
 })
 export class Item implements OnInit, OnDestroy {
+    @Input() category: string
     @Input() name: string;
     @Input() ico: string = "";
     @Input() visible: boolean = true;
@@ -258,7 +254,6 @@ export class Item implements OnInit, OnDestroy {
 export const TABS: any[] = [
     FeatureVTabsComponent,
     VTabsComponent,
-    Category,
     Item,
 ];
 

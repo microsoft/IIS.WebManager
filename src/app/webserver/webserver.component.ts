@@ -24,7 +24,7 @@ import { BreadcrumbsRoot, WebServerCrumb } from 'header/breadcrumb';
         <span *ngIf="failure" class="color-error">{{failure}}</span>
         <div *ngIf="webServer">
             <webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
-            <feature-vtabs [model]="webServer" [resource]="'webserver'" [default]="defaultTab"></feature-vtabs>
+            <feature-vtabs [model]="webServer" [resource]="'webserver'" [default]="defaultTab" [subcategory]="'Web Server'"></feature-vtabs>
         </div>
     `,
     styles: [ `

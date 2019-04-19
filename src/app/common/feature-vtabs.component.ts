@@ -4,6 +4,8 @@ import { OptionsService } from "main/options.service";
 import { UrlUtil } from "utils/url";
 import { LoggerFactory, Logger, LogLevel } from "diagnostics/logger";
 
+const HomeCategory = "Home";
+
 class Feature extends ComponentReference {
     data: any;
 }
@@ -16,17 +18,15 @@ export interface FeatureContext {
     selector: 'feature-vtabs',
     template: `
 <div class="sidebar crumb" [class.nav]="IsActive">
-    <vtabs [markLocation]="true" (activate)="Refresh()" [defaultTab]="default">
-        <category name="'Context'"></category>
-        <item [name]="'Web Server'" [ico]="'fa fa-server'" [routerLink]="['/webserver/general']"></item>
-        <item *ngFor="let module of contexts" [name]="module.name" [ico]="module.ico">
+    <vtabs [markLocation]="true" (activate)="Refresh()" [defaultTab]="default" [categories]="['${HomeCategory}', subcategory]">
+        <item [name]="'Web Server'" [ico]="'fa fa-server'" [routerLink]="['/webserver/general']" [category]="'${HomeCategory}'"></item>
+        <item *ngFor="let module of contexts" [name]="module.name" [ico]="module.ico" [category]="'${HomeCategory}'">
             <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
         </item>
-        <category name="subcategory"></category>
-        <item [name]="generalTabName" [ico]="generalTabIcon">
+        <item [name]="generalTabName" [ico]="generalTabIcon" [category]="subcategory">
             <ng-content select=".general-tab"></ng-content>
         </item>
-        <item *ngFor="let module of features" [name]="module.name" [ico]="module.ico">
+        <item *ngFor="let module of features" [name]="module.name" [ico]="module.ico" [category]="subcategory">
             <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
         </item>
     </vtabs>
@@ -46,8 +46,7 @@ export interface FeatureContext {
     @Input() generalTabIcon: string = "fa fa-wrench";
     @Input() model: FeatureContext;
     @Input() resource: string;
-
-    subcategory: string;
+    @Input() subcategory: string;
     contexts: ComponentReference[] = CONTEXT_MODULES;
     features: Feature[];
 
@@ -69,7 +68,6 @@ export interface FeatureContext {
     }
 
     ngOnInit(): void {
-        this.subcategory = this.resource;
         const apiNames = Object.keys(this.model.links);
         const featureSet: Feature[] = [];
         for (const apiName of apiNames) {

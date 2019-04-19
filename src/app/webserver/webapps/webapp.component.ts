@@ -12,7 +12,7 @@ import { BreadcrumbsRoot, WebServerCrumb, WebSitesCrumb, Breadcrumb } from 'head
         <not-found *ngIf="notFound"></not-found>
         <loading *ngIf="!(app || notFound)"></loading>
         <webapp-header *ngIf="app" [model]="app" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webapp-header>
-        <feature-vtabs *ngIf="app" [model]="app" [resource]="'webapp'"></feature-vtabs>
+        <feature-vtabs *ngIf="app" [model]="app" [resource]="'webapp'" [subcategory]="'Web Application'"></feature-vtabs>
     `,
 })
 export class WebAppComponent implements OnInit {

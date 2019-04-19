@@ -254,3 +254,8 @@ button[disabled] i.fa,
 .sidebar hr {
     border-color: #d4d4d4;
 }
+
+#mainContainer.container-fluid {
+    padding-right: 0px;
+    padding-left: 0px;
+}

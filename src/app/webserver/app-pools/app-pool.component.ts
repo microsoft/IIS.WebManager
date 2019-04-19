@@ -12,7 +12,7 @@ import { BreadcrumbsRoot, AppPoolsCrumb, Breadcrumb, WebServerCrumb } from 'head
         <not-found *ngIf="notFound"></not-found>
         <loading *ngIf="!(pool || notFound)"></loading>
         <app-pool-header *ngIf="pool" [pool]="pool" class="crumb-content" [class.sidebar-nav-content]="_options.active"></app-pool-header>
-        <feature-vtabs *ngIf="pool" [model]="pool" [resource]="'appPool'"></feature-vtabs>
+        <feature-vtabs *ngIf="pool" [model]="pool" [resource]="'appPool'" [subcategory]="'Application Pool'"></feature-vtabs>
         `,
 })
 export class AppPoolComponent implements OnInit {
