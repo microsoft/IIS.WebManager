@@ -38,6 +38,7 @@ export const WebServerModuleName = "Web Server"
 export const WebSitesModuleName = "Web Sites"
 export const AppPoolsModuleName = "Application Pools"
 export const FilesModuleName = "Files"
+export const CertificatesModuleName = "Certificates"
 
 export const WebSitesApiName= "websites";
 export const AppPoolsApiName = "app_pools";
@@ -49,16 +50,17 @@ export class ComponentReference {
 
 const WebSitesContext = new ComponentReference(WebSitesModuleName, "fa fa-globe", WebSiteListComponentName, WebSitesApiName, "/api/webserver/websites");
 const AppPoolsContext = new ComponentReference(AppPoolsModuleName, "fa fa-cogs", AppPoolComponentName, "app_pools", "/api/webserver/application-pools");
+const FilesContext = new ComponentReference("Files", "fa fa-files-o", FilesComponentName, "files", "/api/files/{id}");
 
-export const CONTEXT_MODULES: ComponentReference[] = [ WebSitesContext, AppPoolsContext ];
+export const CONTEXT_MODULES: ComponentReference[] = [ WebSitesContext, AppPoolsContext, FilesContext ];
 
-const managementModules: ComponentReference[] = [
+export const GLOBAL_MODULES: ComponentReference[] = [
     new ComponentReference(WebSitesModuleName, "fa fa-globe", WebSiteListComponentName, WebSitesApiName, "/api/webserver/websites?application_pool.id={appPoolId}"),
     new ComponentReference("Web Applications", "fa fa-code", WebAppListComponentName, "webapps", "/api/webserver/webapps?website.id={websiteid}&application_pool.id={apppoolid}"),
     new ComponentReference("Virtual Directories", "fa fa-folder-o", VdirListComponentName, "vdirs", "/api/webserver/virtual-directories?website.id={siteId}&webapp.id={appId}"),
     new ComponentReference("Authentication", "fa fa-sign-in", AuthenticationComponentName, "authentication", "/api/webserver/authentication/{id}"),
     new ComponentReference("Authorization", "fa fa-user-o", AuthorizationComponentName, "authorization", "/api/webserver/authorization/{id}"),
-    new ComponentReference("Certificates", "fa fa-lock", CertificatesComponentName, "certificates", "/api/certificates"),
+    new ComponentReference(CertificatesModuleName, "fa fa-lock", CertificatesComponentName, "certificates", "/api/certificates"),
     new ComponentReference("Central Certificate Store", "fa fa-certificate", CentralCertificateComponentName, "central_certificates", "/api/webserver/centralized-certificates/{id}"),
     new ComponentReference("Default Documents", "fa fa-file-text-o", DefaultDocumentsComponentName, "default_document", "/api/webserver/default-documents/{id}"),
     new ComponentReference("Directory Browsing", "fa fa-folder-open-o", DirectoryBrowsingComponentName, "directory_browsing", "/api/webserver/directory-browsing/{id}"),
@@ -75,11 +77,3 @@ const managementModules: ComponentReference[] = [
     new ComponentReference("Url Rewrite", "fa fa-exchange", UrlRewriteComponentName, "url_rewrite", "/api/webserver/url-rewrite/{id}"),
     new ComponentReference(FilesModuleName, "fa fa-files-o", WebFilesComponentName, FilesApiName, "/api/webserver/files/{id}"),
 ]
-
-function toMap(components: ComponentReference[]) {
-    return components.reduce(
-        (map, ref, _) => map.set(ref.api_name, ref), new Map<string, ComponentReference>()
-    );
-}
-
-export const GLOBAL_MODULES = toMap(managementModules);

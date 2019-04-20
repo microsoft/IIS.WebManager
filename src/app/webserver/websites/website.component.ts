@@ -12,7 +12,9 @@ import { WebServerCrumb, BreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'head
         <not-found *ngIf="notFound"></not-found>
         <loading *ngIf="!(site || notFound)"></loading>
         <website-header *ngIf="site" [site]="site" class="crumb-content" [class.sidebar-nav-content]="_options.active"></website-header>
-        <feature-vtabs *ngIf="site" [model]="site" [resource]="'website'" [subcategory]="'Web Site'"></feature-vtabs>
+        <feature-vtabs *ngIf="site" [model]="site" [resource]="'website'" [subcategory]="'Web Site'">
+            <website-general class="general-tab" [site]="site" (modelChanged)="onModelChanged()"></website-general>
+        </feature-vtabs>
     `,
 })
 export class WebSiteComponent implements OnInit {

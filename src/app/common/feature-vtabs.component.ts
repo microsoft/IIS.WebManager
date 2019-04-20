@@ -47,6 +47,7 @@ export interface FeatureContext {
     @Input() model: FeatureContext;
     @Input() resource: string;
     @Input() subcategory: string;
+    @Input() include: string[] = [];
     contexts: ComponentReference[] = CONTEXT_MODULES;
     features: Feature[];
 
@@ -70,9 +71,11 @@ export interface FeatureContext {
     ngOnInit(): void {
         const apiNames = Object.keys(this.model.links);
         const featureSet: Feature[] = [];
-        for (const apiName of apiNames) {
-            const feature = GLOBAL_MODULES.get(apiName);
-            if (feature) {
+        for (const feature of GLOBAL_MODULES) {
+            const apiName = feature.api_name;
+            if (this.include.includes(feature.name) ) {
+                featureSet.push(<Feature>{...feature});
+            } else if (apiNames.includes(apiName)) {
                 if (this.model.links[apiName].href) {
                     const matches = UrlUtil.getUrlMatch(this.model.links[apiName].href, feature.api_path);
                     if (matches) {
@@ -82,8 +85,6 @@ export interface FeatureContext {
                         featureSet.push(m);
                     }
                 }
-            } else {
-                this._logger.log(LogLevel.INFO, `Resource: ${this.resource}, API ${apiName} does not have an associated UI module`);
             }
         }
         this.features = featureSet;

@@ -1,4 +1,4 @@
-import { NgModule, Component, Input, Output, ViewChildren, forwardRef, ContentChildren, QueryList, OnInit, ElementRef, OnDestroy, EventEmitter, AfterViewInit } from '@angular/core';
+import { NgModule, Component, Input, Output, ContentChildren, QueryList, OnInit, OnDestroy, EventEmitter, AfterViewInit, Directive, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -54,18 +54,14 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     @Input() markLocation: boolean;
     @Input() defaultTab: string;
     @Output() activate: EventEmitter<Item> = new EventEmitter();
+    @Input() categories: string[];
 
-    tabs: Item[];
-
+    private tabs: Item[];
     private _default: string;
     private _selectedIndex = -1;
-    private _tabsItems: Array<ElementRef>;
     private _sectionHelper: SectionHelper;
     private _subscriptions: Array<Subscription> = [];
-    @Input() categories: string[];
     categorizedTabs: Map<string, Item[]> = new Map<string, Item[]>();
-
-    @ViewChildren('item') private _tabList: QueryList<ElementRef>;
 
     constructor(
         private _activatedRoute: ActivatedRoute,
@@ -79,7 +75,6 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         this._default = this._activatedRoute.snapshot.params["section"] || this.defaultTab;
         this._sectionHelper = new SectionHelper(this.tabs.map(t => t.name), this._default, this.markLocation, this._location, this._router);
         this._subscriptions.push(this._sectionHelper.active.subscribe(sec => this.onSectionChange(sec)));
-        this._tabsItems = this._tabList.toArray();
         window.setTimeout(() => {
             this.refresh();
         }, 1);
@@ -132,6 +127,10 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         return this.categorizedTabs[category];
     }
 
+    public hide(tabName: string) {
+        this.tabs.find((item, _, __) => item.name === tabName).visible = false;
+    }
+
     selectItem(tab: Item) {
         if (!tab.routerLink) {
             this._sectionHelper.selectSection(tab.name);
@@ -158,11 +157,9 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     }
 
     private refresh() {
-        if (!this._tabsItems || this._selectedIndex < 0) {
-            return;
+        if (this.tabs && this._selectedIndex < 0) {
+            this.tabs.forEach(t => { t.visible = true });
         }
-
-        this.tabs.forEach(t => { t.visible = true });
     }
 }
 
