@@ -1,8 +1,9 @@
-import { ComponentReference, GLOBAL_MODULES, CONTEXT_MODULES } from "main/settings";
-import { Component, Input, OnInit } from "@angular/core";
+import { ComponentReference, GLOBAL_MODULES, CONTEXT_MODULES, CertificatesModuleName } from "main/settings";
+import { Component, Input, OnInit, AfterViewInit, forwardRef, ViewChild } from "@angular/core";
 import { OptionsService } from "main/options.service";
 import { UrlUtil } from "utils/url";
 import { LoggerFactory, Logger, LogLevel } from "diagnostics/logger";
+import { VTabsComponent } from "./vtabs.component";
 
 const HomeCategory = "Home";
 
@@ -12,6 +13,11 @@ class Feature extends ComponentReference {
 
 export interface FeatureContext {
     links: any
+}
+
+export class StaticModuleReference {
+    name: string
+    initialize: Promise<boolean>
 }
 
 @Component({
@@ -40,17 +46,18 @@ export interface FeatureContext {
         top: 96px;
     }
 `],
-}) export class FeatureVTabsComponent implements OnInit {
+}) export class FeatureVTabsComponent implements OnInit, AfterViewInit {
     @Input() default: string;
     @Input() generalTabName: string = "General";
     @Input() generalTabIcon: string = "fa fa-wrench";
     @Input() model: FeatureContext;
     @Input() resource: string;
     @Input() subcategory: string;
-    @Input() include: string[] = [];
+    @Input() include: StaticModuleReference[] = [];
     contexts: ComponentReference[] = CONTEXT_MODULES;
     features: Feature[];
 
+    @ViewChild(forwardRef(() => VTabsComponent)) vtabs: VTabsComponent;
     private _logger: Logger;
 
     constructor(
@@ -73,7 +80,7 @@ export interface FeatureContext {
         const featureSet: Feature[] = [];
         for (const feature of GLOBAL_MODULES) {
             const apiName = feature.api_name;
-            if (this.include.includes(feature.name) ) {
+            if (this.include.find(ref => ref.name == feature.name) ) {
                 featureSet.push(<Feature>{...feature});
             } else if (apiNames.includes(apiName)) {
                 if (this.model.links[apiName].href) {
@@ -88,5 +95,18 @@ export interface FeatureContext {
             }
         }
         this.features = featureSet;
+    }
+
+    ngAfterViewInit(): void {
+        for (const feature of this.include) {
+            if (feature.initialize) {
+                feature.initialize.then(success => {
+                    if (!success) {
+                        this._logger.log(LogLevel.WARN, `Tab ${feature.name} cannot be loaded`);
+                        this.vtabs.hide(CertificatesModuleName);
+                    }
+                })
+            }
+        }
     }
 }

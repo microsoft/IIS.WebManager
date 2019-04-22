@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, AfterViewInit, ContentChild, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { OptionsService } from '../main/options.service';
 import { HttpClient } from '../common/http-client';
 import { WebServer } from './webserver';
@@ -11,7 +11,7 @@ import { Runtime } from 'runtime/runtime';
 import { BreadcrumbsService } from 'header/breadcrumbs.service';
 import { BreadcrumbsRoot, WebServerCrumb } from 'header/breadcrumb';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
-import { VTabsComponent } from 'common/vtabs.component';
+import { StaticModuleReference } from 'common/feature-vtabs.component';
 
 @Component({
     template: `
@@ -26,7 +26,7 @@ import { VTabsComponent } from 'common/vtabs.component';
         <span *ngIf="failure" class="color-error">{{failure}}</span>
         <div *ngIf="webServer">
             <webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
-            <feature-vtabs [model]="webServer" [resource]="'webserver'" [default]="defaultTab" [subcategory]="'Web Server'" [include]="['${CertificatesModuleName}']">
+            <feature-vtabs [model]="webServer" [resource]="'webserver'" [default]="defaultTab" [subcategory]="'Web Server'" [include]="staticModules">
                 <webserver-general class="general-tab" [model]="webServer"></webserver-general>
             </feature-vtabs>
         </div>
@@ -38,13 +38,21 @@ import { VTabsComponent } from 'common/vtabs.component';
 }
 `],
 })
-export class WebServerComponent implements OnInit, AfterViewInit {
+export class WebServerComponent implements OnInit {
     logger: Logger;
     webServer: WebServer;
     failure: string;
     defaultTab: string = WebSitesModuleName;
-    @ViewChild(VTabsComponent)
-    tabs: VTabsComponent;
+    certQuery: Promise<any>;
+    staticModules: StaticModuleReference[] = [
+        <StaticModuleReference> {
+            name: CertificatesModuleName,
+            initialize: this._http.head(CertificatesServiceURL, null, false)
+                        .then(_ => true)
+                        .catch(e => {
+                            this.logger.log(LogLevel.WARN, `Error pinging ${CertificatesServiceURL}:\n${e}`);
+                            return false;
+                        })}];
 
     constructor(
         @Inject('WebServerService') private _service: WebServerService,
@@ -63,18 +71,6 @@ export class WebServerComponent implements OnInit, AfterViewInit {
             this.webServer = ws;
             this._crumbs.load(BreadcrumbsRoot.concat(WebServerCrumb));
         });
-    }
-    
-    ngAfterViewInit(): void {
-        this._http.head(CertificatesServiceURL, null, false).then(_ => {
-            throw "test!"
-        }).catch(e => {
-            debugger
-            this.logger.log(LogLevel.WARN,
-`Error pinging ${CertificatesServiceURL}:
-${e}
-Hiding ${CertificatesModuleName} tab`);
-        })
     }
 
     get service() {

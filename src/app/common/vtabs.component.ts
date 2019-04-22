@@ -1,4 +1,4 @@
-import { NgModule, Component, Input, Output, ContentChildren, QueryList, OnInit, OnDestroy, EventEmitter, AfterViewInit, Directive, ElementRef } from '@angular/core';
+import { NgModule, Component, Input, Output, ContentChildren, QueryList, OnInit, OnDestroy, EventEmitter, AfterViewInit, ElementRef, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -17,7 +17,7 @@ import { FeatureVTabsComponent } from './feature-vtabs.component';
                 <ng-container *ngFor="let category of getCategories()">
                     <li *ngIf="!!category" class="separator"><div class="horizontal-strike"><span>{{category}}</span></div></li>
                     <li tabindex="0"
-                        #item
+                        #tabLabels
                         class="hover-edit"
                         *ngFor="let tab of getTabs(category)"
                         [ngClass]="{active: tab.active}"
@@ -62,6 +62,8 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     private _sectionHelper: SectionHelper;
     private _subscriptions: Array<Subscription> = [];
     categorizedTabs: Map<string, Item[]> = new Map<string, Item[]>();
+
+    @ViewChildren('tabLabels') tabLabels: QueryList<ElementRef>;
 
     constructor(
         private _activatedRoute: ActivatedRoute,
@@ -128,7 +130,11 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     }
 
     public hide(tabName: string) {
-        this.tabs.find((item, _, __) => item.name === tabName).visible = false;
+        this.tabLabels.forEach((elementRef, _, __) => {
+            if (elementRef.nativeElement.innerText == tabName) {
+                elementRef.nativeElement.remove();
+            }
+        })
     }
 
     selectItem(tab: Item) {
