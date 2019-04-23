@@ -14,8 +14,7 @@ export class WebSite implements FeatureContext {
     failed_request_tracing: RequestTracing;
     bindings: Array<Binding>;
     application_pool: any;
-
-    links: any;
+    _links: any;
 }
 
 export class Limits {

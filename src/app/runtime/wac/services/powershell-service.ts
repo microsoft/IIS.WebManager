@@ -48,7 +48,7 @@ export class PowershellService {
   }
 
   public invokeHttp(req: Request): Observable<Response> {
-    let requestEncoded = btoa(JSON.stringify(req))
+    let requestEncoded = btoa(JSON.stringify(req));
     return this.invoke<ResponseOptions>(
       PowerShellScripts.Invoke_LocalHttp.script,
       { requestBase64: requestEncoded },
@@ -63,17 +63,17 @@ export class PowershellService {
 
           case 'headers':
             // we need to explicitly wrap it otherwise when we pass it to new Response(res), the header would remain a plain object
-            return new Headers(v)
+            return new Headers(v);
 
           default:
             return v
         }
       }).pipe(map(res => {
-        let response = new Response(res)
+        let response = new Response(res);
         if (res.status < 200 || res.status >= 400) {
-          throw response
+          throw response;
         }
-        return response
+        return response;
     }))
   }
 
@@ -84,7 +84,7 @@ export class PowershellService {
     var scriptName: string = pwCmdString.split("\n")[0]
     return this.session.pipe(
       mergeMap(ps => ps.powerShell.run(compiled)),
-      // instrument(this.logger, `${scriptName} => ${JSON.stringify(psParameters)}`),
+      instrument(this.logger, `${scriptName} => ${JSON.stringify(psParameters)}`),
       logError(this.logger, LogLevel.WARN, `Script ${scriptName} failed`),
       mergeMap((response: PowerShellResult) => {
         if (!response) {

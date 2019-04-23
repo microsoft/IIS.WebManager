@@ -12,6 +12,7 @@ import { BreadcrumbsService } from 'header/breadcrumbs.service';
 import { BreadcrumbsRoot, WebServerCrumb } from 'header/breadcrumb';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { StaticModuleReference } from 'common/feature-vtabs.component';
+import { CONTEXT_MODULES } from 'main/settings'
 
 @Component({
     template: `
@@ -26,7 +27,7 @@ import { StaticModuleReference } from 'common/feature-vtabs.component';
         <span *ngIf="failure" class="color-error">{{failure}}</span>
         <div *ngIf="webServer">
             <webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
-            <feature-vtabs [model]="webServer" [resource]="'webserver'" [default]="defaultTab" [subcategory]="'Web Server'" [include]="staticModules">
+            <feature-vtabs [model]="webServer" [resource]="'webserver'" [default]="defaultTab" [subcategory]="'Web Server'" [include]="includes" [exclude]="excludes">
                 <webserver-general class="general-tab" [model]="webServer"></webserver-general>
             </feature-vtabs>
         </div>
@@ -44,7 +45,7 @@ export class WebServerComponent implements OnInit {
     failure: string;
     defaultTab: string = WebSitesModuleName;
     certQuery: Promise<any>;
-    staticModules: StaticModuleReference[] = [
+    includes: StaticModuleReference[] = [
         <StaticModuleReference> {
             name: CertificatesModuleName,
             initialize: this._http.head(CertificatesServiceURL, null, false)
@@ -53,6 +54,7 @@ export class WebServerComponent implements OnInit {
                             this.logger.log(LogLevel.WARN, `Error pinging ${CertificatesServiceURL}:\n${e}`);
                             return false;
                         })}];
+    excludes: string[] = CONTEXT_MODULES.map(m => m.name);
 
     constructor(
         @Inject('WebServerService') private _service: WebServerService,

@@ -48,12 +48,6 @@ export class ComponentReference {
     constructor(public name: string, public ico: string, public component_name: string, public api_name: string, public api_path: string) {}
 }
 
-const WebSitesContext = new ComponentReference(WebSitesModuleName, "fa fa-globe", WebSiteListComponentName, WebSitesApiName, "/api/webserver/websites");
-const AppPoolsContext = new ComponentReference(AppPoolsModuleName, "fa fa-cogs", AppPoolComponentName, "app_pools", "/api/webserver/application-pools");
-const FilesContext = new ComponentReference("Files", "fa fa-files-o", FilesComponentName, "files", "/api/files/{id}");
-
-export const CONTEXT_MODULES: ComponentReference[] = [ WebSitesContext, AppPoolsContext, FilesContext ];
-
 export const GLOBAL_MODULES: ComponentReference[] = [
     new ComponentReference(WebSitesModuleName, "fa fa-globe", WebSiteListComponentName, WebSitesApiName, "/api/webserver/websites?application_pool.id={appPoolId}"),
     new ComponentReference("Web Applications", "fa fa-code", WebAppListComponentName, "webapps", "/api/webserver/webapps?website.id={websiteid}&application_pool.id={apppoolid}"),
@@ -77,3 +71,18 @@ export const GLOBAL_MODULES: ComponentReference[] = [
     new ComponentReference("Url Rewrite", "fa fa-exchange", UrlRewriteComponentName, "url_rewrite", "/api/webserver/url-rewrite/{id}"),
     new ComponentReference(FilesModuleName, "fa fa-files-o", WebFilesComponentName, FilesApiName, "/api/webserver/files/{id}"),
 ]
+
+// const FilesContext = new ComponentReference(FilesModuleName, "", FilesComponentName, "files", "/api/files/{id}");
+
+export const CONTEXT_MODULES = [
+    <ContextReference> { name: WebServerModuleName, ico: "fa fa-server", routerLink: ["/webserver/general"]},
+    <ContextReference> { name: AppPoolsModuleName, ico: "fa fa-cogs", routerLink: ["/webserver/application-pools"]},
+    <ContextReference> { name: WebSitesModuleName, ico: "fa fa-globe", routerLink: ["/webserver/web-sites"]},
+    // <ContextReference> { name: FilesModuleName, ico: "fa fa-files-o", routerLink: ["/webserver/websites"]},
+];
+
+export class ContextReference {
+    name: string
+    ico: string
+    routerLink: string[]
+}

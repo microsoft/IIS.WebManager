@@ -9,5 +9,5 @@ export class WebApp implements FeatureContext {
     enabled_protocols: string;
     website: WebSite;
     application_pool: any;
-    links: any;
+    _links: any;
 }

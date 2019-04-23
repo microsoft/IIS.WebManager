@@ -24,6 +24,10 @@ export class WebServerService {
         return this._installStatus;
     }
 
+    get cache(): WebServer {
+        return this._server;
+    }
+
     get server(): Promise<WebServer> {
         if (this._server) {
             return Promise.resolve(this._server);
@@ -91,15 +95,15 @@ export class WebServerService {
         return this._http.get("/webserver").then(ws => {
             this._server = new WebServer();
             this._server.id = ws.id;
-            this._server.links = ws._links;
+            this._server._links = ws._links;
 
             //
             // Query Info
-            if (!this._server.links || !this._server.links.info) {
+            if (!this._server._links || !this._server._links.info) {
                 return this._server;
             }
 
-            return this._http.get(this._server.links.info.href.replace("/api", "")).then(info => {
+            return this._http.get(this._server._links.info.href.replace("/api", "")).then(info => {
                 this._server.name = info.name;
                 this._server.status = info.status;
                 this._server.version = info.version;
@@ -118,11 +122,11 @@ export class WebServerService {
     }
 
     private updateStatus(status: string): Promise<WebServer> {
-        if (!this._server.links || !this._server.links.service_controller) {
+        if (!this._server._links || !this._server._links.service_controller) {
             return Promise.resolve(this._server);
         }
 
-        return this._http.patch(this._server.links.service_controller.href.replace("/api", ""), JSON.stringify({ status: status }))
+        return this._http.patch(this._server._links.service_controller.href.replace("/api", ""), JSON.stringify({ status: status }))
             .then(sc => {
                 this._server.status = sc.status; // Update the status
                 return this._server;

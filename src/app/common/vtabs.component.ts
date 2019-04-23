@@ -8,6 +8,7 @@ import { SectionHelper } from './section.helper';
 import { IsWAC } from 'environments/environment'
 import { Module as DynamicModule } from './dynamic.component'
 import { FeatureVTabsComponent } from './feature-vtabs.component';
+import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 
 @Component({
     selector: 'vtabs',
@@ -57,8 +58,6 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     @Input() categories: string[];
 
     private tabs: Item[];
-    private _default: string;
-    private _selectedIndex = -1;
     private _sectionHelper: SectionHelper;
     private _subscriptions: Array<Subscription> = [];
     categorizedTabs: Map<string, Item[]> = new Map<string, Item[]>();
@@ -74,12 +73,18 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     }
 
     public ngAfterViewInit() {
-        this._default = this._activatedRoute.snapshot.params["section"] || this.defaultTab;
-        this._sectionHelper = new SectionHelper(this.tabs.map(t => t.name), this._default, this.markLocation, this._location, this._router);
+        let defaultSection = this._activatedRoute.snapshot.params["section"] || this.defaultTab;
+        let subcategoryName = this.categories.last();
+        let subcategory: Item[] = this.categorizedTabs[subcategoryName];
+        let selectedTab: Item;
+        if (defaultSection) {
+            selectedTab = subcategory.find((item, _, __) => SectionHelper.normalize(item.name) == defaultSection);
+        }
+        if (!selectedTab) {
+            selectedTab = subcategory[0];
+        }
+        this._sectionHelper = new SectionHelper(this.tabs.map(t => t.name), selectedTab.name, this.markLocation, this._location, this._router);
         this._subscriptions.push(this._sectionHelper.active.subscribe(sec => this.onSectionChange(sec)));
-        window.setTimeout(() => {
-            this.refresh();
-        }, 1);
     }
 
     public ngOnDestroy() {
@@ -99,11 +104,6 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
             this.categorizedTabs[category] = [];
         }
         this.categorizedTabs[category].push(tab);
-        if (this._selectedIndex === -1 && (this.tabs.length === 0 && !this._default || SectionHelper.normalize(tab.name) == this._default)) {
-            tab.activate();
-            this._selectedIndex = this.tabs.length;
-        }
-
         if (this._sectionHelper) {
             this._sectionHelper.addSection(tab.name);
         }
@@ -157,15 +157,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
 
         this.tabs.forEach(t => t.deactivate());
         this.tabs[index].activate();
-        this._selectedIndex = index;
-        this.refresh();
         this.activate.emit(this.tabs[index]);
-    }
-
-    private refresh() {
-        if (this.tabs && this._selectedIndex < 0) {
-            this.tabs.forEach(t => { t.visible = true });
-        }
     }
 }
 
@@ -204,13 +196,19 @@ export class Item implements OnInit, OnDestroy {
     @Input() category: string
     @Input() name: string;
     @Input() ico: string = "";
-    @Input() visible: boolean = true;
     @Input() active: boolean;
     @Input() routerLink: Array<any>;
 
     @ContentChildren(DynamicComponent) dynamicChildren: QueryList<DynamicComponent>;
 
-    constructor(private _tabs: VTabsComponent, private _router: Router) {
+    private logger: Logger;
+
+    constructor(
+        private _tabs: VTabsComponent,
+        private _router: Router,
+        private factory: LoggerFactory,
+    ){
+        this.logger = factory.Create(this);
     }
 
     ngOnInit() {
@@ -222,12 +220,16 @@ export class Item implements OnInit, OnDestroy {
     }
     
     activate() {
+        this.logger.log(LogLevel.DEBUG, `activating ${this.name} tab`);
         if (this.dynamicChildren) {
             this.dynamicChildren.forEach(child => child.activate());
         }
 
         if (this.routerLink) {
-            this._router.navigate(this.routerLink);
+            this._router.navigate(this.routerLink, {
+                skipLocationChange: false,
+                replaceUrl: true,
+            });
         }
 
         this.active = true;

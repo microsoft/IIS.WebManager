@@ -16,7 +16,7 @@ export class ApplicationPool implements FeatureContext {
     recycling: Recycling;
     rapid_fail_protection: RapidFailProtection;
     process_orphaning: ProcessOrphaning;
-    links: any;
+    _links: any;
 }
 
 export type PipelineMode = "integrated" | "classic";

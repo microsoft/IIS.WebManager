@@ -18,9 +18,9 @@ import { BreadcrumbsRoot, AppPoolsCrumb, Breadcrumb, WebServerCrumb } from 'head
 `,
 })
 export class AppPoolComponent implements OnInit {
+    pool: ApplicationPool;
+    notFound: boolean;
     private id: string;
-    private pool: ApplicationPool;
-    private notFound: boolean;
     private _original: ApplicationPool;
 
     constructor(

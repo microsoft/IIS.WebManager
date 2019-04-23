@@ -7,6 +7,5 @@ export class WebServer implements FeatureContext {
     status: Status;
     supports_sni: boolean;
     version: string;
-
-    links: any;
+    _links: any;
 }
