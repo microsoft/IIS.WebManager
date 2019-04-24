@@ -1,14 +1,14 @@
 import { NgModule, Component, Input, Output, ContentChildren, QueryList, OnInit, OnDestroy, EventEmitter, AfterViewInit, ElementRef, ViewChildren } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs'
+import { Subscription } from 'rxjs';
 import { DynamicComponent } from './dynamic.component';
 import { SectionHelper } from './section.helper';
-import { IsWAC } from 'environments/environment'
-import { Module as DynamicModule } from './dynamic.component'
+import { Module as DynamicModule } from './dynamic.component';
 import { FeatureVTabsComponent } from './feature-vtabs.component';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
+import { IsWAC } from 'environments/environment';
 
 @Component({
     selector: 'vtabs',
@@ -60,6 +60,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     private tabs: Item[];
     private _sectionHelper: SectionHelper;
     private _subscriptions: Array<Subscription> = [];
+    private logger: Logger;
     categorizedTabs: Map<string, Item[]> = new Map<string, Item[]>();
 
     @ViewChildren('tabLabels') tabLabels: QueryList<ElementRef>;
@@ -68,22 +69,40 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         private _activatedRoute: ActivatedRoute,
         private _location: Location,
         private _router: Router,
+        private factory: LoggerFactory,
     ) {
         this.tabs = [];
+        this.logger = factory.Create(this);
     }
 
     public ngAfterViewInit() {
-        let defaultSection = this._activatedRoute.snapshot.params["section"] || this.defaultTab;
-        let subcategoryName = this.categories.last();
-        let subcategory: Item[] = this.categorizedTabs[subcategoryName];
-        let selectedTab: Item;
-        if (defaultSection) {
-            selectedTab = subcategory.find((item, _, __) => SectionHelper.normalize(item.name) == defaultSection);
+        let selectedPath: string = this._activatedRoute.snapshot.params["section"];
+        if (!selectedPath && this.defaultTab) {
+            selectedPath = SectionHelper.normalize(this.defaultTab);
         }
-        if (!selectedTab) {
-            selectedTab = subcategory[0];
+        if (selectedPath) {
+            if (!selectedPath.includes("+")) {
+                // if input is not fully qualified, resolve category by searching
+                this.logger.log(LogLevel.INFO, `Tab ID ${selectedPath} is not fully qualified, trying to resolve category`);
+                for (let i = this.categories.length - 1; i >= 0; i--) {
+                    let category = SectionHelper.normalize(this.categories[i]);
+                    let item = this.categorizedTabs[category].find(i => SectionHelper.normalize(i.name) == selectedPath);
+                    if (item) {
+                        selectedPath = Item.Join(category, selectedPath);
+                        break;
+                    }
+                }
+            }
+        } else {
+            if (this.categories) {
+                let category = SectionHelper.normalize(this.categories.last());
+                selectedPath = this.categorizedTabs[category][0].fullName;
+            } else {
+                selectedPath = this.categorizedTabs.values[0].fullName;
+            }
         }
-        this._sectionHelper = new SectionHelper(this.tabs.map(t => t.name), selectedTab.name, this.markLocation, this._location, this._router);
+        this.logger.log(LogLevel.DEBUG, `Default tab selected ${selectedPath}`);
+        this._sectionHelper = new SectionHelper(this.tabs.map(t => t.fullName), selectedPath, this.markLocation, this._location, this._router);
         this._subscriptions.push(this._sectionHelper.active.subscribe(sec => this.onSectionChange(sec)));
     }
 
@@ -99,20 +118,19 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     }
 
     public addTab(tab: Item) {
-        const category = tab.category || "";
+        const category = SectionHelper.normalize(tab.category || "");
         if (!this.categorizedTabs[category]) {
             this.categorizedTabs[category] = [];
         }
         this.categorizedTabs[category].push(tab);
         if (this._sectionHelper) {
-            this._sectionHelper.addSection(tab.name);
+            this._sectionHelper.addSection(tab.fullName);
         }
-
         this.tabs.push(tab);
     }
 
     public removeTab(tab: Item) {
-        this._sectionHelper.removeSection(tab.name);
+        this._sectionHelper.removeSection(tab.fullName);
 
         let i = this.tabs.findIndex(item => item == tab);
 
@@ -126,7 +144,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     }
 
     public getTabs(category: string) {
-        return this.categorizedTabs[category];
+        return this.categorizedTabs[SectionHelper.normalize(category)];
     }
 
     public hide(tabName: string) {
@@ -139,7 +157,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
 
     selectItem(tab: Item) {
         if (!tab.routerLink) {
-            this._sectionHelper.selectSection(tab.name);
+            this._sectionHelper.selectSection(tab.fullName);
         }
         else {
             tab.activate();
@@ -149,7 +167,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     }
 
     private onSectionChange(section: string) {
-        let index = this.tabs.findIndex(t => t.name === section);
+        let index = this.tabs.findIndex(t => t.fullName === section);
 
         if (index == -1) {
             index = 0;
@@ -162,7 +180,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
 }
 
 @Component({
-    selector: 'vtabs > item',
+    selector: '[vtabs item][vtabs ng-container item]',
     template: `
         <div *ngIf="!(!active)">
             <span id="vtabs-title" [tabindex]="isWAC() ? -1 : 0"></span>
@@ -193,11 +211,21 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     `],
 })
 export class Item implements OnInit, OnDestroy {
-    @Input() category: string
-    @Input() name: string;
+
+    static Join(category: string, name: string) {
+        return `${category}+${name}`;
+    }
+
+    static GetFullyQualifiedName(item: Item) {
+        return Item.Join(SectionHelper.normalize(item.category), SectionHelper.normalize(item.name));
+    }
+
     @Input() ico: string = "";
     @Input() active: boolean;
     @Input() routerLink: Array<any>;
+    @Input() category: string = "";
+    @Input() name: string;
+    private _fullName: string;
 
     @ContentChildren(DynamicComponent) dynamicChildren: QueryList<DynamicComponent>;
 
@@ -215,6 +243,10 @@ export class Item implements OnInit, OnDestroy {
         this._tabs.addTab(this);
     }
 
+    get fullName() {
+        return this._fullName || (this._fullName = Item.GetFullyQualifiedName(this));
+    }
+
     private isWAC() {
         return IsWAC;
     }
@@ -226,8 +258,9 @@ export class Item implements OnInit, OnDestroy {
         }
 
         if (this.routerLink) {
-            this._router.navigate(this.routerLink, {
-                skipLocationChange: false,
+            console.log(`routing to ${this.routerLink}`)
+            return this._router.navigate(this.routerLink, {
+                skipLocationChange: true,
                 replaceUrl: true,
             });
         }
@@ -264,6 +297,7 @@ export const TABS: any[] = [
 
 @NgModule({
     imports: [
+        RouterModule,
         FormsModule,
         CommonModule,
         DynamicModule,

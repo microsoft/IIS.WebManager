@@ -6,21 +6,18 @@ import { UrlUtil } from '../utils/url';
 
 export class SectionHelper implements IDisposable {
     private _root: string;
-    private _markLocation: boolean;
-    private _router: Router;
-    private _location: Location;
-    private _sections: Array<string> = [];
     private _hashCache: Array<string> = [];
     private _subscriptions: Array<Subscription> = [];
     private _active: BehaviorSubject<string> = new BehaviorSubject<string>("");
 
-    constructor(sections: Array<string>, defaultSection: string, markLocation: boolean, location: Location, router: Router) {
-        this._markLocation = markLocation;
-        this._location = location;
-        this._router = router;
-        this._sections = sections;
-
-        if (markLocation) {
+    constructor(
+        private _sections: Array<string> = [],
+        private defaultSection: string,
+        private _markLocation: boolean,
+        private _location: Location,
+        private _router: Router,
+    ) {
+        if (_markLocation) {
             this._subscriptions.push((<Subscription>this._location.subscribe(e => {
                 if (e.type == 'popstate') {
                     this.navigateSection(this.getSectionFromUrl());
@@ -42,8 +39,8 @@ export class SectionHelper implements IDisposable {
         this.section = defaultSection || "";
 
         // Automatically navigate to first section if no default provided
-        if (!this.section && sections.length > 0) {
-            this.navigateSection(sections[0]);
+        if (!this.section && _sections.length > 0) {
+            this.navigateSection(_sections[0]);
         }
     }
 

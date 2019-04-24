@@ -3,7 +3,7 @@ import { OptionsService } from '../main/options.service';
 import { HttpClient } from '../common/http-client';
 import { WebServer } from './webserver';
 import { WebServerService } from './webserver.service';
-import { WebSitesModuleName, CertificatesModuleName } from '../main/settings';
+import { WebSitesModuleName, CertificatesModuleName, FileSystemModuleName, AppPoolsModuleName } from '../main/settings';
 import { CertificatesServiceURL } from 'certificates/certificates.service';
 import { UnexpectedServerStatusError } from 'error/api-error';
 import { NotificationService } from 'notification/notification.service';
@@ -12,7 +12,6 @@ import { BreadcrumbsService } from 'header/breadcrumbs.service';
 import { BreadcrumbsRoot, WebServerCrumb } from 'header/breadcrumb';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { StaticModuleReference } from 'common/feature-vtabs.component';
-import { CONTEXT_MODULES } from 'main/settings'
 
 @Component({
     template: `
@@ -27,7 +26,7 @@ import { CONTEXT_MODULES } from 'main/settings'
         <span *ngIf="failure" class="color-error">{{failure}}</span>
         <div *ngIf="webServer">
             <webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
-            <feature-vtabs [model]="webServer" [resource]="'webserver'" [default]="defaultTab" [subcategory]="'Web Server'" [include]="includes" [exclude]="excludes">
+            <feature-vtabs [model]="webServer" [resource]="'webserver'" [default]="defaultTab" [subcategory]="'Web Server'" [include]="includes" [promote]="promote">
                 <webserver-general class="general-tab" [model]="webServer"></webserver-general>
             </feature-vtabs>
         </div>
@@ -53,8 +52,16 @@ export class WebServerComponent implements OnInit {
                         .catch(e => {
                             this.logger.log(LogLevel.WARN, `Error pinging ${CertificatesServiceURL}:\n${e}`);
                             return false;
-                        })}];
-    excludes: string[] = CONTEXT_MODULES.map(m => m.name);
+                        })},
+        <StaticModuleReference> {
+            name: FileSystemModuleName,
+        },
+    ];
+    promote: string[] = [
+        AppPoolsModuleName,
+        WebSitesModuleName,
+        FileSystemModuleName,
+    ]
 
     constructor(
         @Inject('WebServerService') private _service: WebServerService,

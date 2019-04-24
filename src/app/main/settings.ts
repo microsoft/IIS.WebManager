@@ -37,7 +37,8 @@ export const AppModuleName = "AppModule"
 export const WebServerModuleName = "Web Server"
 export const WebSitesModuleName = "Web Sites"
 export const AppPoolsModuleName = "Application Pools"
-export const FilesModuleName = "Files"
+export const FileSystemModuleName = "File System"
+export const WebFilesModuleName = "Files"
 export const CertificatesModuleName = "Certificates"
 
 export const WebSitesApiName= "websites";
@@ -50,6 +51,7 @@ export class ComponentReference {
 
 export const GLOBAL_MODULES: ComponentReference[] = [
     new ComponentReference(WebSitesModuleName, "fa fa-globe", WebSiteListComponentName, WebSitesApiName, "/api/webserver/websites?application_pool.id={appPoolId}"),
+    new ComponentReference(AppPoolsModuleName, "fa fa-cogs", AppPoolComponentName, "app_pools", "/api/webserver/application-pools"),
     new ComponentReference("Web Applications", "fa fa-code", WebAppListComponentName, "webapps", "/api/webserver/webapps?website.id={websiteid}&application_pool.id={apppoolid}"),
     new ComponentReference("Virtual Directories", "fa fa-folder-o", VdirListComponentName, "vdirs", "/api/webserver/virtual-directories?website.id={siteId}&webapp.id={appId}"),
     new ComponentReference("Authentication", "fa fa-sign-in", AuthenticationComponentName, "authentication", "/api/webserver/authentication/{id}"),
@@ -58,6 +60,7 @@ export const GLOBAL_MODULES: ComponentReference[] = [
     new ComponentReference("Central Certificate Store", "fa fa-certificate", CentralCertificateComponentName, "central_certificates", "/api/webserver/centralized-certificates/{id}"),
     new ComponentReference("Default Documents", "fa fa-file-text-o", DefaultDocumentsComponentName, "default_document", "/api/webserver/default-documents/{id}"),
     new ComponentReference("Directory Browsing", "fa fa-folder-open-o", DirectoryBrowsingComponentName, "directory_browsing", "/api/webserver/directory-browsing/{id}"),
+    new ComponentReference(WebFilesModuleName, "fa fa-files-o", WebFilesComponentName, FilesApiName, "/api/webserver/files/{id}"),
     new ComponentReference("IP Restrictions", "fa fa-ban", IpRestrictionsComponentName, "ip_restrictions", "/api/webserver/ip-restrictions/{id}"),
     new ComponentReference("Logging","fa fa-pencil", LoggingComponentName, "logging","/api/webserver/logging/{id}"),
     new ComponentReference("Mime Maps", "fa fa-arrows-h", MimeMapsComponentName, "static_content", "/api/webserver/static-content/{id}"),
@@ -69,20 +72,5 @@ export const GLOBAL_MODULES: ComponentReference[] = [
     new ComponentReference("Request Tracing", "fa fa-flag-o", RequestTracingComponentName, "request_tracing", "/api/webserver/http-request-tracing/{id}"),
     new ComponentReference("Static Content", "fa fa-file-o", StaticContentComponentName, "static_content", "/api/webserver/static-content/{id}"),
     new ComponentReference("Url Rewrite", "fa fa-exchange", UrlRewriteComponentName, "url_rewrite", "/api/webserver/url-rewrite/{id}"),
-    new ComponentReference(FilesModuleName, "fa fa-files-o", WebFilesComponentName, FilesApiName, "/api/webserver/files/{id}"),
+    new ComponentReference(FileSystemModuleName, "fa fa-files-o", FilesComponentName, "files", "/api/files/{id}"),
 ]
-
-// const FilesContext = new ComponentReference(FilesModuleName, "", FilesComponentName, "files", "/api/files/{id}");
-
-export const CONTEXT_MODULES = [
-    <ContextReference> { name: WebServerModuleName, ico: "fa fa-server", routerLink: ["/webserver/general"]},
-    <ContextReference> { name: AppPoolsModuleName, ico: "fa fa-cogs", routerLink: ["/webserver/application-pools"]},
-    <ContextReference> { name: WebSitesModuleName, ico: "fa fa-globe", routerLink: ["/webserver/web-sites"]},
-    // <ContextReference> { name: FilesModuleName, ico: "fa fa-files-o", routerLink: ["/webserver/websites"]},
-];
-
-export class ContextReference {
-    name: string
-    ico: string
-    routerLink: string[]
-}

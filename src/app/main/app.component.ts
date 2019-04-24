@@ -10,6 +10,21 @@ import { BreadcrumbsService } from 'header/breadcrumbs.service';
 
 @Component({
     selector: 'app-root',
+    template: `
+<div class='content' (dragover)="dragOver($event)">
+    <header *ngIf="showHeader()"></header>
+    <div class="container-fluid" id="mainContainer" #mainContainer>
+        <breadcrumbs></breadcrumbs>
+        <div class="row" id="mainRow">
+            <div class="col-xs-12">
+                <div id="bodyContent">
+                    <router-outlet (activate)='onActivate($event)'></router-outlet>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+`,
     styles: [`
         .content {
             height: 100%;
@@ -35,7 +50,6 @@ import { BreadcrumbsService } from 'header/breadcrumbs.service';
         }
     `],
     encapsulation: ViewEncapsulation.None,  // Use to disable CSS Encapsulation for this component
-    templateUrl: "./app.component.html",
 })
 export class AppComponent implements OnInit {
     constructor(private _router: Router,

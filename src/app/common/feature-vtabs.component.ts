@@ -1,15 +1,24 @@
-import { ComponentReference, CONTEXT_MODULES, GLOBAL_MODULES, CertificatesModuleName } from "main/settings";
-import { Component, Input, OnInit, AfterViewInit, forwardRef, ViewChild, Inject } from "@angular/core";
+import { ComponentReference, GLOBAL_MODULES, CertificatesModuleName, WebServerModuleName, AppPoolsModuleName, WebSitesModuleName, FileSystemModuleName } from "main/settings";
+import { Component, Input, OnInit, AfterViewInit, forwardRef, ViewChild } from "@angular/core";
 import { OptionsService } from "main/options.service";
 import { UrlUtil } from "utils/url";
 import { LoggerFactory, Logger, LogLevel } from "diagnostics/logger";
 import { VTabsComponent } from "./vtabs.component";
-import { WebServer } from "webserver/webserver";
-import { WebServerService } from "webserver/webserver.service";
+import { SectionHelper } from "./section.helper";
 
 const HomeCategory = "Home";
+export class RouteReference {
+    constructor(public name: string, public ico: string, public routerLink: string[]) {}
+}
 
-class Feature extends ComponentReference {
+export const CONTEXT_MODULES = [
+    new RouteReference(WebServerModuleName, "fa fa-server", [`/webserver/${SectionHelper.normalize(WebServerModuleName)}+general`]),
+    new RouteReference(WebSitesModuleName, "fa fa-globe", [`/webserver/${SectionHelper.normalize(WebSitesModuleName)}`]),
+    new RouteReference(AppPoolsModuleName, "fa fa-cogs", [`/webserver/${SectionHelper.normalize(AppPoolsModuleName)}`]),
+    new RouteReference(FileSystemModuleName, "fa fa-files-o", [`/webserver/${SectionHelper.normalize(FileSystemModuleName)}`]),
+];
+
+export class Feature extends ComponentReference {
     data: any;
 }
 
@@ -27,13 +36,19 @@ export class StaticModuleReference {
     template: `
 <div class="sidebar crumb" [class.nav]="IsActive">
     <vtabs [markLocation]="true" (activate)="Refresh()" [defaultTab]="default" [categories]="['${HomeCategory}', subcategory]">
-        <item *ngFor="let context of contexts" [name]="context.name" [ico]="context.ico" [routerLink]="context.routerLink" [category]="'${HomeCategory}'"></item>
         <item [name]="generalTabName" [ico]="generalTabIcon" [category]="subcategory">
             <ng-content select=".general-tab"></ng-content>
         </item>
         <item *ngFor="let module of features" [name]="module.name" [ico]="module.ico" [category]="subcategory">
             <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
         </item>
+        <ng-container *ngFor="let module of contexts">
+            <item [name]="module.name" [ico]="module.ico" [category]="'${HomeCategory}'" [routerLink]="module.routerLink">
+                <ng-container *ngIf="!(module.routerLink)">
+                    <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
+                </ng-container>
+            </item>
+        </ng-container>
     </vtabs>
 </div>
 `,
@@ -53,23 +68,18 @@ export class StaticModuleReference {
     @Input() resource: string;
     @Input() subcategory: string;
     @Input() include: StaticModuleReference[] = [];
-    @Input() exclude: string[] = [];
-    contexts = CONTEXT_MODULES;
+    @Input() promote: string[] = [];
+    @Input() contexts: any[] = [];
     features: Feature[];
 
     @ViewChild(forwardRef(() => VTabsComponent)) vtabs: VTabsComponent;
     private _logger: Logger;
 
     constructor(
-        @Inject('WebServerService') private _service: WebServerService,
         private options: OptionsService,
         private factory: LoggerFactory,
     ){
         this._logger = factory.Create(this);
-    }
-
-    get server(): WebServer {
-        return this._service.cache;
     }
 
     get IsActive() {
@@ -83,20 +93,36 @@ export class StaticModuleReference {
     ngOnInit(): void {
         const apiNames = Object.keys(this.model._links);
         const featureSet: Feature[] = [];
-        for (const feature of GLOBAL_MODULES.filter(m => !this.exclude.includes(m.name))) {
+        let promoted = new Map<string, Feature>();
+        for (const feature of GLOBAL_MODULES) {
             const apiName = feature.api_name;
+            let candidate: Feature;
             if (this.include.find(ref => ref.name == feature.name) ) {
-                featureSet.push(<Feature>{...feature});
+                candidate = <Feature>{ ...feature };
             } else if (apiNames.includes(apiName)) {
                 if (this.model._links[apiName].href) {
                     const matches = UrlUtil.getUrlMatch(this.model._links[apiName].href, feature.api_path);
                     if (matches) {
-                        const m = <Feature>{ ...feature };
-                        m.data = matches;
-                        m.data[this.resource] = this.model;
-                        featureSet.push(m);
+                        candidate = <Feature>{ ...feature };
+                        candidate.data = matches;
+                        candidate.data[this.resource] = this.model;
                     }
                 }
+            }
+            if (candidate) {
+                if (this.promote && this.promote.includes(candidate.name)) {
+                    promoted[candidate.name] = candidate;
+                } else {
+                    featureSet.push(candidate);
+                }
+            }
+        }
+        for (let context of CONTEXT_MODULES) {
+            let candidate = promoted[context.name];
+            if (candidate) {
+                this.contexts.push(candidate)
+            } else {
+                this.contexts.push(context);
             }
         }
         this.features = featureSet;

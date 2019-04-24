@@ -24,10 +24,6 @@ export class WebServerService {
         return this._installStatus;
     }
 
-    get cache(): WebServer {
-        return this._server;
-    }
-
     get server(): Promise<WebServer> {
         if (this._server) {
             return Promise.resolve(this._server);
