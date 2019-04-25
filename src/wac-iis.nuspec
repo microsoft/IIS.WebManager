@@ -4,7 +4,7 @@
     <packageTypes>
       <packageType name="WindowsAdminCenterExtension" />
     </packageTypes>
-    <id>microsoft.iis-wac-extension</id>
+    <id>msft.iis.iis-management</id>
     <version>$version$</version>
     <title>Microsoft IIS</title>
     <authors>Microsoft</authors>

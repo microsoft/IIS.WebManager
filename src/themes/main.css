@@ -129,6 +129,10 @@ input[type='number'] {
     max-width: 100%;
 }
 
+input[type='radio'] {
+    margin-right: 0.3em;
+}
+
 input:required:invalid:not(.unfocused),
 input:not(:required).ng-invalid {
     border-left-width: 6px;
@@ -169,6 +173,7 @@ button {
     padding: 4px 6px;
     cursor: pointer;
     font-size: 110%;
+    margin: 0.3em;
 }
 
 .bttn i.fa,
