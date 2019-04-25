@@ -11,7 +11,7 @@ import { Router } from "@angular/router";
     template: `
 <ul class="breadcrumbs sme-focus-zone">
     <li *ngFor="let crumb of Crumbs; index as i">
-        <span *ngIf="!(crumb.routerLink)">{{crumb.label}}</span>
+        <span [ngClass]="{root: !i}" *ngIf="!(crumb.routerLink)">{{crumb.label}}</span>
         <a *ngIf="crumb.routerLink" [routerLink]="crumb.routerLink">{{crumb.label}}</a>
         <span class="separator" *ngIf="i != Crumbs.length - 1">&gt;</span>
     </li>
@@ -32,6 +32,10 @@ import { Router } from "@angular/router";
 
 .breadcrumbs li {
     float: left;
+}
+
+.breadcrumbs li span.root {
+    font-weight: bold;
 }
 
 .breadcrumbs .separator {

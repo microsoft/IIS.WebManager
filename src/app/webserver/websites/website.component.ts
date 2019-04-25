@@ -6,13 +6,14 @@ import { DiffUtil } from 'utils/diff';
 import { OptionsService } from 'main/options.service';
 import { BreadcrumbsService } from 'header/breadcrumbs.service';
 import { WebServerCrumb, BreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
+import { WebSitesModuleName } from 'main/settings';
 
 @Component({
     template: `
         <not-found *ngIf="notFound"></not-found>
         <loading *ngIf="!(site || notFound)"></loading>
         <website-header *ngIf="site" [site]="site" class="crumb-content" [class.sidebar-nav-content]="_options.active"></website-header>
-        <feature-vtabs *ngIf="site" [model]="site" [resource]="'website'" [subcategory]="'Web Site'">
+        <feature-vtabs *ngIf="site" [model]="site" [resource]="'website'" [subcategory]="'${WebSitesModuleName}'">
             <website-general class="general-tab" [site]="site" (modelChanged)="onModelChanged()"></website-general>
         </feature-vtabs>
     `,

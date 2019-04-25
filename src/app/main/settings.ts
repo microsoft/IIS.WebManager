@@ -35,7 +35,9 @@ export const WarningComponentName = "WarningComponent"
 export const AppModuleName = "AppModule"
 
 export const WebServerModuleName = "Web Server"
+export const WebServerModuleIcon = "fa fa-server"
 export const WebSitesModuleName = "Web Sites"
+export const WebAppsModuleName = "Web Applications"
 export const AppPoolsModuleName = "Application Pools"
 export const FileSystemModuleName = "File System"
 export const WebFilesModuleName = "Files"
@@ -52,7 +54,7 @@ export class ComponentReference {
 export const GLOBAL_MODULES: ComponentReference[] = [
     new ComponentReference(WebSitesModuleName, "fa fa-globe", WebSiteListComponentName, WebSitesApiName, "/api/webserver/websites?application_pool.id={appPoolId}"),
     new ComponentReference(AppPoolsModuleName, "fa fa-cogs", AppPoolComponentName, "app_pools", "/api/webserver/application-pools"),
-    new ComponentReference("Web Applications", "fa fa-code", WebAppListComponentName, "webapps", "/api/webserver/webapps?website.id={websiteid}&application_pool.id={apppoolid}"),
+    new ComponentReference(WebAppsModuleName, "fa fa-code", WebAppListComponentName, "webapps", "/api/webserver/webapps?website.id={websiteid}&application_pool.id={apppoolid}"),
     new ComponentReference("Virtual Directories", "fa fa-folder-o", VdirListComponentName, "vdirs", "/api/webserver/virtual-directories?website.id={siteId}&webapp.id={appId}"),
     new ComponentReference("Authentication", "fa fa-sign-in", AuthenticationComponentName, "authentication", "/api/webserver/authentication/{id}"),
     new ComponentReference("Authorization", "fa fa-user-o", AuthorizationComponentName, "authorization", "/api/webserver/authorization/{id}"),

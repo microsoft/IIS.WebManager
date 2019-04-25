@@ -3,7 +3,7 @@ import { OptionsService } from '../main/options.service';
 import { HttpClient } from '../common/http-client';
 import { WebServer } from './webserver';
 import { WebServerService } from './webserver.service';
-import { WebSitesModuleName, CertificatesModuleName, FileSystemModuleName, AppPoolsModuleName } from '../main/settings';
+import { WebSitesModuleName, CertificatesModuleName, FileSystemModuleName, AppPoolsModuleName, WebServerModuleName, WebServerModuleIcon } from '../main/settings';
 import { CertificatesServiceURL } from 'certificates/certificates.service';
 import { UnexpectedServerStatusError } from 'error/api-error';
 import { NotificationService } from 'notification/notification.service';
@@ -11,7 +11,7 @@ import { Runtime } from 'runtime/runtime';
 import { BreadcrumbsService } from 'header/breadcrumbs.service';
 import { BreadcrumbsRoot, WebServerCrumb } from 'header/breadcrumb';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
-import { StaticModuleReference } from 'common/feature-vtabs.component';
+import { GlobalModuleReference, HomeCategory } from 'common/feature-vtabs.component';
 
 @Component({
     template: `
@@ -26,7 +26,16 @@ import { StaticModuleReference } from 'common/feature-vtabs.component';
         <span *ngIf="failure" class="color-error">{{failure}}</span>
         <div *ngIf="webServer">
             <webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
-            <feature-vtabs [model]="webServer" [resource]="'webserver'" [default]="defaultTab" [subcategory]="'Web Server'" [include]="includes" [promote]="promote">
+            <feature-vtabs
+                        [model]="webServer"
+                        [resource]="'webserver'"
+                        [generalTabName]="'${WebServerModuleName}'"
+                        [generalTabIcon]="'${WebServerModuleIcon}'"
+                        [generalTabCategory]="'${HomeCategory}'"
+                        [default]="'${WebSitesModuleName}'"
+                        [subcategory]="'${WebServerModuleName}'"
+                        [include]="includes"
+                        [promote]="promote">
                 <webserver-general class="general-tab" [model]="webServer"></webserver-general>
             </feature-vtabs>
         </div>
@@ -42,22 +51,22 @@ export class WebServerComponent implements OnInit {
     logger: Logger;
     webServer: WebServer;
     failure: string;
-    defaultTab: string = WebSitesModuleName;
     certQuery: Promise<any>;
-    includes: StaticModuleReference[] = [
-        <StaticModuleReference> {
+    includes: GlobalModuleReference[] = [
+        <GlobalModuleReference> {
             name: CertificatesModuleName,
             initialize: this._http.head(CertificatesServiceURL, null, false)
                         .then(_ => true)
                         .catch(e => {
-                            this.logger.log(LogLevel.WARN, `Error pinging ${CertificatesServiceURL}:\n${e}`);
+                            this.logger.log(LogLevel.ERROR, `Error pinging ${CertificatesServiceURL}, ${CertificatesModuleName} tab will be disabled:\n${e}`);
                             return false;
                         })},
-        <StaticModuleReference> {
+        <GlobalModuleReference> {
             name: FileSystemModuleName,
         },
     ];
     promote: string[] = [
+        WebServerModuleName,
         AppPoolsModuleName,
         WebSitesModuleName,
         FileSystemModuleName,

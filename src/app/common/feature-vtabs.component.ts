@@ -1,4 +1,4 @@
-import { ComponentReference, GLOBAL_MODULES, CertificatesModuleName, WebServerModuleName, AppPoolsModuleName, WebSitesModuleName, FileSystemModuleName } from "main/settings";
+import { ComponentReference, GLOBAL_MODULES, CertificatesModuleName, WebServerModuleName, AppPoolsModuleName, WebSitesModuleName, FileSystemModuleName, WebServerModuleIcon } from "main/settings";
 import { Component, Input, OnInit, AfterViewInit, forwardRef, ViewChild } from "@angular/core";
 import { OptionsService } from "main/options.service";
 import { UrlUtil } from "utils/url";
@@ -6,13 +6,13 @@ import { LoggerFactory, Logger, LogLevel } from "diagnostics/logger";
 import { VTabsComponent } from "./vtabs.component";
 import { SectionHelper } from "./section.helper";
 
-const HomeCategory = "Home";
+export const HomeCategory = "Home";
 export class RouteReference {
     constructor(public name: string, public ico: string, public routerLink: string[]) {}
 }
 
 export const CONTEXT_MODULES = [
-    new RouteReference(WebServerModuleName, "fa fa-server", [`/webserver/${SectionHelper.normalize(WebServerModuleName)}+general`]),
+    new RouteReference(WebServerModuleName, WebServerModuleIcon, [`/webserver/${SectionHelper.normalize(WebServerModuleName)}+general`]),
     new RouteReference(WebSitesModuleName, "fa fa-globe", [`/webserver/${SectionHelper.normalize(WebSitesModuleName)}`]),
     new RouteReference(AppPoolsModuleName, "fa fa-cogs", [`/webserver/${SectionHelper.normalize(AppPoolsModuleName)}`]),
     new RouteReference(FileSystemModuleName, "fa fa-files-o", [`/webserver/${SectionHelper.normalize(FileSystemModuleName)}`]),
@@ -26,7 +26,7 @@ export interface FeatureContext {
     _links: any
 }
 
-export class StaticModuleReference {
+export class GlobalModuleReference {
     name: string
     initialize: Promise<boolean>
 }
@@ -36,7 +36,7 @@ export class StaticModuleReference {
     template: `
 <div class="sidebar crumb" [class.nav]="IsActive">
     <vtabs [markLocation]="true" (activate)="Refresh()" [defaultTab]="default" [categories]="['${HomeCategory}', subcategory]">
-        <item [name]="generalTabName" [ico]="generalTabIcon" [category]="subcategory">
+        <item [name]="generalTabName" [ico]="generalTabIcon" [category]="generalTabCategory || subcategory">
             <ng-content select=".general-tab"></ng-content>
         </item>
         <item *ngFor="let module of features" [name]="module.name" [ico]="module.ico" [category]="subcategory">
@@ -64,10 +64,11 @@ export class StaticModuleReference {
     @Input() default: string;
     @Input() generalTabName: string = "General";
     @Input() generalTabIcon: string = "fa fa-wrench";
+    @Input() generalTabCategory: string;
     @Input() model: FeatureContext;
     @Input() resource: string;
     @Input() subcategory: string;
-    @Input() include: StaticModuleReference[] = [];
+    @Input() include: GlobalModuleReference[] = [];
     @Input() promote: string[] = [];
     @Input() contexts: any[] = [];
     features: Feature[];
@@ -118,9 +119,13 @@ export class StaticModuleReference {
             }
         }
         for (let context of CONTEXT_MODULES) {
-            let candidate = promoted[context.name];
-            if (candidate) {
-                this.contexts.push(candidate)
+            if (this.promote.includes(context.name)) {
+                let candidate = promoted[context.name];
+                if (candidate) {
+                    this.contexts.push(candidate);
+                } else {
+                    this._logger.log(LogLevel.DEBUG, `Tab ${context.name} will not be added because it is missing in included modules`);
+                }
             } else {
                 this.contexts.push(context);
             }

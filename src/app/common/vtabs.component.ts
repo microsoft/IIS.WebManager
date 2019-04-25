@@ -252,13 +252,11 @@ export class Item implements OnInit, OnDestroy {
     }
     
     activate() {
-        this.logger.log(LogLevel.DEBUG, `activating ${this.name} tab`);
         if (this.dynamicChildren) {
             this.dynamicChildren.forEach(child => child.activate());
         }
 
         if (this.routerLink) {
-            console.log(`routing to ${this.routerLink}`)
             return this._router.navigate(this.routerLink, {
                 skipLocationChange: true,
                 replaceUrl: true,

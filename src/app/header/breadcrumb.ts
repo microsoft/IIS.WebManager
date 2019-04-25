@@ -4,7 +4,7 @@ import { SectionHelper } from "common/section.helper";
 
 export const HomeModuleName = "Home";
 export const BreadcrumbsRoot = IsWAC ? [] : [<Breadcrumb>{ label: HomeModuleName, routerLink: ["/"] }];
-export const WebServerCrumb = <Breadcrumb>{ label: "IIS Web Server", routerLink: [`/webserver/${SectionHelper.normalize(WebServerModuleName)}+general`]};
+export const WebServerCrumb = <Breadcrumb>{ label: "Microsoft IIS" };
 export const WebSitesCrumb = <Breadcrumb>{ label: WebSitesModuleName, routerLink: [`/webserver/${SectionHelper.normalize(WebSitesModuleName)}`]};
 export const AppPoolsCrumb = <Breadcrumb>{ label: AppPoolsModuleName, routerLink: [`/webserver/${SectionHelper.normalize(AppPoolsModuleName)}`]};
 

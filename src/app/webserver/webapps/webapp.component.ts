@@ -6,13 +6,14 @@ import {WebApp} from './webapp';
 import {WebAppsService} from './webapps.service';
 import { BreadcrumbsService } from 'header/breadcrumbs.service';
 import { BreadcrumbsRoot, WebServerCrumb, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
+import { WebAppsModuleName } from 'main/settings';
 
 @Component({
     template: `
         <not-found *ngIf="notFound"></not-found>
         <loading *ngIf="!(app || notFound)"></loading>
         <webapp-header *ngIf="app" [model]="app" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webapp-header>
-        <feature-vtabs *ngIf="app" [model]="app" [resource]="'webapp'" [subcategory]="'Web Application'">
+        <feature-vtabs *ngIf="app" [model]="app" [resource]="'webapp'" [subcategory]="'${WebAppsModuleName}'">
             <webapp-general class="general-tab" [model]="app" (modelChanged)="onModelChanged()"></webapp-general>
         </feature-vtabs>
     `,
