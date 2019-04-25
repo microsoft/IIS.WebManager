@@ -1,6 +1,6 @@
 {
   "projects": {
-    "microsoft.iis.web-manager": {
+    "msft.iis.iis-management": {
       "architect": {
         "build": {
           "configurations": {
@@ -63,10 +63,10 @@
         "serve": {
           "configurations": {
             "wac": {
-              "browserTarget": "microsoft.iis.web-manager:build:wac"
+              "browserTarget": "msft.iis.iis-management:build:wac"
             },
             "wac.prod": {
-              "browserTarget": "microsoft.iis.web-manager:build:wac.prod"
+              "browserTarget": "msft.iis.iis-management:build:wac.prod"
             }
           }
         }

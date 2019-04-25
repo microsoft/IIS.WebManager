@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "microsoft.iis.web-manager": {
+    "msft.iis.iis-management": {
       "root": "",
       "sourceRoot": "app",
       "projectType": "application",
@@ -52,7 +52,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "microsoft.iis.web-manager:build"
+            "browserTarget": "msft.iis.iis-management:build"
           }
         },
         "extract-i18n": {
@@ -70,5 +70,5 @@
       }
     }
   },
-  "defaultProject": "microsoft.iis.web-manager"
+  "defaultProject": "msft.iis.iis-management"
 }

@@ -232,7 +232,7 @@ gulp.task('copy', () => {
 
 gulp.task('bundle', cb => {
     var args = process.argv.slice(3);
-    args.unshift('build', "microsoft.iis.web-manager");
+    args.unshift('build', "msft.iis.iis-management");
     // '--aot', '--progress=false', '--extract-licenses=false', '--output-hashing=all'];
     // if (argv['verbose']) { args.push('--verbose'); }
     // if (argv['prod']) { args.push('--prod'); }

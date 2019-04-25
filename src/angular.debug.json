@@ -1,6 +1,6 @@
 {"projects":
   {
-    "microsoft.iis.web-manager": {
+    "msft.iis.iis-management": {
       "architect": {
         "build": {
           "options": {
