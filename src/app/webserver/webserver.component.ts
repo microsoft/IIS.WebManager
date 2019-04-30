@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, AfterViewInit, ViewChild, forwardRef, Input } from '@angular/core';
 import { OptionsService } from '../main/options.service';
 import { HttpClient } from '../common/http-client';
 import { WebServer } from './webserver';
@@ -9,9 +9,11 @@ import { UnexpectedServerStatusError } from 'error/api-error';
 import { NotificationService } from 'notification/notification.service';
 import { Runtime } from 'runtime/runtime';
 import { BreadcrumbsService } from 'header/breadcrumbs.service';
-import { BreadcrumbsRoot, WebServerCrumb } from 'header/breadcrumb';
+import { BreadcrumbsRoot, Breadcrumb } from 'header/breadcrumb';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
-import { GlobalModuleReference, HomeCategory } from 'common/feature-vtabs.component';
+import { GlobalModuleReference, HomeCategory, FeatureVTabsComponent } from 'common/feature-vtabs.component';
+import { Subscription } from 'rxjs';
+import { Item } from 'common/vtabs.component';
 
 @Component({
     template: `
@@ -24,21 +26,7 @@ import { GlobalModuleReference, HomeCategory } from 'common/feature-vtabs.compon
         </div>
         <loading *ngIf="!webServer && !failure"></loading>
         <span *ngIf="failure" class="color-error">{{failure}}</span>
-        <div *ngIf="webServer">
-            <webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
-            <feature-vtabs
-                        [model]="webServer"
-                        [resource]="'webserver'"
-                        [generalTabName]="'${WebServerModuleName}'"
-                        [generalTabIcon]="'${WebServerModuleIcon}'"
-                        [generalTabCategory]="'${HomeCategory}'"
-                        [default]="'${WebSitesModuleName}'"
-                        [subcategory]="'${WebServerModuleName}'"
-                        [include]="includes"
-                        [promote]="promote">
-                <webserver-general class="general-tab" [model]="webServer"></webserver-general>
-            </feature-vtabs>
-        </div>
+        <webserver-view *ngIf="webServer" [webServer]="webServer"></webserver-view>
     `,
     styles: [ `
 .not-installed {
@@ -48,46 +36,18 @@ import { GlobalModuleReference, HomeCategory } from 'common/feature-vtabs.compon
 `],
 })
 export class WebServerComponent implements OnInit {
-    logger: Logger;
     webServer: WebServer;
     failure: string;
-    certQuery: Promise<any>;
-    includes: GlobalModuleReference[] = [
-        <GlobalModuleReference> {
-            name: CertificatesModuleName,
-            initialize: this._http.head(CertificatesServiceURL, null, false)
-                        .then(_ => true)
-                        .catch(e => {
-                            this.logger.log(LogLevel.ERROR, `Error pinging ${CertificatesServiceURL}, ${CertificatesModuleName} tab will be disabled:\n${e}`);
-                            return false;
-                        })},
-        <GlobalModuleReference> {
-            name: FileSystemModuleName,
-        },
-    ];
-    promote: string[] = [
-        WebServerModuleName,
-        AppPoolsModuleName,
-        WebSitesModuleName,
-        FileSystemModuleName,
-    ]
 
     constructor(
         @Inject('WebServerService') private _service: WebServerService,
         @Inject('Runtime') private _runtime: Runtime,
-        private _crumbs: BreadcrumbsService,
-        private _http: HttpClient,
-        private _options: OptionsService,
         private _notifications: NotificationService,
-        private factory: LoggerFactory,
-    ) {
-        this.logger = factory.Create(this);
-    }
+    ){}
 
     ngOnInit() {
         this.server.then(ws => {
             this.webServer = ws;
-            this._crumbs.load(BreadcrumbsRoot.concat(WebServerCrumb));
         });
     }
 
@@ -96,6 +56,7 @@ export class WebServerComponent implements OnInit {
     }
 
     get server(): Promise<WebServer> {
+        var outer = this;
         return new Promise<WebServer>((resolve, reject) => {
             this._service.server.catch(e => {
                 if (e instanceof UnexpectedServerStatusError) {
@@ -128,5 +89,90 @@ export class WebServerComponent implements OnInit {
                 resolve(ws)
             })
         })
+    }
+}
+
+@Component({
+    selector: "webserver-view",
+    template: `
+<webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
+<feature-vtabs
+    [model]="webServer"
+    [resource]="'webserver'"
+    [generalTabName]="'${WebServerModuleName}'"
+    [generalTabIcon]="'${WebServerModuleIcon}'"
+    [generalTabCategory]="'${HomeCategory}'"
+    [default]="'${WebSitesModuleName}'"
+    [subcategory]="'${WebServerModuleName}'"
+    [include]="includes"
+    [promote]="promote">
+    <webserver-general class="general-tab" [model]="webServer"></webserver-general>
+</feature-vtabs>
+`,
+})
+export class WebServerViewComponent implements AfterViewInit {
+    logger: Logger;
+    includes: GlobalModuleReference[] = [
+        <GlobalModuleReference> {
+            name: CertificatesModuleName,
+            initialize: this._http.head(CertificatesServiceURL, null, false)
+                        .then(_ => true)
+                        .catch(e => {
+                            this.logger.log(LogLevel.ERROR, `Error pinging ${CertificatesServiceURL}, ${CertificatesModuleName} tab will be disabled:\n${e}`);
+                            return false;
+                        })},
+        <GlobalModuleReference> {
+            name: FileSystemModuleName,
+        },
+    ];
+    promote: string[] = [
+        WebServerModuleName,
+        AppPoolsModuleName,
+        WebSitesModuleName,
+        FileSystemModuleName,
+    ]
+    tabsSubscription: Subscription;
+    webserverCrumbs: Breadcrumb[] = BreadcrumbsRoot;
+    websitesCrumbs = BreadcrumbsRoot.concat(<Breadcrumb>{ label: WebSitesModuleName });
+    appPoolsCrumbs = BreadcrumbsRoot.concat(<Breadcrumb>{ label: AppPoolsModuleName });
+    private static webSitesPath = Item.Join(HomeCategory, WebSitesModuleName);
+    private static appPoolsPath = Item.Join(HomeCategory, AppPoolsModuleName);
+
+    @Input() webServer: WebServer;
+    @ViewChild(forwardRef(() => FeatureVTabsComponent)) vtab: FeatureVTabsComponent;
+
+    constructor(
+        private _crumbs: BreadcrumbsService,
+        private _http: HttpClient,
+        private _options: OptionsService,
+        private factory: LoggerFactory,
+    ) {
+        this.logger = factory.Create(this);
+    }
+
+    ngAfterViewInit() {
+        this.tabsSubscription = this.vtab.vtabs.onSelectItem.subscribe(
+            selectedPath => {
+                if (selectedPath == WebServerViewComponent.webSitesPath) {
+                    this._crumbs.load(this.websitesCrumbs);
+                } else if (selectedPath == WebServerViewComponent.appPoolsPath) {
+                    this._crumbs.load(this.appPoolsCrumbs);
+                } else {
+                    this._crumbs.load(this.webserverCrumbs);
+                }
+            },
+            e => {
+                this.logger.log(LogLevel.WARN, `Error retrieving tab updates ${e}`);
+            },
+            () => {
+                this.logger.log(LogLevel.INFO, `VTabs completed updating selected tabs`);
+            }
+        );
+    }
+
+    ngOnDestroy() {
+        if (this.tabsSubscription) {
+            this.tabsSubscription.unsubscribe();
+        }
     }
 }

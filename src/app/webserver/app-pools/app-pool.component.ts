@@ -5,7 +5,7 @@ import {OptionsService} from '../../main/options.service';
 import {ApplicationPool} from './app-pool';
 import {AppPoolsService} from './app-pools.service';
 import { BreadcrumbsService } from 'header/breadcrumbs.service';
-import { BreadcrumbsRoot, AppPoolsCrumb, Breadcrumb, WebServerCrumb } from 'header/breadcrumb';
+import { BreadcrumbsRoot, AppPoolsCrumb, Breadcrumb } from 'header/breadcrumb';
 import { AppPoolsModuleName } from 'main/settings';
 
 @Component({
@@ -40,7 +40,6 @@ export class AppPoolComponent implements OnInit {
                 this.setAppPool(p);
                 this.crumbs.load(
                     BreadcrumbsRoot.concat(
-                        WebServerCrumb,
                         AppPoolsCrumb,
                         <Breadcrumb>{ label: p.name },
                     ));

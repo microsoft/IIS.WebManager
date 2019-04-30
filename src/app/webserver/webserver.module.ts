@@ -12,7 +12,7 @@ import { WebServerRoutingModule } from './webserver-routing.module';
 
 import { WebServerGeneralComponent } from './webserver-general.component';
 import { WebServerHeaderComponent } from './webserver-header.component';
-import { WebServerComponent } from './webserver.component';
+import { WebServerComponent, WebServerViewComponent } from './webserver.component';
 
 
 @NgModule({
@@ -29,7 +29,8 @@ import { WebServerComponent } from './webserver.component';
     declarations: [
         WebServerGeneralComponent,
         WebServerHeaderComponent,
-        WebServerComponent
+        WebServerComponent,
+        WebServerViewComponent,
     ]
 })
 export class WebServerModule {

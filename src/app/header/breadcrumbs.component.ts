@@ -1,8 +1,7 @@
-import { Component, OnDestroy, ChangeDetectorRef, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { BreadcrumbsService } from "./breadcrumbs.service";
 import { Breadcrumb } from "./breadcrumb";
-import { takeUntil } from "rxjs/operators";
-import { Subject } from "rxjs";
+import { Subscription } from "rxjs";
 import { LoggerFactory, LogLevel, Logger } from "diagnostics/logger";
 import { Router } from "@angular/router";
 
@@ -57,23 +56,19 @@ import { Router } from "@angular/router";
 })
 export class BreadcrumbsComponent implements OnInit, OnDestroy {
     public Crumbs: Breadcrumb[] = [];
-    private destroy: Subject<boolean> = new Subject<boolean>();
     private logger: Logger;
+    private sub: Subscription;
 
     constructor(
         private router: Router,
         private factory: LoggerFactory,
         private srv: BreadcrumbsService,
-        private cd: ChangeDetectorRef,
     ){
         this.logger = factory.Create(this);
     }
 
     ngOnInit(): void {
-        this.srv.crumbs.pipe(
-            // close the observable on destroy, the subscription would be unsubscribed
-            takeUntil(this.destroy),
-        ).subscribe(
+        this.sub = this.srv.crumbs.subscribe(
             v => this.Crumbs = v,
             e => this.logger.log(LogLevel.WARN, `Error receiving crumb ${e}`),
         );
@@ -81,6 +76,8 @@ export class BreadcrumbsComponent implements OnInit, OnDestroy {
 
     
     ngOnDestroy(): void {
-        this.destroy.next(true);
+        if (this.sub) {
+            this.sub.unsubscribe();
+        }
     }
 }

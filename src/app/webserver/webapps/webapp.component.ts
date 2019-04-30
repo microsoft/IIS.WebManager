@@ -5,7 +5,7 @@ import {OptionsService} from '../../main/options.service';
 import {WebApp} from './webapp';
 import {WebAppsService} from './webapps.service';
 import { BreadcrumbsService } from 'header/breadcrumbs.service';
-import { BreadcrumbsRoot, WebServerCrumb, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
+import { BreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
 import { WebAppsModuleName } from 'main/settings';
 
 @Component({
@@ -41,7 +41,6 @@ export class WebAppComponent implements OnInit {
                 this.setApp(app);
                 this.crumbs.load(
                     BreadcrumbsRoot.concat(
-                        WebServerCrumb,
                         WebSitesCrumb,
                         <Breadcrumb>{ label: app.website.name, routerLink: ['/webserver/websites/', app.website.id] },
                         <Breadcrumb>{ label: app.path },

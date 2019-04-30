@@ -2,7 +2,7 @@ import { NgModule, Component, Input, Output, ContentChildren, QueryList, OnInit,
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject, ReplaySubject } from 'rxjs';
 import { DynamicComponent } from './dynamic.component';
 import { SectionHelper } from './section.helper';
 import { Module as DynamicModule } from './dynamic.component';
@@ -64,6 +64,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     categorizedTabs: Map<string, Item[]> = new Map<string, Item[]>();
 
     @ViewChildren('tabLabels') tabLabels: QueryList<ElementRef>;
+    onSelectItem: Subject<string> = new ReplaySubject<string>();
 
     constructor(
         private _activatedRoute: ActivatedRoute,
@@ -85,10 +86,9 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
                 // if input is not fully qualified, resolve category by searching
                 this.logger.log(LogLevel.INFO, `Tab ID ${selectedPath} is not fully qualified, trying to resolve category`);
                 for (let i = this.categories.length - 1; i >= 0; i--) {
-                    let category = SectionHelper.normalize(this.categories[i]);
-                    let item = this.categorizedTabs[category].find(i => SectionHelper.normalize(i.name) == selectedPath);
+                    let item = this.categorizedTabs[SectionHelper.normalize(this.categories[i])].find(i => SectionHelper.normalize(i.name) == selectedPath);
                     if (item) {
-                        selectedPath = Item.Join(category, selectedPath);
+                        selectedPath = Item.Join(this.categories[i], selectedPath);
                         break;
                     }
                 }
@@ -115,6 +115,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
             this._sectionHelper.dispose();
             this._sectionHelper = null;
         }
+        this.onSelectItem.unsubscribe();
     }
 
     public addTab(tab: Item) {
@@ -176,6 +177,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         this.tabs.forEach(t => t.deactivate());
         this.tabs[index].activate();
         this.activate.emit(this.tabs[index]);
+        this.onSelectItem.next(section);
     }
 }
 
@@ -213,11 +215,11 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
 export class Item implements OnInit, OnDestroy {
 
     static Join(category: string, name: string) {
-        return `${category}+${name}`;
+        return `${SectionHelper.normalize(category)}+${SectionHelper.normalize(name)}`;
     }
 
     static GetFullyQualifiedName(item: Item) {
-        return Item.Join(SectionHelper.normalize(item.category), SectionHelper.normalize(item.name));
+        return Item.Join(item.category, item.name);
     }
 
     @Input() ico: string = "";

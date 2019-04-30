@@ -5,7 +5,7 @@ import { WebSitesService } from './websites.service';
 import { DiffUtil } from 'utils/diff';
 import { OptionsService } from 'main/options.service';
 import { BreadcrumbsService } from 'header/breadcrumbs.service';
-import { WebServerCrumb, BreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
+import { BreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
 import { WebSitesModuleName } from 'main/settings';
 
 @Component({
@@ -42,7 +42,6 @@ export class WebSiteComponent implements OnInit {
                 this.setSite(s);
                 this._crumbs.load(
                     BreadcrumbsRoot.concat(
-                        WebServerCrumb,
                         WebSitesCrumb,
                         <Breadcrumb>{ label: s.name },
                     )
