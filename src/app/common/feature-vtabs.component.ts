@@ -31,6 +31,11 @@ export class GlobalModuleReference {
     initialize: Promise<boolean>
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// This class is a generalization of the webserver/website/app pool/web app pages
+// Depending on the "Context" (webserver/website/app pool/web app), different "Features" (certificate/URL rewrite/etc) are selected to be displayed
+// Downstream classes can also choose to include modules with "includeModules" force a module to be included or set modules to be promoted to context
+// section by listing the module names in "promoteToContext"
 @Component({
     selector: 'feature-vtabs',
     template: `
@@ -68,8 +73,8 @@ export class GlobalModuleReference {
     @Input() model: FeatureContext;
     @Input() resource: string;
     @Input() subcategory: string;
-    @Input() include: GlobalModuleReference[] = [];
-    @Input() promote: string[] = [];
+    @Input() includeModules: GlobalModuleReference[] = [];
+    @Input() promoteToContext: string[] = [];
     @Input() contexts: any[] = [];
     features: Feature[];
 
@@ -98,7 +103,7 @@ export class GlobalModuleReference {
         for (const feature of GLOBAL_MODULES) {
             const apiName = feature.api_name;
             let candidate: Feature;
-            if (this.include.find(ref => ref.name == feature.name) ) {
+            if (this.includeModules.find(ref => ref.name == feature.name) ) {
                 candidate = <Feature>{ ...feature };
             } else if (apiNames.includes(apiName)) {
                 if (this.model._links[apiName].href) {
@@ -111,7 +116,7 @@ export class GlobalModuleReference {
                 }
             }
             if (candidate) {
-                if (this.promote && this.promote.includes(candidate.name)) {
+                if (this.promoteToContext && this.promoteToContext.includes(candidate.name)) {
                     promoted[candidate.name] = candidate;
                 } else {
                     featureSet.push(candidate);
@@ -119,7 +124,7 @@ export class GlobalModuleReference {
             }
         }
         for (let context of CONTEXT_MODULES) {
-            if (this.promote.includes(context.name)) {
+            if (this.promoteToContext.includes(context.name)) {
                 let candidate = promoted[context.name];
                 if (candidate) {
                     this.contexts.push(candidate);
@@ -134,7 +139,7 @@ export class GlobalModuleReference {
     }
 
     ngAfterViewInit(): void {
-        for (const feature of this.include) {
+        for (const feature of this.includeModules) {
             if (feature.initialize) {
                 feature.initialize.then(success => {
                     if (!success) {

@@ -104,15 +104,15 @@ export class WebServerComponent implements OnInit {
     [generalTabCategory]="'${HomeCategory}'"
     [default]="'${WebSitesModuleName}'"
     [subcategory]="'${WebServerModuleName}'"
-    [include]="includes"
-    [promote]="promote">
+    [includeModules]="staticModules"
+    [promoteToContext]="promoteToContext">
     <webserver-general class="general-tab" [model]="webServer"></webserver-general>
 </feature-vtabs>
 `,
 })
 export class WebServerViewComponent implements AfterViewInit {
     logger: Logger;
-    includes: GlobalModuleReference[] = [
+    staticModules: GlobalModuleReference[] = [
         <GlobalModuleReference> {
             name: CertificatesModuleName,
             initialize: this._http.head(CertificatesServiceURL, null, false)
@@ -125,7 +125,7 @@ export class WebServerViewComponent implements AfterViewInit {
             name: FileSystemModuleName,
         },
     ];
-    promote: string[] = [
+    promoteToContext: string[] = [
         WebServerModuleName,
         AppPoolsModuleName,
         WebSitesModuleName,
