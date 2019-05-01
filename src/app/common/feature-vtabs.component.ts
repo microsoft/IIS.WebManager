@@ -103,8 +103,11 @@ export class GlobalModuleReference {
         for (const feature of GLOBAL_MODULES) {
             const apiName = feature.api_name;
             let candidate: Feature;
+            // If we have specified the module to be included, select the module as candidate
             if (this.includeModules.find(ref => ref.name == feature.name) ) {
                 candidate = <Feature>{ ...feature };
+            // If model's link specifies the module's API, produce the parameter matches
+            // and if it is successful, select it as candidate
             } else if (apiNames.includes(apiName)) {
                 if (this.model._links[apiName].href) {
                     const matches = UrlUtil.getUrlMatch(this.model._links[apiName].href, feature.api_path);
@@ -115,6 +118,7 @@ export class GlobalModuleReference {
                     }
                 }
             }
+            // candidate should go to feature category unless it was specified as context feature
             if (candidate) {
                 if (this.promoteToContext && this.promoteToContext.includes(candidate.name)) {
                     promoted[candidate.name] = candidate;
@@ -123,15 +127,19 @@ export class GlobalModuleReference {
                 }
             }
         }
+        // Populate "contexts" category tabs
+        // CONTEXT_MODULES are placeholder tabs, candidates promoted previously take precedence to be chosen
         for (let context of CONTEXT_MODULES) {
             if (this.promoteToContext.includes(context.name)) {
                 let candidate = promoted[context.name];
                 if (candidate) {
+                    // push the promoted candidate
                     this.contexts.push(candidate);
                 } else {
                     this._logger.log(LogLevel.DEBUG, `Tab ${context.name} will not be added because it is missing in included modules`);
                 }
             } else {
+                // push the placeholder
                 this.contexts.push(context);
             }
         }
