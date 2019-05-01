@@ -118,7 +118,7 @@ export class GlobalModuleReference {
                     }
                 }
             }
-            // candidate should go to feature category unless it was specified as context feature
+            // candidate should go to feature category unless it was specified as context
             if (candidate) {
                 if (this.promoteToContext && this.promoteToContext.includes(candidate.name)) {
                     promoted[candidate.name] = candidate;
