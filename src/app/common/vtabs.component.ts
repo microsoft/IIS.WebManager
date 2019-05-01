@@ -22,8 +22,7 @@ import { IsWAC } from 'environments/environment';
                         class="hover-edit"
                         *ngFor="let tab of getTabs(category)"
                         [ngClass]="{active: tab.active}"
-                        (keyup.space)="selectItem(tab)"
-                        (keyup.enter)="selectItem(tab)"
+                        (focus)="selectItem(tab)"
                         (click)="selectItem(tab)">
                         <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
                     </li>
@@ -164,7 +163,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
             tab.activate();
         }
         // set input focus to the title element of the newly activated tab
-        tab.focusTitle();
+        //tab.focusTitle();
     }
 
     private onSectionChange(section: string) {
