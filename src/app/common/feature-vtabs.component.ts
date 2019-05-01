@@ -48,7 +48,7 @@ export class GlobalModuleReference {
             <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
         </item>
         <ng-container *ngFor="let module of contexts">
-            <item [name]="module.name" [ico]="module.ico" [category]="'${HomeCategory}'" [routerLink]="module.routerLink">
+            <item tabindex="-1" [name]="module.name" [ico]="module.ico" [category]="'${HomeCategory}'" [routerLink]="module.routerLink">
                 <ng-container *ngIf="!(module.routerLink)">
                     <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
                 </ng-container>
