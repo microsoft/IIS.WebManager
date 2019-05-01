@@ -162,8 +162,6 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         else {
             tab.activate();
         }
-        // set input focus to the title element of the newly activated tab
-        //tab.focusTitle();
     }
 
     private onSectionChange(section: string) {
