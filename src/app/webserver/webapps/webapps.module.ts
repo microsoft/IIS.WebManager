@@ -22,7 +22,6 @@ import { WebAppsService } from './webapps.service';
 import { WebAppComponent } from './webapp.component';
 import { WebAppListComponent } from './webapp-list.component';
 import { WebAppItem, WebAppList } from './webapp-list';
-import { WebAppHeaderComponent } from './webapp-header.component';
 import { WebAppGeneralComponent } from './webapp-general.component';
 import { NewWebAppComponent } from './new-webapp.component';
 
@@ -51,7 +50,6 @@ import { NewWebAppComponent } from './new-webapp.component';
         WebAppListComponent,
         WebAppItem,
         WebAppList,
-        WebAppHeaderComponent,
         WebAppGeneralComponent,
         NewWebAppComponent
     ],

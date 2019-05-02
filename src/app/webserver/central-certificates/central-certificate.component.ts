@@ -10,7 +10,8 @@ import { CentralCertificateConfiguration } from './central-certificates';
 @Component({
     template: `
         <fieldset>
-            <switch #s
+            <switch label="Enable"
+                #s
                 [model]="_enabled"
                 (modelChange)="onEnabled($event)"
                 [disabled]="service.status == 'starting' || service.status == 'stopping'">

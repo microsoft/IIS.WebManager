@@ -80,4 +80,8 @@ export class ApiConnection {
 
         return url;
     }
+
+    public getDisplayName(): string {
+        return this.displayName || this.hostname();
+    }
 }

@@ -1,9 +1,6 @@
 
-import {Component, Input, Output, EventEmitter, ViewChild, Optional, Injector, OnInit, OnChanges, SimpleChange} from '@angular/core';
-
-import {DateTime} from '../../common/primitives';
-import {Selector} from '../../common/selector';
-
+import {Component, Input, ViewChild, Optional, Injector, OnInit, OnChanges, SimpleChange} from '@angular/core';
+import {Selector} from 'common/selector';
 import {Binding} from './site';
 import {WebSitesService} from './websites.service';
 

@@ -10,7 +10,9 @@ import { NotificationService } from '../../notification/notification.service';
     template: `
         <loading *ngIf="service.status == 'unknown' && !service.error"></loading>
         <error [error]="service.error"></error>
-        <switch class="install" *ngIf="service.webserverScope && service.status != 'unknown'" #s
+        <switch label="Enable"
+                *ngIf="service.webserverScope && service.status != 'unknown'"
+                class="install" #s
                 [auto]="false"
                 [model]="service.status == 'started' || service.status == 'starting'"
                 [disabled]="service.status == 'starting' || service.status == 'stopping'"
@@ -22,8 +24,7 @@ import { NotificationService } from '../../notification/notification.service';
         <override-mode class="pull-right" *ngIf="ipRestrictions" [scope]="ipRestrictions.scope" [metadata]="ipRestrictions.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="ipRestrictions" [attr.disabled]="_locked || null">
             <fieldset>
-                <label *ngIf="!ipRestrictions.scope">Web Site Default</label>
-                <switch class="block" [(model)]="enabled" #s [auto]="false" (modelChanged)="onEnabledChanging(!s.model)">{{enabled ? "On" : "Off"}}</switch>
+                <switch [label]="ipRestrictions.scope ? 'Enable' : 'Web Site Default'" class="block" [(model)]="enabled" #s [auto]="false" (modelChanged)="onEnabledChanging(!s.model)">{{enabled ? "On" : "Off"}}</switch>
             </fieldset>
             <div *ngIf="enabled || !ipRestrictions.scope">
                 <tabs>

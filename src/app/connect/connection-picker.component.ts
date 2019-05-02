@@ -48,10 +48,6 @@ export class ConnectionPickerComponent implements OnDestroy {
             return "Not Connected";
         }
 
-        return this.getDisplayName(this._active);
-    }
-
-    private getDisplayName(con: ApiConnection): string {
-        return con.displayName || con.hostname();
+        return this._active.getDisplayName();
     }
 }

@@ -25,8 +25,7 @@ import { AppPoolListComponent } from '../app-pools/app-pool-list.component';
                 </fieldset>
 
                 <fieldset class="inline-block">
-                    <label>Custom Protocols</label>
-                    <switch class="block" [(model)]="custom_protocols" (modelChange)="useCustomProtocols($event)">{{custom_protocols ? "On" : "Off"}}</switch>
+                    <switch label="Custom Protocols" class="block" [(model)]="custom_protocols" (modelChange)="useCustomProtocols($event)">{{custom_protocols ? "On" : "Off"}}</switch>
                 </fieldset>
                 <fieldset class="inline-block" *ngIf="custom_protocols">
                     <label>Protocols</label>
@@ -36,7 +35,7 @@ import { AppPoolListComponent } from '../app-pools/app-pool-list.component';
             <tab [name]="'Application Pool'">
                 <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Change Application Pool <i class="fa fa-caret-down"></i></button>
                 <selector #poolSelect class="container-fluid create">
-                    <app-pools #appPools [actions]="'view'" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
+                    <app-pools #appPools [listingOnly]="true" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
                 </selector>
                 <app-pool-details [model]="model.application_pool"></app-pool-details>
             </tab>

@@ -1,11 +1,10 @@
 import { Component, Input, Inject, ViewChild } from '@angular/core';
-
-import { Selector } from '../../common/selector';
-import { Humanizer } from '../../common/primitives';
-import { HttpClient } from '../../common/http-client';
-import { ApiFile } from '../../files/file';
+import { Selector } from 'common/selector';
+import { Humanizer } from 'common/primitives';
+import { HttpClient } from 'common/http-client';
+import { ApiFile } from 'files/file';
 import { LoggingService } from './logging.service';
-import { FilesService } from '../../files/files.service';
+import { FilesService } from 'files/files.service';
 
 @Component({
     selector: 'log-file',
@@ -31,7 +30,7 @@ import { FilesService } from '../../files/files.service';
                     <selector #selector [right]="true">
                         <ul>
                             <li><button title="Download" class="download" *ngIf="model.type=='file'" (click)="onDownload($event)">Download</button></li>
-                            <li><button class="delete" (click)="onDelete($event)">Delete</button></li>
+                            <li><button title="Delete" class="delete" (click)="onDelete($event)">Delete</button></li>
                         </ul>
                     </selector>
                 </div>

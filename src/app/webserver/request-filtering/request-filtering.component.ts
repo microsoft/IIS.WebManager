@@ -11,7 +11,9 @@ import { RequestFilteringSettings, RequestFiltering } from './request-filtering'
         <loading *ngIf="service.status == 'unknown' && !service.error"></loading>
         <error [error]="service.error"></error>
         <override-mode class="pull-right" *ngIf="settings" [scope]="settings.scope" [metadata]="settings.metadata" (revert)="onRevert()" (modelChanged)="onFeatureChanged()"></override-mode>
-        <switch class="install" *ngIf="service.webserverScope && service.status != 'unknown'" #s
+        <switch label="Enable"
+                *ngIf="service.webserverScope && service.status != 'unknown'"
+                class="install" #s
                 [auto]="false"
                 [model]="service.status == 'started' || service.status == 'starting'"
                 [disabled]="service.status == 'starting' || service.status == 'stopping'"
@@ -26,20 +28,16 @@ import { RequestFilteringSettings, RequestFiltering } from './request-filtering'
                     <div class="row">
                         <div class="col-xs-7 col-md-4 col-lg-3">
                             <fieldset>
-                                <label>Allow Unlisted File Extensions</label>
-                                <switch class="block" [disabled]="_locked" [(model)]="settings.allow_unlisted_file_extensions" (modelChanged)="onFeatureChanged()">{{settings.allow_unlisted_file_extensions ? "Yes" : "No"}}</switch>
+                                <switch label="Allow Unlisted File Extensions" class="block" [disabled]="_locked" [(model)]="settings.allow_unlisted_file_extensions" (modelChanged)="onFeatureChanged()">{{settings.allow_unlisted_file_extensions ? "Yes" : "No"}}</switch>
                             </fieldset>
                             <fieldset>
-                                <label>Allow Unlisted Verbs</label>
-                                <switch class="block" [disabled]="_locked" [(model)]="settings.allow_unlisted_verbs" (modelChanged)="onFeatureChanged()">{{settings.allow_unlisted_verbs ? "Yes" : "No"}}</switch>
+                                <switch label="Allow Unlisted Verbs" class="block" [disabled]="_locked" [(model)]="settings.allow_unlisted_verbs" (modelChanged)="onFeatureChanged()">{{settings.allow_unlisted_verbs ? "Yes" : "No"}}</switch>
                             </fieldset>
                             <fieldset>
-                                <label>Allow High Bit Characters</label>
-                                <switch class="block" [disabled]="_locked" [(model)]="settings.allow_high_bit_characters" (modelChanged)="onFeatureChanged()">{{settings.allow_high_bit_characters ? "Yes" : "No"}}</switch>
+                                <switch label="Allow High Bit Characters" class="block" [disabled]="_locked" [(model)]="settings.allow_high_bit_characters" (modelChanged)="onFeatureChanged()">{{settings.allow_high_bit_characters ? "Yes" : "No"}}</switch>
                             </fieldset>
                             <fieldset>
-                                <label>Allow Double Escaping</label>
-                                <switch class="block" [disabled]="_locked" [(model)]="settings.allow_double_escaping" (modelChanged)="onFeatureChanged()">{{settings.allow_double_escaping ? "Yes" : "No"}}</switch>
+                                <switch label="Allow Double Escaping" class="block" [disabled]="_locked" [(model)]="settings.allow_double_escaping" (modelChanged)="onFeatureChanged()">{{settings.allow_double_escaping ? "Yes" : "No"}}</switch>
                             </fieldset>
                         </div>
                         <div class="col-xs-7 col-md-4">

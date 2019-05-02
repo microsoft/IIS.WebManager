@@ -1,12 +1,20 @@
-﻿import { Component, Input, ViewChild } from '@angular/core';
-import { Selector } from '../common/selector';
+﻿import { Component, Input } from '@angular/core';
 import { Certificate } from './certificate';
+
+enum ViewState {
+    closed = 0, open,
+}
+
+const viewStates = [
+    { icon: "more", title: "More..." },
+    { icon: "less", title: "less..." },
+]
 
 @Component({
     selector: 'certificate',
     template: `
         <div *ngIf="model" class="grid-item row" tabindex="-1">
-            <div *ngIf="!_viewing" class="row-data">
+            <div *ngIf="!viewing" class="row-data">
                 <div class="visible-xs col-xs-9 col-data cer">
                     <label>Name</label>
                     <span>{{displayName}}</span>
@@ -30,19 +38,9 @@ import { Certificate } from './certificate';
                 </div>
             </div>
             <div class="actions">
-                <div class="selector-wrapper">
-                    <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="(_selector && _selector.opened) || false">
-                        <i class="fa fa-ellipsis-h"></i>
-                    </button>
-                    <selector [right]="true">
-                        <ul>
-                            <li><button *ngIf="!_viewing" class="edit" title="Details" (click)="onDetails($event)">Details</button></li>
-                            <li><button  *ngIf="_viewing" class="cancel" title="Close" (click)="onDetails($event)">Close</button></li>
-                        </ul>
-                    </selector>
-                </div>
+                <button class="list-action-button {{detailsButtonIcon}}" title="{{detailsButtonTitle}}" (click)="onDetails($event)"></button>
             </div>
-            <certificate-details *ngIf="_viewing" [model]="model"></certificate-details>
+            <certificate-details *ngIf="viewing" [model]="model"></certificate-details>
         </div>
     `,
     styles: [`
@@ -79,57 +77,50 @@ import { Certificate } from './certificate';
         .support {
             font-size: 85%;
         }
-
-        .selector-wrapper {
-            position: relative;
-            line-height: 22px;
-        }
-
-        selector {
-            position:absolute;
-            right:0;
-            top: 32px;
-        }
-
-        selector button {
-            min-width: 125px;
-            width: 100%;
-        }
     `]
 })
 export class CertificateListItem {
     @Input() model: Certificate;
-    private _viewing: boolean;
-    @ViewChild(Selector) private _selector: Selector;
+    private _viewing: ViewState = ViewState.closed;
 
     public toggleView() {
-        this._viewing = !this._viewing;
+        this._viewing = 1 - this._viewing;
     }
 
-    private get validTo() {
+    get viewing() {
+        return this._viewing;
+    }
+
+    get detailsButtonIcon() {
+        return viewStates[this.viewing].icon;
+    }
+
+    get detailsButtonTitle() {
+        return viewStates[this.viewing].title;
+    }
+
+    get validTo() {
         return Certificate.friendlyValidTo(this.model);
     }
 
-    private get issuedBy() {
+    get issuedBy() {
         return Certificate.friendlyIssuedBy(this.model);
     }
 
-    private get displayName() {
+    get displayName() {
         return Certificate.displayName(this.model);
     }
 
-    private onDetails(e: Event) {
+    onDetails(e: Event) {
         e.preventDefault();
-        this._selector.close();
         this.toggleView();
     }
 
-    private prevent(e: Event) {
+    prevent(e: Event) {
         e.preventDefault();
     }
 
-    private openSelector(e: Event) {
+    openSelector(e: Event) {
         e.preventDefault();
-        this._selector.toggle();
     }
 }

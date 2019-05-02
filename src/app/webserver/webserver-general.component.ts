@@ -34,7 +34,9 @@ export class WebServerGeneralComponent {
 
     private _subs: Array<Subscription> = [];
 
-    constructor(@Inject('WebServerService') private _service: WebServerService) {}
+    constructor(
+        @Inject('WebServerService') private _service: WebServerService,
+    ) {}
 
     ngOnInit() {
         this._subs.push(this._service.status.subscribe(status => this.model.status = status));

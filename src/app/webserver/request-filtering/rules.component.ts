@@ -34,12 +34,10 @@ import { RequestFilteringService } from './request-filtering.service';
                     <div class="col-lg-4 col-md-5 col-xs-12">
 
                         <fieldset>
-                            <label>Scan Url</label>
-                            <switch class="block" [disabled]="locked" [(model)]="model.scan_url">{{model.scan_url ? "Yes" : "No"}}</switch>
+                            <switch label="Scan Url" class="block" [disabled]="locked" [(model)]="model.scan_url">{{model.scan_url ? "Yes" : "No"}}</switch>
                         </fieldset>
                         <fieldset>
-                            <label>Scan Query String</label>
-                            <switch class="block" [disabled]="locked" [(model)]="model.scan_query_string">{{model.scan_query_string ? "Yes" : "No"}}</switch>
+                            <switch label="Scan Query String" class="block" [disabled]="locked" [(model)]="model.scan_query_string">{{model.scan_query_string ? "Yes" : "No"}}</switch>
                         </fieldset>
 
                         <fieldset [class.has-list]="_displayHeaders">

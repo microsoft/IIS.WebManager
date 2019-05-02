@@ -32,8 +32,7 @@ import { ApplicationPoolIdentity } from './app-pool';
             </div>
         </div>
         <fieldset class='inline-block' *ngIf="useUserProfile">
-            <label>Load User Profile</label>
-            <switch class="block" [(model)]="model.load_user_profile" (modelChanged)="onModelChanged()">
+            <switch label="Load User Profile" class="block" [(model)]="model.load_user_profile" (modelChanged)="onModelChanged()">
                 {{model.load_user_profile ? "On" : "Off"}}
             </switch>
         </fieldset>

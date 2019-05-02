@@ -560,34 +560,13 @@ select[enabled]:not(.inactive) {
 
 .feature-header {
     margin: 0;
-    margin-bottom: 20px;
-    padding-top: 20px;
-    padding-bottom: 10px;
     max-width: 100%;
     display: inline-block;
     white-space: nowrap;
+    padding-top: 25px;
+    padding-left: 10px;
+    padding-bottom: 15px;
 }
-
-.feature-title {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    padding-right: 15px;
-}
-
-.feature-title h1 {
-    font-size: 25px;
-    display: inline;
-}
-
-.feature-title h1:before {
-    font-family: FontAwesome;
-    padding-right: 10px;
-    display:inline-block;
-    line-height: 32px;
-    vertical-align: bottom;
-}
-
 
 /* 
     Collapse
@@ -770,11 +749,27 @@ button.go:before {
     content: "\f061";
 }
 
+button.add:before {
+    content: "\f067";
+}
+
+button.browse:before {
+    content: "\f0ac";
+}
+
 a.link:before {
     content: "\f08e";
     font-family: FontAwesome;
     line-height: 22px;
     vertical-align: middle;
+}
+
+button.more:before {
+    content: "\f067";
+}
+
+button.less:before {
+    content: "\f068";
 }
 
 
@@ -792,8 +787,6 @@ a.link:before {
     overflow: hidden;
     overflow-y: auto;
     left: 0;
-    border-right-style: solid;
-    border-right-width: 1px;
 }
 
 .sidebar .items li:not(.separator) {
@@ -803,13 +796,13 @@ a.link:before {
 .sidebar .items li.separator {
     font-size: 11px;
     text-align: center;
-    color: #999;
+    color: #ccc;
     display: block;
 }
 
 .sidebar .items li.separator .horizontal-strike {
     display: inline-block;
-    color: #999;
+    color: #ccc;
     letter-spacing: 1px;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -817,7 +810,7 @@ a.link:before {
     text-align: center;
     width: 100%;
     background-clip: content-box;
-    border-bottom: 1px solid #999;
+    border-bottom: 1px solid #ccc;
     line-height: .1em;
     margin: 10px 0 20px;
 }
@@ -887,8 +880,6 @@ a.link:before {
 .sidebar .content {
     right: 0;
     position: absolute;
-    padding-right: 15px;
-    padding-left: 15px;
 }
 
 .sidebar-nav-content,
@@ -914,11 +905,6 @@ a.link:before {
     margin-right: 10px;
     border-style: solid;
     border-width: 1px;
-}
-
-.crumb-content {
-    top:14px;
-    position: absolute;
 }
 
 .sidebar .crumbs {
@@ -953,4 +939,59 @@ a.link:before {
     opacity: .7;
     padding: 0 6px;
     content: ">";
+}
+
+.sidebar .content {
+    border-left: solid 1px #ccc;
+}
+
+.list-action-button {
+    display: inline-flex;
+	font-weight: 500;
+}
+
+.row.grid-item.selected-for-edit {
+    background-color: #cce1f1;
+}
+
+.breadcrumbs {
+    font-size: 14px;
+    display: inline;
+    position: sticky;
+    display: inline-block;
+    margin-block-end: 0%;
+    margin-top: 1em;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid #ccc;
+    width: 100%;
+    padding-left: 10px;
+}
+
+.breadcrumbs li {
+    float: left;
+}
+
+.breadcrumbs li span.root {
+    font-weight: bold;
+}
+
+.breadcrumbs .separator {
+    margin-right: 0.2em;
+    margin-left: 0.2em;
+}
+
+.breadcrumbs .pointer:hover {
+    text-decoration: underline;
+}
+
+.breadcrumbs button {
+    padding: 0px;
+    margin: 0px;
+    border: none;
+    outline: none;
+}
+
+.model-header {
+    line-height: 2em;
+    vertical-align: middle;
 }

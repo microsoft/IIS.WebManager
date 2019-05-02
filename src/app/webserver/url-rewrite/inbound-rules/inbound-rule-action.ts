@@ -73,8 +73,7 @@ import { InboundRule, ActionType, RedirectType } from '../url-rewrite';
                 </enum>
             </fieldset>
             <fieldset>
-                <label>Log Rewritten Url</label>
-                <switch [(model)]="rule.action.log_rewritten_url">
+                <switch label="Log Rewritten Url" [(model)]="rule.action.log_rewritten_url">
                     {{rule.action.log_rewritten_url ? "On" : "Off"}}
                 </switch>
             </fieldset>

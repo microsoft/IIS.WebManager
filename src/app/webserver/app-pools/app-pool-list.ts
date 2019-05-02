@@ -1,51 +1,55 @@
-import { Component, Input, Output, Inject, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, Output, Inject, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
-
-import { Selector } from '../../common/selector';
-import { Status } from '../../common/status';
-import { OrderBy } from '../../common/sort.pipe';
-
-import { NotificationService } from '../../notification/notification.service';
+import { OrderBy } from 'common/sort.pipe';
+import { NotificationService } from 'notification/notification.service';
 import { AppPoolsService } from './app-pools.service';
 import { ApplicationPool, ProcessModelIdentityType } from './app-pool';
+import { ListOperationDef, ListOperationContext } from 'common/list';
+import { Status } from 'common/status';
+import { resolveAppPoolRoute } from 'webserver/webserver-routing.module';
+
+enum AppPoolOp {
+    recycle, start, stop, edit, delete,
+}
+
+const appPoolOperations: ListOperationDef<AppPoolOp>[] = [
+    new ListOperationDef<AppPoolOp>(AppPoolOp.recycle, "Recycle", "refresh"),
+    new ListOperationDef<AppPoolOp>(AppPoolOp.start, "Start", "start"),
+    new ListOperationDef<AppPoolOp>(AppPoolOp.stop, "Stop", "stop"),
+    new ListOperationDef<AppPoolOp>(AppPoolOp.edit, "Edit", "edit"),
+    new ListOperationDef<AppPoolOp>(AppPoolOp.delete, "Delete", "delete"),
+];
+
+const actionRestrictions: Map<AppPoolOp, Status> = new Map<AppPoolOp, Status>([
+    [AppPoolOp.start, Status.Stopped],
+    [AppPoolOp.recycle, Status.Started],
+    [AppPoolOp.stop, Status.Started],
+]);
 
 
 @Component({
     selector: 'app-pool-item',
     template: `
-    <div *ngIf="model" class="grid-item row border-color">
-        <div class='col-xs-7 col-sm-4 col-md-3 v-align big'>
-            <a class="color-normal hover-color-active" [routerLink]="['/webserver/app-pools', model.id]">{{model.name}}</a>
-        </div>
-        <div class='col-xs-3 col-md-2 v-align'>
-            <span class='status' [ngClass]="model.status">{{model.status}}</span>
-        </div>
-        <div class='col-md-2 hidden-xs hidden-sm v-align capitalize'>
-            <span>{{model.pipeline_mode}}</span>
-        </div>
-        <div class='col-sm-2 hidden-xs v-align'>
-            <span>{{runtimeVer()}}</span>
-        </div>
-        <div class="col-lg-2 visible-lg v-align">
-            {{identity()}}
-        </div>
-        <div class="actions">
-            <div class="selector-wrapper">
-                <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="(_selector && _selector.opened) || false">
-                    <i class="fa fa-ellipsis-h"></i>
-                </button>
-                <selector [right]="true">
-                    <ul>
-                        <li><button class="edit" title="Edit" *ngIf="allow('edit')" (click)="onEdit($event)">Edit</button></li>
-                        <li><button class="refresh" title="Recycle" *ngIf="allow('recycle')" [attr.disabled]="!started() || null" (click)="onRecycle($event)">Recycle</button></li>
-                        <li><button class="start" title="Start" *ngIf="allow('start')" [attr.disabled]="model.status != 'stopped' ? true : null" (click)="onStart($event)">Start</button></li>
-                        <li><button class="stop" *ngIf="allow('stop')" title="Stop" [attr.disabled]="!started() || null" (click)="onStop($event)">Stop</button></li>
-                        <li><button class="delete" *ngIf="allow('delete')" title="Delete" (click)="onDelete($event)">Delete</button></li>
-                    </ul>
-                </selector>
-            </div>
-        </div>
+<div class="grid-item row border-color"
+    [class.selected-for-edit]="selected"
+    (click)="onItemClicked($event)"
+    (dblclick)="onDblClick($event)">
+    <div class='col-xs-7 col-sm-4 col-md-3 v-align big'>
+        <a class="color-normal hover-color-active" [routerLink]="['/webserver/app-pools', model.id]">{{model.name}}</a>
     </div>
+    <div class='col-xs-3 col-md-2 v-align'>
+        <span class='status' [ngClass]="model.status">{{model.status}}</span>
+    </div>
+    <div class='col-md-2 hidden-xs hidden-sm v-align capitalize'>
+        <span>{{model.pipeline_mode}}</span>
+    </div>
+    <div class='col-sm-2 hidden-xs v-align'>
+        <span>{{runtimeVer()}}</span>
+    </div>
+    <div class="col-lg-2 visible-lg v-align">
+        {{identity()}}
+    </div>
+</div>
     `,
     styles: [`
         .big {
@@ -72,70 +76,53 @@ import { ApplicationPool, ProcessModelIdentityType } from './app-pool';
             text-overflow: ellipsis;
         }
 
-        .actions ul {
-            margin-bottom: 0;
-        }
-
-        .selector-wrapper {
-            position: relative;
-        }
-
         .v-align {
             padding-top: 6px;
         }
-
-        selector {
-            position:absolute;
-            right:0;
-            top: 32px;
-        }
-
-        selector button {
-            min-width: 125px;
-            width: 100%;
-        }
     `]
 })
-export class AppPoolItem {
+export class AppPoolItem extends ListOperationContext<AppPoolOp> {
     @Input() model: ApplicationPool;
-    @Input() actions: string = "";
-    @ViewChild(Selector) private _selector: Selector;
+    @Output() onSelected: EventEmitter<AppPoolItem> = new EventEmitter();
+    selected: boolean = false;
 
-    constructor(private _router: Router,
-                @Inject("AppPoolsService") private _service: AppPoolsService,
-                private _notificationService: NotificationService) {
+    constructor(
+        private router: Router,
+        private notifications: NotificationService,
+        @Inject("AppPoolsService") private service: AppPoolsService,
+    ) {
+        super();
     }
 
-    onDelete(e: Event) {
-        e.stopPropagation();
-        this._selector.close();
-
-        this._notificationService.confirm("Delete Application Pool", "Are you sure you want to delete Application Pool '" + this.model.name + "'")
-            .then(confirmed => confirmed && this._service.delete(this.model));
+    isDisabled(op: ListOperationDef<AppPoolOp>) {
+        let restriction = actionRestrictions.get(op.id);
+        if (restriction && this.model.status != restriction) {
+            return true;
+        }
+        return null;
     }
 
-    onEdit(e: Event) {
-        e.stopPropagation();
-        this._selector.close();
-        this._router.navigate(['webserver', 'app-pools', this.model.id]);
-    }
+    execute(op: ListOperationDef<AppPoolOp>): Promise<any> {
+        switch (op.id) {
+            case AppPoolOp.edit:
+                return this.router.navigate([resolveAppPoolRoute(this.model.id)]);
 
-    onStart(e: Event) {
-        e.stopPropagation();
-        this._selector.close();
-        this._service.start(this.model);
-    }
+            case AppPoolOp.start:
+                return this.service.start(this.model);
 
-    onStop(e: Event) {
-        e.stopPropagation();
-        this._selector.close();
-        this._service.stop(this.model);
-    }
+            case AppPoolOp.stop:
+                return this.service.stop(this.model);
 
-    onRecycle(e: Event) {
-        e.stopPropagation();
-        this._selector.close();
-        this._service.recycle(this.model);
+            case AppPoolOp.recycle:
+                return this.service.recycle(this.model);
+
+            case AppPoolOp.delete:
+                return this.notifications.confirmAsync(
+                    "Delete Application Pool",
+                    `Are you sure you want to delete "${this.model.name}"`,
+                    () => this.service.delete(this.model),
+                );
+        }
     }
 
     identity(): string {
@@ -173,44 +160,57 @@ export class AppPoolItem {
         }
     }
 
-    allow(action: string): boolean {
-        return this.actions.indexOf(action) >= 0;
+    onItemClicked(e: Event) {
+        if (e.defaultPrevented) {
+            return;
+        }
+        this.selected = true;
+        if (this.onSelected.observers.length > 0) {
+            this.onSelected.emit(this);
+        }
     }
 
-    started(): boolean {
-        return this.model.status == 'started';
-    }
-
-    private openSelector(e: Event) {
-        e.preventDefault();
-        this._selector.toggle();
-    }
-
-    private prevent(e: Event) {
-        e.preventDefault();
+    onDblClick(e: Event) {
+        if (e.defaultPrevented) {
+            return;
+        }
+        this.router.navigate([resolveAppPoolRoute(this.model.id)]);
     }
 }
-
-
 
 @Component({
     selector: 'app-pool-list',
     template: `
-        <div class="container-fluid">
-            <div class="hidden-xs border-active grid-list-header row" [hidden]="model.length == 0">
-                <label class="col-xs-7 col-sm-4 col-md-3" [ngClass]="_orderBy.css('name')" (click)="_orderBy.sort('name')">Name</label>
-                <label class="col-xs-3 col-md-2" [ngClass]="_orderBy.css('status')" (click)="_orderBy.sort('status')">Status</label>
-                <label class="col-md-2 hidden-sm" [ngClass]="_orderBy.css('pipeline_mode')" (click)="_orderBy.sort('pipeline_mode')">Pipeline</label>
-                <label class="col-md-2" [ngClass]="_orderBy.css('managed_runtime_version')" (click)="_orderBy.sort('managed_runtime_version')">.NET Framework</label>
-                <label class="col-lg-2 visible-lg">Identity</label>
-            </div>
-            
-            <ul class="grid-list">
-                <li *ngFor="let p of model | orderby: _orderBy.Field: _orderBy.Asc" (click)="onItemSelected($event, p);" (dblclick)="onDblClick($event, p)" class="hover-editing">
-                    <app-pool-item [model]="p" [actions]="actions"></app-pool-item>
-                </li>
-            </ul>
-        </div>
+<list-operations-bar [operations]="operations" [context]="selected">
+    <button
+        class="list-operation-addon-left add list-action-button"
+        [class.background-active]="newAppPool.opened"
+        (click)="newAppPool.toggle()">
+        Create
+    </button>
+    <selector #newAppPool
+            class="container-fluid list-operation-addon-view">
+        <new-app-pool *ngIf="newAppPool.opened"
+            (created)="newAppPool.close()"
+            (cancel)="newAppPool.close()">
+        </new-app-pool>
+    </selector>
+</list-operations-bar>
+<div class="container-fluid">
+    <div class="hidden-xs border-active grid-list-header row" [hidden]="model.length == 0">
+        <label class="col-xs-7 col-sm-4 col-md-3" [ngClass]="_orderBy.css('name')" (click)="_orderBy.sort('name')">Name</label>
+        <label class="col-xs-3 col-md-2" [ngClass]="_orderBy.css('status')" (click)="_orderBy.sort('status')">Status</label>
+        <label class="col-md-2 hidden-sm" [ngClass]="_orderBy.css('pipeline_mode')" (click)="_orderBy.sort('pipeline_mode')">Pipeline</label>
+        <label class="col-md-2" [ngClass]="_orderBy.css('managed_runtime_version')" (click)="_orderBy.sort('managed_runtime_version')">.NET Framework</label>
+        <label class="col-lg-2 visible-lg">Identity</label>
+    </div>
+    <ul class="grid-list">
+        <li *ngFor="let p of model | orderby: _orderBy.Field: _orderBy.Asc"
+            class="hover-editing">
+            <app-pool-item [model]="p" (onSelected)="onItemSelected($event)"></app-pool-item>
+        </li>
+    </ul>
+</div>
     `,
     styles: [`
         .container-fluid,
@@ -222,28 +222,28 @@ export class AppPoolItem {
 })
 export class AppPoolList {
     @Input() model: Array<ApplicationPool>;
-    @Input() actions: string = "edit,recycle,start,stop,delete";
+    @Input() listingOnly: boolean = false;
     @Output() itemSelected: EventEmitter<any> = new EventEmitter();
 
-    private _orderBy: OrderBy = new OrderBy();
+    _orderBy: OrderBy = new OrderBy();
+    private _selected: AppPoolItem;
 
-    constructor(@Inject("AppPoolsService") private _service: AppPoolsService,
-                private _router: Router) {
+    onItemSelected(item: AppPoolItem) {
+        if (this._selected) {
+            this._selected.selected = false;
+        }
+        this._selected = item;
+        this.itemSelected.next(item.model);
     }
 
-    private onItemSelected(e: Event, pool: ApplicationPool) {
-        if (e.defaultPrevented) {
-            return;
-        }
-
-        this.itemSelected.next(pool);
+    get selected() {
+        return this._selected;
     }
 
-    private onDblClick(e: Event, pool: ApplicationPool) {
-        if (e.defaultPrevented) {
-            return;
+    get operations() {
+        if (this.listingOnly) {
+            return [];
         }
-
-        this._router.navigate(['webserver', 'app-pools', pool.id]);
+        return appPoolOperations;
     }
 }

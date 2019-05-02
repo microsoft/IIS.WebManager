@@ -5,6 +5,7 @@ import { ApiConnection } from '../connect/api-connection';
 import { ConnectService } from '../connect/connect.service';
 import { NotificationService } from '../notification/notification.service';
 
+// TODO: unify with WAC lists
 @Component({
     selector: 'server',
     template: `

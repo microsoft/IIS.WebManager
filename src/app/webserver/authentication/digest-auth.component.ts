@@ -10,7 +10,9 @@ import { NotificationService } from '../../notification/notification.service';
     selector: 'digest-auth',
     template: `
         <error [error]="service.digestError"></error>
-        <switch class="install" *ngIf="service.webserverScope && service.digestStatus != 'unknown'" #s
+        <switch label="Enable"
+                *ngIf="service.webserverScope && service.digestStatus != 'unknown'"
+                class="install" #s
                 [auto]="false"
                 [model]="service.digestStatus == 'started' || service.digestStatus == 'starting'"
                 [disabled]="service.digestStatus == 'starting' || service.digestStatus == 'stopping'"
@@ -22,8 +24,7 @@ import { NotificationService } from '../../notification/notification.service';
         <override-mode class="pull-right" *ngIf="_model" [scope]="_model.scope" [metadata]="_model.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="_model">
             <fieldset>
-                <label *ngIf="!_model.scope">Web Site Default</label>
-                <switch class="block" [disabled]="_locked" [(model)]="_model.enabled" (modelChanged)="onModelChanged()">{{_model.enabled ? "On" : "Off"}}</switch>
+                <switch [label]="_model.scope ? 'Enable' : 'Web Site Default'" class="block" [disabled]="_locked" [(model)]="_model.enabled" (modelChanged)="onModelChanged()">{{_model.enabled ? "On" : "Off"}}</switch>
             </fieldset>
             <fieldset class="clear" *ngIf="_model.enabled || !_model.scope">
                 <label>Realm</label>

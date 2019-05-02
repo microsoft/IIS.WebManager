@@ -11,7 +11,9 @@ import { NotificationService } from '../../notification/notification.service';
     template: `
         <loading *ngIf="service.status == 'unknown' && !service.error"></loading>
         <error [error]="_error"></error>
-        <switch class="install" *ngIf="service.webserverScope && service.status != 'unknown'" #s
+        <switch label="Enable"
+                *ngIf="service.webserverScope && service.status != 'unknown'"
+                class="install" #s
                 [auto]="false"
                 [model]="service.status == 'started' || service.status == 'starting'"
                 [disabled]="service.status == 'starting' || service.status == 'stopping'"
@@ -23,12 +25,10 @@ import { NotificationService } from '../../notification/notification.service';
         <override-mode class="pull-right" *ngIf="model" [scope]="model.scope" (revert)="onRevert()" [metadata]="model.metadata" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="model">
             <fieldset>
-                <label>Dynamic Compression</label>
-                <switch class="block" [disabled]="_locked" [(model)]="model.do_dynamic_compression" (modelChanged)="onModelChanged()">{{model.do_dynamic_compression ? "On" : "Off"}}</switch>
+                <switch label="Dynamic Compression" class="block" [disabled]="_locked" [(model)]="model.do_dynamic_compression" (modelChanged)="onModelChanged()">{{model.do_dynamic_compression ? "On" : "Off"}}</switch>
             </fieldset>
             <fieldset>
-                <label>Static Compression</label>
-                <switch class="block" [disabled]="_locked" [(model)]="model.do_static_compression" (modelChanged)="onModelChanged()">{{model.do_static_compression ? "On" : "Off"}}</switch>
+                <switch label="Static Compression" class="block" [disabled]="_locked" [(model)]="model.do_static_compression" (modelChanged)="onModelChanged()">{{model.do_static_compression ? "On" : "Off"}}</switch>
             </fieldset>
 
             <!-- Settings only visible at Web Server level -->
@@ -40,8 +40,7 @@ import { NotificationService } from '../../notification/notification.service';
                     <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="model.directory" (selected)="onSelectPath($event)"></server-file-selector>
                 </fieldset>
                 <fieldset class="inline-block">
-                    <label>Limit Storage</label>
-                    <switch class="block" [model]="model.do_disk_space_limitting" (modelChange)="onSpaceLimit($event)">{{model.do_disk_space_limitting ? "Yes" : "No"}}</switch>
+                    <switch label="Limit Storage" class="block" [model]="model.do_disk_space_limitting" (modelChange)="onSpaceLimit($event)">{{model.do_disk_space_limitting ? "Yes" : "No"}}</switch>
                 </fieldset>
                 <div *ngIf="model.do_disk_space_limitting" class="inline-block">
                     <fieldset class="inline-block">

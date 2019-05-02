@@ -15,7 +15,9 @@ import { NotificationService } from '../../notification/notification.service';
             [scope]="_defDoc.scope"
             (revert)="onRevert()" 
             (modelChanged)="onModelChanged()"></override-mode>
-        <switch class="install" *ngIf="service.webserverScope && service.status != 'unknown'" #s
+        <switch label="Enable"
+                *ngIf="service.webserverScope && service.status != 'unknown'"
+                class="install" #s
                 [auto]="false"
                 [model]="service.status == 'started' || service.status == 'starting'"
                 [disabled]="service.status == 'starting' || service.status == 'stopping'"
@@ -26,8 +28,7 @@ import { NotificationService } from '../../notification/notification.service';
         <span *ngIf="service.status == 'stopped' && !service.webserverScope">Default Documents are off. Turn them on <a [routerLink]="['/webserver/default-documents']">here</a></span>
         <div *ngIf="_defDoc" [attr.disabled]="_defDoc.metadata.is_locked ? true : null">
             <fieldset>
-                <label *ngIf="!_defDoc.scope">Web Site Default</label>
-                <switch class="block" [(model)]="_defDoc.enabled" (modelChanged)="onModelChanged()">{{_defDoc.enabled ? "On" : "Off"}}</switch>
+                <switch [label]="_defDoc.scope ? 'Enable' : 'Web Site Default'" class="block" [(model)]="_defDoc.enabled" (modelChanged)="onModelChanged()">{{_defDoc.enabled ? "On" : "Off"}}</switch>
             </fieldset>
             <files *ngIf="_defDoc.enabled || !_defDoc.scope"></files>
         </div>

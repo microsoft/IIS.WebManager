@@ -15,12 +15,10 @@ import { IpRestrictions } from './ip-restrictions'
             </select>
         </fieldset>
         <fieldset>
-            <label>Proxy Mode</label>
-            <switch class="block" [(model)]="model.enable_proxy_mode" (modelChanged)="onModelChanged()">{{model.enable_proxy_mode ? "On" : "Off"}}</switch>
+            <switch label="Proxy Mode" class="block" [(model)]="model.enable_proxy_mode" (modelChanged)="onModelChanged()">{{model.enable_proxy_mode ? "On" : "Off"}}</switch>
         </fieldset>
         <fieldset>
-            <label>Use Reverse DNS Lookup</label>
-            <switch class="block" [(model)]="model.enable_reverse_dns" (modelChanged)="onModelChanged()">{{model.enable_reverse_dns ? "Yes" : "No"}}</switch>
+            <switch label="Use Reverse DNS Lookup" class="block" [(model)]="model.enable_reverse_dns" (modelChanged)="onModelChanged()">{{model.enable_reverse_dns ? "Yes" : "No"}}</switch>
         </fieldset>
     `,
     styles: [`

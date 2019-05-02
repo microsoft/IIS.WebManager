@@ -57,8 +57,7 @@ import { RestrictionRule, IpRestrictions } from './ip-restrictions'
                 </fieldset>
                 <fieldset>
                     <div class="inline-block">
-                        <label class="block">Restrict by Subnet Mask</label>
-                        <switch #s [model]="model.subnet_mask!='255.255.255.255'" (modelChange)="onEnableSubnetMask($event)">{{s.model ? "Yes" : "No"}}</switch>
+                        <switch label="Restrict by Subnet Mask" #s [model]="model.subnet_mask!='255.255.255.255'" (modelChange)="onEnableSubnetMask($event)">{{s.model ? "Yes" : "No"}}</switch>
                     </div>
                     <div class="inline-block no-label" *ngIf="s.model">
                         <input class="form-control name" placeholder="Example: 255.255.0.0" type="text" [(ngModel)]="model.subnet_mask" required />
@@ -195,8 +194,7 @@ export class RestrictionRuleComponent implements OnChanges, OnInit {
     selector: 'restriction-rules',
     template: `
         <fieldset>
-            <label>Allow Unlisted</label>
-            <switch class="block" [(model)]="ipRestrictions.allow_unlisted" (modelChanged)="onModelChanged()">{{ipRestrictions.allow_unlisted ? "Yes" : "No"}}</switch>
+            <switch label="Allow Unlisted" class="block" [(model)]="ipRestrictions.allow_unlisted" (modelChanged)="onModelChanged()">{{ipRestrictions.allow_unlisted ? "Yes" : "No"}}</switch>
         </fieldset>
         <fieldset>
             <button class="create" (click)="createRule()" [class.inactive]="_editing || _newRule"><i class="fa fa-plus blue"></i><span>Add</span></button>

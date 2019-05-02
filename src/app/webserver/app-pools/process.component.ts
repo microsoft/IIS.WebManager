@@ -17,8 +17,7 @@ import {ApplicationPool, ProcessModel, ProcessOrphaning} from './app-pool';
         </fieldset>
         <div>
             <fieldset class="inline-block">
-                <label>Web Garden</label>
-                <switch class="block" [model]="model.process_model.max_processes > 1" (modelChange)="onWebGarden($event)">
+                <switch label="Web Garden" class="block" [model]="model.process_model.max_processes > 1" (modelChange)="onWebGarden($event)">
                     {{model.process_model.max_processes > 1 ? "On" : "Off"}}
                 </switch>
             </fieldset>
@@ -58,8 +57,7 @@ import {ApplicationPool, ProcessModel, ProcessOrphaning} from './app-pool';
         </fieldset>
         <div>
             <fieldset class="inline-block">
-                <label>Health Monitoring</label>
-                <switch class="block" [(model)]="model.process_model.pinging_enabled" (modelChanged)="onModelChanged()">
+                <switch label="Health Monitoring" class="block" [(model)]="model.process_model.pinging_enabled" (modelChanged)="onModelChanged()">
                     {{model.process_model.pinging_enabled ? "On" : "Off"}}
                 </switch>
             </fieldset>
@@ -108,8 +106,7 @@ export class ProcessModelComponent {
     selector: 'process-orphaning',
     template: `            
         <fieldset>
-            <label>Process Orphaning</label>
-            <switch class="block" [(model)]="model.enabled" (modelChanged)="onModelChanged()">
+            <switch label="Process Orphaning" class="block" [(model)]="model.enabled" (modelChanged)="onModelChanged()">
                 {{model.enabled ? "On" : "Off"}}
             </switch>
         </fieldset>

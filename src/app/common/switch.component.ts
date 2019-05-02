@@ -128,6 +128,9 @@ import { FormsModule } from '@angular/forms';
     `],
     template: `
         <div class="switch-container" [attr.disabled]="disabled ? true : null">
+            <div *ngIf="label">
+                <div class="switch-label"><label>{{label}}</label></div>
+            </div>
             <label class="switch">
                 <input #checkbox class="switch-input" type="checkbox"  [ngModel]="toBool()" (ngModelChange)="updateData($event)"/>
                 <span class="switch-content border-color background-normal" ><div class="switch-fill background-active"></div></span>
@@ -139,6 +142,7 @@ import { FormsModule } from '@angular/forms';
     exportAs: 'switchVal'
 })
 export class SwitchComponent {
+    @Input() label: string;
     @Input() on: any;
     @Input() off: any;
     @Input() disabled: boolean;

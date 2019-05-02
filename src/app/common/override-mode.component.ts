@@ -49,10 +49,7 @@ import {Module as Switch} from './switch.component';
                 <!-- Override mode -->
                 <div *ngIf="!metadata.is_locked">
                     <fieldset>
-                        <label>
-                            Permit changes at child level
-                        </label>
-                        <switch class="block" [model]="metadata.override_mode_effective" (modelChange)="updateData($event)" [on]="'allow'" [off]="'deny'">
+                        <switch label="Permit changes at child level" class="block" [model]="metadata.override_mode_effective" (modelChange)="updateData($event)" [on]="'allow'" [off]="'deny'">
                             <span>{{metadata.override_mode_effective}}</span>
                         </switch>
                     </fieldset>

@@ -1,7 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter, Inject, ViewChild } from '@angular/core';
+import { Component, Input, Output, EventEmitter, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-
-import { Selector } from '../../common/selector';
 import { WebApp } from './webapp'
 import { WebAppsService } from './webapps.service';
 import { WebSitesService } from '../websites/websites.service';
@@ -39,19 +37,10 @@ import { WebSitesService } from '../websites/websites.service';
                 <navigator [model]="model.website.bindings" [path]="model.path" [right]="true"></navigator>
             </div>
         <div>
-        <div class="actions" *ngIf="actions">
-            <div class="selector-wrapper">
-                <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="(_selector && _selector.opened) || false">
-                    <i class="fa fa-ellipsis-h"></i>
-                </button>
-                <selector [right]="true">
-                    <ul>
-                        <li *ngIf="action('edit')"><button class="edit" title="Edit" (click)="onEdit($event)">Edit</button></li>
-                        <li *ngIf="action('browse')"><a class="bttn link" href={{url}} title={{url}} target="_blank">Browse</a></li>
-                        <li *ngIf="action('delete')"><button class="delete" title="Delete" (click)="onDelete($event)">Delete</button></li>
-                    </ul>
-                </selector>
-            </div>
+        <div class="list-actions">
+            <a *ngIf="action('browse')" title="Browse" class="list-action-button bttn link" href={{url}} title={{url}} target="_blank"></a>
+            <button [attr.disabled]="!action('edit') || null" title="Edit" class="list-action-button edit" (click)="onEdit($event)"></button>
+            <button [attr.disabled]="!action('delete') || null" title="Delete" class="list-action-button delete" (click)="onDelete($event)"></button>
         </div>
     </div>
     `,
@@ -95,23 +84,8 @@ import { WebSitesService } from '../websites/websites.service';
             display: inline;
         }
 
-        .selector-wrapper {
-            position: relative;
-        }
-
         .v-align {
             padding-top: 6px;
-        }
-
-        selector {
-            position:absolute;
-            right:0;
-            top: 32px;
-        }
-
-        selector button {
-            min-width: 125px;
-            width: 100%;
         }
     `]
 })
@@ -119,7 +93,6 @@ export class WebAppItem {
     @Input() model: WebApp;
     @Input() actions: string = "";
     @Input() fields: string = "";
-    @ViewChild(Selector) private _selector: Selector;
     private _url: string;
 
     constructor(private _router: Router,
@@ -127,7 +100,7 @@ export class WebAppItem {
         @Inject("WebSitesService") private _siteService: WebSitesService) {
     }
 
-    private get url() {
+    get url() {
         if (!this.model.website || this.model.website.bindings.length == 0) {
             return "";
         }
@@ -139,36 +112,24 @@ export class WebAppItem {
         return this._url;
     }
 
-    private onDelete(e: Event) {
+    onDelete(e: Event) {
         e.preventDefault();
-        this._selector.close();
-
         if (confirm("Are you sure you want to delete '" + this.model.location + "'?")) {
             this._service.delete(this.model);
         }
     }
 
-    private onEdit(e: Event) {
+    onEdit(e: Event) {
         e.stopPropagation();
-        this._selector.close();
         this._router.navigate(['webserver', 'webapps', this.model.id]);
     }
 
-    private action(action: string): boolean {
+    action(action: string): boolean {
         return this.actions.indexOf(action) >= 0;
     }
 
-    private field(f: string): boolean {
+    field(f: string): boolean {
         return this.fields.indexOf(f) >= 0;
-    }
-
-    private prevent(e: Event) {
-        e.preventDefault();
-    }
-
-    private openSelector(e: Event) {
-        e.preventDefault();
-        this._selector.toggle();
     }
 }
 

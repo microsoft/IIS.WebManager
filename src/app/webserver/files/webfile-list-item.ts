@@ -1,10 +1,7 @@
-import { Component, Input, Output, Inject, ViewChild, EventEmitter } from '@angular/core';
-
-import { Selector } from '../../common/selector';
-import { NotificationService } from '../../notification/notification.service';
-import { Humanizer } from '../../common/primitives';
-
-import { FilesService } from '../../files/files.service';
+import { Component, Input, Output, Inject, EventEmitter } from '@angular/core';
+import { NotificationService } from 'notification/notification.service';
+import { Humanizer } from 'common/primitives';
+import { FilesService } from 'files/files.service';
 import { WebFilesService } from './webfiles.service';
 import { WebFileType, WebFile } from './webfile';
 
@@ -38,19 +35,10 @@ import { WebFileType, WebFile } from './webfile';
             <div class="col-md-1 visible-lg visible-md valign text-right support">
                 <span *ngIf="model.file_info && model.file_info.size">{{getSize()}}</span>
             </div>
-            <div class="actions">
-                <div class="selector-wrapper">
-                    <button title="More" *ngIf="!model.isVirtual" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
-                        <i class="fa fa-ellipsis-h"></i>
-                    </button>
-                    <selector [right]="true">
-                        <ul>
-                            <li><button class="edit" title="Rename" *ngIf="model.type!='vdir' && model.file_info" (click)="onRename($event)">Rename</button></li>
-                            <li><button class="download" title="Download" *ngIf="model.type=='file' && model.file_info" (click)="onDownload($event)">Download</button></li>
-                            <li><button class="delete" title="Delete" *ngIf="model.type!='vdir'" (click)="onDelete($event)">Delete</button></li>
-                        </ul>
-                    </selector>
-                </div>
+            <div class="list-actions">
+                <button class="list-action-button download" title="Download" *ngIf="model.type=='file'" [attr.disabled]="disableEdit(model)" (click)="onDownload($event)"></button>
+                <button class="list-action-button edit" title="Rename" [attr.disabled]="disableRename(model)" (click)="onRename($event)"></button>
+                <button class="list-action-button delete" title="Delete" [attr.disabled]="disableDelete(model)" (click)="onDelete($event)"></button>
             </div>
         </div>
     `,
@@ -74,21 +62,6 @@ import { WebFileType, WebFile } from './webfile';
             margin: 0px;
         }
 
-        .selector-wrapper {
-            position: relative;
-        }
-
-        selector {
-            position:absolute;
-            right:0;
-            top: 32px;
-        }
-
-        selector button {
-            min-width: 125px;
-            width: 100%;
-        }`,
-        `
         .fi.vdir i::before,
         .fi.application i::before {
             content: "\\f07b";
@@ -111,25 +84,47 @@ import { WebFileType, WebFile } from './webfile';
 export class WebFileComponent {
     @Input() model: WebFile;
     @Output() modelChanged: EventEmitter<any> = new EventEmitter();
+    _editing = false;
 
-    @ViewChild(Selector) selector: Selector;
-
-    private _editing = false;
-
-    constructor(private _service: WebFilesService,
-                @Inject("FilesService") private _fileService: FilesService,
-                private _notificationService: NotificationService) {
-    }
+    constructor(
+        private _service: WebFilesService,
+        private _notificationService: NotificationService,
+        @Inject("FilesService") private _fileService: FilesService,
+    ) {}
     
-    private get href() {
+    get href() {
         return window.location.pathname + "#" + this.model.path;
     }
 
-    private get displayDate(): string {
+    get displayDate(): string {
         return Humanizer.date(this.model.file_info.last_modified);
     }
+
+    disableEdit(model: WebFile) {
+        if (!model.file_info) {
+            return true;
+        } else {
+            return null;
+        }
+    }
+
+    disableRename(model: WebFile) {
+        if (model.type == WebFileType.Vdir || !model.file_info) {
+            return true;
+        } else {
+            return null;
+        }
+    }
+
+    disableDelete(model: WebFile) {
+        if (model.type == WebFileType.Vdir) {
+            return true;
+        } else {
+            return null;
+        }
+    }
     
-    private rename(name: string) {
+    rename(name: string) {
         if (name) {
             this._service.rename(this.model, name);
             this.modelChanged.emit(this.model);
@@ -138,37 +133,29 @@ export class WebFileComponent {
         this._editing = false;
     }
 
-    private onCancel(e: Event) {
+    onCancel(e: Event) {
         e.preventDefault();
-        this.selector.close();
-
         this.cancel();
     }
 
-    private onBlur(event: Event) {
+    onBlur(event: Event) {
         if (event && event.target && (<HTMLInputElement>event.target).value === this.model.name) {
-
             //
             // No change. Force cancel
             this.cancel();
         }
     }
 
-    private onRename(e: Event) {
+    onRename(e: Event) {
         e.preventDefault();
-        this.selector.close();
-
         if (this.model.type == WebFileType.Vdir) {
             return;
         }
-
         this._editing = true;
     }
 
-    private onDelete(e: Event) {
+    onDelete(e: Event) {
         e.preventDefault();
-        this.selector.close();
-
         this._notificationService.confirm("Delete File", "Are you sure you want to delete " + this.model.name)
             .then(confirmed => {
                 if (confirmed) {
@@ -177,27 +164,20 @@ export class WebFileComponent {
             });
     }
 
-    private onDownload(e: Event) {
+    onDownload(e: Event) {
         e.preventDefault();
-        this.selector.close();
-
         this._fileService.download(this.model.file_info);
     }
 
-    private prevent(e: Event) {
+    prevent(e: Event) {
         e.preventDefault();
     }
 
+    getSize() {
+        return this.model.file_info.size ? Humanizer.number(Math.ceil(this.model.file_info.size / 1024)) + ' KB': null;
+    }
+
     private cancel() {
-        this.selector.close();
         this._editing = false;
     }
-
-    private openSelector(e: Event) {
-        this.selector.toggle();
-    }
-
-    private getSize() {
-        return this.model.file_info.size ? Humanizer.number(Math.ceil(this.model.file_info.size / 1024)) + ' KB': null;
-    }   
 }

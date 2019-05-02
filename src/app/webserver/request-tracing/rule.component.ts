@@ -41,8 +41,7 @@ import { RequestTracingService } from './request-tracing.service';
                 </div>
                 <fieldset *ngIf="_isEditing" class="col-xs-12">
                     <fieldset class="inline-block"> 
-                        <label class="block">Min Request Time</label>
-                        <switch [model]="hasMinReqExecutionTime()" (modelChange)="enableRequestTime($event)">{{hasMinReqExecutionTime() ? "On" : "Off"}}</switch>
+                        <switch label="Min Request Time" [model]="hasMinReqExecutionTime()" (modelChange)="enableRequestTime($event)">{{hasMinReqExecutionTime() ? "On" : "Off"}}</switch>
                     </fieldset>
                     <fieldset class="inline-block" *ngIf="hasMinReqExecutionTime()">
                         <label class="block">Length <span class="units">(s)</span></label>
@@ -60,8 +59,7 @@ import { RequestTracingService } from './request-tracing.service';
                 </fieldset>
                 <div *ngIf="_isEditing" class="col-xs-12 col-sm-12 col-md-7 col-lg-6">
                     <fieldset *ngFor="let p of _providers;">
-                        <label>{{p.name}}</label>
-                        <switch class="block" [model]="isProviderEnabled(p)" (modelChange)="enableProvider(p, $event)"></switch>
+                        <switch [label]="p.name" class="block" [model]="isProviderEnabled(p)" (modelChange)="enableProvider(p, $event)"></switch>
                         <div class="trace" *ngIf="isProviderEnabled(p)">
                             <trace [model]="getTrace(p)"></trace>
                         </div>

@@ -13,8 +13,7 @@ import {StringListComponent} from '../../common/string-list.component';
     template: `
         <div *ngIf="model">
             <fieldset class='inline-block'>
-                <label>Schedule</label>
-                <switch class="block" [model]="model.length > 0" (modelChange)="enable($event)">
+                <switch label="Schedule" class="block" [model]="model.length > 0" (modelChange)="enable($event)">
                     {{model.length > 0 ? "On" : "Off"}}
                 </switch>
             </fieldset>
@@ -75,22 +74,19 @@ export class DailyScheduleComponent {
         <div class='col-sm-7 col-lg-4'>
             <div>
                 <fieldset>
-                    <label>Overlapped Recycle</label>
-                    <switch class="block" [model]="!model.disable_overlapped_recycle" (modelChange)="model.disable_overlapped_recycle = !$event" (modelChanged)="onModelChanged()">
+                    <switch label="Overlapped Recycle" class="block" [model]="!model.disable_overlapped_recycle" (modelChange)="model.disable_overlapped_recycle = !$event" (modelChanged)="onModelChanged()">
                         {{model.disable_overlapped_recycle ? "Off" : "On"}}
                     </switch>
                 </fieldset>
                 <fieldset>
-                    <label>Config Change</label>
-                    <switch class="block" [model]="!model.disable_recycle_on_config_change" (modelChange)="model.disable_recycle_on_config_change = !$event" (modelChanged)="onModelChanged()">
+                    <switch label="Config Change" class="block" [model]="!model.disable_recycle_on_config_change" (modelChange)="model.disable_recycle_on_config_change = !$event" (modelChanged)="onModelChanged()">
                         {{model.disable_recycle_on_config_change ? "Off" : "On"}}
                     </switch>
                 </fieldset>
             </div>
             <div>
                 <fieldset class='inline-block'>
-                    <label>Private Memory</label>
-                    <switch class="block" [model]="model.periodic_restart.private_memory > 0" (modelChange)="onPrivateMemory($event)">
+                    <switch label="Private Memory" class="block" [model]="model.periodic_restart.private_memory > 0" (modelChange)="onPrivateMemory($event)">
                         {{model.periodic_restart.private_memory > 0 ? "On" : "Off"}}
                     </switch>
                 </fieldset>
@@ -101,8 +97,7 @@ export class DailyScheduleComponent {
             </div>
             <div>
                 <fieldset class='inline-block'>
-                    <label>Virtual Memory</label>
-                    <switch class="block" [model]="model.periodic_restart.virtual_memory > 0" (modelChange)="onVirtualMemory($event)">
+                    <switch label="Virtual Memory" class="block" [model]="model.periodic_restart.virtual_memory > 0" (modelChange)="onVirtualMemory($event)">
                         {{model.periodic_restart.virtual_memory > 0 ? "On" : "Off"}}
                     </switch>
                 </fieldset>
@@ -113,8 +108,7 @@ export class DailyScheduleComponent {
             </div>
             <div>
                 <fieldset class='inline-block'>
-                    <label>Request Limit</label>
-                    <switch class="block" [model]="model.periodic_restart.request_limit > 0" (modelChange)="onRequestLimit($event)">
+                    <switch label="Request Limit" class="block" [model]="model.periodic_restart.request_limit > 0" (modelChange)="onRequestLimit($event)">
                         {{model.periodic_restart.request_limit > 0 ? "On" : "Off"}}
                     </switch>
                 </fieldset>
@@ -125,8 +119,7 @@ export class DailyScheduleComponent {
             </div>
             <div>
                 <fieldset class='inline-block'>
-                    <label>Periodically</label>
-                    <switch class="block" [model]="timeIntervalEnabled()" (modelChange)="onTimeInterval($event)">
+                    <switch label="Periodically" class="block" [model]="timeIntervalEnabled()" (modelChange)="onTimeInterval($event)">
                         {{timeIntervalEnabled() ? "On" : "Off"}}
                     </switch>
                 </fieldset>

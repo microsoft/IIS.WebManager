@@ -7,8 +7,7 @@ import {Cpu, ProcessorAction} from './app-pool';
     selector: 'cpu',
     template: `            
         <fieldset>
-            <label>CPU Limit</label>
-            <switch class="block" [model]="model.limit != 0" (modelChange)="onLimitCpu($event)">
+            <switch label="CPU Limit" class="block" [model]="model.limit != 0" (modelChange)="onLimitCpu($event)">
                 {{model.limit != 0 ? "On" : "Off"}}
             </switch>
         </fieldset>
@@ -26,30 +25,26 @@ import {Cpu, ProcessorAction} from './app-pool';
 
         <div *ngIf="model.limit != 0">
             <fieldset class='inline-block'>
-                <label>Throttle CPU</label>
-                <switch class="block" [model]="isThrottled()" (modelChange)="onThrottled($event)">
+                <switch label="Throttle CPU" class="block" [model]="isThrottled()" (modelChange)="onThrottled($event)">
                     {{isThrottled() ? "On" : "Off"}}
                 </switch>
             </fieldset>
 
             <fieldset class='inline-block' *ngIf='isThrottled()'>
-                <label>Under Load Only</label>
-                <switch class="block" [model]="model.action == 'ThrottleUnderLoad'" (modelChange)="onThrottleUnderLoad($event)">
+                <switch label="Under Load Only" class="block" [model]="model.action == 'ThrottleUnderLoad'" (modelChange)="onThrottleUnderLoad($event)">
                     {{model.action == 'ThrottleUnderLoad' ? "On" : "Off"}}
                 </switch>
             </fieldset>
 
             <fieldset>
-                <label>Kill Worker Process</label>
-                <switch class="block" [model]="model.action == 'KillW3wp'" (modelChange)="onKillProcess($event)">
+                <switch label="Kill Worker Process" class="block" [model]="model.action == 'KillW3wp'" (modelChange)="onKillProcess($event)">
                     {{model.action == 'KillW3wp' ? "On" : "Off"}}
                 </switch>
             </fieldset>
         </div>
 
         <fieldset class='inline-block'>
-            <label>CPU Affinity</label>
-            <switch class="block" [(model)]="model.processor_affinity_enabled" (modelChanged)="onModelChanged()">
+            <switch label="CPU Affinity" class="block" [(model)]="model.processor_affinity_enabled" (modelChanged)="onModelChanged()">
                 {{model.processor_affinity_enabled ? "On" : "Off"}}
             </switch>
         </fieldset>

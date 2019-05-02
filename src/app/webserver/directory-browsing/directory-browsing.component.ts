@@ -9,7 +9,9 @@ import { NotificationService } from '../../notification/notification.service';
     template: `
         <loading *ngIf="service.status == 'unknown' && !service.error"></loading>
         <error [error]="service.error"></error>
-        <switch class="install" *ngIf="service.webserverScope && service.status != 'unknown'" #s
+        <switch label="Enable"
+                *ngIf="service.webserverScope && service.status != 'unknown'"
+                class="install" #s
                 [auto]="false"
                 [model]="service.status == 'started' || service.status == 'starting'"
                 [disabled]="service.status == 'starting' || service.status == 'stopping'"
@@ -21,8 +23,7 @@ import { NotificationService } from '../../notification/notification.service';
         <override-mode class="pull-right" *ngIf="feature" [scope]="feature.scope" [metadata]="feature.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="feature">
             <fieldset>
-                <label *ngIf="!feature.scope">Web Site Default</label>
-                <switch class="block" [disabled]="_locked" [(model)]="feature.enabled" (modelChanged)="onModelChanged()">{{feature.enabled ? "On" : "Off"}}</switch>
+                <switch [label]="feature.scope ? 'Enable' : 'Web Site Default'" class="block" [disabled]="_locked" [(model)]="feature.enabled" (modelChanged)="onModelChanged()">{{feature.enabled ? "On" : "Off"}}</switch>
             </fieldset>
             <div [hidden]="!feature.enabled && feature.scope">
                 <fieldset>

@@ -1,19 +1,47 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {DiffUtil} from '../../utils/diff';
-import {OptionsService} from '../../main/options.service';
 import {WebApp} from './webapp';
 import {WebAppsService} from './webapps.service';
-import { BreadcrumbsService } from 'header/breadcrumbs.service';
+import { WebAppsModuleName, WebAppModuleIcon } from 'main/settings';
 import { BreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
-import { WebAppsModuleName } from 'main/settings';
+import { BreadcrumbsResolver, FeatureContext } from 'common/feature-vtabs.component';
+import { ModelStatusUpdater } from 'header/model-header.component';
+import { TitlesService } from 'header/titles.service';
+import { resolveWebsiteRoute, resolveWebAppRoute } from 'webserver/webserver-routing.module';
+
+const crumbsRoot = BreadcrumbsRoot.concat(WebSitesCrumb);
+class WebAppCrumbsResolver implements BreadcrumbsResolver {
+    resolve(model: FeatureContext): Breadcrumb[] {
+        let app = <WebApp> model;
+        return crumbsRoot.concat(
+            <Breadcrumb>{ label: app.website.name, routerLink: [resolveWebsiteRoute(app.website.id)] },
+            <Breadcrumb>{ label: app.path, routerLink: [resolveWebAppRoute(app.id)] },
+        );
+    }
+}
+
+class WebAppStatusUpdater extends ModelStatusUpdater {
+    constructor(app: WebApp) {
+        super(
+            WebAppsModuleName,
+            WebAppModuleIcon,
+            app.path,
+            app,
+            null,
+        )
+    }
+}
 
 @Component({
     template: `
         <not-found *ngIf="notFound"></not-found>
         <loading *ngIf="!(app || notFound)"></loading>
-        <webapp-header *ngIf="app" [model]="app" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webapp-header>
-        <feature-vtabs *ngIf="app" [model]="app" [resource]="'webapp'" [subcategory]="'${WebAppsModuleName}'">
+        <feature-vtabs
+            *ngIf="app" [model]="app"
+            [resource]="'webapp'"
+            [subcategory]="'${WebAppsModuleName}'"
+            [breadcrumbsResolver]="breadcrumbsResolver">
             <webapp-general class="general-tab" [model]="app" (modelChanged)="onModelChanged()"></webapp-general>
         </feature-vtabs>
     `,
@@ -22,14 +50,14 @@ export class WebAppComponent implements OnInit {
     id: string;
     app: WebApp;
     notFound: boolean;
+    breadcrumbsResolver = new WebAppCrumbsResolver();
 
     private _original: any;
 
     constructor(
+        private title: TitlesService,
         private _route: ActivatedRoute,
-        private _options: OptionsService,
         private _router: Router,
-        private crumbs: BreadcrumbsService,
         @Inject("WebAppsService") private _service: WebAppsService,
     ) {
         this.id = this._route.snapshot.params["id"];
@@ -39,13 +67,6 @@ export class WebAppComponent implements OnInit {
         this._service.get(this.id)
             .then(app => {
                 this.setApp(app);
-                this.crumbs.load(
-                    BreadcrumbsRoot.concat(
-                        WebSitesCrumb,
-                        <Breadcrumb>{ label: app.website.name, routerLink: ['/webserver/websites/', app.website.id] },
-                        <Breadcrumb>{ label: app.path },
-                    )
-                );
             })
             .catch(s => {
                 if (s && s.status == '404') {
@@ -80,6 +101,7 @@ export class WebAppComponent implements OnInit {
     }
 
     private setApp(app: WebApp) {
+        this.title.loadModelUpdater(new WebAppStatusUpdater(app));
         this.app = app;
         this._original = JSON.parse(JSON.stringify(app));
     }

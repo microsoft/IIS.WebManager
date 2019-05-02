@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { WebSite } from './site';
 import { WebSitesService } from './websites.service';
 import { ApplicationPool } from '../app-pools/app-pool';
+import { Perspective } from './website-list';
 
 @Component({
     selector: 'website-list-component',
@@ -10,19 +11,12 @@ import { ApplicationPool } from '../app-pools/app-pool';
         <loading *ngIf="!_sites && !lazy && !service.error"></loading>
         <div *ngIf="service.installStatus == 'stopped'" class="not-installed">
             <p>
-                Web Server (IIS) is not installed on the machine
+gul                Web Server (IIS) is not installed on the machine
                 <br/>
                 <a href="https://docs.microsoft.com/en-us/iis/install/installing-iis-85/installing-iis-85-on-windows-server-2012-r2" >Learn more</a>
             </p>
         </div>
-        <div *ngIf="!appPool && service.installStatus != 'stopped'">
-            <button [class.background-active]="newWebSite.opened" (click)="newWebSite.toggle()">Create Web Site <i class="fa fa-caret-down"></i></button>
-            <selector #newWebSite class="container-fluid">
-                <new-website *ngIf="newWebSite.opened" (created)="newWebSite.close()" (cancel)="newWebSite.close()"></new-website>
-            </selector>
-        </div>
-        <br/>
-        <website-list *ngIf="_sites" [model]="_sites" [fields]="fields()"></website-list>
+        <website-list *ngIf="_sites" [model]="_sites" [perspective]="perspective"></website-list>
     `,
     styles: [`
         br {
@@ -42,8 +36,9 @@ export class WebSiteListComponent implements OnInit {
     private _sites: Array<WebSite>;
     private _subs: Array<Subscription> = [];
 
-    constructor(@Inject("WebSitesService") private _service: WebSitesService) {
-    }
+    constructor(
+        @Inject("WebSitesService") private service: WebSitesService,
+    ) {}
 
     ngOnInit() {
         if (!this.lazy) {
@@ -51,12 +46,12 @@ export class WebSiteListComponent implements OnInit {
         }
     }
 
-    ngOnDestroy() {
-        this._subs.forEach(s => s.unsubscribe());
+    get perspective(): Perspective {
+        return this.appPool ? Perspective.AppPool : Perspective.WebServer;
     }
 
-    get service() {
-        return this._service;
+    ngOnDestroy() {
+        this._subs.forEach(s => s.unsubscribe());
     }
 
     activate() {
@@ -67,8 +62,8 @@ export class WebSiteListComponent implements OnInit {
         }
 
         if (this.appPool) {
-            this._service.getByAppPool(this.appPool).then(_ => {
-                this._subs.push(this._service.webSites.subscribe(sites => {
+            this.service.getByAppPool(this.appPool).then(_ => {
+                this._subs.push(this.service.webSites.subscribe(sites => {
                     this._sites = [];
                     sites.forEach(s => {
                         if (s.application_pool && s.application_pool.id == this.appPool.id) {
@@ -79,20 +74,12 @@ export class WebSiteListComponent implements OnInit {
             });
         }
         else {
-            this._service.getAll().then(_ => {
-                this._subs.push(this._service.webSites.subscribe(sites => {
+            this.service.getAll().then(_ => {
+                this._subs.push(this.service.webSites.subscribe(sites => {
                     this._sites = [];
                     sites.forEach(s => this._sites.push(s));
                 }));
             });
         }
-    }
-
-    fields(): string {
-        if (this.appPool) {
-            return "name,path,status";
-        }
-
-        return "name,path,status,app-pool";
     }
 }

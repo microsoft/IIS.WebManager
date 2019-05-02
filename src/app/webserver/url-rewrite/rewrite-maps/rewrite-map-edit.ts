@@ -16,8 +16,7 @@ import { RewriteMap, RewriteMapping } from '../url-rewrite';
                 <input type="text" class="form-control name" [(ngModel)]="map.default_value" />
             </fieldset>
             <fieldset>
-                <label>Ignore Case</label>
-                <switch [(model)]="map.ignore_case">{{map.ignore_case ? "Yes" : "No"}}</switch>
+                <switch label="Ignore Case" [(model)]="map.ignore_case">{{map.ignore_case ? "Yes" : "No"}}</switch>
             </fieldset>
             
             <button (click)="add()" class="create"><span>Add Mapping</span></button>

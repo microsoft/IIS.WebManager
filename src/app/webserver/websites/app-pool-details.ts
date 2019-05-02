@@ -1,9 +1,8 @@
-﻿import { Component, OnInit, Input, Optional, Inject, ViewChild } from '@angular/core';
-
-import { Selector } from '../../common/selector';
+﻿import { Component, Input, Optional, Inject, ViewChild } from '@angular/core';
+import { Selector } from 'common/selector';
 import { AppPoolsService } from '../app-pools/app-pools.service';
 import { ApplicationPool } from '../app-pools/app-pool';
-import { DiffUtil } from '../../utils/diff';
+import { DiffUtil } from 'utils/diff';
 
 @Component({
     selector: 'app-pool-details',
@@ -27,8 +26,7 @@ import { DiffUtil } from '../../utils/diff';
             </div>
         </fieldset>
         <fieldset *ngIf="svc">
-            <label>Auto Start</label>
-            <switch class="block" [(model)]="model.auto_start" (modelChanged)="onModelChanged()">{{model.auto_start ? "On" : "Off"}}</switch>
+            <switch label="Auto Start" class="block" [(model)]="model.auto_start" (modelChanged)="onModelChanged()">{{model.auto_start ? "On" : "Off"}}</switch>
         </fieldset>
         <fieldset *ngIf="svc">
             <identity [model]="model.identity" [useUserProfile]="false" (modelChanged)="onModelChanged()"></identity>

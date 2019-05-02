@@ -15,8 +15,7 @@ import {ApplicationPool} from './app-pool';
                     <input class="form-control name" type="text" [(ngModel)]="pool.name" (modelChanged)="onModelChanged()" required throttle />
                 </fieldset>
                 <fieldset>
-                    <label>Auto Start</label>
-                    <switch class="block" [(model)]="pool.auto_start" (modelChanged)="onModelChanged()">{{pool.auto_start ? "On" : "Off"}}</switch>
+                    <switch label="Auto Start" class="block" [(model)]="pool.auto_start" (modelChanged)="onModelChanged()">{{pool.auto_start ? "On" : "Off"}}</switch>
                 </fieldset>
                 <fieldset>
                     <identity [model]="pool.identity" (modelChanged)="onModelChanged()"></identity>

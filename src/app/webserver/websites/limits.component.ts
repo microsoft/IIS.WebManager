@@ -15,8 +15,7 @@ import {Limits} from './site';
         </fieldset>
         <div>
             <fieldset class="inline-block">
-                <label>Network Throttling</label>
-                <switch class="block" [model]="hasBandwidthLimit()" (modelChange)="onBandwidth($event)">{{hasBandwidthLimit() ? "On" : "Off"}}</switch>
+                <switch label="Network Throttling" class="block" [model]="hasBandwidthLimit()" (modelChange)="onBandwidth($event)">{{hasBandwidthLimit() ? "On" : "Off"}}</switch>
             </fieldset>
             <fieldset *ngIf="hasBandwidthLimit()" class="inline-block">
                 <label>Bandwidth <span class="units">(bytes/s)</span></label>
@@ -25,8 +24,7 @@ import {Limits} from './site';
         </div>
         <div>
             <fieldset class="inline-block">
-                <label>Client Connections</label>
-                <switch class="block" [model]="hasConnectionsLimit()" (modelChange)="onConnectionsLimit($event)">{{hasConnectionsLimit() ? "On" : "Off"}}</switch>
+                <switch label="Client Connections" class="block" [model]="hasConnectionsLimit()" (modelChange)="onConnectionsLimit($event)">{{hasConnectionsLimit() ? "On" : "Off"}}</switch>
             </fieldset>
 
             <fieldset *ngIf="hasConnectionsLimit()" class="inline-block">
