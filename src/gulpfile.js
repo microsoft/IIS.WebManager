@@ -87,7 +87,7 @@ function merge(obj1, obj2) {
 gulp.task('generate-angular-json', (_) => {
     var override = process.argv.slice(3).find(function(s, _, __) { return s.startsWith('--configuration=') || s.startsWith('-c=') })
     var scenario = override ? override.split('=').pop().split('.')[0] : 'site'
-    var mode = override.trim().endsWith('prod') ? 'prod' : 'debug'
+    var mode = override && override.trim().endsWith('prod') ? 'prod' : 'debug'
     // merge the base json with the json file specific to the scenario
     return gulp.src(['angular.common.json', `angular.${scenario}.json`, `angular.${mode}.json`])
         .pipe(function() {
@@ -232,7 +232,7 @@ gulp.task('copy', () => {
 
 gulp.task('bundle', cb => {
     var args = process.argv.slice(3);
-    args.unshift('build', "microsoft.iis.web-manager");
+    args.unshift('build', "msft.iis.iis-management");
     // '--aot', '--progress=false', '--extract-licenses=false', '--output-hashing=all'];
     // if (argv['verbose']) { args.push('--verbose'); }
     // if (argv['prod']) { args.push('--prod'); }

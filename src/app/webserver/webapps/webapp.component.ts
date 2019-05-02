@@ -1,49 +1,28 @@
 import {Component, OnInit, Inject} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
-
-import {ModuleUtil} from '../../utils/module';
 import {DiffUtil} from '../../utils/diff';
 import {OptionsService} from '../../main/options.service';
-
-
 import {WebApp} from './webapp';
 import {WebAppsService} from './webapps.service';
 import { BreadcrumbsService } from 'header/breadcrumbs.service';
-import { BreadcrumbsRoot, WebServerCrumb, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
-
+import { BreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
+import { WebAppsModuleName } from 'main/settings';
 
 @Component({
     template: `
         <not-found *ngIf="notFound"></not-found>
         <loading *ngIf="!(app || notFound)"></loading>
         <webapp-header *ngIf="app" [model]="app" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webapp-header>
-
-        <div *ngIf="app" class="sidebar crumb" [class.nav]="_options.active">
-            <vtabs [markLocation]="true" (activate)="_options.refresh()">
-                <item [name]="'General'" [ico]="'fa fa-wrench'">
-                    <webapp-general [model]="app" (modelChanged)="onModelChanged()"></webapp-general>
-                </item>
-                <item *ngFor="let module of modules" [name]="module.name" [ico]="module.ico">
-                    <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
-                </item>
-            </vtabs>
-        </div>
+        <feature-vtabs *ngIf="app" [model]="app" [resource]="'webapp'" [subcategory]="'${WebAppsModuleName}'">
+            <webapp-general class="general-tab" [model]="app" (modelChanged)="onModelChanged()"></webapp-general>
+        </feature-vtabs>
     `,
-    styles: [`
-        :host >>> .sidebar > vtabs .vtabs > .items {
-            top: 35px;
-        }
-        :host >>> .sidebar > vtabs .vtabs > .content {
-            top: 96px;
-        }
-    `]
 })
 export class WebAppComponent implements OnInit {
     id: string;
     app: WebApp;
     notFound: boolean;
-    modules: Array<any> = [];
-    
+
     private _original: any;
 
     constructor(
@@ -60,13 +39,11 @@ export class WebAppComponent implements OnInit {
         this._service.get(this.id)
             .then(app => {
                 this.setApp(app);
-                ModuleUtil.initModules(this.modules, this.app, "webapp");
                 this.crumbs.load(
                     BreadcrumbsRoot.concat(
-                        WebServerCrumb,
                         WebSitesCrumb,
-                        <Breadcrumb>{ Label: app.website.name, RouterLink: ['/webserver/websites/', app.website.id] },
-                        <Breadcrumb>{ Label: app.path },
+                        <Breadcrumb>{ label: app.website.name, routerLink: ['/webserver/websites/', app.website.id] },
+                        <Breadcrumb>{ label: app.path },
                     )
                 );
             })

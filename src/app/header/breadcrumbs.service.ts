@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Breadcrumb } from "./breadcrumb";
-import { BehaviorSubject, Subscribable, Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
 @Injectable()
 export class BreadcrumbsService {

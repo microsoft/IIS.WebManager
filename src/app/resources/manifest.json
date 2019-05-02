@@ -1,10 +1,10 @@
 {
   "$schema": "../../node_modules/@microsoft/windows-admin-center-sdk/core/manifest/module-schema.json#",
-  "name": "microsoft.iis",
+  "name": "msft.iis.iis-management",
   "displayName": "resources:strings:displayName",
   "description": "resources:strings:description",
-  "target": "/modules/microsoft.iis",
-  "icon": "sme-icon:icon-win-powerShell",
+  "target": "/modules/msft.iis.iis-management",
+  "icon": "sme-icon:sme-icon-windowsAdminCenterIIS",
   "keywords": [
     "resources:strings:keywords"
   ],
@@ -15,7 +15,7 @@
       "urlName": "iis",
       "displayName": "resources:strings:displayName",
       "description": "resources:strings:description",
-      "icon": "sme-icon:icon-win-powerShell",
+      "icon": "sme-icon:sme-icon-windowsAdminCenterIIS",
       "path": "",
       "requirements": [
         {

@@ -2,42 +2,26 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { WebSite } from './site';
 import { WebSitesService } from './websites.service';
-import { ModuleUtil } from 'utils/module';
 import { DiffUtil } from 'utils/diff';
 import { OptionsService } from 'main/options.service';
 import { BreadcrumbsService } from 'header/breadcrumbs.service';
-import { WebServerCrumb, BreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
+import { BreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
+import { WebSitesModuleName } from 'main/settings';
 
 @Component({
     template: `
         <not-found *ngIf="notFound"></not-found>
         <loading *ngIf="!(site || notFound)"></loading>
         <website-header *ngIf="site" [site]="site" class="crumb-content" [class.sidebar-nav-content]="_options.active"></website-header>
-        <div *ngIf="site" class="sidebar crumb" [class.nav]="_options.active">
-            <vtabs [markLocation]="true" (activate)="_options.refresh()">
-                <item [name]="'General'" [ico]="'fa fa-wrench'">
-                    <website-general [site]="site" (modelChanged)="onModelChanged()"></website-general>
-                </item>
-                <item *ngFor="let module of modules" [name]="module.name" [ico]="module.ico">
-                    <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
-                </item>
-            </vtabs>
-        </div>
+        <feature-vtabs *ngIf="site" [model]="site" [resource]="'website'" [subcategory]="'${WebSitesModuleName}'">
+            <website-general class="general-tab" [site]="site" (modelChanged)="onModelChanged()"></website-general>
+        </feature-vtabs>
     `,
-    styles: [`
-        :host >>> .sidebar vtabs .vtabs > .items {
-            top: 35px;
-        }
-        :host >>> .sidebar vtabs .vtabs > .content {
-            top: 96px;
-        }
-    `]
 })
 export class WebSiteComponent implements OnInit {
     id: string;
     site: WebSite;
     notFound: boolean;
-    modules: Array<any> = [];
 
     private _original: any;
 
@@ -56,12 +40,10 @@ export class WebSiteComponent implements OnInit {
         this._service.get(this.id)
             .then(s => {
                 this.setSite(s);
-                ModuleUtil.initModules(this.modules, this.site, "website");
                 this._crumbs.load(
                     BreadcrumbsRoot.concat(
-                        WebServerCrumb,
                         WebSitesCrumb,
-                        <Breadcrumb>{ Label: s.name },
+                        <Breadcrumb>{ label: s.name },
                     )
                 );
             })

@@ -34,25 +34,35 @@ export const UploadComponentName = "UploadComponent"
 export const WarningComponentName = "WarningComponent"
 export const AppModuleName = "AppModule"
 
+export const WebServerModuleName = "Web Server"
+export const WebServerModuleIcon = "fa fa-server"
 export const WebSitesModuleName = "Web Sites"
+export const WebAppsModuleName = "Web Applications"
 export const AppPoolsModuleName = "Application Pools"
+export const FileSystemModuleName = "File System"
+export const WebFilesModuleName = "Files"
+export const CertificatesModuleName = "Certificates"
+
+export const WebSitesApiName= "websites";
+export const AppPoolsApiName = "app_pools";
+export const FilesApiName = "files";
 
 export class ComponentReference {
     constructor(public name: string, public ico: string, public component_name: string, public api_name: string, public api_path: string) {}
 }
 
-export var GLOBAL_MODULES = [
-    new ComponentReference(WebSitesModuleName, "fa fa-globe", WebSiteListComponentName, "websites", "/api/webserver/websites?application_pool.id={appPoolId}"),
+export const GLOBAL_MODULES: ComponentReference[] = [
+    new ComponentReference(WebSitesModuleName, "fa fa-globe", WebSiteListComponentName, WebSitesApiName, "/api/webserver/websites?application_pool.id={appPoolId}"),
     new ComponentReference(AppPoolsModuleName, "fa fa-cogs", AppPoolComponentName, "app_pools", "/api/webserver/application-pools"),
-    new ComponentReference("Files", "fa fa-files-o", WebFilesComponentName, "files", "/api/webserver/files/{id}"),
-    new ComponentReference("Web Applications", "fa fa-code", WebAppListComponentName, "webapps", "/api/webserver/webapps?website.id={websiteid}&application_pool.id={apppoolid}"),
+    new ComponentReference(WebAppsModuleName, "fa fa-code", WebAppListComponentName, "webapps", "/api/webserver/webapps?website.id={websiteid}&application_pool.id={apppoolid}"),
     new ComponentReference("Virtual Directories", "fa fa-folder-o", VdirListComponentName, "vdirs", "/api/webserver/virtual-directories?website.id={siteId}&webapp.id={appId}"),
     new ComponentReference("Authentication", "fa fa-sign-in", AuthenticationComponentName, "authentication", "/api/webserver/authentication/{id}"),
     new ComponentReference("Authorization", "fa fa-user-o", AuthorizationComponentName, "authorization", "/api/webserver/authorization/{id}"),
-    new ComponentReference("Certificates", "fa fa-lock", CertificatesComponentName, "certificates", "/api/certificates"),
+    new ComponentReference(CertificatesModuleName, "fa fa-lock", CertificatesComponentName, "certificates", "/api/certificates"),
     new ComponentReference("Central Certificate Store", "fa fa-certificate", CentralCertificateComponentName, "central_certificates", "/api/webserver/centralized-certificates/{id}"),
     new ComponentReference("Default Documents", "fa fa-file-text-o", DefaultDocumentsComponentName, "default_document", "/api/webserver/default-documents/{id}"),
     new ComponentReference("Directory Browsing", "fa fa-folder-open-o", DirectoryBrowsingComponentName, "directory_browsing", "/api/webserver/directory-browsing/{id}"),
+    new ComponentReference(WebFilesModuleName, "fa fa-files-o", WebFilesComponentName, FilesApiName, "/api/webserver/files/{id}"),
     new ComponentReference("IP Restrictions", "fa fa-ban", IpRestrictionsComponentName, "ip_restrictions", "/api/webserver/ip-restrictions/{id}"),
     new ComponentReference("Logging","fa fa-pencil", LoggingComponentName, "logging","/api/webserver/logging/{id}"),
     new ComponentReference("Mime Maps", "fa fa-arrows-h", MimeMapsComponentName, "static_content", "/api/webserver/static-content/{id}"),
@@ -63,5 +73,6 @@ export var GLOBAL_MODULES = [
     new ComponentReference("Response Headers", "fa fa-arrow-down", HttpResponseHeadersComponentName, "response_headers", "/api/webserver/http-response-headers/{id}"),
     new ComponentReference("Request Tracing", "fa fa-flag-o", RequestTracingComponentName, "request_tracing", "/api/webserver/http-request-tracing/{id}"),
     new ComponentReference("Static Content", "fa fa-file-o", StaticContentComponentName, "static_content", "/api/webserver/static-content/{id}"),
-    new ComponentReference("Url Rewrite", "fa fa-exchange", UrlRewriteComponentName, "url_rewrite", "/api/webserver/url-rewrite/{id}")
+    new ComponentReference("Url Rewrite", "fa fa-exchange", UrlRewriteComponentName, "url_rewrite", "/api/webserver/url-rewrite/{id}"),
+    new ComponentReference(FileSystemModuleName, "fa fa-files-o", FilesComponentName, "files", "/api/files/{id}"),
 ]

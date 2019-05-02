@@ -1,32 +1,19 @@
-import { Component, Inject } from '@angular/core';
-import { ModuleUtil } from '../utils/module';
+import { Component, Inject, OnInit, AfterViewInit, ViewChild, forwardRef, Input } from '@angular/core';
 import { OptionsService } from '../main/options.service';
 import { HttpClient } from '../common/http-client';
 import { WebServer } from './webserver';
 import { WebServerService } from './webserver.service';
-import { ComponentReference, FilesComponentName, WebSitesModuleName } from '../main/settings';
+import { WebSitesModuleName, CertificatesModuleName, FileSystemModuleName, AppPoolsModuleName, WebServerModuleName, WebServerModuleIcon } from '../main/settings';
 import { CertificatesServiceURL } from 'certificates/certificates.service';
 import { UnexpectedServerStatusError } from 'error/api-error';
 import { NotificationService } from 'notification/notification.service';
 import { Runtime } from 'runtime/runtime';
 import { BreadcrumbsService } from 'header/breadcrumbs.service';
-import { BreadcrumbsRoot, WebServerCrumb } from 'header/breadcrumb';
-import { IsWAC } from 'environments/environment';
-
-const sidebarStyles = `
-:host >>> .sidebar > vtabs .vtabs > .items {
-    top: ` + (IsWAC ? 0 : 35) + `px;
-}
-
-:host >>> .sidebar > vtabs .vtabs > .content {
-    top: 96px;
-}
-
-.not-installed {
-    text-align: center;
-    margin-top: 50px;
-}
-`
+import { BreadcrumbsRoot, Breadcrumb } from 'header/breadcrumb';
+import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
+import { GlobalModuleReference, HomeCategory, FeatureVTabsComponent } from 'common/feature-vtabs.component';
+import { Subscription } from 'rxjs';
+import { Item } from 'common/vtabs.component';
 
 @Component({
     template: `
@@ -39,51 +26,28 @@ const sidebarStyles = `
         </div>
         <loading *ngIf="!webServer && !failure"></loading>
         <span *ngIf="failure" class="color-error">{{failure}}</span>
-        <div *ngIf="webServer">
-            <webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
-            <div class="sidebar crumb" [class.nav]="_options.active">
-                <vtabs *ngIf="webServer" [markLocation]="true" (activate)="_options.refresh()" [defaultTab]="defaultTab">
-                    <item [name]="'Web Server'" [ico]="'fa fa-wrench'">
-                        <webserver-general [model]="webServer"></webserver-general>
-                    </item>
-                    <item *ngFor="let module of modules" [name]="module.name" [ico]="module.ico">
-                        <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
-                    </item>
-                </vtabs>
-            </div>
-        </div>
+        <webserver-view *ngIf="webServer" [webServer]="webServer"></webserver-view>
     `,
-    styles: [ sidebarStyles ]
+    styles: [ `
+.not-installed {
+    text-align: center;
+    margin-top: 50px;
+}
+`],
 })
-export class WebServerComponent {
+export class WebServerComponent implements OnInit {
     webServer: WebServer;
-    modules: Array<any> = [];
     failure: string;
-    defaultTab: string = WebSitesModuleName;
 
     constructor(
         @Inject('WebServerService') private _service: WebServerService,
         @Inject('Runtime') private _runtime: Runtime,
-        private _crumbs: BreadcrumbsService,
-        private _http: HttpClient,
-        private _options: OptionsService,
         private _notifications: NotificationService,
-    ) {}
+    ){}
 
     ngOnInit() {
         this.server.then(ws => {
             this.webServer = ws;
-            ModuleUtil.initModules(this.modules, this.webServer, "webserver");
-            ModuleUtil.addModule(this.modules, "Certificates");
-
-            // Insert files global module after application pools
-            let index = this.modules.findIndex(m => m.name.toLocaleLowerCase() == "application pools") + 1;
-            this.modules.splice(index, 0, new ComponentReference("Files", "fa fa-files-o", FilesComponentName, "files", "/api/files/{id}"));
-            this._http.head(CertificatesServiceURL, null, false)
-                .catch(_ => {
-                    this.modules = this.modules.filter(m => m.name.toLocaleLowerCase() !== 'certificates')
-                });
-            this._crumbs.load(BreadcrumbsRoot.concat(WebServerCrumb));
         });
     }
 
@@ -92,6 +56,7 @@ export class WebServerComponent {
     }
 
     get server(): Promise<WebServer> {
+        var outer = this;
         return new Promise<WebServer>((resolve, reject) => {
             this._service.server.catch(e => {
                 if (e instanceof UnexpectedServerStatusError) {
@@ -124,5 +89,90 @@ export class WebServerComponent {
                 resolve(ws)
             })
         })
+    }
+}
+
+@Component({
+    selector: "webserver-view",
+    template: `
+<webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
+<feature-vtabs
+    [model]="webServer"
+    [resource]="'webserver'"
+    [generalTabName]="'${WebServerModuleName}'"
+    [generalTabIcon]="'${WebServerModuleIcon}'"
+    [generalTabCategory]="'${HomeCategory}'"
+    [default]="'${WebSitesModuleName}'"
+    [subcategory]="'${WebServerModuleName}'"
+    [includeModules]="staticModules"
+    [promoteToContext]="promoteToContext">
+    <webserver-general class="general-tab" [model]="webServer"></webserver-general>
+</feature-vtabs>
+`,
+})
+export class WebServerViewComponent implements AfterViewInit {
+    logger: Logger;
+    staticModules: GlobalModuleReference[] = [
+        <GlobalModuleReference> {
+            name: CertificatesModuleName,
+            initialize: this._http.head(CertificatesServiceURL, null, false)
+                        .then(_ => true)
+                        .catch(e => {
+                            this.logger.log(LogLevel.ERROR, `Error pinging ${CertificatesServiceURL}, ${CertificatesModuleName} tab will be disabled:\n${e}`);
+                            return false;
+                        })},
+        <GlobalModuleReference> {
+            name: FileSystemModuleName,
+        },
+    ];
+    promoteToContext: string[] = [
+        WebServerModuleName,
+        AppPoolsModuleName,
+        WebSitesModuleName,
+        FileSystemModuleName,
+    ]
+    tabsSubscription: Subscription;
+    webserverCrumbs: Breadcrumb[] = BreadcrumbsRoot;
+    websitesCrumbs = BreadcrumbsRoot.concat(<Breadcrumb>{ label: WebSitesModuleName });
+    appPoolsCrumbs = BreadcrumbsRoot.concat(<Breadcrumb>{ label: AppPoolsModuleName });
+    private static webSitesPath = Item.Join(HomeCategory, WebSitesModuleName);
+    private static appPoolsPath = Item.Join(HomeCategory, AppPoolsModuleName);
+
+    @Input() webServer: WebServer;
+    @ViewChild(forwardRef(() => FeatureVTabsComponent)) vtab: FeatureVTabsComponent;
+
+    constructor(
+        private _crumbs: BreadcrumbsService,
+        private _http: HttpClient,
+        private _options: OptionsService,
+        private factory: LoggerFactory,
+    ) {
+        this.logger = factory.Create(this);
+    }
+
+    ngAfterViewInit() {
+        this.tabsSubscription = this.vtab.vtabs.onSelectItem.subscribe(
+            selectedPath => {
+                if (selectedPath == WebServerViewComponent.webSitesPath) {
+                    this._crumbs.load(this.websitesCrumbs);
+                } else if (selectedPath == WebServerViewComponent.appPoolsPath) {
+                    this._crumbs.load(this.appPoolsCrumbs);
+                } else {
+                    this._crumbs.load(this.webserverCrumbs);
+                }
+            },
+            e => {
+                this.logger.log(LogLevel.WARN, `Error retrieving tab updates ${e}`);
+            },
+            () => {
+                this.logger.log(LogLevel.INFO, `VTabs completed updating selected tabs`);
+            }
+        );
+    }
+
+    ngOnDestroy() {
+        if (this.tabsSubscription) {
+            this.tabsSubscription.unsubscribe();
+        }
     }
 }

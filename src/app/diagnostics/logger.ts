@@ -50,16 +50,18 @@ export function instrument<T>(logger: Logger, name: string): OperatorFunction<T,
     if (IsProduction) {
         return (o: Observable<T>): Observable<T> => o;
     } else {
+        let count = 0;
         logger.log(LogLevel.DEBUG, `${new Date().toISOString()}: ${name} scheduled`);
         return (o: Observable<T>): Observable<T> => o.pipe(tap(
             _ => {
+                count++;
                 logger.log(LogLevel.DEBUG, `${new Date().toISOString()}: ${name} returned value`);
             },
             _ => {
                 logger.log(LogLevel.DEBUG, `${new Date().toISOString()}: ${name} returned error`);
             },
             () => {
-                logger.log(LogLevel.DEBUG, `${new Date().toISOString()}: ${name} completed`);
+                logger.log(LogLevel.DEBUG, `${new Date().toISOString()}: ${name} completed, number of results returned: ${count}`);
             }
         ));
     }

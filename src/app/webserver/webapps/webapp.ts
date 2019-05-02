@@ -1,6 +1,7 @@
-import {WebSite} from '../websites/site';
+import { WebSite } from '../websites/site';
+import { FeatureContext } from 'common/feature-vtabs.component';
 
-export class WebApp {
+export class WebApp implements FeatureContext {
     id: string;
     path: string;
     location: string;

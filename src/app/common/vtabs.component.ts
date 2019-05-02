@@ -1,28 +1,33 @@
-import { NgModule, Component, Input, Output, ViewChildren, forwardRef, ContentChildren, QueryList, OnInit, ElementRef, Renderer, OnDestroy, EventEmitter } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { NgModule, Component, Input, Output, ContentChildren, QueryList, OnInit, OnDestroy, EventEmitter, AfterViewInit, ElementRef, ViewChildren } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs'
+import { Subscription, Subject, ReplaySubject } from 'rxjs';
 import { DynamicComponent } from './dynamic.component';
 import { SectionHelper } from './section.helper';
-import { IsWAC } from 'environments/environment'
+import { Module as DynamicModule } from './dynamic.component';
+import { FeatureVTabsComponent } from './feature-vtabs.component';
+import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
+import { IsWAC } from 'environments/environment';
 
 @Component({
     selector: 'vtabs',
     template: `
         <div class="vtabs">
             <ul class="items sme-focus-zone">
-                <li
-                    tabindex="0"
-                    #item
-                    class="hover-edit"
-                    *ngFor="let tab of tabs; let i = index;"
-                    [ngClass]="{active: tab.active}"
-                    (keyup.space)="selectItem(i)"
-                    (keyup.enter)="selectItem(i)"
-                    (click)="selectItem(i)">
-                    <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
-                </li>
+                <ng-container *ngFor="let category of getCategories()">
+                    <li *ngIf="!!category" class="separator"><div class="horizontal-strike"><span>{{category}}</span></div></li>
+                    <li tabindex="0"
+                        #tabLabels
+                        class="hover-edit"
+                        *ngFor="let tab of getTabs(category)"
+                        [ngClass]="{active: tab.active}"
+                        (keyup.space)="selectItem(tab)"
+                        (keyup.enter)="selectItem(tab)"
+                        (click)="selectItem(tab)">
+                        <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
+                    </li>
+                </ng-container>
             </ul>
             <div class="content sme-focus-zone">
                 <ng-content></ng-content>
@@ -46,51 +51,59 @@ import { IsWAC } from 'environments/environment'
         '(window:resize)': 'refresh()'
     }
 })
-export class VTabsComponent implements OnDestroy {
+export class VTabsComponent implements OnDestroy, AfterViewInit {
     @Input() markLocation: boolean;
     @Input() defaultTab: string;
     @Output() activate: EventEmitter<Item> = new EventEmitter();
+    @Input() categories: string[];
 
-    tabs: Item[];
-
-    private _default: string;
-    private _selectedIndex = -1;
-    private _tabsItems: Array<ElementRef>;
+    private tabs: Item[];
     private _sectionHelper: SectionHelper;
     private _subscriptions: Array<Subscription> = [];
-    @ViewChildren('item') private _tabList: QueryList<ElementRef>;
-    @ContentChildren(forwardRef(() => Item)) its: QueryList<Item>;
+    private logger: Logger;
+    categorizedTabs: Map<string, Item[]> = new Map<string, Item[]>();
+
+    @ViewChildren('tabLabels') tabLabels: QueryList<ElementRef>;
+    onSelectItem: Subject<string> = new ReplaySubject<string>();
 
     constructor(
         private _activatedRoute: ActivatedRoute,
         private _location: Location,
         private _router: Router,
+        private factory: LoggerFactory,
     ) {
         this.tabs = [];
+        this.logger = factory.Create(this);
     }
 
     public ngAfterViewInit() {
-        this._default = this._activatedRoute.snapshot.params["section"];
-        if (!this._default) {
-            this._default = this.defaultTab;
+        let selectedPath: string = this._activatedRoute.snapshot.params["section"];
+        if (!selectedPath && this.defaultTab) {
+            selectedPath = SectionHelper.normalize(this.defaultTab);
         }
-        this._sectionHelper = new SectionHelper(this.tabs.map(t => t.name), this._default, this.markLocation, this._location, this._router);
-
-        this._subscriptions.push(this._sectionHelper.active.subscribe(sec => this.onSectionChange(sec)));
-
-        this._subscriptions.push(this.its.changes.subscribe(change => {
-            let arr: Array<Item> = change.toArray();
-            arr.forEach(item => {
-                if (!this.tabs.find(t => t == item)) {
-                    this.addTab(item);
+        if (selectedPath) {
+            if (!selectedPath.includes("+")) {
+                // if input is not fully qualified, resolve category by searching
+                this.logger.log(LogLevel.INFO, `Tab ID ${selectedPath} is not fully qualified, trying to resolve category`);
+                for (let i = this.categories.length - 1; i >= 0; i--) {
+                    let item = this.categorizedTabs[SectionHelper.normalize(this.categories[i])].find(i => SectionHelper.normalize(i.name) == selectedPath);
+                    if (item) {
+                        selectedPath = Item.Join(this.categories[i], selectedPath);
+                        break;
+                    }
                 }
-            });
-        }));
-
-        this._tabsItems = this._tabList.toArray();
-        window.setTimeout(() => {
-            this.refresh();
-        }, 1);
+            }
+        } else {
+            if (this.categories) {
+                let category = SectionHelper.normalize(this.categories.last());
+                selectedPath = this.categorizedTabs[category][0].fullName;
+            } else {
+                selectedPath = this.categorizedTabs.values[0].fullName;
+            }
+        }
+        this.logger.log(LogLevel.DEBUG, `Default tab selected ${selectedPath}`);
+        this._sectionHelper = new SectionHelper(this.tabs.map(t => t.fullName), selectedPath, this.markLocation, this._location, this._router);
+        this._subscriptions.push(this._sectionHelper.active.subscribe(sec => this.onSectionChange(sec)));
     }
 
     public ngOnDestroy() {
@@ -102,23 +115,23 @@ export class VTabsComponent implements OnDestroy {
             this._sectionHelper.dispose();
             this._sectionHelper = null;
         }
+        this.onSelectItem.unsubscribe();
     }
 
     public addTab(tab: Item) {
-        if (this._selectedIndex === -1 && (this.tabs.length === 0 && !this._default || SectionHelper.normalize(tab.name) == this._default)) {
-            tab.activate();
-            this._selectedIndex = this.tabs.length;
+        const category = SectionHelper.normalize(tab.category || "");
+        if (!this.categorizedTabs[category]) {
+            this.categorizedTabs[category] = [];
         }
-
+        this.categorizedTabs[category].push(tab);
         if (this._sectionHelper) {
-            this._sectionHelper.addSection(tab.name);
+            this._sectionHelper.addSection(tab.fullName);
         }
-
         this.tabs.push(tab);
     }
 
     public removeTab(tab: Item) {
-        this._sectionHelper.removeSection(tab.name);
+        this._sectionHelper.removeSection(tab.fullName);
 
         let i = this.tabs.findIndex(item => item == tab);
 
@@ -127,22 +140,35 @@ export class VTabsComponent implements OnDestroy {
         }
     }
 
-    private selectItem(index: number) {
-        let tab = this.tabs[index];
+    public getCategories() {
+        return this.categories || this.categorizedTabs.keys();
+    }
 
+    public getTabs(category: string) {
+        return this.categorizedTabs[SectionHelper.normalize(category)];
+    }
+
+    public hide(tabName: string) {
+        this.tabLabels.forEach((elementRef, _, __) => {
+            if (elementRef.nativeElement.innerText == tabName) {
+                elementRef.nativeElement.remove();
+            }
+        })
+    }
+
+    selectItem(tab: Item) {
         if (!tab.routerLink) {
-            this._sectionHelper.selectSection(tab.name);
+            this._sectionHelper.selectSection(tab.fullName);
         }
         else {
             tab.activate();
         }
-        
         // set input focus to the title element of the newly activated tab
         tab.focusTitle();
     }
 
     private onSectionChange(section: string) {
-        let index = this.tabs.findIndex(t => t.name === section);
+        let index = this.tabs.findIndex(t => t.fullName === section);
 
         if (index == -1) {
             index = 0;
@@ -150,22 +176,13 @@ export class VTabsComponent implements OnDestroy {
 
         this.tabs.forEach(t => t.deactivate());
         this.tabs[index].activate();
-        this._selectedIndex = index;
-        this.refresh();
         this.activate.emit(this.tabs[index]);
-    }
-
-    private refresh() {
-        if (!this._tabsItems || this._selectedIndex < 0) {
-            return;
-        }
-
-        this.tabs.forEach(t => { t.visible = true });
+        this.onSelectItem.next(section);
     }
 }
 
 @Component({
-    selector: 'vtabs > item',
+    selector: '[vtabs item][vtabs ng-container item]',
     template: `
         <div *ngIf="!(!active)">
             <span id="vtabs-title" [tabindex]="isWAC() ? -1 : 0"></span>
@@ -196,19 +213,40 @@ export class VTabsComponent implements OnDestroy {
     `],
 })
 export class Item implements OnInit, OnDestroy {
-    @Input() name: string;
+
+    static Join(category: string, name: string) {
+        return `${SectionHelper.normalize(category)}+${SectionHelper.normalize(name)}`;
+    }
+
+    static GetFullyQualifiedName(item: Item) {
+        return Item.Join(item.category, item.name);
+    }
+
     @Input() ico: string = "";
-    @Input() visible: boolean = true;
     @Input() active: boolean;
     @Input() routerLink: Array<any>;
+    @Input() category: string = "";
+    @Input() name: string;
+    private _fullName: string;
 
     @ContentChildren(DynamicComponent) dynamicChildren: QueryList<DynamicComponent>;
 
-    constructor(private _tabs: VTabsComponent, private _router: Router) {
+    private logger: Logger;
+
+    constructor(
+        private _tabs: VTabsComponent,
+        private _router: Router,
+        private factory: LoggerFactory,
+    ){
+        this.logger = factory.Create(this);
     }
 
     ngOnInit() {
         this._tabs.addTab(this);
+    }
+
+    get fullName() {
+        return this._fullName || (this._fullName = Item.GetFullyQualifiedName(this));
     }
 
     private isWAC() {
@@ -221,7 +259,10 @@ export class Item implements OnInit, OnDestroy {
         }
 
         if (this.routerLink) {
-            this._router.navigate(this.routerLink);
+            return this._router.navigate(this.routerLink, {
+                skipLocationChange: true,
+                replaceUrl: true,
+            });
         }
 
         this.active = true;
@@ -249,14 +290,17 @@ export class Item implements OnInit, OnDestroy {
 }
 
 export const TABS: any[] = [
+    FeatureVTabsComponent,
     VTabsComponent,
-    Item
+    Item,
 ];
 
 @NgModule({
     imports: [
+        RouterModule,
         FormsModule,
-        CommonModule
+        CommonModule,
+        DynamicModule,
     ],
     exports: [
         TABS

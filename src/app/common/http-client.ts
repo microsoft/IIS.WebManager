@@ -79,16 +79,17 @@ export class HttpClient {
     }
 
     public request(url: string, options?: RequestOptionsArgs, warn?: boolean): Promise<Response> {
-        return this.requestOnConnection(url, options, warn).pipe(
-            catchError((e, _) => {
+        return new Promise<Response>((resolve, reject) => {
+            this.requestOnConnection(url, options, warn).subscribe(
+             v => resolve(v),
+             e => {
                 var unhandled = this.runtime.HandleConnectError(e);
                 if (unhandled) {
-                    return throwError(unhandled);
+                    return reject(unhandled);
                 }
-                // HandleConnectError should have handled the error such as navigating away, no result is emitted.
-                return of(null);
-            }),
-        ).toPromise();
+             }
+            )
+        });
     }
 
     private setJsonContentType(options?: RequestOptionsArgs) {

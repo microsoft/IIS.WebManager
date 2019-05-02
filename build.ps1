@@ -24,8 +24,13 @@ function ShouldNPMInstall {
     return $npmInstallNeeded
 }
 
+function ToPassThroughArgs($inputArgs) {
+    return $inputArgs | Where-Object { $_ -notlike "--purge" -and $_ -notlike "--pack" -and $_ -notlike "--serve" -and -not ($_.startsWith("--version="))}
+}
+
 $purge = $args | Where-Object { $_ -like "--purge" }
 $pack = $args | Where-Object { $_ -like "--pack" }
+$serve = $args | Where-Object { $_ -like "--serve" }
 $version = $args | Where-Object { $_.ToLower().startsWith("--version=") }
 if ($version) {
     # Example: --version=0.1.$(Build.BuildNumber)
@@ -67,7 +72,7 @@ if ($pack) {
 Write-Host "Dump the root source directory..."
 Get-ChildItem $Env:BUILD_SOURCESDIRECTORY
 
-$buildArgs = $args | Where-Object { $_ -notlike "--purge" -and $_ -notlike "--pack" -and -not ($_.startsWith("--version="))}
+$buildArgs = ToPassThroughArgs $args
 $buildTools = @("@angular/cli","gulp-cli")
 
 Push-Location src
@@ -99,6 +104,9 @@ try {
     Write-Host ("OutputDirectory: " + (Resolve-Path "..\dist").Path)
     if ($pack) {
         nuget pack . -Version $version -OutputDirectory (Resolve-Path "..\dist").Path
+    }
+    if ($serve) {
+        gulp serve $buildArgs
     }
 } finally {
     Pop-Location

@@ -1,6 +1,7 @@
-import {Status} from '../../common/status';
+import { Status } from 'common/status';
+import { FeatureContext } from 'common/feature-vtabs.component';
 
-export class ApplicationPool {
+export class ApplicationPool implements FeatureContext {
     name: string;
     id: string;
     status: Status;
