@@ -206,8 +206,13 @@ function EnsureUserGroup($groupName) {
         ## Note: Powershell Get-LocalGroupMember's implementation has some issue and passing SID would be required for desired behavior
         ## However, Add-LocalGroupMember always require the AD Path
         if (!(Get-LocalGroupMember -Group $groupName -Member $userSid -ErrorAction SilentlyContinue)) {
-            Add-LocalGroupMember -Group $groupName -Member $userAD | Out-Null
-            $script:groupModified = $true
+            try {
+                # Add-LocalGroupMember does not return anything, so we use catch block to ensure success
+                Add-LocalGroupMember -Group $groupName -Member $userAD
+                $script:groupModified = $true
+            } catch {
+                LogVerbose "Error $_ when trying to add user $userAD to group $groupName, ignoring..."
+            }
         }
     } else {
         $userPath = 'WinNT://' + $userAD.Replace("\", "/")
@@ -217,9 +222,10 @@ function EnsureUserGroup($groupName) {
         } catch {
             if (VerifyCOMErrorCode $_ 0x800708AC) {
                 ## Expected exception when group does not exist
-                LogVerbose "Re-throwing an exception that might have indicated that the group ${groupName} does not exist"
+                LogVerbose "Captured an exception that might have indicated that the group ${groupName} does not exist"
+            } else {
+                throw
             }
-            throw
         }
         try {
             $group.Invoke('Add', @($userPath)) | Out-Null
