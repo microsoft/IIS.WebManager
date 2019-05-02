@@ -12,6 +12,9 @@ import { IsWAC } from 'environments/environment';
 
 @Component({
     selector: 'vtabs',
+    // In WAC mode, we can select feature when input-focus is changed.
+    // In the site mode, we can't select the feature when input-focus is change.
+    // That is because users are allowed to use only tab key, not arrow keys, unlike the WAC mode.
     template: `
         <div class="vtabs">
             <ul class="items sme-focus-zone">
@@ -24,8 +27,8 @@ import { IsWAC } from 'environments/environment';
                         [ngClass]="{active: tab.active}"
                         (keyup.space)="selectItem(tab)"
                         (keyup.enter)="selectItem(tab)"
-                        (focus)="selectItem(tab)"
-                        (click)=" IsWAC? selectItem(tab): '' ">
+                        (focus)=" isWAC() ? selectItem(tab) : '' "
+                        (click)="selectItem(tab)">
                         <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
                     </li>
                 </ng-container>
@@ -178,6 +181,10 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         this.activate.emit(this.tabs[index]);
         this.onSelectItem.next(section);
     }
+
+    private isWAC() {
+        return IsWAC;
+    }
 }
 
 @Component({
@@ -247,10 +254,6 @@ export class Item implements OnInit, OnDestroy {
         return this._fullName || (this._fullName = Item.GetFullyQualifiedName(this));
     }
 
-    private isWAC() {
-        return IsWAC;
-    }
-    
     activate() {
         if (this.dynamicChildren) {
             this.dynamicChildren.forEach(child => child.activate());
