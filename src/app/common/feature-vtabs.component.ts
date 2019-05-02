@@ -38,6 +38,7 @@ export class GlobalModuleReference {
 // section by listing the module names in "promoteToContext"
 @Component({
     selector: 'feature-vtabs',
+    // NOTE: when [routerLink] is used, Angular automatically set tabindex="0". In order to avoid that behavior, we decided to add tabindex="-1".
     template: `
 <div class="sidebar crumb" [class.nav]="IsActive">
     <vtabs [markLocation]="true" (activate)="Refresh()" [defaultTab]="default" [categories]="['${HomeCategory}', subcategory]">
@@ -47,13 +48,10 @@ export class GlobalModuleReference {
         <item *ngFor="let module of features" [name]="module.name" [ico]="module.ico" [category]="subcategory">
             <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
         </item>
-        <ng-container *ngFor="let module of contexts">
-            <item [name]="module.name" [ico]="module.ico" [category]="'${HomeCategory}'" [routerLink]="module.routerLink">
-                <ng-container *ngIf="!(module.routerLink)">
-                    <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
-                </ng-container>
-            </item>
-        </ng-container>
+        <item *ngFor="let module of contexts" [name]="module.name" [ico]="module.ico" [category]="'${HomeCategory}'"
+            [routerLink]="module.routerLink" tabindex="-1">
+            <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
+        </item>
     </vtabs>
 </div>
 `,

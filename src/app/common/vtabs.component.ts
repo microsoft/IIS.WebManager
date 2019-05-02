@@ -24,7 +24,8 @@ import { IsWAC } from 'environments/environment';
                         [ngClass]="{active: tab.active}"
                         (keyup.space)="selectItem(tab)"
                         (keyup.enter)="selectItem(tab)"
-                        (click)="selectItem(tab)">
+                        (focus)="selectItem(tab)"
+                        (click)=" IsWAC? selectItem(tab): '' ">
                         <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
                     </li>
                 </ng-container>
@@ -163,8 +164,6 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         else {
             tab.activate();
         }
-        // set input focus to the title element of the newly activated tab
-        tab.focusTitle();
     }
 
     private onSectionChange(section: string) {
@@ -185,7 +184,6 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     selector: '[vtabs item][vtabs ng-container item]',
     template: `
         <div *ngIf="!(!active)">
-            <span id="vtabs-title" [tabindex]="isWAC() ? -1 : 0"></span>
             <h1 class="border-active">
                 <span>{{name}}</span>
             </h1>
@@ -266,10 +264,6 @@ export class Item implements OnInit, OnDestroy {
         }
 
         this.active = true;
-    }
-
-    focusTitle() {
-        setTimeout(()=>document.getElementById("vtabs-title").focus());
     }
 
     deactivate() {
