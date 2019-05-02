@@ -24,6 +24,10 @@ function ShouldNPMInstall {
     return $npmInstallNeeded
 }
 
+function ToPassThroughArgs($inputArgs) {
+    return $inputArgs | Where-Object { $_ -notlike "--purge" -and $_ -notlike "--pack" -and $_ -notlike "--serve" -and -not ($_.startsWith("--version="))}
+}
+
 $purge = $args | Where-Object { $_ -like "--purge" }
 $pack = $args | Where-Object { $_ -like "--pack" }
 $serve = $args | Where-Object { $_ -like "--serve" }
@@ -68,7 +72,7 @@ if ($pack) {
 Write-Host "Dump the root source directory..."
 Get-ChildItem $Env:BUILD_SOURCESDIRECTORY
 
-$buildArgs = $args | Where-Object { $_ -notlike "--purge" -and $_ -notlike "--pack" -and -not ($_.startsWith("--version="))}
+$buildArgs = ToPassThroughArgs $args
 $buildTools = @("@angular/cli","gulp-cli")
 
 Push-Location src
