@@ -46,8 +46,7 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { Runtime } from "runtime/runtime";
 import { AppRoutingModule } from "./app-routing.module";
 import { ProvidersAddon, ModulesAddon } from "./app.addon";
-import { BreadcrumbsComponent } from "header/breadcrumbs.component";
-import { BreadcrumbsService } from "header/breadcrumbs.service";
+import { TitlesModule } from "header/titles.module";
 
 @NgModule({
     imports: [
@@ -69,7 +68,7 @@ import { BreadcrumbsService } from "header/breadcrumbs.service";
         FilesModule,
         MonitoringModule,
         AngularFontAwesomeModule,
-
+        TitlesModule,
         ModulesAddon,
     ],
     declarations: [
@@ -85,7 +84,6 @@ import { BreadcrumbsService } from "header/breadcrumbs.service";
         ModalComponent,
         InformationComponent,
         NewVersionNotificationComponent,
-        BreadcrumbsComponent,
     ],
     providers: [
         HttpClient,
@@ -98,7 +96,6 @@ import { BreadcrumbsService } from "header/breadcrumbs.service";
         LoggerFactory,
         OptionsService,
         Angulartics2GoogleAnalytics,
-        BreadcrumbsService,
 
         { provide: "WebServerService", useClass: WebServerService },
         { provide: "WebSitesService", useClass: WebSitesService },

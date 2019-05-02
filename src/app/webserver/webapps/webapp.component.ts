@@ -4,7 +4,7 @@ import {DiffUtil} from '../../utils/diff';
 import {OptionsService} from '../../main/options.service';
 import {WebApp} from './webapp';
 import {WebAppsService} from './webapps.service';
-import { BreadcrumbsService } from 'header/breadcrumbs.service';
+import { TitlesService } from 'header/titles.service';
 import { BreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
 import { WebAppsModuleName } from 'main/settings';
 
@@ -29,7 +29,7 @@ export class WebAppComponent implements OnInit {
         private _route: ActivatedRoute,
         private _options: OptionsService,
         private _router: Router,
-        private crumbs: BreadcrumbsService,
+        private _titles: TitlesService,
         @Inject("WebAppsService") private _service: WebAppsService,
     ) {
         this.id = this._route.snapshot.params["id"];
@@ -39,7 +39,7 @@ export class WebAppComponent implements OnInit {
         this._service.get(this.id)
             .then(app => {
                 this.setApp(app);
-                this.crumbs.load(
+                this._titles.load(
                     BreadcrumbsRoot.concat(
                         WebSitesCrumb,
                         <Breadcrumb>{ label: app.website.name, routerLink: ['/webserver/websites/', app.website.id] },

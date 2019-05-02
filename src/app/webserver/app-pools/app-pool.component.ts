@@ -4,7 +4,7 @@ import {DiffUtil} from '../../utils/diff';
 import {OptionsService} from '../../main/options.service';
 import {ApplicationPool} from './app-pool';
 import {AppPoolsService} from './app-pools.service';
-import { BreadcrumbsService } from 'header/breadcrumbs.service';
+import { TitlesService } from 'header/titles.service';
 import { BreadcrumbsRoot, AppPoolsCrumb, Breadcrumb } from 'header/breadcrumb';
 import { AppPoolsModuleName } from 'main/settings';
 
@@ -28,7 +28,7 @@ export class AppPoolComponent implements OnInit {
         private _route: ActivatedRoute,
         private _options: OptionsService,
         private _router: Router,
-        private crumbs: BreadcrumbsService,
+        private _titles: TitlesService,
         @Inject("AppPoolsService") private _service: AppPoolsService,
     ){
         this.id = this._route.snapshot.params['id'];
@@ -38,7 +38,7 @@ export class AppPoolComponent implements OnInit {
         this._service.get(this.id)
             .then(p => {
                 this.setAppPool(p);
-                this.crumbs.load(
+                this._titles.load(
                     BreadcrumbsRoot.concat(
                         AppPoolsCrumb,
                         <Breadcrumb>{ label: p.name },

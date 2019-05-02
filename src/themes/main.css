@@ -916,11 +916,6 @@ a.link:before {
     border-width: 1px;
 }
 
-.crumb-content {
-    top:14px;
-    position: absolute;
-}
-
 .sidebar .crumbs {
     position: absolute;
     top: 1em;

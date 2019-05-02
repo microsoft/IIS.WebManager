@@ -9,6 +9,7 @@ import { Module as DynamicModule } from './dynamic.component';
 import { FeatureVTabsComponent } from './feature-vtabs.component';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { IsWAC } from 'environments/environment';
+import { TitlesModule } from 'header/titles.module';
 
 @Component({
     selector: 'vtabs',
@@ -298,6 +299,7 @@ export const TABS: any[] = [
         FormsModule,
         CommonModule,
         DynamicModule,
+        TitlesModule,
     ],
     exports: [
         TABS

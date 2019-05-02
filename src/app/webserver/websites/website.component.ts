@@ -4,7 +4,7 @@ import { WebSite } from './site';
 import { WebSitesService } from './websites.service';
 import { DiffUtil } from 'utils/diff';
 import { OptionsService } from 'main/options.service';
-import { BreadcrumbsService } from 'header/breadcrumbs.service';
+import { TitlesService } from 'header/titles.service';
 import { BreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
 import { WebSitesModuleName } from 'main/settings';
 
@@ -28,7 +28,7 @@ export class WebSiteComponent implements OnInit {
     constructor(
         private _route: ActivatedRoute,
         private _options: OptionsService,
-        private _crumbs: BreadcrumbsService,
+        private _titles: TitlesService,
         @Inject("WebSitesService") private _service: WebSitesService,
     ){
         this.id = this._route.snapshot.params['id'];
@@ -40,7 +40,7 @@ export class WebSiteComponent implements OnInit {
         this._service.get(this.id)
             .then(s => {
                 this.setSite(s);
-                this._crumbs.load(
+                this._titles.load(
                     BreadcrumbsRoot.concat(
                         WebSitesCrumb,
                         <Breadcrumb>{ label: s.name },

@@ -8,7 +8,7 @@ import { CertificatesServiceURL } from 'certificates/certificates.service';
 import { UnexpectedServerStatusError } from 'error/api-error';
 import { NotificationService } from 'notification/notification.service';
 import { Runtime } from 'runtime/runtime';
-import { BreadcrumbsService } from 'header/breadcrumbs.service';
+import { TitlesService } from 'header/titles.service';
 import { BreadcrumbsRoot, Breadcrumb } from 'header/breadcrumb';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { GlobalModuleReference, HomeCategory, FeatureVTabsComponent } from 'common/feature-vtabs.component';
@@ -95,7 +95,6 @@ export class WebServerComponent implements OnInit {
 @Component({
     selector: "webserver-view",
     template: `
-<webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
 <feature-vtabs
     [model]="webServer"
     [resource]="'webserver'"
@@ -106,6 +105,7 @@ export class WebServerComponent implements OnInit {
     [subcategory]="'${WebServerModuleName}'"
     [includeModules]="staticModules"
     [promoteToContext]="promoteToContext">
+    <webserver-header [model]="webServer" class="vtab-header" [class.sidebar-nav-content]="_options.active"></webserver-header>
     <webserver-general class="general-tab" [model]="webServer"></webserver-general>
 </feature-vtabs>
 `,
@@ -142,7 +142,7 @@ export class WebServerViewComponent implements AfterViewInit {
     @ViewChild(forwardRef(() => FeatureVTabsComponent)) vtab: FeatureVTabsComponent;
 
     constructor(
-        private _crumbs: BreadcrumbsService,
+        private _titles: TitlesService,
         private _http: HttpClient,
         private _options: OptionsService,
         private factory: LoggerFactory,
@@ -154,11 +154,11 @@ export class WebServerViewComponent implements AfterViewInit {
         this.tabsSubscription = this.vtab.vtabs.onSelectItem.subscribe(
             selectedPath => {
                 if (selectedPath == WebServerViewComponent.webSitesPath) {
-                    this._crumbs.load(this.websitesCrumbs);
+                    this._titles.load(this.websitesCrumbs);
                 } else if (selectedPath == WebServerViewComponent.appPoolsPath) {
-                    this._crumbs.load(this.appPoolsCrumbs);
+                    this._titles.load(this.appPoolsCrumbs);
                 } else {
-                    this._crumbs.load(this.webserverCrumbs);
+                    this._titles.load(this.webserverCrumbs);
                 }
             },
             e => {
