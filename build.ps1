@@ -26,6 +26,7 @@ function ShouldNPMInstall {
 
 $purge = $args | Where-Object { $_ -like "--purge" }
 $pack = $args | Where-Object { $_ -like "--pack" }
+$serve = $args | Where-Object { $_ -like "--serve" }
 $version = $args | Where-Object { $_.ToLower().startsWith("--version=") }
 if ($version) {
     # Example: --version=0.1.$(Build.BuildNumber)
@@ -99,6 +100,9 @@ try {
     Write-Host ("OutputDirectory: " + (Resolve-Path "..\dist").Path)
     if ($pack) {
         nuget pack . -Version $version -OutputDirectory (Resolve-Path "..\dist").Path
+    }
+    if ($serve) {
+        gulp serve $buildArgs
     }
 } finally {
     Pop-Location
