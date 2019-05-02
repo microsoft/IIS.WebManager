@@ -52,8 +52,8 @@ export class GlobalModuleReference {
             <item [name]="module.name" [ico]="module.ico" [category]="'${HomeCategory}'" [routerLink]="module.routerLink" tabindex="-1">
                 <ng-container *ngIf="!(module.routerLink)">
                     <dynamic [name]="module.component_name" [module]="module" [data]="module.data"></dynamic>
-                </ng-container>	
-            </item>	
+                </ng-container>
+            </item>
         </ng-container>
     </vtabs>
 </div>
