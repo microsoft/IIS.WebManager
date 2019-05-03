@@ -19,18 +19,25 @@ import { IsWAC } from 'environments/environment';
         <div class="vtabs">
             <ul class="items sme-focus-zone">
                 <ng-container *ngFor="let category of getCategories()">
-                    <li *ngIf="!!category" class="separator"><div class="horizontal-strike"><span>{{category}}</span></div></li>
-                    <li tabindex="0"
-                        #tabLabels
-                        class="hover-edit"
-                        *ngFor="let tab of getTabs(category)"
-                        [ngClass]="{active: tab.active}"
-                        (keyup.space)="selectItem(tab)"
-                        (keyup.enter)="selectItem(tab)"
-                        (focus)=" isWAC() ? selectItem(tab) : '' "
-                        (click)="selectItem(tab)">
-                        <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
-                    </li>
+                    <div class="sme-focus-zone">
+                    <li [attr.tabindex]=" isWAC() ? '0' : null " *ngIf="!!category" class="separator">
+                            <div class="horizontal-strike">
+                                <span>{{category}}</span>
+                            </div>
+                        </li>
+                        <li *ngFor="let tab of getTabs(category)"
+                            tabindex="0"
+                            #tabLabels
+                            class="hover-edit"
+                            [ngClass]="{active: tab.active}"
+                            (keyup.space)="selectItem(tab)"
+                            (keyup.enter)="selectItem(tab)"
+                            (focus)=" isWAC() ? selectItem(tab) : '' "
+                            (click)="selectItem(tab)">
+                            <i [class]="tab.ico"></i>
+                            <span class="border-active">{{tab.name}}</span>
+                        </li>
+                    </div>
                 </ng-container>
             </ul>
             <div class="content sme-focus-zone">
