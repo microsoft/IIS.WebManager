@@ -20,7 +20,7 @@ import { IsWAC } from 'environments/environment';
             <ul class="items sme-focus-zone">
                 <ng-container *ngFor="let category of getCategories()">
                     <div class="sme-focus-zone">
-                        <li tabindex="0" *ngIf="!!category" class="separator">
+                    <li [attr.tabindex]=" isWAC() ? '0' : null " *ngIf="!!category" class="separator">
                             <div class="horizontal-strike">
                                 <span>{{category}}</span>
                             </div>
