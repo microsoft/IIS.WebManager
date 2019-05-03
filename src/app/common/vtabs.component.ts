@@ -17,10 +17,10 @@ import { IsWAC } from 'environments/environment';
     // That is because users are allowed to use only tab key, not arrow keys, unlike the WAC mode.
     template: `
         <div class="vtabs">
-            <ul class="items sme-focus-zone">
+            <ul class="items">
                 <ng-container *ngFor="let category of getCategories()">
                     <div class="sme-focus-zone">
-                    <li [attr.tabindex]=" isWAC() ? '0' : null " *ngIf="!!category" class="separator">
+                        <li [attr.tabindex]=" isWAC() ? '0' : null " *ngIf="!!category" class="separator">
                             <div class="horizontal-strike">
                                 <span>{{category}}</span>
                             </div>
