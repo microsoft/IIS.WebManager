@@ -1,4 +1,17 @@
-import { NgModule, Component, Input, Output, ContentChildren, QueryList, OnInit, OnDestroy, EventEmitter, AfterViewInit, ElementRef, ViewChildren } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    Input,
+    NgModule,
+    OnDestroy,
+    OnInit,
+    Output,
+    QueryList,
+    ViewChildren,
+} from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,6 +23,7 @@ import { FeatureVTabsComponent } from './feature-vtabs.component';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { IsWAC } from 'environments/environment';
 import { TitlesModule } from 'header/titles.module';
+import { Heading } from 'header/feature-header.component';
 
 @Component({
     selector: 'vtabs',
@@ -18,6 +32,7 @@ import { TitlesModule } from 'header/titles.module';
     // That is because users are allowed to use only tab key, not arrow keys, unlike the WAC mode.
     template: `
         <div class="vtabs">
+            <div *ngIf="header" class="vtab-header items">{{header}}</div>
             <ul class="items sme-focus-zone">
                 <ng-container *ngFor="let category of getCategories()">
                     <li *ngIf="!!category" class="separator"><div class="horizontal-strike"><span>{{category}}</span></div></li>
@@ -34,29 +49,46 @@ import { TitlesModule } from 'header/titles.module';
                     </li>
                 </ng-container>
             </ul>
-            <div class="content sme-focus-zone">
-                <ng-content></ng-content>
-            </div>
+        </div>
+        <div class="content sme-focus-zone">
+            <ng-content></ng-content>
         </div>
     `,
     styles: [`
-        .content {
-            min-width: 320px;
-        }
+.content {
+    min-width: 320px;
+    height: 100vh;
+}
 
-        li:focus {
-            outline-style: dashed;
-            outline-color: #000;
-            outline-width: 2px;
-            outline-offset: -2px;
-            text-decoration: underline;
-        }
-    `],
+li:focus {
+    outline-style: dashed;
+    outline-color: #000;
+    outline-width: 2px;
+    outline-offset: -2px;
+    text-decoration: underline;
+}
+
+.vtab-header {
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 1em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.vtabs {
+    width: 200px;
+    position: sticky;
+    float: left;
+    height: 100vh;
+}`],
     host: {
         '(window:resize)': 'refresh()'
     }
 })
 export class VTabsComponent implements OnDestroy, AfterViewInit {
+    @Input() header: string;
     @Input() markLocation: boolean;
     @Input() defaultTab: string;
     @Output() activate: EventEmitter<Item> = new EventEmitter();
@@ -67,9 +99,9 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     private _subscriptions: Array<Subscription> = [];
     private logger: Logger;
     categorizedTabs: Map<string, Item[]> = new Map<string, Item[]>();
+    onSelectItem: Subject<Item> = new ReplaySubject<Item>();
 
     @ViewChildren('tabLabels') tabLabels: QueryList<ElementRef>;
-    onSelectItem: Subject<string> = new ReplaySubject<string>();
 
     constructor(
         private _activatedRoute: ActivatedRoute,
@@ -178,9 +210,10 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         }
 
         this.tabs.forEach(t => t.deactivate());
-        this.tabs[index].activate();
-        this.activate.emit(this.tabs[index]);
-        this.onSelectItem.next(section);
+        let selectedTab = this.tabs[index];
+        selectedTab.activate();
+        this.activate.emit(selectedTab);
+        this.onSelectItem.next(selectedTab);
     }
 
     private isWAC() {
@@ -191,24 +224,14 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
 @Component({
     selector: '[vtabs item][vtabs ng-container item]',
     template: `
-        <div *ngIf="!(!active)">
-            <h1 class="border-active">
-                <span>{{name}}</span>
-            </h1>
-            <ng-content></ng-content>
+        <div *ngIf="active">
+            <titles></titles>
+            <div>
+                <ng-content></ng-content>
+            </div>
         </div>
     `,
     styles: [`
-        h1 {
-            margin: 0;
-            padding: 0;
-            margin-bottom: 30px;
-            line-height: 34px;
-            font-size: 18px;
-            border-bottom-style: dotted;
-            border-bottom-width: 1px;
-        }
-
         span:focus {
             outline-style: dashed;
             outline-color: #000;
@@ -218,7 +241,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         }
     `],
 })
-export class Item implements OnInit, OnDestroy {
+export class Item implements OnInit, OnDestroy, Heading {
 
     static Join(category: string, name: string) {
         return `${SectionHelper.normalize(category)}+${SectionHelper.normalize(name)}`;
@@ -302,10 +325,10 @@ export const TABS: any[] = [
         TitlesModule,
     ],
     exports: [
-        TABS
+        TABS,
     ],
     declarations: [
-        TABS
+        TABS,
     ]
 })
 export class Module { }

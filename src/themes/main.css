@@ -560,9 +560,7 @@ select[enabled]:not(.inactive) {
 
 .feature-header {
     margin: 0;
-    margin-bottom: 20px;
     padding-top: 20px;
-    padding-bottom: 10px;
     max-width: 100%;
     display: inline-block;
     white-space: nowrap;
@@ -792,8 +790,6 @@ a.link:before {
     overflow: hidden;
     overflow-y: auto;
     left: 0;
-    border-right-style: solid;
-    border-right-width: 1px;
 }
 
 .sidebar .items li:not(.separator) {
@@ -948,4 +944,8 @@ a.link:before {
     opacity: .7;
     padding: 0 6px;
     content: ">";
+}
+
+.sidebar .content {
+    border-left: solid 1px #999;
 }

@@ -3,7 +3,6 @@ import { TitlesService } from "./titles.service";
 import { Breadcrumb } from "./breadcrumb";
 import { Subscription } from "rxjs";
 import { LoggerFactory, LogLevel, Logger } from "diagnostics/logger";
-import { Router } from "@angular/router";
 
 @Component({
     selector: `titles`,
@@ -15,19 +14,21 @@ import { Router } from "@angular/router";
         <span class="separator" *ngIf="i != Crumbs.length - 1">&gt;</span>
     </li>
 </ul>
-<div>{{service.heading}}</div>
+<div class="model-header">
+    <model-header></model-header>
+</div>
+<div class="feature-header">
+    <feature-header></feature-header>
+</div>
 `,
     styles: [`
 .breadcrumbs {
-    line-height: 30px;
-    font-size: 12px;
+    font-size: 14px;
     display: inline;
     position: sticky;
     display: inline-block;
-    font-family: 'Segoe UI';
-    padding-left: 1em;
-    padding-top: 1em;
     margin-block-end: 0%;
+    margin-top: 1em;
 }
 
 .breadcrumbs li {
@@ -53,6 +54,10 @@ import { Router } from "@angular/router";
     border: none;
     outline: none;
 }
+.model-header {
+    line-height: 2em;
+    vertical-align: middle;
+}
 `],
 })
 export class TitlesComponent implements OnInit, OnDestroy {
@@ -61,7 +66,6 @@ export class TitlesComponent implements OnInit, OnDestroy {
     private sub: Subscription;
 
     constructor(
-        private router: Router,
         private factory: LoggerFactory,
         public service: TitlesService,
     ){

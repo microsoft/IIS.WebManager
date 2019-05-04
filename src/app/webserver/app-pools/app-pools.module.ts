@@ -20,7 +20,6 @@ import { Routing } from './app-pool.routes';
 
 import { AppPoolComponent } from './app-pool.component';
 import { AppPoolGeneralComponent } from './app-pool-general.component';
-import { AppPoolHeaderComponent } from './app-pool-header.component';
 import { CpuComponent } from './cpu.component';
 import { ProcessModelComponent, ProcessOrphaningComponent } from './process.component';
 import { RapidFailProtectionComponent } from './rapid-fail-protection.component';
@@ -48,7 +47,6 @@ import { DailyScheduleComponent, RecyclingComponent } from './recycling.componen
     declarations: [
         AppPoolComponent,
         AppPoolGeneralComponent,
-        AppPoolHeaderComponent,
         CpuComponent,
         ProcessModelComponent,
         ProcessOrphaningComponent,
