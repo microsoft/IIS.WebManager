@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, Input } from "@angular/core";
 import { TitlesService } from "./titles.service";
 import { Breadcrumb } from "./breadcrumb";
 import { Subscription } from "rxjs";
@@ -61,12 +61,13 @@ import { LoggerFactory, LogLevel, Logger } from "diagnostics/logger";
 `],
 })
 export class TitlesComponent implements OnInit, OnDestroy {
-    public Crumbs: Breadcrumb[] = [];
+    Crumbs: Breadcrumb[] = [];
+
     private logger: Logger;
     private sub: Subscription;
 
     constructor(
-        private factory: LoggerFactory,
+        factory: LoggerFactory,
         public service: TitlesService,
     ){
         this.logger = factory.Create(this);

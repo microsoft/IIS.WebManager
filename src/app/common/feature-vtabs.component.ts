@@ -35,7 +35,7 @@ export class Feature extends ComponentReference {
 }
 
 export interface FeatureContext {
-    _links: any
+    _links: any;
 }
 
 export interface BreadcrumbsResolver {
@@ -92,7 +92,7 @@ export class GlobalModuleReference {
     constructor(
         private titles: TitlesService,
         private options: OptionsService,
-        private factory: LoggerFactory,
+        factory: LoggerFactory,
     ){
         this.logger = factory.Create(this);
     }

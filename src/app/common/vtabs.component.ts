@@ -107,7 +107,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         private _activatedRoute: ActivatedRoute,
         private _location: Location,
         private _router: Router,
-        private factory: LoggerFactory,
+        factory: LoggerFactory,
     ) {
         this.tabs = [];
         this.logger = factory.Create(this);
@@ -265,7 +265,7 @@ export class Item implements OnInit, OnDestroy, Heading {
     constructor(
         private _tabs: VTabsComponent,
         private _router: Router,
-        private factory: LoggerFactory,
+        factory: LoggerFactory,
     ){
         this.logger = factory.Create(this);
     }

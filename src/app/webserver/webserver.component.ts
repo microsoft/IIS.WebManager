@@ -9,8 +9,11 @@ import { NotificationService } from 'notification/notification.service';
 import { Runtime } from 'runtime/runtime';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { GlobalModuleReference, HomeCategory, BreadcrumbsResolver, FeatureContext } from 'common/feature-vtabs.component';
-import { Subscription } from 'rxjs';
+import { Subscription, Subscribable } from 'rxjs';
 import { BreadcrumbsRoot, Breadcrumb } from 'header/breadcrumb';
+import { TitlesService } from 'header/titles.service';
+import { ModelStatusUpdater } from 'header/model-header.component';
+import { Status } from 'common/status';
 
 export class WebServerBrumbsResolver implements BreadcrumbsResolver {
     constructor(
@@ -19,6 +22,20 @@ export class WebServerBrumbsResolver implements BreadcrumbsResolver {
 
     resolve(_: FeatureContext): Breadcrumb[] {
         return this.crumbs;
+    }
+}
+
+class WebServerStatusUpdater extends ModelStatusUpdater {
+    constructor(
+        public ico: string,
+        public model: Promise<any>,
+        public statusUpdate: Subscribable<Status>,
+    ) {
+        super(ico, model, statusUpdate)
+    }
+
+    public getDisplayName(_): string {
+        return "IIS Web Server";
     }
 }
 
@@ -82,9 +99,10 @@ export class WebServerComponent implements OnInit {
     constructor(
         private _http: HttpClient,
         private _notifications: NotificationService,
+        private _title: TitlesService,
         @Inject('WebServerService') private _service: WebServerService,
         @Inject('Runtime') private _runtime: Runtime,
-        private factory: LoggerFactory,
+        factory: LoggerFactory,
     ){
         this.logger = factory.Create(this);
     }
@@ -93,6 +111,13 @@ export class WebServerComponent implements OnInit {
         this.server.then(ws => {
             this.webServer = ws;
         });
+
+        this._title.loadModelUpdater(
+            new WebServerStatusUpdater(
+                WebServerModuleIcon,
+                this._service.server,
+                this._service.status,
+            ));
     }
 
     ngOnDestroy() {
