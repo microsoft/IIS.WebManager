@@ -3,11 +3,19 @@ import { Status } from "common/status";
 import { Subscribable, Unsubscribable } from "rxjs";
 import { TitlesService } from "./titles.service";
 
-export class ModelStatusUpdater {
+export interface ModelStatusController {
+    start();
+    stop();
+    restart();
+}
+
+export abstract class ModelStatusUpdater {
     constructor(
+        public modelType: string,
         public ico: string,
         public model: Promise<any>,
         public statusUpdate: Subscribable<Status>,
+        public controller: ModelStatusController,
     ) {}
 
     public getDisplayName(model): string {
@@ -19,9 +27,13 @@ export class ModelStatusUpdater {
     selector: 'model-header',
     template: `
 <div class="model-header">
-    <div *ngIf="!displayName">loading module...</div>
-    <i [class]="ico"></i><span *ngIf="displayName" [ngClass]="status">{{displayName}}</span>
-    <div>Status: {{status}}</div>
+    <div *ngIf="!displayName">fetching information for {{modelType}}...</div>
+    <div class="status-digest"><i [class]="ico"></i><span *ngIf="displayName" [ngClass]="status">{{displayName}}</span></div>
+    <div *ngIf="modelUpdater.controller" class="status-digest controller">
+        <button class="compact-button refresh" title="Restart" (click)="modelUpdater.controller.restart()"></button>
+        <button class="compact-button start" title="Start" [attr.disabled]="status != 'stopped' || null" (click)="modelUpdater.controller.start()"></button>
+        <button class="compact-button stop" title="Stop" [attr.disabled]="status != 'started' || null" (click)="modelUpdater.controller.stop()"></button>
+    </div>
 </div>
 `,
     styles: [`
@@ -31,6 +43,21 @@ i {
 
 .model-header {
     font-size: 14px;
+    padding-left: 5px;
+    padding-top: 5px;
+    padding-bottom: 10px;
+}
+
+.compact-button {
+    font-size: 10px;
+    border: none;
+    background: none;
+    padding: 0px 8px;
+    margin: 0px;
+}
+
+.status-digest {
+    display: inline-block;
 }
 `]
 })
@@ -59,10 +86,7 @@ export class ModelHeaderComponent implements OnInit, OnDestroy {
                 this.displayName = this.modelUpdater.getDisplayName(model);
                 this.subscriptions.push(
                     this.modelUpdater.statusUpdate.subscribe(
-                        status => {
-                            debugger
-                            this.status = status
-                        },
+                        status => this.status = status,
                     )
                 )
             },
@@ -73,5 +97,9 @@ export class ModelHeaderComponent implements OnInit, OnDestroy {
         for (let s of this.subscriptions) {
             s.unsubscribe();
         }
+    }
+
+    get modelType() {
+        return this.modelUpdater.modelType;
     }
 }

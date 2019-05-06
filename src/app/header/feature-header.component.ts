@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Status } from 'common/status';
 import { Subscription } from 'rxjs';
 import { TitlesService } from './titles.service';
 
@@ -12,27 +11,37 @@ export interface Heading {
     selector: 'feature-header',
     template: `
 <div class="feature-title sme-focus-zone">
-    <h1 [ngClass]="status">
+    <h1>
         <i [class]="ico"></i><span class="border-active">{{title}}</span>
     </h1>
-    <span *ngIf="statusSubject" class="status">{{status}}</span>
 </div>
     `,
     styles: [`
-.status {
-    display: block;
-    text-align: right;
-}
-
 i {
     padding-right: 0.3em;
+}
+
+.feature-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-left: 5px;
+    padding-bottom: 5px;
+}
+
+.feature-title h1 {
+    font-size: 20px;
+    display: inline;
+}
+
+.feature-title h1:before {
+    display:inline-block;
 }
     `]
 })
 export class FeatureHeaderComponent implements OnInit, OnDestroy {
     ico: string;
     title: string;
-    status: Status = Status.Unknown;
     private subscriptions: Subscription[] = [];
 
     constructor(

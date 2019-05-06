@@ -7,18 +7,22 @@ import { LoggerFactory, LogLevel, Logger } from "diagnostics/logger";
 @Component({
     selector: `titles`,
     template: `
-<ul class="breadcrumbs sme-focus-zone">
-    <li *ngFor="let crumb of Crumbs; index as i">
-        <span [ngClass]="{root: !i}" *ngIf="!(crumb.routerLink)">{{crumb.label}}</span>
-        <a *ngIf="crumb.routerLink" [routerLink]="crumb.routerLink">{{crumb.label}}</a>
-        <span class="separator" *ngIf="i != Crumbs.length - 1">&gt;</span>
-    </li>
-</ul>
-<div class="model-header">
-    <model-header></model-header>
-</div>
-<div class="feature-header">
-    <feature-header></feature-header>
+<div class="titles">
+    <ul class="breadcrumbs sme-focus-zone">
+        <li *ngFor="let crumb of Crumbs; index as i">
+            <span [ngClass]="{root: !i}" *ngIf="!(crumb.routerLink)">{{crumb.label}}</span>
+            <a *ngIf="crumb.routerLink" [routerLink]="crumb.routerLink">{{crumb.label}}</a>
+            <span class="separator" *ngIf="i != Crumbs.length - 1">&gt;</span>
+        </li>
+    </ul>
+    <div class="headings">
+        <div class="model-header">
+            <model-header></model-header>
+        </div>
+        <div class="feature-header">
+            <feature-header></feature-header>
+        </div>
+    </div>
 </div>
 `,
     styles: [`
@@ -29,6 +33,10 @@ import { LoggerFactory, LogLevel, Logger } from "diagnostics/logger";
     display: inline-block;
     margin-block-end: 0%;
     margin-top: 1em;
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid #999;
+    width: 100%;
+    padding-left: 10px;
 }
 
 .breadcrumbs li {
@@ -54,9 +62,14 @@ import { LoggerFactory, LogLevel, Logger } from "diagnostics/logger";
     border: none;
     outline: none;
 }
+
 .model-header {
     line-height: 2em;
     vertical-align: middle;
+}
+
+.headings {
+    padding-left: 10px;
 }
 `],
 })

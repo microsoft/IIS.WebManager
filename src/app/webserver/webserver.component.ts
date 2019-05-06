@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy, Input, AfterViewInit, ViewChild, forwardRef } from '@angular/core';
 import { HttpClient } from '../common/http-client';
 import { WebServer } from './webserver';
 import { WebServerService } from './webserver.service';
@@ -8,14 +8,16 @@ import { UnexpectedServerStatusError } from 'error/api-error';
 import { NotificationService } from 'notification/notification.service';
 import { Runtime } from 'runtime/runtime';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
-import { GlobalModuleReference, HomeCategory, BreadcrumbsResolver, FeatureContext } from 'common/feature-vtabs.component';
+import { GlobalModuleReference, HomeCategory, BreadcrumbsResolver, FeatureContext, FeatureVTabsComponent } from 'common/feature-vtabs.component';
 import { Subscription, Subscribable } from 'rxjs';
 import { BreadcrumbsRoot, Breadcrumb } from 'header/breadcrumb';
 import { TitlesService } from 'header/titles.service';
-import { ModelStatusUpdater } from 'header/model-header.component';
+import { ModelStatusUpdater, ModelStatusController } from 'header/model-header.component';
 import { Status } from 'common/status';
+import { ConnectService } from 'connect/connect.service';
+import { VTabsComponent, Item } from 'common/vtabs.component';
 
-export class WebServerBrumbsResolver implements BreadcrumbsResolver {
+export class WebServerCrumbsResolver implements BreadcrumbsResolver {
     constructor(
         private crumbs: Breadcrumb[],
     ) {}
@@ -25,23 +27,57 @@ export class WebServerBrumbsResolver implements BreadcrumbsResolver {
     }
 }
 
-class WebServerStatusUpdater extends ModelStatusUpdater {
+class WebServerStatusController implements ModelStatusController {
     constructor(
-        public ico: string,
+        private service: WebServerService,
+    ) {}
+
+    start() {
+        this.service.start();
+    }
+
+    stop() {
+        this.service.stop();
+    }
+
+    restart() {
+        this.service.restart();
+    }
+}
+
+class WebServerStatusUpdater extends ModelStatusUpdater {
+    private connectionName: string;
+    constructor(
+        private service: WebServerService,
+        private connections: ConnectService,
         public model: Promise<any>,
         public statusUpdate: Subscribable<Status>,
     ) {
-        super(ico, model, statusUpdate)
+        super(
+            WebServerModuleName,
+            WebServerModuleIcon,
+            model,
+            statusUpdate,
+            new WebServerStatusController(service),
+        );
+        this.connections.active.subscribe(
+            v => {
+                if (v) {
+                    this.connectionName = v.getDisplayName();
+                }
+            },
+        );
     }
 
+
     public getDisplayName(_): string {
-        return "IIS Web Server";
+        return this.connectionName;
     }
 }
 
 @Component({
     template: `
-        <div *ngIf="service.installStatus == 'stopped'" class="not-installed">
+        <div *ngIf="notInstalled" class="not-installed">
             <p>
                 Web Server (IIS) is not installed on the machine
                 <br/>
@@ -50,19 +86,7 @@ class WebServerStatusUpdater extends ModelStatusUpdater {
         </div>
         <loading *ngIf="!webServer && !failure"></loading>
         <span *ngIf="failure" class="color-error">{{failure}}</span>
-        <feature-vtabs *ngIf="webServer"
-            [model]="webServer"
-            [resource]="'webserver'"
-            [generalTabName]="'${WebServerModuleName}'"
-            [generalTabIcon]="'${WebServerModuleIcon}'"
-            [generalTabCategory]="'${HomeCategory}'"
-            [default]="'${WebSitesModuleName}'"
-            [subcategory]="'${WebServerModuleName}'"
-            [includeModules]="staticModules"
-            [promoteToContext]="promoteToContext"
-            [breadcrumbsResolver]="breadcrumbsResolver">
-            <webserver-general class="general-tab" [model]="webServer"></webserver-general>
-        </feature-vtabs>
+        <webserver-view *ngIf="webServer" [webServer]="webServer"></webserver-view>
     `,
     styles: [ `
 .not-installed {
@@ -72,76 +96,36 @@ class WebServerStatusUpdater extends ModelStatusUpdater {
 `],
 })
 export class WebServerComponent implements OnInit {
-    logger: Logger;
-    staticModules: GlobalModuleReference[] = [
-        <GlobalModuleReference> {
-            name: CertificatesModuleName,
-            initialize: this._http.head(CertificatesServiceURL, null, false)
-                        .then(_ => true)
-                        .catch(e => {
-                            this.logger.log(LogLevel.ERROR, `Error pinging ${CertificatesServiceURL}, ${CertificatesModuleName} tab will be disabled:\n${e}`);
-                            return false;
-                        })},
-        <GlobalModuleReference> {
-            name: FileSystemModuleName,
-        },
-    ];
-    promoteToContext: string[] = [
-        WebServerModuleName,
-        AppPoolsModuleName,
-        WebSitesModuleName,
-    ]
-    breadcrumbsResolver: BreadcrumbsResolver = new WebServerBrumbsResolver(BreadcrumbsRoot);
-    tabsSubscription: Subscription;
     webServer: WebServer;
     failure: string;
 
     constructor(
-        private _http: HttpClient,
-        private _notifications: NotificationService,
-        private _title: TitlesService,
-        @Inject('WebServerService') private _service: WebServerService,
-        @Inject('Runtime') private _runtime: Runtime,
-        factory: LoggerFactory,
-    ){
-        this.logger = factory.Create(this);
-    }
+        private notifications: NotificationService,
+        @Inject('Runtime') private runtime: Runtime,
+        @Inject('WebServerService') private service: WebServerService,
+    ){}
 
     ngOnInit() {
         this.server.then(ws => {
             this.webServer = ws;
         });
-
-        this._title.loadModelUpdater(
-            new WebServerStatusUpdater(
-                WebServerModuleIcon,
-                this._service.server,
-                this._service.status,
-            ));
     }
 
-    ngOnDestroy() {
-        if (this.tabsSubscription) {
-            this.tabsSubscription.unsubscribe();
-        }
-    }
-
-    get service() {
-        return this._service;
+    get notInstalled() {
+        return this.service.installStatus == 'stopped';
     }
 
     get server(): Promise<WebServer> {
-        var outer = this;
         return new Promise<WebServer>((resolve, reject) => {
-            this._service.server.catch(e => {
+            this.service.server.catch(e => {
                 if (e instanceof UnexpectedServerStatusError) {
-                    this._notifications.confirm(
+                    this.notifications.confirm(
                         `Start Microsoft IIS Administration API`,
                         `Microsoft IIS Administration API is currently ${e.Status}. Do you want to start the service?`).then(confirmed => {
                         if (confirmed) {
-                            this._runtime.StartIISAdministration().subscribe(
+                            this.runtime.StartIISAdministration().subscribe(
                                 _ => {
-                                    this._service.server.catch(ex => {
+                                    this.service.server.catch(ex => {
                                         reject(this.failure = `Unable to start Microsoft IIS Administration API Service, error ${ex}`)
                                         throw ex
                                     }).then(s => {
@@ -164,5 +148,91 @@ export class WebServerComponent implements OnInit {
                 resolve(ws)
             })
         })
+    }
+}
+
+const subComponentList: string[] = [
+    Item.Join(HomeCategory, WebSitesModuleName),
+    Item.Join(HomeCategory, AppPoolsModuleName),
+]
+
+@Component({
+    selector: 'webserver-view',
+    template: `
+<feature-vtabs
+    [model]="webServer"
+    [resource]="'webserver'"
+    [generalTabName]="'${WebServerModuleName}'"
+    [generalTabIcon]="'${WebServerModuleIcon}'"
+    [generalTabCategory]="'${HomeCategory}'"
+    [default]="'${WebSitesModuleName}'"
+    [subcategory]="'${WebServerModuleName}'"
+    [includeModules]="staticModules"
+    [promoteToContext]="promoteToContext"
+    [breadcrumbsResolver]="breadcrumbsResolver">
+    <webserver-general class="general-tab" [model]="webServer"></webserver-general>
+</feature-vtabs>
+    `,
+})
+export class WebServerViewComponent implements OnInit, OnDestroy, AfterViewInit {
+    @Input() webServer: WebServer;
+
+    logger: Logger;
+    staticModules: GlobalModuleReference[] = [
+        <GlobalModuleReference> {
+            name: CertificatesModuleName,
+            initialize: this.httpClient.head(CertificatesServiceURL, null, false)
+                        .then(_ => true)
+                        .catch(e => {
+                            this.logger.log(LogLevel.ERROR, `Error pinging ${CertificatesServiceURL}, ${CertificatesModuleName} tab will be disabled:\n${e}`);
+                            return false;
+                        })},
+        <GlobalModuleReference> {
+            name: FileSystemModuleName,
+        },
+    ];
+    promoteToContext: string[] = [
+        WebServerModuleName,
+        AppPoolsModuleName,
+        WebSitesModuleName,
+    ]
+    breadcrumbsResolver: BreadcrumbsResolver = new WebServerCrumbsResolver(BreadcrumbsRoot);
+    subscriptions: Subscription[] = [];
+    @ViewChild(forwardRef(() => FeatureVTabsComponent)) features: FeatureVTabsComponent;
+
+    constructor(
+        private httpClient: HttpClient,
+        private title: TitlesService,
+        private connections: ConnectService,
+        @Inject('WebServerService') private service: WebServerService,
+        factory: LoggerFactory,
+    ){
+        this.logger = factory.Create(this);
+    }
+
+    ngOnInit() {
+        this.title.loadModelUpdater(
+            new WebServerStatusUpdater(
+                this.service,
+                this.connections,
+                this.service.server,
+                this.service.status,
+            ));
+    }
+
+    ngOnDestroy() {
+        for (let sub of this.subscriptions) {
+            sub.unsubscribe();
+        }
+    }
+
+    ngAfterViewInit(){
+        this.subscriptions.push(
+            this.features.vtabs.onSelectItem.subscribe(
+                v => this.features.vtabs.showCategory(
+                    WebServerModuleName,
+                    !subComponentList.includes(v.fullName),
+                ),
+            ))
     }
 }

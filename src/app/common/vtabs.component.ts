@@ -35,18 +35,22 @@ import { Heading } from 'header/feature-header.component';
             <div *ngIf="header" class="vtab-header items">{{header}}</div>
             <ul class="items sme-focus-zone">
                 <ng-container *ngFor="let category of getCategories()">
-                    <li *ngIf="!!category" class="separator"><div class="horizontal-strike"><span>{{category}}</span></div></li>
-                    <li tabindex="0"
-                        #tabLabels
-                        class="hover-edit"
-                        *ngFor="let tab of getTabs(category)"
-                        [ngClass]="{active: tab.active}"
-                        (keyup.space)="selectItem(tab)"
-                        (keyup.enter)="selectItem(tab)"
-                        (focus)=" isWAC() ? selectItem(tab) : '' "
-                        (click)="selectItem(tab)">
-                        <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
-                    </li>
+                    <ng-container *ngIf="!IsHidden(category)">
+                        <li *ngIf="category" class="separator">
+                            <div class="horizontal-strike"><span>{{category}}</span></div>
+                        </li>
+                        <li tabindex="0"
+                            #tabLabels
+                            class="hover-edit"
+                            *ngFor="let tab of getTabs(category)"
+                            [ngClass]="{active: tab.active}"
+                            (keyup.space)="selectItem(tab)"
+                            (keyup.enter)="selectItem(tab)"
+                            (focus)=" isWAC() ? selectItem(tab) : '' "
+                            (click)="selectItem(tab)">
+                            <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
+                        </li>
+                    </ng-container>
                 </ng-container>
             </ul>
         </div>
@@ -98,6 +102,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     private _sectionHelper: SectionHelper;
     private _subscriptions: Array<Subscription> = [];
     private logger: Logger;
+    private hiddenCategories: Set<string> = new Set<string>();
     categorizedTabs: Map<string, Item[]> = new Map<string, Item[]>();
     onSelectItem: Subject<Item> = new ReplaySubject<Item>();
 
@@ -155,6 +160,10 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         this.onSelectItem.unsubscribe();
     }
 
+    public IsHidden(category: string) {
+        return this.hiddenCategories.has(category);
+    }
+
     public addTab(tab: Item) {
         const category = SectionHelper.normalize(tab.category || "");
         if (!this.categorizedTabs[category]) {
@@ -193,7 +202,15 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         })
     }
 
-    selectItem(tab: Item) {
+    public showCategory(name: string, show: boolean) {
+        if (show) {
+            this.hiddenCategories.delete(name);
+        } else {
+            this.hiddenCategories.add(name);
+        }
+    }
+
+    public selectItem(tab: Item) {
         if (!tab.routerLink) {
             this._sectionHelper.selectSection(tab.fullName);
         }
@@ -224,21 +241,25 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
 @Component({
     selector: '[vtabs item][vtabs ng-container item]',
     template: `
-        <div *ngIf="active">
-            <titles></titles>
-            <div>
-                <ng-content></ng-content>
-            </div>
-        </div>
+<div *ngIf="active">
+    <titles></titles>
+    <div class="vtab-content">
+        <ng-content></ng-content>
+    </div>
+</div>
     `,
     styles: [`
-        span:focus {
-            outline-style: dashed;
-            outline-color: #000;
-            outline-width: 2px;
-            outline-offset: -2px;
-            text-decoration: underline;
-        }
+span:focus {
+    outline-style: dashed;
+    outline-color: #000;
+    outline-width: 2px;
+    outline-offset: -2px;
+    text-decoration: underline;
+}
+
+.vtab-content {
+    padding-left: 20px;
+}
     `],
 })
 export class Item implements OnInit, OnDestroy, Heading {

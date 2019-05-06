@@ -8,7 +8,7 @@ import { Module as Selector } from '../common/selector';
 import { Module as Loading } from '../notification/loading.component';
 import { WebServerRoutingModule } from './webserver-routing.module';
 import { WebServerGeneralComponent } from './webserver-general.component';
-import { WebServerComponent } from './webserver.component';
+import { WebServerComponent, WebServerViewComponent } from './webserver.component';
 
 
 @NgModule({
@@ -23,6 +23,7 @@ import { WebServerComponent } from './webserver.component';
         Loading
     ],
     declarations: [
+        WebServerViewComponent,
         WebServerGeneralComponent,
         WebServerComponent,
     ]

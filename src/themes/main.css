@@ -560,32 +560,10 @@ select[enabled]:not(.inactive) {
 
 .feature-header {
     margin: 0;
-    padding-top: 20px;
     max-width: 100%;
     display: inline-block;
     white-space: nowrap;
 }
-
-.feature-title {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    padding-right: 15px;
-}
-
-.feature-title h1 {
-    font-size: 25px;
-    display: inline;
-}
-
-.feature-title h1:before {
-    font-family: FontAwesome;
-    padding-right: 10px;
-    display:inline-block;
-    line-height: 32px;
-    vertical-align: bottom;
-}
-
 
 /* 
     Collapse
@@ -883,8 +861,6 @@ a.link:before {
 .sidebar .content {
     right: 0;
     position: absolute;
-    padding-right: 15px;
-    padding-left: 15px;
 }
 
 .sidebar-nav-content,
