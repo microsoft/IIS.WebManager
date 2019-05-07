@@ -4,8 +4,11 @@ import { WebSite } from './site';
 import { WebSitesService } from './websites.service';
 import { DiffUtil } from 'utils/diff';
 import { BreadcrumbsRoot, WebSitesCrumb, Breadcrumb, resolveWebsiteRoute } from 'header/breadcrumb';
-import { WebSitesModuleName } from 'main/settings';
+import { WebSitesModuleName, WebSiteModuleIcon } from 'main/settings';
 import { BreadcrumbsResolver, FeatureContext } from 'common/feature-vtabs.component';
+import { ModelStatusUpdater, UpdateType } from 'header/model-header.component';
+import { TitlesService } from 'header/titles.service';
+import { filter, map } from 'rxjs/operators';
 
 const crumbsRoot = BreadcrumbsRoot.concat(WebSitesCrumb);
 class WebSiteBreadcrumbResolver implements BreadcrumbsResolver {
@@ -15,18 +18,40 @@ class WebSiteBreadcrumbResolver implements BreadcrumbsResolver {
     }
 }
 
+class WebSiteStatusUpdater extends ModelStatusUpdater {
+    constructor(
+        service: WebSitesService,
+        site: WebSite,
+    ) {
+        super(
+            WebSitesModuleName,
+            WebSiteModuleIcon,
+            site.name,
+            service.statusUpdates.pipe(
+                filter(s => s.id == site.id),
+                map(s => s.status),
+            ),
+            new Map<UpdateType, () => void>([
+                [UpdateType.start, () => service.start(site)],
+                [UpdateType.stop, () => service.stop(site)],
+                [UpdateType.delete, () => service.delete(site)],
+            ]),
+        )
+    }
+}
+
 @Component({
     template: `
-        <not-found *ngIf="notFound"></not-found>
-        <loading *ngIf="!(site || notFound)"></loading>
-        <feature-vtabs
-            *ngIf="site"
-            [model]="site"
-            [resource]="'website'"
-            [subcategory]="'${WebSitesModuleName}'"
-            [breadcrumbsResolver]="breadcrumbsResolver">
-            <website-general class="general-tab" [site]="site" (modelChanged)="onModelChanged()"></website-general>
-        </feature-vtabs>
+<not-found *ngIf="notFound"></not-found>
+<loading *ngIf="!(site || notFound)"></loading>
+<feature-vtabs
+    *ngIf="site"
+    [model]="site"
+    [resource]="'website'"
+    [subcategory]="'${WebSitesModuleName}'"
+    [breadcrumbsResolver]="breadcrumbsResolver">
+    <website-general class="general-tab" [site]="site" (modelChanged)="onModelChanged()"></website-general>
+</feature-vtabs>
     `,
 })
 export class WebSiteComponent implements OnInit {
@@ -38,24 +63,22 @@ export class WebSiteComponent implements OnInit {
     private _original: any;
 
     constructor(
-        private _route: ActivatedRoute,
-        @Inject("WebSitesService") private _service: WebSitesService,
+        private title: TitlesService,
+        private route: ActivatedRoute,
+        @Inject("WebSitesService") private service: WebSitesService,
     ){
-        this.id = this._route.snapshot.params['id'];
+        this.id = this.route.snapshot.params['id'];
     }
 
     ngOnInit() {
-        //
-        // Async get website
-        this._service.get(this.id)
-            .then(s => {
-                this.setSite(s);
-            })
-            .catch(s => {
-                if (s && s.status == '404') {
-                    this.notFound = true;
-                }
-            });
+        var site = this.service.get(this.id);
+        site.then(s => {
+            this.setSite(s);
+        }).catch(s => {
+            if (s && s.status == '404') {
+                this.notFound = true;
+            }
+        });
     }
 
     onModelChanged() {
@@ -66,12 +89,18 @@ export class WebSiteComponent implements OnInit {
             var changes = DiffUtil.diff(this._original, this.site);
             
             if (Object.keys(changes).length > 0) {
-                this._service.update(this.site, changes).then(s => this.setSite(s));
+                this.service.update(this.site, changes).then(s => this.setSite(s));
             }
         }
     }
 
     private setSite(s) {
+        this.title.loadModelUpdater(
+            new WebSiteStatusUpdater(
+                this.service,
+                s,
+            )
+        );
         this.site = s;
         this._original = JSON.parse(JSON.stringify(s));
     }

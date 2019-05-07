@@ -6,9 +6,9 @@ import { ModelStatusUpdater } from "./model-header.component";
 
 @Injectable()
 export class TitlesService {
-    private readonly _modelUpdate: Subject<ModelStatusUpdater> = new ReplaySubject<ModelStatusUpdater>();
-    private readonly _crumbs: Subject<Breadcrumb[]> = new ReplaySubject<Breadcrumb[]>();
-    private readonly _heading: Subject<Heading> = new ReplaySubject<Heading>();
+    private readonly _modelUpdate: Subject<ModelStatusUpdater> = new ReplaySubject<ModelStatusUpdater>(1);
+    private readonly _crumbs: Subject<Breadcrumb[]> = new ReplaySubject<Breadcrumb[]>(1);
+    private readonly _heading: Subject<Heading> = new ReplaySubject<Heading>(1);
 
     public loadModelUpdater(updater: ModelStatusUpdater) {
         this._modelUpdate.next(updater);

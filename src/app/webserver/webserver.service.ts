@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, interval, ReplaySubject, Subject } from "rxjs";
+import { Observable, interval, ReplaySubject, Subject } from "rxjs";
 import { Status } from '../common/status';
 import { HttpClient } from '../common/http-client';
 import { ApiError, ApiErrorType } from '../error/api-error';
@@ -10,7 +10,7 @@ export class WebServerService {
     public error: ApiError;
 
     private _server: WebServer;
-    private _statusChanged: Subject<Status> = new ReplaySubject<Status>();
+    private _statusChanged: Subject<Status> = new ReplaySubject<Status>(1);
     private _installStatus: Status = Status.Unknown;
 
     constructor(private _http: HttpClient) {

@@ -104,7 +104,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     private logger: Logger;
     private hiddenCategories: Set<string> = new Set<string>();
     categorizedTabs: Map<string, Item[]> = new Map<string, Item[]>();
-    onSelectItem: Subject<Item> = new ReplaySubject<Item>();
+    onSelectItem: Subject<Item> = new ReplaySubject<Item>(1);
 
     @ViewChildren('tabLabels') tabLabels: QueryList<ElementRef>;
 

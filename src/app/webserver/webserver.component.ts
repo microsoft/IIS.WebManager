@@ -9,13 +9,13 @@ import { NotificationService } from 'notification/notification.service';
 import { Runtime } from 'runtime/runtime';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { GlobalModuleReference, HomeCategory, BreadcrumbsResolver, FeatureContext, FeatureVTabsComponent } from 'common/feature-vtabs.component';
-import { Subscription, Subscribable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { BreadcrumbsRoot, Breadcrumb } from 'header/breadcrumb';
 import { TitlesService } from 'header/titles.service';
-import { ModelStatusUpdater, ModelStatusController } from 'header/model-header.component';
-import { Status } from 'common/status';
+import { ModelStatusUpdater, UpdateType } from 'header/model-header.component';
 import { ConnectService } from 'connect/connect.service';
-import { VTabsComponent, Item } from 'common/vtabs.component';
+import { Item } from 'common/vtabs.component';
+import { filter, take } from 'rxjs/operators';
 
 export class WebServerCrumbsResolver implements BreadcrumbsResolver {
     constructor(
@@ -27,51 +27,22 @@ export class WebServerCrumbsResolver implements BreadcrumbsResolver {
     }
 }
 
-class WebServerStatusController implements ModelStatusController {
-    constructor(
-        private service: WebServerService,
-    ) {}
-
-    start() {
-        this.service.start();
-    }
-
-    stop() {
-        this.service.stop();
-    }
-
-    restart() {
-        this.service.restart();
-    }
-}
-
 class WebServerStatusUpdater extends ModelStatusUpdater {
-    private connectionName: string;
     constructor(
-        private service: WebServerService,
-        private connections: ConnectService,
-        public model: Promise<any>,
-        public statusUpdate: Subscribable<Status>,
+        displayName: string,
+        service: WebServerService,
     ) {
         super(
             WebServerModuleName,
             WebServerModuleIcon,
-            model,
-            statusUpdate,
-            new WebServerStatusController(service),
-        );
-        this.connections.active.subscribe(
-            v => {
-                if (v) {
-                    this.connectionName = v.getDisplayName();
-                }
-            },
-        );
-    }
-
-
-    public getDisplayName(_): string {
-        return this.connectionName;
+            displayName,
+            service.status,
+            new Map<UpdateType, () => void>([
+                [UpdateType.start, service.start],
+                [UpdateType.stop, service.stop],
+                [UpdateType.restart, service.restart],
+            ]),
+        )
     }
 }
 
@@ -211,13 +182,17 @@ export class WebServerViewComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     ngOnInit() {
-        this.title.loadModelUpdater(
-            new WebServerStatusUpdater(
-                this.service,
-                this.connections,
-                this.service.server,
-                this.service.status,
-            ));
+        this.connections.active.pipe(
+            filter(c => !!c),
+            take(1),
+        ).subscribe(conn =>
+            this.title.loadModelUpdater(
+                new WebServerStatusUpdater(
+                    conn.getDisplayName(),
+                    this.service,
+                ),
+            ),
+        );
     }
 
     ngOnDestroy() {

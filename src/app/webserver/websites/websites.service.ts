@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy, Inject, Optional } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from "rxjs";
+import { BehaviorSubject, Observable, Subscription, Subject, ReplaySubject } from "rxjs";
 import { DiffUtil } from '../../utils/diff';
 import { HttpClient } from '../../common/http-client';
 import { Status } from '../../common/status';
@@ -13,19 +13,15 @@ import { NotificationService } from '../../notification/notification.service';
 @Injectable()
 export class WebSitesService implements OnDestroy {
     public error: ApiError;
-
     private static _appPoolFields: string = "application_pool.name,application_pool.auto_start,application_pool.status,application_pool.identity,application_pool.pipeline_mode,application_pool.managed_runtime_version";
-
     private _all: boolean;
     private _loadedAppPools: Set<string> = new Set<string>();
-
     private _data: Map<string, WebSite> = new Map<string, WebSite>();
     private _webSites: BehaviorSubject<Map<string, WebSite>> = new BehaviorSubject<Map<string, WebSite>>(this._data);
     private _appPools: Map<string, ApplicationPool> = new Map<string, ApplicationPool>();
     private _installStatus: Status = Status.Unknown;
-
     private _subscriptions: Array<Subscription> = [];
-
+    public statusUpdates: Subject<WebSite> = new ReplaySubject<WebSite>(1);
 
     constructor(private _http: HttpClient,
                 private _notificationService: NotificationService,
@@ -170,16 +166,18 @@ export class WebSitesService implements OnDestroy {
 
         return this._http.patch("/webserver/websites/" + site.id, JSON.stringify({ status: "started" }))
             .then(s => {
-                site.status = s.status
+                site.status = s.status;
+                this.statusUpdates.next(site);
             });
     }
 
     stop(site: WebSite) {
-        site.status = Status.Starting;
+        site.status = Status.Stopping;
 
         return this._http.patch("/webserver/websites/" + site.id, JSON.stringify({ status: "stopped" }))
             .then(s => {
-                site.status = s.status
+                site.status = s.status;
+                this.statusUpdates.next(site);
             });
     }
 
@@ -188,7 +186,6 @@ export class WebSitesService implements OnDestroy {
             .then(_ => {
                 this._data.delete(webSite.id);
                 webSite.id = undefined; // Invalidate
-
                 this._webSites.next(this._data);
             });
     }
@@ -279,6 +276,7 @@ export class WebSitesService implements OnDestroy {
         if (!site) {
             // Add new
             this._data.set(s.id, s);
+            this.statusUpdates.next(s);
             return true;
         }
         else {
