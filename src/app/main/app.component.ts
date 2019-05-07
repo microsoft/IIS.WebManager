@@ -49,13 +49,15 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
     encapsulation: ViewEncapsulation.None,  // Use to disable CSS Encapsulation for this component
 })
 export class AppComponent implements OnInit {
-    constructor(private _router: Router,
+    constructor(
+        private _router: Router,
         private _loadingSvc: LoadingService,
         private _windowService: WindowService,
         private _renderer: Renderer,
         @Inject("Runtime") private runtime: Runtime,
         angulartics2: Angulartics2,
-        angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
+        angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics
+    ){
     }
 
     @ViewChild('mainContainer') mainContainer: ElementRef;
