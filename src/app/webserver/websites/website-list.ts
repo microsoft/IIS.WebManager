@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, Inject, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Selector } from '../../common/selector';
@@ -124,6 +124,15 @@ export class WebSiteItem {
 
     @ViewChild(Selector) private _selector: Selector;
     private _url: string;
+
+    @HostListener('keydown', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent) {
+        if (event.keyCode === 13) {
+            // Disable AccessibilityManager's keyboardEvent handler due to this issue:
+            // https://github.com/microsoft/IIS.WebManager/issues/360
+            event.stopPropagation();
+        }
+    }
 
     constructor(@Inject("WebSitesService") private _service: WebSitesService,
                 private _notificationService: NotificationService) {
