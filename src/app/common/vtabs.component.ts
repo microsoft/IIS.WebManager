@@ -11,6 +11,7 @@ import {
     Output,
     QueryList,
     ViewChildren,
+    AfterContentInit,
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
@@ -24,6 +25,7 @@ import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { IsWAC } from 'environments/environment';
 import { TitlesModule } from 'header/titles.module';
 import { Heading } from 'header/feature-header.component';
+import { TitlesService } from 'header/titles.service';
 
 @Component({
     selector: 'vtabs',
@@ -262,7 +264,7 @@ span:focus {
 }
     `],
 })
-export class Item implements OnInit, OnDestroy, Heading {
+export class Item implements OnInit, OnDestroy, AfterContentInit, Heading {
 
     static Join(category: string, name: string) {
         return `${SectionHelper.normalize(category)}+${SectionHelper.normalize(name)}`;
@@ -281,15 +283,11 @@ export class Item implements OnInit, OnDestroy, Heading {
 
     @ContentChildren(DynamicComponent) dynamicChildren: QueryList<DynamicComponent>;
 
-    private logger: Logger;
-
     constructor(
         private _tabs: VTabsComponent,
         private _router: Router,
-        factory: LoggerFactory,
-    ){
-        this.logger = factory.Create(this);
-    }
+        private _titles: TitlesService,
+    ){}
 
     ngOnInit() {
         this._tabs.addTab(this);
@@ -301,7 +299,9 @@ export class Item implements OnInit, OnDestroy, Heading {
 
     activate() {
         if (this.dynamicChildren) {
-            this.dynamicChildren.forEach(child => child.activate());
+            this.dynamicChildren.forEach(child => child.activate().then(_ => {
+                this._titles.featureModel = child.component().instance;
+            }));
         }
 
         if (this.routerLink) {
@@ -312,6 +312,12 @@ export class Item implements OnInit, OnDestroy, Heading {
         }
 
         this.active = true;
+    }
+
+    ngAfterContentInit() {
+        if (this.dynamicChildren.length > 1) {
+            console.error(`ITEM ${this.fullName}, UNEXPECTED NUMBER OF CHILDREN: ${this.dynamicChildren.length}`);
+        }
     }
 
     deactivate() {

@@ -170,7 +170,7 @@ export class GlobalModuleReference {
             (item: Item) => {
                 let crumbsRoot = this.breadcrumbsResolver.resolve(this.model);
                 this.titles.loadCrumbs(crumbsRoot.concat(<Breadcrumb>{ label: item.name }));
-                this.titles.loadHeading(item);
+                this.titles.heading = item;
             },
         );
     }

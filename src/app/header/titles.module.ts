@@ -5,11 +5,13 @@ import { RouterModule } from "@angular/router";
 import { TitlesComponent } from "./titles.component";
 import { FeatureHeaderComponent } from "./feature-header.component";
 import { ModelHeaderComponent } from "./model-header.component";
+import { Module as SwitchModule } from "common/switch.component";
 
 @NgModule({
     imports: [
         CommonModule,
         RouterModule,
+        SwitchModule,
     ],
     declarations: [
         ModelHeaderComponent,

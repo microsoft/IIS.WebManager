@@ -22,7 +22,10 @@ export class DynamicComponent implements OnInit {
     private _moduleRef: NgModuleRef<any>;
     private _componentRef: ComponentRef<any>;
 
-    constructor(private vcRef: ViewContainerRef, private compiler: Compiler) {
+    constructor(
+        private vcRef: ViewContainerRef,
+        private compiler: Compiler,
+    ) {
     }
 
     ngOnInit() {
@@ -31,21 +34,25 @@ export class DynamicComponent implements OnInit {
         }
     }
 
-    public activate() {
+    public component() {
+        return this._componentRef;
+    }
+
+    public activate(): Promise<any> {
         if (!this.name) {
             return;
         }
         
         if (this._componentRef) {
             if (typeof (this._componentRef.instance["activate"]) === "function") {
-                this._componentRef.instance.activate();
+                return this._componentRef.instance.activate();
             }
-            return;
+            return Promise.resolve();
         }
 
         let data = this.data;
 
-        this.initializeComponent()
+        return this.initializeComponent()
             .then(() => {
                 this.bind(data);
             });

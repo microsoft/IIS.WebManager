@@ -1,84 +1,48 @@
-import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { Status } from '../../common/status';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Observable, BehaviorSubject, Subscription, Subject } from 'rxjs';
 import { HttpClient } from '../../common/http-client';
-import { ApiError, ApiErrorType } from '../../error/api-error';
-import { Authorization, AuthRule } from './authorization'
-import { IsWebServerScope } from 'runtime/runtime';
-import { ActivatedRoute } from '@angular/router';
+import { ApiErrorType, ApiError } from '../../error/api-error';
+import { Authorization, AuthRule } from './authorization';
 
+export const ApiURL = "/webserver/authorization/";
 @Injectable()
-export class AuthorizationService {
+export class AuthorizationService implements OnDestroy {
     public error: ApiError;
-
-    private static URL = "/webserver/authorization/";
-    private _webserverScope: boolean;
-    private _status: Status = Status.Unknown;
     private _authorization: BehaviorSubject<Authorization> = new BehaviorSubject<Authorization>(null);
     private _rules: BehaviorSubject<Array<AuthRule>> = new BehaviorSubject<Array<AuthRule>>([]);
+    private subscriptions: Subscription[] = [];
 
     constructor(
-        private _route: ActivatedRoute,
-        private _http: HttpClient,
+        private httpClient: HttpClient,
     ){
-        this._webserverScope = IsWebServerScope(this._route);
+        this.subscriptions.push(
+            this._authorization.subscribe(auth => this.loadRules(auth))
+        )
     }
 
-    public get authorization(): Observable<Authorization> {
-        return this._authorization.asObservable();
+    ngOnDestroy(): void {
+        for (let sub of this.subscriptions) {
+            sub.unsubscribe();
+        }
+    }
+
+    public get authorization(): BehaviorSubject<Authorization> {
+        return this._authorization;
     }
 
     public get rules(): Observable<Array<AuthRule>> {
         return this._rules.asObservable();
     }
 
-    public get status(): Status {
-        return this._status;
-    }
-
-    public get webserverScope(): boolean {
-        return this._webserverScope;
-    }
-
-    public initialize(id: string): void {
-        this.loadSettings(id).then(feature => {
-            this.loadRules();
-        });
-    }
-
-    public install(): Promise<any> {
-        this._status = Status.Starting;
-        return this._http.post(AuthorizationService.URL, "")
-            .then(auth => {
-                this._status = Status.Started;
-                this._authorization.next(auth);
-                this.loadRules();
-            })
-            .catch(e => {
-                this.error = e;
-                throw e;
-            });
-    }
-
-    public uninstall(): Promise<any> {
-        this._status = Status.Stopping;
-        let id = this._authorization.getValue().id;
-        this._authorization.next(null);
-        return this._http.delete(AuthorizationService.URL + id)
-            .then(() => {
-                this._status = Status.Stopped;
-            })
-            .catch(e => {
-                this.error = e;
-                throw e;
-            });
+    public initialize(id: string): Promise<Authorization> {
+        return this.loadSettings(id);
     }
 
     public save(settings: Authorization): Promise<Authorization> {
-        return this._http.patch(settings._links.self.href.replace('/api', ''), JSON.stringify(settings))
+        return this.httpClient.patch(settings._links.self.href.replace('/api', ''), JSON.stringify(settings))
             .then((s: Authorization) => {
                 Object.assign(settings, s);
-                this.loadRules();
+                this.loadRules(s);
                 return settings;
             });
     }
@@ -86,8 +50,7 @@ export class AuthorizationService {
     public addRule(rule: AuthRule): Promise<AuthRule> {
         let settings: Authorization = this._authorization.getValue();
         rule.authorization = settings;
-
-        return this._http.post(settings._links.rules.href.replace('/api', ''), JSON.stringify(rule))
+        return this.httpClient.post(settings._links.rules.href.replace('/api', ''), JSON.stringify(rule))
             .then((newRule: AuthRule) => {
                 let rules = this._rules.getValue();
                 rules.push(newRule);
@@ -97,7 +60,7 @@ export class AuthorizationService {
     }
 
     public saveRule(rule: AuthRule): Promise<AuthRule> {
-        return this._http.patch(rule._links.self.href.replace('/api', ''), JSON.stringify(rule))
+        return this.httpClient.patch(rule._links.self.href.replace('/api', ''), JSON.stringify(rule))
             .then((r: AuthRule) => {
                 Object.assign(rule, r);
                 return rule;
@@ -105,7 +68,7 @@ export class AuthorizationService {
     }
 
     public deleteRule(rule: AuthRule): void {
-        this._http.delete(rule._links.self.href.replace('/api', ''))
+        this.httpClient.delete(rule._links.self.href.replace('/api', ''))
             .then(() => {
                 let rules = this._rules.getValue();
                 rules = rules.filter(r => r.id != rule.id);
@@ -113,38 +76,37 @@ export class AuthorizationService {
             });
     }
 
-    public revert(): Promise<any> {
+    public revert(): Promise<Authorization> {
         let settings = this._authorization.getValue();
 
-        return this._http.delete(this._authorization.getValue()._links.self.href.replace("/api", ""))
-            .then(_ => {
-                return this.loadSettings(settings.id).then(set => this.loadRules());
+        return this.httpClient.delete(this._authorization.getValue()._links.self.href.replace("/api", ""))
+            .then(auth => {
+                this.loadSettings(settings.id).then(auth => this.loadRules(auth));
+                return auth;
             });
     }
 
     private loadSettings(id: string): Promise<Authorization> {
-        return this._http.get(AuthorizationService.URL + id)
+        return this.httpClient.get(ApiURL + id)
             .then(feature => {
-                this._status = Status.Started;
                 this._authorization.next(feature);
                 return feature;
             })
             .catch(e => {
                 this.error = e;
-
                 if (e.type && e.type == ApiErrorType.FeatureNotInstalled) {
-                    this._status = Status.Stopped;
                     return;
                 }
-
                 throw e;
             });
     }
 
-    private loadRules(): Promise<Array<AuthRule>> {
-        let feature = this._authorization.getValue();
-
-        return this._http.get(feature._links.rules.href.replace('/api', ''))
+    private loadRules(feature: Authorization): Promise<Array<AuthRule>> {
+        if (!feature) {
+            this._rules.next([]);
+            return Promise.resolve([]);
+        }
+        return this.httpClient.get(feature._links.rules.href.replace('/api', ''))
             .then((rulesObj) => {
                 this._rules.next(rulesObj.rules);
                 return rulesObj.rules;

@@ -6,7 +6,7 @@ import { NotificationService } from "notification/notification.service";
 import { FeatureContext } from "common/feature-vtabs.component";
 
 export enum UpdateType {
-    restart, recycle, start, stop, delete
+    Restart, Recycle, Start, Stop, Delete
 }
 
 class ModelAction {
@@ -22,11 +22,11 @@ class ModelAction {
 const MODEL_TYPE_TOKEN = "{moduleType}";
 const MODEL_NAME_TOKEN = "{updateAction}";
 const MODEL_ACTIONS = [
-    <ModelAction> { action: UpdateType.restart, ico: "refresh", displayName: "Restart", requiredStatus: Status.Started, prompt: `Restart ${MODEL_TYPE_TOKEN} "${MODEL_NAME_TOKEN}"?` },
-    <ModelAction> { action: UpdateType.recycle, ico: "refresh", displayName: "Recycle", requiredStatus: Status.Started, prompt: `Recycle ${MODEL_TYPE_TOKEN} "${MODEL_NAME_TOKEN}"?` },
-    <ModelAction> { action: UpdateType.start, ico: "start", displayName: "Start", requiredStatus: Status.Stopped },
-    <ModelAction> { action: UpdateType.stop, ico: "stop", displayName: "Stop", requiredStatus: Status.Started, prompt: `Stop ${MODEL_TYPE_TOKEN} "${MODEL_NAME_TOKEN}"?` },
-    <ModelAction> { action: UpdateType.delete, ico: "delete", displayName: "Delete", prompt: `Delete ${MODEL_TYPE_TOKEN} "${MODEL_NAME_TOKEN}"?` },
+    <ModelAction> { action: UpdateType.Restart, ico: "refresh", displayName: "Restart", requiredStatus: Status.Started, prompt: `Restart ${MODEL_TYPE_TOKEN} "${MODEL_NAME_TOKEN}"?` },
+    <ModelAction> { action: UpdateType.Recycle, ico: "refresh", displayName: "Recycle", requiredStatus: Status.Started, prompt: `Recycle ${MODEL_TYPE_TOKEN} "${MODEL_NAME_TOKEN}"?` },
+    <ModelAction> { action: UpdateType.Start, ico: "start", displayName: "Start", requiredStatus: Status.Stopped },
+    <ModelAction> { action: UpdateType.Stop, ico: "stop", displayName: "Stop", requiredStatus: Status.Started, prompt: `Stop ${MODEL_TYPE_TOKEN} "${MODEL_NAME_TOKEN}"?` },
+    <ModelAction> { action: UpdateType.Delete, ico: "delete", displayName: "Delete", prompt: `Delete ${MODEL_TYPE_TOKEN} "${MODEL_NAME_TOKEN}"?` },
 ];
 
 export abstract class ModelStatusUpdater {
@@ -87,7 +87,7 @@ export class ModelHeaderComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.subscriptions.push(
-            this.title.modelUpdate.subscribe(
+            this.title.modelUpdater.subscribe(
                 updater => {
                     this.modelUpdater = updater,
                     this.ico = this.modelUpdater.ico;

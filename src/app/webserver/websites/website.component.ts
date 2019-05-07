@@ -28,8 +28,8 @@ class WebSiteStatusUpdater extends ModelStatusUpdater {
             site.name,
             site,
             new Map<UpdateType, () => void>([
-                [UpdateType.start, () => service.start(site)],
-                [UpdateType.stop, () => service.stop(site)],
+                [UpdateType.Start, () => service.start(site)],
+                [UpdateType.Stop, () => service.stop(site)],
                 // [UpdateType.delete, () => service.delete(site)],
             ]),
         )

@@ -39,9 +39,9 @@ class WebServerStatusUpdater extends ModelStatusUpdater {
             displayName,
             webServer,
             new Map<UpdateType, () => void>([
-                [UpdateType.start, () => service.start()],
-                [UpdateType.stop, () => service.stop()],
-                [UpdateType.restart, () => service.restart()],
+                [UpdateType.Start, () => service.start()],
+                [UpdateType.Stop, () => service.stop()],
+                [UpdateType.Restart, () => service.restart()],
             ]),
         )
     }

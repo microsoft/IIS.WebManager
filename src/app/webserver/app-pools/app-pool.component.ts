@@ -28,10 +28,10 @@ class AppPoolStatusUpdater extends ModelStatusUpdater {
             pool.name,
             pool,
             new Map<UpdateType, () => void>([
-                [UpdateType.recycle, () => service.recycle(pool)],
-                [UpdateType.start, () => service.start(pool)],
-                [UpdateType.stop, () => service.stop(pool)],
-                // [UpdateType.delete, () => service.delete(pool)],
+                [UpdateType.Recycle, () => service.recycle(pool)],
+                [UpdateType.Start, () => service.start(pool)],
+                [UpdateType.Stop, () => service.stop(pool)],
+                // [UpdateType.Delete, () => service.delete(pool)],
             ]),
         )
     }
