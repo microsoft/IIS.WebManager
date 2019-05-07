@@ -128,8 +128,8 @@ export class WebSiteItem {
     @HostListener('keydown', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
         if (event.keyCode === 13) {
-            // Disable AccessibilityManager's keyboardEvent handler
-            // For it has some unknown timing issue for <a> element
+            // Disable AccessibilityManager's keyboardEvent handler due to this issue:
+            // https://github.com/microsoft/IIS.WebManager/issues/360
             event.stopPropagation();
         }
     }
