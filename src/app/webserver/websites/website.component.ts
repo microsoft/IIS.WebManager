@@ -8,7 +8,6 @@ import { WebSitesModuleName, WebSiteModuleIcon } from 'main/settings';
 import { BreadcrumbsResolver, FeatureContext } from 'common/feature-vtabs.component';
 import { ModelStatusUpdater, UpdateType } from 'header/model-header.component';
 import { TitlesService } from 'header/titles.service';
-import { filter, map } from 'rxjs/operators';
 
 const crumbsRoot = BreadcrumbsRoot.concat(WebSitesCrumb);
 class WebSiteBreadcrumbResolver implements BreadcrumbsResolver {
@@ -27,10 +26,7 @@ class WebSiteStatusUpdater extends ModelStatusUpdater {
             WebSitesModuleName,
             WebSiteModuleIcon,
             site.name,
-            service.statusUpdates.pipe(
-                filter(s => s.id == site.id),
-                map(s => s.status),
-            ),
+            site,
             new Map<UpdateType, () => void>([
                 [UpdateType.start, () => service.start(site)],
                 [UpdateType.stop, () => service.stop(site)],
@@ -95,12 +91,7 @@ export class WebSiteComponent implements OnInit {
     }
 
     private setSite(s) {
-        this.title.loadModelUpdater(
-            new WebSiteStatusUpdater(
-                this.service,
-                s,
-            )
-        );
+        this.title.loadModelUpdater(new WebSiteStatusUpdater(this.service,s));
         this.site = s;
         this._original = JSON.parse(JSON.stringify(s));
     }

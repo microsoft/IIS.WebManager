@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Status } from "common/status";
-import { Subscribable, Unsubscribable } from "rxjs";
+import { Unsubscribable } from "rxjs";
 import { TitlesService } from "./titles.service";
 import { NotificationService } from "notification/notification.service";
+import { FeatureContext } from "common/feature-vtabs.component";
 
 export enum UpdateType {
     restart, recycle, start, stop, delete
@@ -33,7 +34,7 @@ export abstract class ModelStatusUpdater {
         public modelType: string,
         public ico: string,
         public displayName: string,
-        public statusUpdate: Subscribable<Status>,
+        public model: FeatureContext,
         public controller: Map<UpdateType, () => void>,
     ) {}
 }
@@ -75,7 +76,6 @@ i {
 `]
 })
 export class ModelHeaderComponent implements OnInit, OnDestroy {
-    status: Status;
     ico: string;
     private subscriptions: Unsubscribable[] = [];
     private modelUpdater: ModelStatusUpdater;
@@ -94,11 +94,10 @@ export class ModelHeaderComponent implements OnInit, OnDestroy {
                 }
             ),
         );
-        this.subscriptions.push(
-            this.modelUpdater.statusUpdate.subscribe(
-                status => this.status = status,
-            ),
-        );
+    }
+
+    get status() {
+        return (<any> this.modelUpdater.model).status || Status.Unknown;
     }
 
     isDisabled(action: ModelAction) {
@@ -130,16 +129,15 @@ export class ModelHeaderComponent implements OnInit, OnDestroy {
     }
 
     private invokeAction(action: ModelAction) {
-        try {
-            let func = this.modelUpdater.controller.get(action.action);
-            func();
-        } catch (e) {
-            debugger
-        }
+        this.modelUpdater.controller.get(action.action)();
     }
 
     get applicableActions() {
-        return MODEL_ACTIONS.filter(a => this.modelUpdater.controller.get(a.action));
+        if (this.modelUpdater.controller) {
+            return MODEL_ACTIONS.filter(a => this.modelUpdater.controller.get(a.action));
+        } else {
+            return [];
+        }
     }
 
     get modelType() {

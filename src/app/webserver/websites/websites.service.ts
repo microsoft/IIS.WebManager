@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy, Inject, Optional } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription, Subject, ReplaySubject } from "rxjs";
+import { BehaviorSubject, Observable, Subscription, } from "rxjs";
 import { DiffUtil } from '../../utils/diff';
 import { HttpClient } from '../../common/http-client';
 import { Status } from '../../common/status';
@@ -21,7 +21,6 @@ export class WebSitesService implements OnDestroy {
     private _appPools: Map<string, ApplicationPool> = new Map<string, ApplicationPool>();
     private _installStatus: Status = Status.Unknown;
     private _subscriptions: Array<Subscription> = [];
-    public statusUpdates: Subject<WebSite> = new ReplaySubject<WebSite>(1);
 
     constructor(private _http: HttpClient,
                 private _notificationService: NotificationService,
@@ -167,7 +166,6 @@ export class WebSitesService implements OnDestroy {
         return this._http.patch("/webserver/websites/" + site.id, JSON.stringify({ status: "started" }))
             .then(s => {
                 site.status = s.status;
-                this.statusUpdates.next(site);
             });
     }
 
@@ -177,7 +175,6 @@ export class WebSitesService implements OnDestroy {
         return this._http.patch("/webserver/websites/" + site.id, JSON.stringify({ status: "stopped" }))
             .then(s => {
                 site.status = s.status;
-                this.statusUpdates.next(site);
             });
     }
 
@@ -276,7 +273,6 @@ export class WebSitesService implements OnDestroy {
         if (!site) {
             // Add new
             this._data.set(s.id, s);
-            this.statusUpdates.next(s);
             return true;
         }
         else {

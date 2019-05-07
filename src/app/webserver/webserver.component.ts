@@ -30,13 +30,14 @@ export class WebServerCrumbsResolver implements BreadcrumbsResolver {
 class WebServerStatusUpdater extends ModelStatusUpdater {
     constructor(
         displayName: string,
+        webServer: WebServer,
         service: WebServerService,
     ) {
         super(
             WebServerModuleName,
             WebServerModuleIcon,
             displayName,
-            service.status,
+            webServer,
             new Map<UpdateType, () => void>([
                 [UpdateType.start, () => service.start()],
                 [UpdateType.stop, () => service.stop()],
@@ -189,6 +190,7 @@ export class WebServerViewComponent implements OnInit, OnDestroy, AfterViewInit 
             this.title.loadModelUpdater(
                 new WebServerStatusUpdater(
                     conn.getDisplayName(),
+                    this.webServer,
                     this.service,
                 ),
             ),

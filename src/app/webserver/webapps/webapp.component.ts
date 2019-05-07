@@ -3,9 +3,11 @@ import {Router, ActivatedRoute} from '@angular/router';
 import {DiffUtil} from '../../utils/diff';
 import {WebApp} from './webapp';
 import {WebAppsService} from './webapps.service';
-import { WebAppsModuleName } from 'main/settings';
+import { WebAppsModuleName, WebAppModuleIcon } from 'main/settings';
 import { BreadcrumbsRoot, WebSitesCrumb, Breadcrumb, resolveWebsiteRoute, resolveWebAppRoute } from 'header/breadcrumb';
 import { BreadcrumbsResolver, FeatureContext } from 'common/feature-vtabs.component';
+import { ModelStatusUpdater } from 'header/model-header.component';
+import { TitlesService } from 'header/titles.service';
 
 const crumbsRoot = BreadcrumbsRoot.concat(WebSitesCrumb);
 class WebAppCrumbsResolver implements BreadcrumbsResolver {
@@ -15,6 +17,18 @@ class WebAppCrumbsResolver implements BreadcrumbsResolver {
             <Breadcrumb>{ label: app.website.name, routerLink: [resolveWebsiteRoute(app.website.id)] },
             <Breadcrumb>{ label: app.path, routerLink: [resolveWebAppRoute(app.id)] },
         );
+    }
+}
+
+class WebAppStatusUpdater extends ModelStatusUpdater {
+    constructor(app: WebApp) {
+        super(
+            WebAppsModuleName,
+            WebAppModuleIcon,
+            app.path,
+            app,
+            null,
+        )
     }
 }
 
@@ -40,6 +54,7 @@ export class WebAppComponent implements OnInit {
     private _original: any;
 
     constructor(
+        private title: TitlesService,
         private _route: ActivatedRoute,
         private _router: Router,
         @Inject("WebAppsService") private _service: WebAppsService,
@@ -85,6 +100,7 @@ export class WebAppComponent implements OnInit {
     }
 
     private setApp(app: WebApp) {
+        this.title.loadModelUpdater(new WebAppStatusUpdater(app));
         this.app = app;
         this._original = JSON.parse(JSON.stringify(app));
     }
