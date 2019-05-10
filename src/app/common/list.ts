@@ -26,13 +26,13 @@ export abstract class ListOperationContext<T> {
         if (e.defaultPrevented) {
             return;
         }
-        this.selected = true;
         if (this.onSelected.observers.length > 0) {
             this.onSelected.emit(this);
         }
+        this.selected = true;
     }
 
-    onDblClick(e: Event) {
+    onEnter(e: Event) {
         if (e.defaultPrevented) {
             return Promise.resolve(null);
         }

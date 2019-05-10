@@ -38,6 +38,7 @@ class WebAppStatusUpdater extends ModelStatusUpdater {
         <not-found *ngIf="notFound"></not-found>
         <loading *ngIf="!(app || notFound)"></loading>
         <feature-vtabs
+            class="sme-focus-zone"
             *ngIf="app" [model]="app"
             [resource]="'webapp'"
             [subcategory]="'${WebAppsModuleName}'"

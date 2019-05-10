@@ -9,6 +9,8 @@
         "vdirs",
         "webapp",
         "webapps",
-        "Unsubscribable"
+        "Unsubscribable",
+        "tabindex",
+        "valign"
     ]
 }

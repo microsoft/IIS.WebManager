@@ -24,6 +24,7 @@ import { WebAppListComponent } from './webapp-list.component';
 import { WebAppItem, WebAppList } from './webapp-list';
 import { WebAppGeneralComponent } from './webapp-general.component';
 import { NewWebAppComponent } from './new-webapp.component';
+import { ListModule } from 'common/list';
 
 
 @NgModule({
@@ -44,6 +45,7 @@ import { NewWebAppComponent } from './new-webapp.component';
         Selector,
         Tabs,
         AutoFocus,
+        ListModule,
     ],
     declarations: [
         WebAppComponent,

@@ -37,7 +37,7 @@ import { Heading } from 'header/feature-header.component';
                 <ng-container *ngFor="let category of getCategories()">
                     <ng-container *ngIf="!IsHidden(category)">
                         <li *ngIf="category" class="separator">
-                            <div class="horizontal-strike"><span>{{category}}</span></div>
+                            <div class="horizontal-strike"><span class="category">{{category}}</span></div>
                         </li>
                         <li tabindex="0"
                             #tabLabels
@@ -86,7 +86,12 @@ li:focus {
     position: sticky;
     float: left;
     height: 100vh;
-}`],
+}
+
+.category {
+    color: #000;
+}
+`],
     host: {
         '(window:resize)': 'refresh()'
     }

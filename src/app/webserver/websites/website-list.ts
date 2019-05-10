@@ -1,14 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, Inject, HostListener } from '@angular/core';
+import { Component, Input, Inject, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { WebSite } from './site';
 import { OrderBy, SortPipe } from 'common/sort.pipe';
 import { Range } from 'common/virtual-list.component';
 import { Status } from 'common/status';
-import { resolveWebsiteRoute } from 'webserver/webserver-routing.module';
+import { resolveWebsiteRoute, resolveAppPoolRoute } from 'webserver/webserver-routing.module';
 import { WebSitesService } from './websites.service';
 import { NotificationService } from 'notification/notification.service';
 import { ListOperationDef, ListOperationContext } from 'common/list';
-import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 
 enum WebSiteOp {
     browse = 0, start, stop, edit, delete,
@@ -27,29 +26,34 @@ const actionRestrictions: Map<WebSiteOp, Status> = new Map<WebSiteOp, Status>([
     [WebSiteOp.stop, Status.Started],
 ]);
 
+enum WebSiteFields {
+    path = 1, status = 2, appPool = 4,
+}
+
 @Component({
     selector: 'website-item',
     template: `
 <div class="row grid-item border-color"
     [class.selected-for-edit]="selected"
     (click)="onItemSelected($event)"
-    (dblclick)="onDblClick($event)"
-    (keydown.space)="onItemSelected($event)">
+    (keydown.space)="onItemSelected($event)"
+    (dblclick)="onEnter($event)"
+    (keydown.enter)="onEnter($event)">
     <div class='col-xs-7 col-sm-4 col-md-3 col-lg-3'>
         <div class='name'>
-            <a class="color-normal hover-color-active" [routerLink]="['/webserver/websites', model.id]">{{model.name}}</a>
-            <small class='physical-path' *ngIf="field('path')">{{model.physical_path}}</small>
+            <div tabindex="0" class="color-normal hover-color-active">{{model.name}}</div>
+            <small class='physical-path' *ngIf="field(${WebSiteFields.path})">{{model.physical_path}}</small>
         </div>
     </div>
-    <div class='col-xs-3 col-sm-2 col-md-1 valign' *ngIf="field('status')">
+    <div class='col-xs-3 col-sm-2 col-md-1 valign' *ngIf="field(${WebSiteFields.status})">
         <span class='status' [ngClass]="model.status">{{model.status}}</span>
         <span title="HTTPS is ON" class="visible-xs-inline https" *ngIf="hasHttps()"></span>
     </div>
-    <div class='col-lg-2 visible-lg valign'  *ngIf="field('app-pool')">
+    <div class='col-lg-2 visible-lg valign'  *ngIf="field(${WebSiteFields.appPool})">
         <div *ngIf="model.application_pool">
-            <a [routerLink]="['/webserver', 'app-pools', model.application_pool.id]">
+            <a [routerLink]="appPoolRoute">
                 <span [ngClass]="model.application_pool.status">{{model.application_pool.name}}
-                    <span class="status" *ngIf="model.application_pool.status != 'started'">  ({{model.application_pool.status}})</span>
+                    <span *ngIf="model.application_pool.status != 'started'">({{model.application_pool.status}})</span>
                 </span>
             </a>
         </div>
@@ -60,49 +64,37 @@ const actionRestrictions: Map<WebSiteOp, Status> = new Map<WebSiteOp, Status>([
 </div>
     `,
     styles: [`
-        .name {
-            font-size: 16px;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-        }
+.name {
+    font-size: 16px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
 
-        .https:after {
-            font-family: FontAwesome;
-            content: "\\f023";
-            padding-left: 5px;
-        }
+.https:after {
+    font-family: FontAwesome;
+    content: "\\f023";
+    padding-left: 5px;
+}
 
-        a {
-            background: transparent;
-            display: inline;
-        }
+a {
+    background: transparent;
+    display: inline;
+}
 
-        .status {
-            text-transform: capitalize;
-        }
-        
-        .name small {
-            font-size: 12px;
-        }
+.name small {
+    font-size: 12px;
+}
 
-        .name .physical-path {
-            text-transform: lowercase;
-        }
-
-        .row {
-            margin: 0;
-        }
-
-        .actions {
-            padding-top: 4px;
-        }
+.row {
+    margin: 0;
+}
     `]
 })
-export class WebSiteItem extends ListOperationContext<WebSiteOp> {
+export class WebSiteItem extends ListOperationContext<WebSiteOp> implements OnInit {
     @Input() model: WebSite;
-    @Input() fields: Set<string>;
-    urlCache: string;
+    @Input() fields: WebSiteFields;
+    private siteUrl: string;
 
     constructor(
         private router: Router,
@@ -114,35 +106,43 @@ export class WebSiteItem extends ListOperationContext<WebSiteOp> {
 
     @HostListener('keydown', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
+        // Disable AccessibilityManager's keyboardEvent handler due to this issue:
+        // https://github.com/microsoft/IIS.WebManager/issues/360
+        // Capture enter key
         if (event.keyCode === 13) {
-            // Disable AccessibilityManager's keyboardEvent handler due to this issue:
-            // https://github.com/microsoft/IIS.WebManager/issues/360
             event.stopPropagation();
         }
+    }
+
+    ngOnInit(): void {
+        this.siteUrl = this.service.getDefaultUrl(this.model);
     }
 
     started() {
         return this.model.status == Status.Started;
     }
 
-    field(f: string): boolean {
-        return this.fields.has(f);
-    }
-    
-    getTitle(op: ListOperationDef<WebSiteOp>): string {
-        if (op.id == WebSiteOp.browse) {
-            return this.url;
-        }
-        return super.getTitle(op);
+    field(f: WebSiteFields): boolean {
+        return (this.fields & f) != 0;
     }
 
-    get url() {
-        return this.urlCache || (this.urlCache = this.service.getUrl(this.model.bindings[0]));
+    get appPoolRoute() {
+        return [resolveAppPoolRoute(this.model.application_pool.id)];
+    }
+
+    getTitle(op: ListOperationDef<WebSiteOp>): string {
+        if (op.id == WebSiteOp.browse) {
+            return this.siteUrl || `${super.getTitle(op)} (unavailable)`;
+        }
+        return super.getTitle(op);
     }
 
     isDisabled(op: ListOperationDef<WebSiteOp>) {
         let restriction = actionRestrictions.get(op.id);
         if (restriction && this.model.status != restriction) {
+            return true;
+        }
+        if (op.id == WebSiteOp.browse && !this.siteUrl) {
             return true;
         }
         return null;
@@ -151,7 +151,7 @@ export class WebSiteItem extends ListOperationContext<WebSiteOp> {
     execute(op: ListOperationDef<WebSiteOp>): Promise<any> {
         switch (op.id) {
             case WebSiteOp.browse:
-                return Promise.resolve(window.open(this.url, '_blank'));
+                return Promise.resolve(window.open(this.siteUrl, '_blank'));
 
             case WebSiteOp.start:
                 return this.service.start(this.model);
@@ -175,6 +175,10 @@ export class WebSiteItem extends ListOperationContext<WebSiteOp> {
         }
     }
 
+    edit() {
+        return this.router.navigate([resolveWebsiteRoute(this.model.id)]);
+    }
+
     hasHttps(): boolean {
         for (var i = 0; i < this.model.bindings.length; ++i) {
             if (this.model.bindings[i].is_https) {
@@ -183,20 +187,18 @@ export class WebSiteItem extends ListOperationContext<WebSiteOp> {
         }
         return false;
     }
-
-    edit() {
-        return this.router.navigate([resolveWebsiteRoute(this.model.id)]);
-    }
 }
 
 export enum Perspective {
-    WebServer = 1, AppPool,
+    WebServer = 0, AppPool,
 }
 
-const perspectives = new Map<Perspective, Set<string>>([
-    [Perspective.AppPool, new Set<string>(["name", "path", "status"])],
-    [Perspective.WebServer, new Set<string>(["name", "path", "status", "app-pool"])],
-])
+const perspectives = [
+    // Index 0 => WebServer
+    WebSiteFields.path | WebSiteFields.status | WebSiteFields.appPool,
+    // Index 1 => AppPool
+    WebSiteFields.path | WebSiteFields.status,
+];
 
 @Component({
     selector: 'website-list',
@@ -225,7 +227,7 @@ const perspectives = new Map<Perspective, Set<string>>([
             tabindex="0" aria-label="Name Header" role="button" (keyup.enter)="doSort('name')" (keyup.space)="doSort('name')">Name</label>
         <label class="col-xs-3 col-md-1 col-lg-1" [ngClass]="_orderBy.css('status')" (click)="doSort('status')"
             tabindex="0" aria-label="Status Header" role="button" (keyup.space)="doSort('status')" (keyup.enter)="doSort('status')">Status</label>
-        <label class="col-lg-2 visible-lg" *ngIf="hasField('app-pool')" [ngClass]="_orderBy.css('application_pool.name')" (click)="doSort('application_pool.name')"
+        <label class="col-lg-2 visible-lg" *ngIf="hasField(${WebSiteFields.appPool})" [ngClass]="_orderBy.css('application_pool.name')" (click)="doSort('application_pool.name')"
             tabindex="0" aria-label="Application Pool Header" role="button" (keyup.enter)="doSort('application_pool.name')" (keyup.space)="doSort('application_pool.name')">Application Pool</label>
     </div>
     <virtual-list class="grid-list"
@@ -239,23 +241,23 @@ const perspectives = new Map<Perspective, Set<string>>([
 </div>
     `,
     styles: [`
-        .container-fluid,
-        .row {
-            margin: 0;
-            padding: 0;
-        }
+.container-fluid,
+.row {
+    margin: 0;
+    padding: 0;
+}
     `]
 })
-export class WebSiteList {
+export class WebSiteList implements OnInit {
     @Input() model: Array<WebSite>;
     @Input() perspective: Perspective = Perspective.WebServer;
+    fields: WebSiteFields;
 
     private _selected: WebSiteItem;
     private _orderBy: OrderBy = new OrderBy();
     private _sortPipe: SortPipe = new SortPipe();
     private _range: Range = new Range(0, 0);
     private _view: Array<WebSite> = [];
-    private _fields: Set<string>;
 
     constructor(
         @Inject("WebSitesService") private service: WebSitesService,
@@ -263,7 +265,7 @@ export class WebSiteList {
 
     public ngOnInit() {
         this.onRangeChange(this._range);
-        this._fields = perspectives.get(this.perspective)
+        this.fields = perspectives[this.perspective];
     }
 
     get canAdd() {
@@ -278,10 +280,6 @@ export class WebSiteList {
         return this._selected;
     }
 
-    get fields() {
-        return this._fields;
-    }
-
     onItemSelected(item: WebSiteItem) {
         if (this._selected) {
             this._selected.selected = false;
@@ -289,8 +287,8 @@ export class WebSiteList {
         this._selected = item;
     }
 
-    hasField(field: string): boolean {
-        return this._fields.has(field);
+    hasField(f: WebSiteFields): boolean {
+        return (this.fields & f) != 0;
     }
 
     onRangeChange(range: Range) {

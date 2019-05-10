@@ -1,4 +1,4 @@
-import { Component, Input, Output, Inject, EventEmitter } from '@angular/core';
+import { Component, Input, Output, Inject, EventEmitter, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { OrderBy } from 'common/sort.pipe';
 import { NotificationService } from 'notification/notification.service';
@@ -33,10 +33,11 @@ const actionRestrictions: Map<AppPoolOp, Status> = new Map<AppPoolOp, Status>([
 <div class="grid-item row border-color"
     [class.selected-for-edit]="selected"
     (click)="onItemSelected($event)"
-    (dblclick)="onDblClick($event)"
-    (keydown.space)="onItemSelected($event)">
+    (keydown.space)="onItemSelected($event)"
+    (dblclick)="onEnter($event)"
+    (keydown.enter)="onEnter($event)">
     <div class='col-xs-7 col-sm-4 col-md-3 v-align big'>
-        <a class="color-normal hover-color-active" [routerLink]="['/webserver/app-pools', model.id]">{{model.name}}</a>
+        <div class="color-normal hover-color-active" (click)="onEnter($event)">{{model.name}}</div>
     </div>
     <div class='col-xs-3 col-md-2 v-align'>
         <span class='status' [ngClass]="model.status">{{model.status}}</span>
@@ -91,6 +92,16 @@ export class AppPoolItem extends ListOperationContext<AppPoolOp> {
         @Inject("AppPoolsService") private service: AppPoolsService,
     ) {
         super();
+    }
+
+    @HostListener('keydown', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent) {
+        // Disable AccessibilityManager's keyboardEvent handler due to this issue:
+        // https://github.com/microsoft/IIS.WebManager/issues/360
+        // Capture enter key
+        if (event.keyCode === 13) {
+            event.stopPropagation();
+        }
     }
 
     isDisabled(op: ListOperationDef<AppPoolOp>) {

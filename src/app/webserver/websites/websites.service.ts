@@ -9,6 +9,8 @@ import { AppPoolsService } from '../app-pools/app-pools.service';
 import { ApplicationPool } from '../app-pools/app-pool';
 import { ApiError, ApiErrorType } from 'error/api-error';
 import { NotificationService } from 'notification/notification.service';
+import { WebSiteItem } from './website-list';
+import { getUrlScheme } from '@angular/compiler';
 
 @Injectable()
 export class WebSitesService implements OnDestroy {
@@ -214,6 +216,13 @@ export class WebSitesService implements OnDestroy {
         this._subscriptions.forEach(sub => {
             sub.unsubscribe();
         })
+    }
+
+    public getDefaultUrl(site: WebSite): string {
+        if (site.bindings && site.bindings.length > 0) {
+            return this.getUrl(site.bindings[0]);
+        }
+        return null;
     }
 
     public getUrl(binding: Binding, path: string = ""): string {
