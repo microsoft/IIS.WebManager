@@ -22,7 +22,7 @@ export abstract class ListOperationContext<T> {
         return op.displayName;
     }
 
-    onItemClicked(e: Event) {
+    onItemSelected(e: Event) {
         if (e.defaultPrevented) {
             return;
         }

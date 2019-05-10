@@ -32,8 +32,9 @@ const actionRestrictions: Map<WebSiteOp, Status> = new Map<WebSiteOp, Status>([
     template: `
 <div class="row grid-item border-color"
     [class.selected-for-edit]="selected"
-    (click)="onItemClicked($event)"
-    (dblclick)="onDblClick($event)">
+    (click)="onItemSelected($event)"
+    (dblclick)="onDblClick($event)"
+    (keydown.space)="onItemSelected($event)">
     <div class='col-xs-7 col-sm-4 col-md-3 col-lg-3'>
         <div class='name'>
             <a class="color-normal hover-color-active" [routerLink]="['/webserver/websites', model.id]">{{model.name}}</a>

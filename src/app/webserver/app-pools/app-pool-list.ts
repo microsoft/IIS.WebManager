@@ -32,8 +32,9 @@ const actionRestrictions: Map<AppPoolOp, Status> = new Map<AppPoolOp, Status>([
     template: `
 <div class="grid-item row border-color"
     [class.selected-for-edit]="selected"
-    (click)="onItemClicked($event)"
-    (dblclick)="onDblClick($event)">
+    (click)="onItemSelected($event)"
+    (dblclick)="onDblClick($event)"
+    (keydown.space)="onItemSelected($event)">
     <div class='col-xs-7 col-sm-4 col-md-3 v-align big'>
         <a class="color-normal hover-color-active" [routerLink]="['/webserver/app-pools', model.id]">{{model.name}}</a>
     </div>
