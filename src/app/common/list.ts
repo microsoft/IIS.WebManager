@@ -1,4 +1,4 @@
-import { Component, Input, NgModule } from "@angular/core";
+import { Component, Input, NgModule, Output, EventEmitter } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 
@@ -11,6 +11,9 @@ export class ListOperationDef<T> {
 }
 
 export abstract class ListOperationContext<T> {
+    selected: boolean = false;
+    @Output() onSelected: EventEmitter<any> = new EventEmitter();
+
     show(_: ListOperationDef<T>): boolean {
         return true;
     }
@@ -19,6 +22,24 @@ export abstract class ListOperationContext<T> {
         return op.displayName;
     }
 
+    onItemClicked(e: Event) {
+        if (e.defaultPrevented) {
+            return;
+        }
+        this.selected = true;
+        if (this.onSelected.observers.length > 0) {
+            this.onSelected.emit(this);
+        }
+    }
+
+    onDblClick(e: Event) {
+        if (e.defaultPrevented) {
+            return Promise.resolve(null);
+        }
+        return this.edit();
+    }
+
+    edit(): Promise<any> { return Promise.resolve(null); }
     abstract isDisabled(op: ListOperationDef<T>);
     abstract execute(op: ListOperationDef<T>): Promise<any>;
 }

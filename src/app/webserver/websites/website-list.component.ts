@@ -11,7 +11,7 @@ import { Perspective } from './website-list';
         <loading *ngIf="!_sites && !lazy && !service.error"></loading>
         <div *ngIf="service.installStatus == 'stopped'" class="not-installed">
             <p>
-gul                Web Server (IIS) is not installed on the machine
+                Web Server (IIS) is not installed on the machine
                 <br/>
                 <a href="https://docs.microsoft.com/en-us/iis/install/installing-iis-85/installing-iis-85-on-windows-server-2012-r2" >Learn more</a>
             </p>

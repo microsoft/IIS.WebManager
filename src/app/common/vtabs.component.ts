@@ -40,9 +40,6 @@ import { Heading } from 'header/feature-header.component';
                             <div class="horizontal-strike"><span>{{category}}</span></div>
                         </li>
                         <li tabindex="0"
-                        </li>
-                        <li *ngFor="let tab of getTabs(category)"
-                            tabindex="0"
                             #tabLabels
                             class="hover-edit"
                             *ngFor="let tab of getTabs(category)"
@@ -52,9 +49,7 @@ import { Heading } from 'header/feature-header.component';
                             (focus)=" isWAC() ? selectItem(tab) : '' "
                             (click)="selectItem(tab)">
                             <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
-                            <span class="border-active">{{tab.name}}</span>
                         </li>
-                    </div>
                     </ng-container>
                 </ng-container>
             </ul>

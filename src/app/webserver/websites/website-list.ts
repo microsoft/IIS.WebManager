@@ -101,8 +101,6 @@ const actionRestrictions: Map<WebSiteOp, Status> = new Map<WebSiteOp, Status>([
 export class WebSiteItem extends ListOperationContext<WebSiteOp> {
     @Input() model: WebSite;
     @Input() fields: Set<string>;
-    @Output() onSelected: EventEmitter<WebSiteItem> = new EventEmitter();
-    selected: boolean = false;
     urlCache: string;
 
     constructor(
@@ -121,7 +119,6 @@ export class WebSiteItem extends ListOperationContext<WebSiteOp> {
             event.stopPropagation();
         }
     }
-
 
     started() {
         return this.model.status == Status.Started;
@@ -186,21 +183,8 @@ export class WebSiteItem extends ListOperationContext<WebSiteOp> {
         return false;
     }
 
-    onItemClicked(e: Event) {
-        if (e.defaultPrevented) {
-            return;
-        }
-        this.selected = true;
-        if (this.onSelected.observers.length > 0) {
-            this.onSelected.emit(this);
-        }
-    }
-
-    onDblClick(e: Event) {
-        if (e.defaultPrevented) {
-            return;
-        }
-        this.router.navigate([resolveWebsiteRoute(this.model.id)]);
+    edit() {
+        return this.router.navigate([resolveWebsiteRoute(this.model.id)]);
     }
 }
 

@@ -83,8 +83,6 @@ const actionRestrictions: Map<AppPoolOp, Status> = new Map<AppPoolOp, Status>([
 })
 export class AppPoolItem extends ListOperationContext<AppPoolOp> {
     @Input() model: ApplicationPool;
-    @Output() onSelected: EventEmitter<AppPoolItem> = new EventEmitter();
-    selected: boolean = false;
 
     constructor(
         private router: Router,
@@ -160,21 +158,8 @@ export class AppPoolItem extends ListOperationContext<AppPoolOp> {
         }
     }
 
-    onItemClicked(e: Event) {
-        if (e.defaultPrevented) {
-            return;
-        }
-        this.selected = true;
-        if (this.onSelected.observers.length > 0) {
-            this.onSelected.emit(this);
-        }
-    }
-
-    onDblClick(e: Event) {
-        if (e.defaultPrevented) {
-            return;
-        }
-        this.router.navigate([resolveAppPoolRoute(this.model.id)]);
+    edit() {
+        return this.router.navigate([resolveAppPoolRoute(this.model.id)]);
     }
 }
 
