@@ -33,7 +33,7 @@ import { Heading } from 'header/feature-header.component';
     template: `
         <div class="vtabs">
             <div *ngIf="header" class="vtab-header items">{{header}}</div>
-            <ul class="items">
+            <ul class="items sme-focus-zone">
                 <ng-container *ngFor="let category of getCategories()">
                     <ng-container *ngIf="!IsHidden(category)">
                         <li *ngIf="category" class="separator">
@@ -46,7 +46,6 @@ import { Heading } from 'header/feature-header.component';
                             [ngClass]="{active: tab.active}"
                             (keyup.space)="selectItem(tab)"
                             (keyup.enter)="selectItem(tab)"
-                            (focus)=" isWAC() ? selectItem(tab) : '' "
                             (click)="selectItem(tab)">
                             <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
                         </li>
