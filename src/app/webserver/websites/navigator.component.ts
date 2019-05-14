@@ -33,16 +33,12 @@ import {WebSitesService} from './websites.service';
     styles: [`
         .wrapper {
             display: block;
-            overflow: hidden;
         }
 
         .url {
-            margin-right: -10px;
-            padding-right: 15px;
-            max-width:90%;
             float: left;
-            line-height: 25px;
         }
+
         .selector-wrapper {
             float: left;
             display: inline-flex;

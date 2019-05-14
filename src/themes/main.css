@@ -30,6 +30,7 @@ a:focus{
     text-decoration: none;
 }
 
+div:focus,
 label:focus,
 a:focus,
 button:focus {
