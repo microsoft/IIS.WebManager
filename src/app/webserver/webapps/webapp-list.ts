@@ -46,7 +46,7 @@ enum WebAppFields {
         </div>
         <ng-container *ngFor="let parent of parents">
             <div class="col-sm-2 hidden-xs valign">
-                <a tabindex="0" [routerLink]="parent.route">
+                <a tabindex="0" [routerLink]="parent.route" (keydown.enter)="$event.stopPropagation()">
                     <span [ngClass]="parent.status">{{parent.name}}
                         <span *ngIf="parent.status != 'started'">({{parent.status}})</span>
                     </span>

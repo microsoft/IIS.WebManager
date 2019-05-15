@@ -9,7 +9,14 @@ import {WebSitesService} from './websites.service';
     template: `
         <div class="wrapper">
             <div class="url inline-block">
-                <div tabindex="0" class="hidden-xs hover-active" *ngIf="model.length > 0" [hidden]="small" [class.cert]="isHttps(0)" title="{{getUrl(0)}}" (click)="onNavigate($event, getUrl(0))">
+                <div tabindex="0"
+                    class="hidden-xs hover-active"
+                    *ngIf="model.length > 0"
+                    [hidden]="small"
+                    [class.cert]="isHttps(0)"
+                    title="{{getUrl(0)}}"
+                    (click)="onNavigate($event, getUrl(0))"
+                    (keydown.enter)="onNavigate($event, getUrl(0))">
                     <span>{{getFriendlyUrl(0)}}</span>
                 </div>
             </div>
@@ -22,7 +29,14 @@ import {WebSitesService} from './websites.service';
                     <selector #navigator>
                         <ul class="grid-list">
                             <li *ngFor="let b of model; let i = index" class="grid-item hover-active">
-                                <div tabindex="0" class="hover-active" [class.cert]="isHttps(i)" title="{{getUrl(i)}}" (click)="onNavigate($event, getUrl(i))"><span>{{getFriendlyUrl(i)}}</span></div>
+                                <div tabindex="0"
+                                    class="hover-active"
+                                    [class.cert]="isHttps(i)"
+                                    title="{{getUrl(i)}}"
+                                    (click)="onNavigate($event, getUrl(i))"
+                                    (keydown.enter)="onNavigate($event, getUrl(i))">
+                                    <span>{{getFriendlyUrl(i)}}</span>
+                                </div>
                             </li>
                         </ul>
                     </selector>

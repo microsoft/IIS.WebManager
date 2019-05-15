@@ -51,7 +51,7 @@ enum WebSiteFields {
     </div>
     <div class='col-lg-2 visible-lg valign'  *ngIf="field(${WebSiteFields.appPool})">
         <div *ngIf="model.application_pool">
-            <a [routerLink]="appPoolRoute">
+            <a [routerLink]="appPoolRoute" (keydown.enter)="$event.stopPropagation()">
                 <span [ngClass]="model.application_pool.status">{{model.application_pool.name}}
                     <span *ngIf="model.application_pool.status != 'started'">({{model.application_pool.status}})</span>
                 </span>
@@ -61,8 +61,7 @@ enum WebSiteFields {
     <div class=' hidden-xs col-xs-4 col-xs-push-1 col-sm-3 col-md-3 valign overflow-visible'>
         <navigator [model]="model.bindings" [right]="true"></navigator>
     </div>
-</div>
-    `,
+</div>`,
     styles: [`
 .name {
     font-size: 16px;

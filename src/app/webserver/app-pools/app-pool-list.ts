@@ -37,7 +37,7 @@ const actionRestrictions: Map<AppPoolOp, Status> = new Map<AppPoolOp, Status>([
     (dblclick)="onEnter($event)"
     (keydown.enter)="onEnter($event)">
     <div class='col-xs-7 col-sm-4 col-md-3 v-align big'>
-        <div class="color-normal hover-color-active" (click)="onEnter($event)">{{model.name}}</div>
+        <div tabindex="0" class="color-normal hover-color-active">{{model.name}}</div>
     </div>
     <div class='col-xs-3 col-md-2 v-align'>
         <span class='status' [ngClass]="model.status">{{model.status}}</span>
@@ -54,34 +54,34 @@ const actionRestrictions: Map<AppPoolOp, Status> = new Map<AppPoolOp, Status>([
 </div>
     `,
     styles: [`
-        .big {
-            font-size: 16px;
-        }
+.big {
+    font-size: 16px;
+}
 
-        .big a {
-            display: inline;
-            background: transparent;
-        }
+.big a {
+    display: inline;
+    background: transparent;
+}
 
-        span {
-            overflow: hidden;
-            white-space:nowrap;
-        }
+span {
+    overflow: hidden;
+    white-space:nowrap;
+}
 
-        .row {
-            margin: 0;
-        }
+.row {
+    margin: 0;
+}
 
-        [class*="col-"] {
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
+[class*="col-"] {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 
-        .v-align {
-            padding-top: 6px;
-        }
-    `]
+.v-align {
+    padding-top: 6px;
+}`
+    ],
 })
 export class AppPoolItem extends ListOperationContext<AppPoolOp> {
     @Input() model: ApplicationPool;
