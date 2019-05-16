@@ -8,7 +8,7 @@ import { LoggerFactory, LogLevel, Logger } from "diagnostics/logger";
     selector: `titles`,
     template: `
 <div class="titles">
-    <ul class="breadcrumbs sme-focus-zone">
+    <ul class="breadcrumbs">
         <li *ngFor="let crumb of breadcrumbs; index as i">
             <span [ngClass]="{root: !i}" *ngIf="!(crumb.routerLink)">{{crumb.label}}</span>
             <a *ngIf="crumb.routerLink" [routerLink]="crumb.routerLink">{{crumb.label}}</a>

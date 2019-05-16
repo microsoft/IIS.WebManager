@@ -63,11 +63,9 @@ i {
 }
 
 .compact-button {
-    font-size: 10px;
     border: none;
-    background: none;
-    padding: 0px 8px;
-    margin: 0px;
+    font-size: 10px;
+    width: 2.5em;
 }
 
 .status-digest {

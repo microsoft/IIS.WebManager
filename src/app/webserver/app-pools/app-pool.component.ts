@@ -32,6 +32,7 @@ class AppPoolStatusUpdater extends ModelStatusUpdater {
                 [UpdateType.Recycle, () => service.recycle(pool)],
                 [UpdateType.Start, () => service.start(pool)],
                 [UpdateType.Stop, () => service.stop(pool)],
+                // TODO: consider if delete button is appropriate on model header
                 // [UpdateType.delete, () => service.delete(pool)],
             ]),
         )

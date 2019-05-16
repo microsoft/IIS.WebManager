@@ -31,6 +31,7 @@ class WebSiteStatusUpdater extends ModelStatusUpdater {
             new Map<UpdateType, () => void>([
                 [UpdateType.Start, () => service.start(site)],
                 [UpdateType.Stop, () => service.stop(site)],
+                // TODO: consider if delete button is appropriate on model header
                 // [UpdateType.delete, () => service.delete(site)],
             ]),
         )
