@@ -1,19 +1,53 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {DiffUtil} from '../../utils/diff';
-import {OptionsService} from '../../main/options.service';
-import {ApplicationPool} from './app-pool';
-import {AppPoolsService} from './app-pools.service';
-import { BreadcrumbsService } from 'header/breadcrumbs.service';
-import { BreadcrumbsRoot, AppPoolsCrumb, Breadcrumb } from 'header/breadcrumb';
-import { AppPoolsModuleName } from 'main/settings';
+import { Component, OnInit, Inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DiffUtil } from '../../utils/diff';
+import { ApplicationPool } from './app-pool';
+import { AppPoolsService } from './app-pools.service';
+import { AppPoolsModuleName, AppPoolModuleIcon } from 'main/settings';
+import { BreadcrumbsResolver, FeatureContext } from 'common/feature-vtabs.component';
+import { Breadcrumb, BreadcrumbsRoot, AppPoolsCrumb } from 'header/breadcrumb';
+import { ModelStatusUpdater, UpdateType } from 'header/model-header.component';
+import { TitlesService } from 'header/titles.service';
+import { resolveAppPoolRoute } from 'webserver/webserver-routing.module';
+
+const crumbsRoot = BreadcrumbsRoot.concat(AppPoolsCrumb);
+class AppPoolBreadcrumbResolver implements BreadcrumbsResolver {
+    resolve(model: FeatureContext): Breadcrumb[] {
+        const pool = <ApplicationPool> model;
+        return crumbsRoot.concat(<Breadcrumb>{ label: pool.name, routerLink: [resolveAppPoolRoute(pool.id)] });
+    }
+}
+
+class AppPoolStatusUpdater extends ModelStatusUpdater {
+    constructor(
+        service: AppPoolsService,
+        pool: ApplicationPool,
+    ) {
+        super(
+            AppPoolsModuleName,
+            AppPoolModuleIcon,
+            pool.name,
+            pool,
+            new Map<UpdateType, () => void>([
+                [UpdateType.Recycle, () => service.recycle(pool)],
+                [UpdateType.Start, () => service.start(pool)],
+                [UpdateType.Stop, () => service.stop(pool)],
+                // TODO: consider if delete button is appropriate on model header
+                // [UpdateType.delete, () => service.delete(pool)],
+            ]),
+        )
+    }
+}
 
 @Component({
     template: `
         <not-found *ngIf="notFound"></not-found>
         <loading *ngIf="!(pool || notFound)"></loading>
-        <app-pool-header *ngIf="pool" [pool]="pool" class="crumb-content" [class.sidebar-nav-content]="_options.active"></app-pool-header>
-        <feature-vtabs *ngIf="pool" [model]="pool" [resource]="'appPool'" [subcategory]="'${AppPoolsModuleName}'">
+        <feature-vtabs
+            *ngIf="pool" [model]="pool"
+            [resource]="'appPool'"
+            [subcategory]="'${AppPoolsModuleName}'"
+            [breadcrumbsResolver]="breadcrumbsResolver">
             <app-pool-general class="general-tab" [pool]="pool" (modelChanged)="onModelChanged()"></app-pool-general>
         </feature-vtabs>
 `,
@@ -21,28 +55,23 @@ import { AppPoolsModuleName } from 'main/settings';
 export class AppPoolComponent implements OnInit {
     pool: ApplicationPool;
     notFound: boolean;
+    breadcrumbsResolver = new AppPoolBreadcrumbResolver();
     private id: string;
-    private _original: ApplicationPool;
+    private original: ApplicationPool;
 
     constructor(
-        private _route: ActivatedRoute,
-        private _options: OptionsService,
-        private _router: Router,
-        private crumbs: BreadcrumbsService,
-        @Inject("AppPoolsService") private _service: AppPoolsService,
+        private title: TitlesService,
+        private route: ActivatedRoute,
+        private router: Router,
+        @Inject("AppPoolsService") private service: AppPoolsService,
     ){
-        this.id = this._route.snapshot.params['id'];
+        this.id = this.route.snapshot.params['id'];
     }
 
     ngOnInit() {
-        this._service.get(this.id)
+        this.service.get(this.id)
             .then(p => {
                 this.setAppPool(p);
-                this.crumbs.load(
-                    BreadcrumbsRoot.concat(
-                        AppPoolsCrumb,
-                        <Breadcrumb>{ label: p.name },
-                    ));
             })
             .catch(s => {
                 if (s && s.status == '404') {
@@ -57,15 +86,15 @@ export class AppPoolComponent implements OnInit {
         }
 
         // Set up diff object
-        var changes = DiffUtil.diff(this._original, this.pool);
+        var changes = DiffUtil.diff(this.original, this.pool);
 
         if (Object.keys(changes).length > 0) {
             var id = this.pool.id;
-            this._service.update(this.pool, changes).then(p => {
+            this.service.update(this.pool, changes).then(p => {
                 if (p.id != id) {
                     //
                     // Refresh if the Id has changed
-                    this._router.navigate(['webserver', 'app-pools', p.id]);
+                    this.router.navigate(['webserver', 'app-pools', p.id]);
                 }
                 else {
                     this.setAppPool(p);
@@ -75,7 +104,8 @@ export class AppPoolComponent implements OnInit {
     }
 
     private setAppPool(p: ApplicationPool) {
+        this.title.loadModelUpdater(new AppPoolStatusUpdater(this.service, p));
         this.pool = p;
-        this._original = JSON.parse(JSON.stringify(p));
+        this.original = JSON.parse(JSON.stringify(p));
     }
 }

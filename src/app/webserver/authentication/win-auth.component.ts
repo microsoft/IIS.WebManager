@@ -10,7 +10,9 @@ import { NotificationService } from '../../notification/notification.service';
     selector: 'win-auth',
     template: `
         <error [error]="service.windowsError"></error>
-        <switch class="install" *ngIf="service.webserverScope && service.windowsStatus != 'unknown'" #s
+        <switch label="Enable"
+                *ngIf="service.webserverScope && service.windowsStatus != 'unknown'"
+                class="install" #s
                 [auto]="false"
                 [model]="service.windowsStatus == 'started' || service.windowsStatus == 'starting'"
                 [disabled]="service.windowsStatus == 'starting' || service.windowsStatus == 'stopping'"
@@ -22,13 +24,11 @@ import { NotificationService } from '../../notification/notification.service';
         <override-mode class="pull-right" *ngIf="_model" [scope]="_model.scope" [metadata]="_model.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="_model">
             <fieldset>
-                <label *ngIf="!_model.scope">Web Site Default</label>
-                <switch class="block" [disabled]="_locked" [(model)]="_model.enabled" (modelChanged)="onModelChanged()">{{_model.enabled ? "On" : "Off"}}</switch>
+                <switch [label]="_model.scope ? 'Enable' : 'Web Site Default'" class="block" [disabled]="_locked" [(model)]="_model.enabled" (modelChanged)="onModelChanged()">{{_model.enabled ? "On" : "Off"}}</switch>
             </fieldset>
             <div class="clear" *ngIf="_model.enabled || !_model.scope">
                 <fieldset>
-                    <label>Use Kernel Mode</label>
-                    <switch class="block" [disabled]="_locked" [(model)]="_model.use_kernel_mode" (modelChanged)="onModelChanged()">{{_model.use_kernel_mode ? "On" : "Off"}}</switch>
+                    <switch label="Use Kernel Mode" class="block" [disabled]="_locked" [(model)]="_model.use_kernel_mode" (modelChanged)="onModelChanged()">{{_model.use_kernel_mode ? "On" : "Off"}}</switch>
                 </fieldset>
                 <ul>
                     <li *ngFor="let provider of _model.providers; let i = index;">

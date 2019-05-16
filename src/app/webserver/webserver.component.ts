@@ -1,5 +1,4 @@
-import { Component, Inject, OnInit, AfterViewInit, ViewChild, forwardRef, Input } from '@angular/core';
-import { OptionsService } from '../main/options.service';
+import { Component, Inject, OnInit, OnDestroy, Input, AfterViewInit, ViewChild, forwardRef } from '@angular/core';
 import { HttpClient } from '../common/http-client';
 import { WebServer } from './webserver';
 import { WebServerService } from './webserver.service';
@@ -8,16 +7,49 @@ import { CertificatesServiceURL } from 'certificates/certificates.service';
 import { UnexpectedServerStatusError } from 'error/api-error';
 import { NotificationService } from 'notification/notification.service';
 import { Runtime } from 'runtime/runtime';
-import { BreadcrumbsService } from 'header/breadcrumbs.service';
-import { BreadcrumbsRoot, Breadcrumb } from 'header/breadcrumb';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
-import { GlobalModuleReference, HomeCategory, FeatureVTabsComponent } from 'common/feature-vtabs.component';
+import { GlobalModuleReference, HomeCategory, BreadcrumbsResolver, FeatureContext, FeatureVTabsComponent } from 'common/feature-vtabs.component';
 import { Subscription } from 'rxjs';
+import { BreadcrumbsRoot, Breadcrumb } from 'header/breadcrumb';
+import { TitlesService } from 'header/titles.service';
+import { ModelStatusUpdater, UpdateType } from 'header/model-header.component';
+import { ConnectService } from 'connect/connect.service';
 import { Item } from 'common/vtabs.component';
+import { filter, take } from 'rxjs/operators';
+
+export class WebServerCrumbsResolver implements BreadcrumbsResolver {
+    constructor(
+        private crumbs: Breadcrumb[],
+    ) {}
+
+    resolve(_: FeatureContext): Breadcrumb[] {
+        return this.crumbs;
+    }
+}
+
+class WebServerStatusUpdater extends ModelStatusUpdater {
+    constructor(
+        displayName: string,
+        webServer: WebServer,
+        service: WebServerService,
+    ) {
+        super(
+            WebServerModuleName,
+            WebServerModuleIcon,
+            displayName,
+            webServer,
+            new Map<UpdateType, () => void>([
+                [UpdateType.Start, () => service.start()],
+                [UpdateType.Stop, () => service.stop()],
+                [UpdateType.Restart, () => service.restart()],
+            ]),
+        )
+    }
+}
 
 @Component({
     template: `
-        <div *ngIf="service.installStatus == 'stopped'" class="not-installed">
+        <div *ngIf="notInstalled" class="not-installed">
             <p>
                 Web Server (IIS) is not installed on the machine
                 <br/>
@@ -40,9 +72,9 @@ export class WebServerComponent implements OnInit {
     failure: string;
 
     constructor(
-        @Inject('WebServerService') private _service: WebServerService,
-        @Inject('Runtime') private _runtime: Runtime,
-        private _notifications: NotificationService,
+        private notifications: NotificationService,
+        @Inject('Runtime') private runtime: Runtime,
+        @Inject('WebServerService') private service: WebServerService,
     ){}
 
     ngOnInit() {
@@ -51,22 +83,21 @@ export class WebServerComponent implements OnInit {
         });
     }
 
-    get service() {
-        return this._service;
+    get notInstalled() {
+        return this.service.installStatus == 'stopped';
     }
 
     get server(): Promise<WebServer> {
-        var outer = this;
         return new Promise<WebServer>((resolve, reject) => {
-            this._service.server.catch(e => {
+            this.service.server.catch(e => {
                 if (e instanceof UnexpectedServerStatusError) {
-                    this._notifications.confirm(
+                    this.notifications.confirm(
                         `Start Microsoft IIS Administration API`,
                         `Microsoft IIS Administration API is currently ${e.Status}. Do you want to start the service?`).then(confirmed => {
                         if (confirmed) {
-                            this._runtime.StartIISAdministration().subscribe(
+                            this.runtime.StartIISAdministration().subscribe(
                                 _ => {
-                                    this._service.server.catch(ex => {
+                                    this.service.server.catch(ex => {
                                         reject(this.failure = `Unable to start Microsoft IIS Administration API Service, error ${ex}`)
                                         throw ex
                                     }).then(s => {
@@ -92,10 +123,14 @@ export class WebServerComponent implements OnInit {
     }
 }
 
+const subComponentList: string[] = [
+    Item.Join(HomeCategory, WebSitesModuleName),
+    Item.Join(HomeCategory, AppPoolsModuleName),
+]
+
 @Component({
-    selector: "webserver-view",
+    selector: 'webserver-view',
     template: `
-<webserver-header [model]="webServer" class="crumb-content" [class.sidebar-nav-content]="_options.active"></webserver-header>
 <feature-vtabs
     [model]="webServer"
     [resource]="'webserver'"
@@ -105,17 +140,20 @@ export class WebServerComponent implements OnInit {
     [default]="'${WebSitesModuleName}'"
     [subcategory]="'${WebServerModuleName}'"
     [includeModules]="staticModules"
-    [promoteToContext]="promoteToContext">
+    [promoteToContext]="promoteToContext"
+    [breadcrumbsResolver]="breadcrumbsResolver">
     <webserver-general class="general-tab" [model]="webServer"></webserver-general>
 </feature-vtabs>
-`,
+    `,
 })
-export class WebServerViewComponent implements AfterViewInit {
+export class WebServerViewComponent implements OnInit, OnDestroy, AfterViewInit {
+    @Input() webServer: WebServer;
+
     logger: Logger;
     staticModules: GlobalModuleReference[] = [
         <GlobalModuleReference> {
             name: CertificatesModuleName,
-            initialize: this._http.head(CertificatesServiceURL, null, false)
+            initialize: this.httpClient.head(CertificatesServiceURL, null, false)
                         .then(_ => true)
                         .catch(e => {
                             this.logger.log(LogLevel.ERROR, `Error pinging ${CertificatesServiceURL}, ${CertificatesModuleName} tab will be disabled:\n${e}`);
@@ -129,50 +167,49 @@ export class WebServerViewComponent implements AfterViewInit {
         WebServerModuleName,
         AppPoolsModuleName,
         WebSitesModuleName,
-        FileSystemModuleName,
     ]
-    tabsSubscription: Subscription;
-    webserverCrumbs: Breadcrumb[] = BreadcrumbsRoot;
-    websitesCrumbs = BreadcrumbsRoot.concat(<Breadcrumb>{ label: WebSitesModuleName });
-    appPoolsCrumbs = BreadcrumbsRoot.concat(<Breadcrumb>{ label: AppPoolsModuleName });
-    private static webSitesPath = Item.Join(HomeCategory, WebSitesModuleName);
-    private static appPoolsPath = Item.Join(HomeCategory, AppPoolsModuleName);
-
-    @Input() webServer: WebServer;
-    @ViewChild(forwardRef(() => FeatureVTabsComponent)) vtab: FeatureVTabsComponent;
+    breadcrumbsResolver: BreadcrumbsResolver = new WebServerCrumbsResolver(BreadcrumbsRoot);
+    subscriptions: Subscription[] = [];
+    @ViewChild(forwardRef(() => FeatureVTabsComponent)) features: FeatureVTabsComponent;
 
     constructor(
-        private _crumbs: BreadcrumbsService,
-        private _http: HttpClient,
-        private _options: OptionsService,
-        private factory: LoggerFactory,
-    ) {
+        private httpClient: HttpClient,
+        private title: TitlesService,
+        private connections: ConnectService,
+        @Inject('WebServerService') private service: WebServerService,
+        factory: LoggerFactory,
+    ){
         this.logger = factory.Create(this);
     }
 
-    ngAfterViewInit() {
-        this.tabsSubscription = this.vtab.vtabs.onSelectItem.subscribe(
-            selectedPath => {
-                if (selectedPath == WebServerViewComponent.webSitesPath) {
-                    this._crumbs.load(this.websitesCrumbs);
-                } else if (selectedPath == WebServerViewComponent.appPoolsPath) {
-                    this._crumbs.load(this.appPoolsCrumbs);
-                } else {
-                    this._crumbs.load(this.webserverCrumbs);
-                }
-            },
-            e => {
-                this.logger.log(LogLevel.WARN, `Error retrieving tab updates ${e}`);
-            },
-            () => {
-                this.logger.log(LogLevel.INFO, `VTabs completed updating selected tabs`);
-            }
+    ngOnInit() {
+        this.connections.active.pipe(
+            filter(c => !!c),
+            take(1),
+        ).subscribe(conn =>
+            this.title.loadModelUpdater(
+                new WebServerStatusUpdater(
+                    conn.getDisplayName(),
+                    this.webServer,
+                    this.service,
+                ),
+            ),
         );
     }
 
     ngOnDestroy() {
-        if (this.tabsSubscription) {
-            this.tabsSubscription.unsubscribe();
+        for (let sub of this.subscriptions) {
+            sub.unsubscribe();
         }
+    }
+
+    ngAfterViewInit(){
+        this.subscriptions.push(
+            this.features.vtabs.onSelectItem.subscribe(
+                v => this.features.vtabs.showCategory(
+                    WebServerModuleName,
+                    !subComponentList.includes(v.fullName),
+                ),
+            ))
     }
 }

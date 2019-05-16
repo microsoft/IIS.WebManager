@@ -127,8 +127,7 @@ export class InboundRuleVariableComponent {
                     <input type="text" required class="form-control" [(ngModel)]="variable.value" />
                 </fieldset>
                 <fieldset>
-                    <label>Replace</label>
-                    <switch [(model)]="variable.replace">{{variable.replace ? 'Yes' : 'No'}}</switch>
+                    <switch label="Replace" [(model)]="variable.replace">{{variable.replace ? 'Yes' : 'No'}}</switch>
                 </fieldset>
             </fieldset>
             <div class="actions">

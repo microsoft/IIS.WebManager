@@ -1,16 +1,9 @@
 import { Component, Input, Output, EventEmitter, ViewChildren, QueryList, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { NgModel } from '@angular/forms';
-
-import { Selector } from '../../common/selector';
-
-import { ApiFile } from '../../files/file';
-import { WebSite, Binding } from './site';
-import { WebSitesService } from './websites.service';
-import { BindingList } from './binding-list.component';
-
+import { Selector } from 'common/selector';
+import { ApiFile } from 'files/file';
+import { WebSite } from './site';
 import { AppPoolListComponent } from '../app-pools/app-pool-list.component';
-import { AppPoolsService } from '../app-pools/app-pools.service';
 
 
 @Component({
@@ -29,12 +22,10 @@ import { AppPoolsService } from '../app-pools/app-pools.service';
                     <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="site.physical_path" (selected)="onSelectPath($event)"></server-file-selector>
                 </fieldset>
                 <fieldset>
-                    <label>Auto Start</label>
-                    <switch class="block" [(model)]="site.server_auto_start" (modelChanged)="onModelChanged()">{{site.server_auto_start ? "On" : "Off"}}</switch>
+                    <switch label="Auto Start" class="block" [(model)]="site.server_auto_start" (modelChanged)="onModelChanged()">{{site.server_auto_start ? "On" : "Off"}}</switch>
                 </fieldset>
                 <fieldset class="inline-block">
-                    <label>Custom Protocols</label>
-                    <switch class="block" [(model)]="custom_protocols" (modelChange)="useCustomProtocols($event)">{{custom_protocols ? "On" : "Off"}}</switch>
+                    <switch label="Custom Protocols" class="block" [(model)]="custom_protocols" (modelChange)="useCustomProtocols($event)">{{custom_protocols ? "On" : "Off"}}</switch>
                 </fieldset>
                 <fieldset class="inline-block" *ngIf="custom_protocols">
                     <label>Protocols</label>
@@ -50,7 +41,7 @@ import { AppPoolsService } from '../app-pools/app-pools.service';
             <tab [name]="'Application Pool'">
                 <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Change Application Pool <i class="fa fa-caret-down"></i></button>
                 <selector #poolSelect class="container-fluid create">
-                    <app-pools #appPools [actions]="'view'" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
+                    <app-pools #appPools [listingOnly]="true" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
                 </selector>
                 <app-pool-details [model]="site.application_pool"></app-pool-details>
             </tab>

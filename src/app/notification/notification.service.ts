@@ -63,6 +63,26 @@ export class NotificationService {
         });
     }
 
+    public confirmAsync<T>(
+        title: string,
+        message: string,
+        action: () => Promise<T>,
+        rejectOnCancel: boolean = false,
+    ): Promise<T> {
+        return new Promise<T>((resolve, reject) => {
+            this.confirm(title, message).then(confirmed => {
+                if (confirmed) {
+                    action().then(v => resolve(v)).catch(e => reject(e));
+                } else {
+                    if (rejectOnCancel) {
+                        reject("cancelled");
+                    }
+                    resolve(null);
+                }
+            }).catch(e => reject(e));
+        });
+    }
+
     public notify(notification: Notification) {
         this._data.push(notification);
         this._notifications.next(this._data);

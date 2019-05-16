@@ -43,8 +43,7 @@ import { WebApp } from '../webapps/webapp';
                     </fieldset>
                     <div class="col-xs-12">
                         <fieldset>
-                            <label>Custom Identity</label>
-                            <switch class="block" #customIdentity="switchVal" [model]="model.identity.username" (modelChange)="onUseCustomIdentity($event)">{{model.identity.username ? "On" : "Off"}}</switch>
+                            <switch label="Custom Identity" class="block" #customIdentity="switchVal" [model]="model.identity.username" (modelChange)="onUseCustomIdentity($event)">{{model.identity.username ? "On" : "Off"}}</switch>
                         </fieldset>
                         <div *ngIf="customIdentity.model">
                             <div class="row">

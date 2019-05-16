@@ -12,7 +12,9 @@ import { RequestTracing, RequestTracingRule, Trace, EventSeverity, Verbosity } f
     template: `
         <loading *ngIf="service.status == 'unknown' && !service.error"></loading>
         <error [error]="service.error"></error>
-        <switch class="install" *ngIf="service.webserverScope && service.status != 'unknown'" #s
+        <switch label="Enable"
+                *ngIf="service.webserverScope && service.status != 'unknown'"
+                class="install" #s
                 [auto]="false"
                 [model]="service.status == 'started' || service.status == 'starting'"
                 [disabled]="service.status == 'starting' || service.status == 'stopping'"
@@ -30,7 +32,7 @@ import { RequestTracing, RequestTracingRule, Trace, EventSeverity, Verbosity } f
         <div *ngIf="requestTracing" [attr.disabled]="requestTracing.metadata.is_locked ? true : null">
             <section>
                 <fieldset *ngIf="scopeType() != 'webserver'" [disabled]="scopeType() != 'website' || null">
-                    <switch class="block" [(model)]="requestTracing.enabled" (modelChanged)="onModelChanged()">{{requestTracing.enabled ? "On" : "Off"}}</switch>
+                    <switch label="Enable" class="block" [(model)]="requestTracing.enabled" (modelChanged)="onModelChanged()">{{requestTracing.enabled ? "On" : "Off"}}</switch>
                 </fieldset>
             </section>
 

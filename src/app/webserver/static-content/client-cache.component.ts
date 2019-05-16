@@ -6,8 +6,7 @@ import {ClientCache} from './static-content'
     selector: 'client-cache',
     template: `
         <fieldset>
-            <label>E-Tag</label>
-            <switch class="block" [disabled]="locked" [(model)]="model.set_e_tag" (modelChanged)="onModelChanged()">{{model.set_e_tag ? "On" : "Off"}}</switch>
+            <switch label="E-Tag" class="block" [disabled]="locked" [(model)]="model.set_e_tag" (modelChanged)="onModelChanged()">{{model.set_e_tag ? "On" : "Off"}}</switch>
         </fieldset>
         <fieldset>
             <label>Cache-Control</label>
@@ -27,8 +26,7 @@ import {ClientCache} from './static-content'
             <input class="form-control path" type="text" [disabled]="locked" [(ngModel)]="model.http_expires" (modelChanged)="onModelChanged()" throttle />
         </fieldset>
         <fieldset class="inline-block pull-left">
-            <label>Custom Cache-Control</label>
-            <switch [(model)]="_useCustom" (modelChanged)="onCustom()">{{_useCustom ? "On" : "Off"}}</switch>
+            <switch label="Custom Cache-Control" [(model)]="_useCustom" (modelChanged)="onCustom()">{{_useCustom ? "On" : "Off"}}</switch>
         </fieldset>
         <fieldset *ngIf="_useCustom" class="fill">
             <label>&nbsp;</label>

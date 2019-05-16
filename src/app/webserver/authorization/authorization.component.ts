@@ -10,7 +10,9 @@ import { Authorization } from './authorization'
     template: `
         <loading *ngIf="service.status == 'unknown' && !service.error"></loading>
         <error [error]="service.error"></error>
-        <switch class="install" *ngIf="service.webserverScope && service.status != 'unknown'" #s
+        <switch label="Enable"
+                *ngIf="service.webserverScope && service.status != 'unknown'"
+                class="install" #s
                 [auto]="false"
                 [model]="service.status == 'started' || service.status == 'starting'"
                 [disabled]="service.status == 'starting' || service.status == 'stopping'"
@@ -30,9 +32,9 @@ import { Authorization } from './authorization'
         </div>
     `,
     styles: [`
-        .install {
-            margin-bottom: 40px;
-        }
+.install {
+    margin-bottom: 40px;
+}
     `]
 })
 export class AuthorizationComponent implements OnInit, OnDestroy {

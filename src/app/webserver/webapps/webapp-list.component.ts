@@ -1,43 +1,30 @@
 
-import {Component, OnInit, Input, Output, EventEmitter, Inject} from '@angular/core';
-
-import {WebApp} from './webapp'
-import {WebAppsService} from './webapps.service';
-import {WebAppList} from './webapp-list';
-
-import {WebSite} from '../websites/site';
-import {WebSitesService} from '../websites/websites.service';
-import {ApplicationPool} from '../app-pools/app-pool';
-
-
+import { Component, OnInit, Input, Inject } from '@angular/core';
+import { WebApp } from './webapp'
+import { WebAppsService } from './webapps.service';
+import { WebSite } from '../websites/site';
+import { ApplicationPool } from '../app-pools/app-pool';
 
 @Component({
     template: `
-        <div *ngIf="website">
-            <button [class.background-active]="newWebApp.opened" (click)="newWebApp.toggle()">Create Web Application <i class="fa fa-caret-down"></i></button>
-            <selector #newWebApp class="container-fluid">
-                <new-webapp *ngIf="newWebApp.opened" [website]="website" (created)="newWebApp.close()" (cancel)="newWebApp.close()"></new-webapp>
-            </selector>
-        </div>
-        <br/>
-        <p *ngIf="!_webapps">Loading...</p>
-        <webapp-list *ngIf="_webapps" [model]="_webapps" [fields]="fields()"></webapp-list>
+<p *ngIf="!_webapps">Loading...</p>
+<webapp-list *ngIf="_webapps" [model]="_webapps" [appPool]="appPool" [website]="website"></webapp-list>
     `,
     styles: [`
-        br {
-            margin-top: 30px;
-        }
+br {
+    margin-top: 30px;
+}
     `]
 })
 export class WebAppListComponent implements OnInit {
     @Input() appPool: ApplicationPool;
     @Input() website: WebSite;
     @Input() lazy: boolean;
-
     private _webapps: Array<WebApp>;
 
-    constructor(@Inject("WebAppsService") private _service: WebAppsService) {
-    }
+    constructor(
+        @Inject("WebAppsService") private _service: WebAppsService,
+    ) {}
 
     ngOnInit() {
         if (!this.lazy) {
@@ -81,18 +68,5 @@ export class WebAppListComponent implements OnInit {
         else {
             this._webapps = [];
         }
-    }
-
-    private fields(): string {
-        let fields: string = "path,site,app-pool";
-
-        if (this.website) {
-            fields = "path,app-pool";
-        }
-        else if (this.appPool) {
-            fields = "path,site";
-        }
-
-        return fields;
     }
 }

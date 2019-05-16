@@ -11,11 +11,11 @@ import { Module as Sort } from '../../common/sort.pipe';
 import { Module as Selector } from '../../common/selector';
 import { Module as Enum } from '../../common/enum.component';
 import { Module as AutoFocus } from '../../common/focus';
-
 import { AppPoolList, AppPoolItem } from './app-pool-list';
 import { AppPoolListComponent } from './app-pool-list.component';
 import { NewAppPoolComponent } from './new-app-pool.component';
 import { IdentityComponent } from './identity.component';
+import { ListModule } from 'common/list';
 
 @NgModule({
     imports: [
@@ -30,6 +30,7 @@ import { IdentityComponent } from './identity.component';
         Selector,
         Enum,
         AutoFocus,
+        ListModule,
     ],
     exports: [
         AppPoolList,

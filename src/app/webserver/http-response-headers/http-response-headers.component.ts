@@ -14,8 +14,7 @@ import {HttpResponseHeaders, CustomHeader, RedirectHeader} from './http-response
         <div *ngIf="httpResponseHeaders">
             <override-mode class="pull-right" [metadata]="httpResponseHeaders.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
             <fieldset>
-                <label>Keep Alive</label>
-                <switch class="block" [disabled]="_locked" [(model)]="httpResponseHeaders.allow_keep_alive" (modelChanged)="onModelChanged()">{{httpResponseHeaders.allow_keep_alive ? "On" : "Off"}}</switch>
+                <switch label="Keep Alive" class="block" [disabled]="_locked" [(model)]="httpResponseHeaders.allow_keep_alive" (modelChanged)="onModelChanged()">{{httpResponseHeaders.allow_keep_alive ? "On" : "Off"}}</switch>
             </fieldset>
             <tabs>
                 <tab [name]="'Custom Headers'">

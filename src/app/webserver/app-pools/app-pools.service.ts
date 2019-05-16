@@ -80,12 +80,11 @@ export class AppPoolsService {
         });
     }
 
-    start(pool: ApplicationPool) {
+    start(pool: ApplicationPool): Promise<ApplicationPool> {
         pool.status = Status.Starting;
 
-        this.update(pool, { status: "started" }).then(p => {
+        return this.update(pool, { status: "started" }).then(p => {
             pool.status = p.status;
-
             //
             // Ping
             if (pool.status == Status.Starting) {
@@ -99,47 +98,51 @@ export class AppPoolsService {
                     });
                 });
             }
+            return p;
         });
     }
 
-    stop(pool: ApplicationPool) {
+    stop(pool: ApplicationPool): Promise<ApplicationPool> {
         pool.status = Status.Stopping;
 
-        this.update(pool, { status: "stopped" }).then(p => {
+        return this.update(pool, { status: "stopped" }).then(p => {
             pool.status = p.status;
-
             //
             // Ping
             if (pool.status == Status.Stopping) {
                 let ob = interval(1000).subscribe(i => {
                     this.loadAppPool(pool.id, "status").then(p => {
                         pool.status = p.status;
-
                         if (pool.status != Status.Stopping || i >= 90) {
                             ob.unsubscribe();
                         }
                     });
                 });
             }
+            return p;
         });
     }
 
     recycle(pool: ApplicationPool) {
         if (pool.status == Status.Stopped) {
-            this.start(pool);
-            return;
+            return this.start(pool);
         }
 
-        this.stop(pool);
-
-        if (pool.status == Status.Stopping) {
-            let ob = interval(200).subscribe(i => {
-                if (pool.status == Status.Stopped || i >= 450) {
-                    ob.unsubscribe();
-                    this.start(pool);
-                }
-            });
-        }
+        return new Promise<ApplicationPool>((resolve, reject) => {
+            this.stop(pool).then(_ => {
+                this.start(pool).then(
+                    p => resolve(p),
+                ).catch(e => reject(e));
+            }).catch(e => reject(e));
+            if (pool.status == Status.Stopping) {
+                let ob = interval(200).subscribe(i => {
+                    if (pool.status == Status.Stopped || i >= 450) {
+                        ob.unsubscribe();
+                        this.start(pool);
+                    }
+                });
+            }
+        });
     }
 
     delete(pool: ApplicationPool): Promise<any> {

@@ -1,21 +1,24 @@
 
-import {Component, Input, Output, EventEmitter, ViewChild, Optional, Injector, OnInit, OnChanges, SimpleChange} from '@angular/core';
-
-import {DateTime} from '../../common/primitives';
-import {Selector} from '../../common/selector';
-
+import {Component, Input, ViewChild, Optional, Injector, OnInit, OnChanges, SimpleChange} from '@angular/core';
+import {Selector} from 'common/selector';
 import {Binding} from './site';
 import {WebSitesService} from './websites.service';
-
 
 @Component({
     selector: 'navigator',
     template: `
         <div class="wrapper">
             <div class="url inline-block">
-                <a class="hidden-xs" *ngIf="model.length > 0" [hidden]="small" [class.cert]="isHttps(0)" title="{{getUrl(0)}}" href="{{getUrl(0)}}" (click)="onNavigate($event)">
+                <div tabindex="0"
+                    class="hidden-xs hover-active"
+                    *ngIf="model.length > 0"
+                    [hidden]="small"
+                    [class.cert]="isHttps(0)"
+                    title="{{getUrl(0)}}"
+                    (click)="onNavigate($event, getUrl(0))"
+                    (keydown.enter)="onNavigate($event, getUrl(0))">
                     <span>{{getFriendlyUrl(0)}}</span>
-                </a>
+                </div>
             </div>
             <div class="selector-wrapper" *ngIf="model.length > 0">
                 <button class="no-border" [class.visible-xs]="model.length == 1 && !small" [class.background-active]="navigator.opened" (click)="openNavigator($event)">
@@ -26,7 +29,14 @@ import {WebSitesService} from './websites.service';
                     <selector #navigator>
                         <ul class="grid-list">
                             <li *ngFor="let b of model; let i = index" class="grid-item hover-active">
-                                <a [class.cert]="isHttps(i)" href="{{getUrl(i)}}" title="{{getUrl(i)}}" target="_blank" (click)="onNavigate($event)"><span>{{getFriendlyUrl(i)}}</span></a>
+                                <div tabindex="0"
+                                    class="hover-active"
+                                    [class.cert]="isHttps(i)"
+                                    title="{{getUrl(i)}}"
+                                    (click)="onNavigate($event, getUrl(i))"
+                                    (keydown.enter)="onNavigate($event, getUrl(i))">
+                                    <span>{{getFriendlyUrl(i)}}</span>
+                                </div>
                             </li>
                         </ul>
                     </selector>
@@ -36,17 +46,13 @@ import {WebSitesService} from './websites.service';
     `,
     styles: [`
         .wrapper {
-            dispay: block;
-            overflow: hidden;
+            display: block;
         }
 
         .url {
-            margin-right: -10px;
-            padding-right: 15px;
-            max-width:90%;
             float: left;
-            line-height: 25px;
         }
+
         .selector-wrapper {
             float: left;
             display: inline-flex;
@@ -149,25 +155,27 @@ export class NavigatorComponent implements OnInit, OnChanges {
         }
     }
 
-    private onNavigate(e: Event) {
+    onNavigate(e: Event, url: string) {
+        window.open(url, '_blank');
         e.stopPropagation();
     }
 
-    private openNavigator(e: Event) {
+    openNavigator(e: Event) {
         e.preventDefault();
+        e.stopPropagation();
         this.navigator.toggle();
     }
 
-    private getUrl(i: number): string {
+    getUrl(i: number): string {
         return this._service.getUrl(this.model[i], this.path);
     }
 
-    private getFriendlyUrl(i: number) {
+    getFriendlyUrl(i: number) {
         let url = this.getUrl(i);
         return url.substr(url.indexOf("://") + 3);
     }
 
-    private isHttps(i: number): boolean {
+    isHttps(i: number): boolean {
         return this.model[i].is_https;
     }
 

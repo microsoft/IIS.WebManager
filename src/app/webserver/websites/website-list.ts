@@ -1,184 +1,184 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, Inject, HostListener } from '@angular/core';
+import { Component, Input, Inject, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
-import { Selector } from '../../common/selector';
 import { WebSite } from './site';
+import { OrderBy, SortPipe } from 'common/sort.pipe';
+import { Range } from 'common/virtual-list.component';
+import { Status } from 'common/status';
+import { resolveWebsiteRoute, resolveAppPoolRoute } from 'webserver/webserver-routing.module';
 import { WebSitesService } from './websites.service';
-import { OrderBy, SortPipe } from '../../common/sort.pipe';
-import { Range } from '../../common/virtual-list.component';
-import { NotificationService } from '../../notification/notification.service';
+import { NotificationService } from 'notification/notification.service';
+import { ListOperationDef, ListOperationContext } from 'common/list';
+
+enum WebSiteOp {
+    browse = 0, start, stop, edit, delete,
+}
+
+const WebSiteOperations: ListOperationDef<WebSiteOp>[] = [
+    new ListOperationDef<WebSiteOp>(WebSiteOp.browse, "Browse", "browse"),
+    new ListOperationDef<WebSiteOp>(WebSiteOp.start, "Start", "start"),
+    new ListOperationDef<WebSiteOp>(WebSiteOp.stop, "Stop", "stop"),
+    new ListOperationDef<WebSiteOp>(WebSiteOp.edit, "Edit", "edit"),
+    new ListOperationDef<WebSiteOp>(WebSiteOp.delete, "Delete", "delete"),
+]
+
+const actionRestrictions: Map<WebSiteOp, Status> = new Map<WebSiteOp, Status>([
+    [WebSiteOp.start, Status.Stopped],
+    [WebSiteOp.stop, Status.Started],
+]);
+
+enum WebSiteFields {
+    path = 1, status = 2, appPool = 4,
+}
 
 @Component({
     selector: 'website-item',
     template: `
-    <div *ngIf="model" class="row grid-item border-color">
-        <div class='col-xs-7 col-sm-4 col-md-3 col-lg-3'>
-            <div class='name'>
-                <a class="color-normal hover-color-active" [routerLink]="['/webserver/websites', model.id]">{{model.name}}</a>
-                <small class='physical-path' *ngIf="field('path')">{{model.physical_path}}</small>
-            </div>
-        </div>
-        <div class='col-xs-3 col-sm-2 col-md-1 valign' *ngIf="field('status')">
-            <span class='status' [ngClass]="model.status">{{model.status}}</span>
-            <span title="HTTPS is ON" class="visible-xs-inline https" *ngIf="hasHttps()"></span>
-        </div>
-        <div class='col-lg-2 visible-lg valign'  *ngIf="field('app-pool')">
-            <div *ngIf="model.application_pool">
-                <a [routerLink]="['/webserver', 'app-pools', model.application_pool.id]">
-                    <span [ngClass]="model.application_pool.status">{{model.application_pool.name}}
-                        <span class="status" *ngIf="model.application_pool.status != 'started'">  ({{model.application_pool.status}})</span>
-                    </span>
-                </a>
-            </div>
-        </div>
-        <div class=' hidden-xs col-xs-4 col-xs-push-1 col-sm-3 col-md-3 valign overflow-visible' *ngIf="allow('browse')">
-            <navigator [model]="model.bindings" [right]="true"></navigator>
-        </div>
-        <div class="actions">
-            <div class="selector-wrapper">
-                <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="(_selector && _selector.opened) || false">
-                    <i class="fa fa-ellipsis-h"></i>
-                </button>
-                <selector [right]="true">
-                    <ul>
-                        <li *ngIf="allow('edit')"><a class="bttn edit" [routerLink]="['/webserver/websites', model.id]">Edit</a></li>
-                        <li *ngIf="allow('browse')"><a class="bttn link" href={{url}} title={{url}} target="_blank">Browse</a></li>
-                        <li *ngIf="allow('start')"><button class="start" [attr.disabled]="model.status != 'stopped' || null" (click)="onStart($event)">Start</button></li>
-                        <li *ngIf="allow('stop')"><button class="stop" [attr.disabled]="!started() || null" (click)="onStop($event)">Stop</button></li>
-                        <li *ngIf="allow('delete')"><button class="delete" (click)="onDelete($event)">Delete</button></li>
-                    </ul>
-                </selector>
-            </div>
+<div class="row grid-item border-color"
+    [class.selected-for-edit]="selected"
+    (click)="onItemSelected($event)"
+    (keydown.space)="onItemSelected($event)"
+    (dblclick)="onEnter($event)"
+    (keydown.enter)="onEnter($event)">
+    <div class='col-xs-7 col-sm-4 col-md-3 col-lg-3'>
+        <div class='name'>
+            <div tabindex="0" class="color-normal hover-color-active">{{model.name}}</div>
+            <small class='physical-path' *ngIf="field(${WebSiteFields.path})">{{model.physical_path}}</small>
         </div>
     </div>
-    `,
+    <div class='col-xs-3 col-sm-2 col-md-1 valign' *ngIf="field(${WebSiteFields.status})">
+        <span class='status' [ngClass]="model.status">{{model.status}}</span>
+        <span title="HTTPS is ON" class="visible-xs-inline https" *ngIf="hasHttps()"></span>
+    </div>
+    <div class='col-lg-2 visible-lg valign'  *ngIf="field(${WebSiteFields.appPool})">
+        <div *ngIf="model.application_pool">
+            <a [routerLink]="appPoolRoute" (keydown.enter)="$event.stopPropagation()">
+                <span [ngClass]="model.application_pool.status">{{model.application_pool.name}}
+                    <span *ngIf="model.application_pool.status != 'started'">({{model.application_pool.status}})</span>
+                </span>
+            </a>
+        </div>
+    </div>
+    <div class=' hidden-xs col-xs-4 col-xs-push-1 col-sm-3 col-md-3 valign overflow-visible'>
+        <navigator [model]="model.bindings" [right]="true"></navigator>
+    </div>
+</div>`,
     styles: [`
-        button {
-            border: none;
-            display: inline-flex;
-        }
+.name {
+    font-size: 16px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
 
-        .name {
-            font-size: 16px;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-        }
+.https:after {
+    font-family: FontAwesome;
+    content: "\\f023";
+    padding-left: 5px;
+}
 
-        .https:after {
-            font-family: FontAwesome;
-            content: "\\f023";
-            padding-left: 5px;
-        }
+a {
+    background: transparent;
+    display: inline;
+}
 
-        a {
-            background: transparent;
-            display: inline;
-        }
+.name small {
+    font-size: 12px;
+}
 
-        .status {
-            text-transform: capitalize;
-        }
-        
-        .name small {
-            font-size: 12px;
-        }
-
-        .name .physical-path {
-            text-transform: lowercase;
-        }
-
-        .row {
-            margin: 0;
-        }
-
-        .actions {
-            padding-top: 4px;
-        }
-
-        .selector-wrapper {
-            position: relative;
-        }
-
-        selector {
-            position:absolute;
-            right:0;
-            top: 32px;
-        }
-
-        selector button,
-        selector .bttn {
-            min-width: 125px;
-            width: 100%;
-        }
+.row {
+    margin: 0;
+}
     `]
 })
-export class WebSiteItem {
+export class WebSiteItem extends ListOperationContext<WebSiteOp> implements OnInit {
     @Input() model: WebSite;
-    @Input() actions: string = "";
-    @Input() fields: string = "name,path,status,app-pool";
+    @Input() fields: WebSiteFields;
+    private siteUrl: string;
 
-    @Output() start: EventEmitter<any> = new EventEmitter<any>();
-    @Output() stop: EventEmitter<any> = new EventEmitter<any>();
-    @Output() delete: EventEmitter<any> = new EventEmitter<any>();
-
-    @ViewChild(Selector) private _selector: Selector;
-    private _url: string;
+    constructor(
+        private router: Router,
+        private notifications: NotificationService,
+        @Inject("WebSitesService") private service: WebSitesService,
+    ) {
+        super();
+    }
 
     @HostListener('keydown', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
+        // Disable AccessibilityManager's keyboardEvent handler due to this issue:
+        // https://github.com/microsoft/IIS.WebManager/issues/360
+        // Capture enter key
         if (event.keyCode === 13) {
-            // Disable AccessibilityManager's keyboardEvent handler due to this issue:
-            // https://github.com/microsoft/IIS.WebManager/issues/360
             event.stopPropagation();
         }
     }
 
-    constructor(@Inject("WebSitesService") private _service: WebSitesService,
-                private _notificationService: NotificationService) {
+    ngOnInit(): void {
+        this.siteUrl = this.service.getDefaultUrl(this.model);
     }
 
-    private get url() {
-        if (!this._url && this.model.bindings.length > 0) {
-            this._url = this._service.getUrl(this.model.bindings[0]);
+    started() {
+        return this.model.status == Status.Started;
+    }
+
+    field(f: WebSiteFields): boolean {
+        return (this.fields & f) != 0;
+    }
+
+    get appPoolRoute() {
+        return [resolveAppPoolRoute(this.model.application_pool.id)];
+    }
+
+    getTitle(op: ListOperationDef<WebSiteOp>): string {
+        if (op.id == WebSiteOp.browse) {
+            return this.siteUrl || `${super.getTitle(op)} (unavailable)`;
         }
-
-        return this._url;
-    }
-        
-    private onDelete(e: Event) {
-        e.preventDefault();
-        this._selector.close();
-
-        this._notificationService.confirm("Delete Web Site", "Are you sure you want to delete '" + this.model.name + "'?")
-            .then(confirmed => confirmed && this._service.delete(this.model));
+        return super.getTitle(op);
     }
 
-    private onStart(e: Event) {
-        e.preventDefault();
-        this._selector.close();
-        this._service.start(this.model);
+    isDisabled(op: ListOperationDef<WebSiteOp>) {
+        let restriction = actionRestrictions.get(op.id);
+        if (restriction && this.model.status != restriction) {
+            return true;
+        }
+        if (op.id == WebSiteOp.browse && !this.siteUrl) {
+            return true;
+        }
+        return null;
     }
 
-    private onStop(e: Event) {
-        e.preventDefault();
-        this._selector.close();
-        this._service.stop(this.model);
+    execute(op: ListOperationDef<WebSiteOp>): Promise<any> {
+        switch (op.id) {
+            case WebSiteOp.browse:
+                return Promise.resolve(window.open(this.siteUrl, '_blank'));
+
+            case WebSiteOp.start:
+                return this.service.start(this.model);
+
+            case WebSiteOp.stop:
+                return this.notifications.confirmAsync(
+                    "Stop Web Site",
+                    `Are you sure you want to stop "${this.model.name}"?`,
+                    () => this.service.stop(this.model),
+                );
+
+            case WebSiteOp.edit:
+                return this.router.navigate([resolveWebsiteRoute(this.model.id)]);
+
+            case WebSiteOp.delete:
+                return this.notifications.confirmAsync(
+                    "Delete Web Site",
+                    `Are you sure you want to delete "${this.model.name}"?`,
+                    () => this.service.delete(this.model),
+                );
+        }
     }
 
-    private allow(action: string): boolean {
-        return this.actions.indexOf(action) >= 0;
+    edit() {
+        return this.router.navigate([resolveWebsiteRoute(this.model.id)]);
     }
 
-    private started() {
-        return this.model.status == 'started';
-    }
-
-    private field(f: string): boolean {
-        return this.fields.indexOf(f) >= 0;
-    }
-
-    private hasHttps(): boolean {
+    hasHttps(): boolean {
         for (var i = 0; i < this.model.bindings.length; ++i) {
             if (this.model.bindings[i].is_https) {
                 return true;
@@ -186,95 +186,116 @@ export class WebSiteItem {
         }
         return false;
     }
-
-    private openSelector(e: Event) {
-        e.preventDefault();
-        this._selector.toggle();
-    }
-
-    private prevent(e: Event) {
-        e.preventDefault();
-    }
 }
 
+export enum Perspective {
+    WebServer = 0, AppPool,
+}
 
+const perspectives = [
+    // Index 0 => WebServer
+    WebSiteFields.path | WebSiteFields.status | WebSiteFields.appPool,
+    // Index 1 => AppPool
+    WebSiteFields.path | WebSiteFields.status,
+];
 
 @Component({
     selector: 'website-list',
     template: `
-        <div class="container-fluid">
-            <div class="hidden-xs border-active grid-list-header row" [hidden]="model.length == 0">
-                <label class="col-xs-8 col-sm-4 col-md-3 col-lg-3" [ngClass]="_orderBy.css('name')" (click)="doSort('name')"
-                    tabindex="0" aria-label="Name Header" role="button" (keyup.enter)="doSort('name')" (keyup.space)="doSort('name')">Name</label>
-                <label class="col-xs-3 col-md-1 col-lg-1" [ngClass]="_orderBy.css('status')" (click)="doSort('status')"
-                    tabindex="0" aria-label="Status Header" role="button" (keyup.space)="doSort('status')" (keyup.enter)="doSort('status')">Status</label>
-                <label class="col-lg-2 visible-lg" *ngIf="hasField('app-pool')" [ngClass]="_orderBy.css('application_pool.name')" (click)="doSort('application_pool.name')"
-                    tabindex="0" aria-label="Application Pool Header" role="button" (keyup.enter)="doSort('application_pool.name')" (keyup.space)="doSort('application_pool.name')">Application Pool</label>
-            </div>
-            <virtual-list class="grid-list"
-                        *ngIf="model"
-                        [count]="model.length"
-                        (rangeChange)="onRangeChange($event)">
-                <li class="hover-editing" tabindex="-1" *ngFor="let s of _view">
-                    <website-item (click)="onItemClicked($event, s)" (dblclick)="onDblClick($event, s)" [model]="s" [actions]="actions" [fields]="fields"></website-item>
-                </li>
-            </virtual-list>
-        </div>
+<list-operations-bar *ngIf="!canAdd" [operations]="operations" [context]="selected"></list-operations-bar>
+<list-operations-bar *ngIf="canAdd" [operations]="operations" [context]="selected">
+    <selector
+        class="container-fluid list-operation-addon-view"
+        #newWebSite>
+        <new-website
+            *ngIf="newWebSite.opened"
+            (created)="newWebSite.close()"
+            (cancel)="newWebSite.close()">
+        </new-website>
+    </selector>
+    <button
+        class="list-operation-addon-left add list-action-button"
+        [class.background-active]="newWebSite.opened"
+        (click)="newWebSite.toggle()">
+        Create
+    </button>
+</list-operations-bar>
+<div class="container-fluid">
+    <div class="hidden-xs border-active grid-list-header row" [hidden]="model.length == 0">
+        <label class="col-xs-8 col-sm-4 col-md-3 col-lg-3" [ngClass]="_orderBy.css('name')" (click)="doSort('name')"
+            tabindex="0" aria-label="Name Header" role="button" (keyup.enter)="doSort('name')" (keyup.space)="doSort('name')">Name</label>
+        <label class="col-xs-3 col-md-1 col-lg-1" [ngClass]="_orderBy.css('status')" (click)="doSort('status')"
+            tabindex="0" aria-label="Status Header" role="button" (keyup.space)="doSort('status')" (keyup.enter)="doSort('status')">Status</label>
+        <label class="col-lg-2 visible-lg" *ngIf="hasField(${WebSiteFields.appPool})" [ngClass]="_orderBy.css('application_pool.name')" (click)="doSort('application_pool.name')"
+            tabindex="0" aria-label="Application Pool Header" role="button" (keyup.enter)="doSort('application_pool.name')" (keyup.space)="doSort('application_pool.name')">Application Pool</label>
+    </div>
+    <virtual-list class="grid-list"
+                *ngIf="model"
+                [count]="model.length"
+                (rangeChange)="onRangeChange($event)">
+        <li class="hover-editing" tabindex="-1" *ngFor="let s of _view">
+            <website-item [model]="s" [fields]="fields" (onSelected)="onItemSelected($event)"></website-item>
+        </li>
+    </virtual-list>
+</div>
     `,
     styles: [`
-        .container-fluid,
-        .row {
-            margin: 0;
-            padding: 0;
-        }
+.container-fluid,
+.row {
+    margin: 0;
+    padding: 0;
+}
     `]
 })
-export class WebSiteList {
+export class WebSiteList implements OnInit {
     @Input() model: Array<WebSite>;
-    @Input() fields: string = "name,path,status,app-pool";
-    @Input() actions: string = "edit,browse,start,stop,delete";
-    @Output() itemSelected: EventEmitter<any> = new EventEmitter();
+    @Input() perspective: Perspective = Perspective.WebServer;
+    fields: WebSiteFields;
 
+    private _selected: WebSiteItem;
     private _orderBy: OrderBy = new OrderBy();
     private _sortPipe: SortPipe = new SortPipe();
     private _range: Range = new Range(0, 0);
     private _view: Array<WebSite> = [];
 
-    constructor(private _router: Router) {
-    }
+    constructor(
+        @Inject("WebSitesService") private service: WebSitesService,
+    ){}
 
     public ngOnInit() {
         this.onRangeChange(this._range);
+        this.fields = perspectives[this.perspective];
     }
 
-    private onItemClicked(e: Event, site: WebSite) {
-        if (e.defaultPrevented) {
-            return;
+    get canAdd() {
+        return this.perspective == Perspective.WebServer && this.service.installStatus != Status.Stopped;
+    }
+
+    get operations() {
+        return WebSiteOperations;
+    }
+
+    get selected() {
+        return this._selected;
+    }
+
+    onItemSelected(item: WebSiteItem) {
+        if (this._selected) {
+            this._selected.selected = false;
         }
-
-        if (this.itemSelected.observers.length > 0) {
-            this.itemSelected.emit(site);
-        }
+        this._selected = item;
     }
 
-    private onDblClick(e: Event, site: WebSite) {
-        if (e.defaultPrevented) {
-            return;
-        }
-
-        this._router.navigate(['webserver', 'websites', site.id]);
+    hasField(f: WebSiteFields): boolean {
+        return (this.fields & f) != 0;
     }
 
-    private hasField(field: string): boolean {
-        return this.fields.indexOf(field) >= 0;
-    }
-
-    private onRangeChange(range: Range) {
+    onRangeChange(range: Range) {
         Range.fillView(this._view, this.model, range);
         this._range = range;
     }
 
-    private doSort(field: string) {
+    doSort(field: string) {
         this._orderBy.sort(field);
         this._sortPipe.transform(this.model, this._orderBy.Field, this._orderBy.Asc, null, true);
         this.onRangeChange(this._range);

@@ -16,8 +16,7 @@ import { InboundSection, InboundRule, PatternSyntax, ActionType, ConditionMatchC
                 (modelChanged)="onModelChanged()"></override-mode>
             <div>
                 <fieldset>
-                    <label>Original Url Encoding</label>
-                    <switch *ngIf="_settings.use_original_url_encoding !== undefined" [(model)]="_settings.use_original_url_encoding" (modelChanged)="onModelChanged()">{{_settings.use_original_url_encoding ? "Yes" : "No"}}</switch>
+                    <switch label="Original Url Encoding" *ngIf="_settings.use_original_url_encoding !== undefined" [(model)]="_settings.use_original_url_encoding" (modelChanged)="onModelChanged()">{{_settings.use_original_url_encoding ? "Yes" : "No"}}</switch>
                 </fieldset>
                 
                 <button class="create" [class.background-active]="newRule.opened" (click)="newRule.toggle()">Create Rule <i class="fa fa-caret-down"></i></button>

@@ -55,8 +55,7 @@ import { first } from 'rxjs/operators'
 
                 <div class="col-xs-12 overflow-visible" *ngIf="isHttp()">
                     <fieldset class="inline-block">
-                        <label>HTTPS</label>
-                        <switch class="block" (modelChange)="model.is_https=$event" [model]="model.is_https" (modelChanged)=onHttps()>{{model.is_https ? "On" : "Off"}}</switch>
+                        <switch label="HTTPS" class="block" (modelChange)="model.is_https=$event" [model]="model.is_https" (modelChanged)=onHttps()>{{model.is_https ? "On" : "Off"}}</switch>
                     </fieldset>
                     <fieldset class="inline-block cert bottom" *ngIf="model.is_https">
                         <button (click)="selectCert()" class="background-normal select-cert" [class.background-active]="!!_certSelect.first && _certSelect.first.opened">
@@ -77,8 +76,7 @@ import { first } from 'rxjs/operators'
                 </div>
                 <div class="col-xs-8">
                     <fieldset class="inline-block">
-                        <label>Custom Protocol</label>
-                        <switch class="block" [model]="!isHttp()" (modelChange)="onCustomProtocol($event)">{{isHttp() ? "Off" : "On"}}</switch>
+                        <switch label="Custom Protocol" class="block" [model]="!isHttp()" (modelChange)="onCustomProtocol($event)">{{isHttp() ? "Off" : "On"}}</switch>
                     </fieldset>
                     <fieldset class="inline-block protocol" *ngIf="!isHttp()">
                         <label>Protocol</label>

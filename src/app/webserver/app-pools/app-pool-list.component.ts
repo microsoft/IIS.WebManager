@@ -1,5 +1,4 @@
 import {Component, OnInit, OnDestroy, Input, Output, EventEmitter, Inject} from '@angular/core';
-import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {AppPoolsService} from './app-pools.service';
 import {ApplicationPool} from './app-pool';
@@ -8,14 +7,11 @@ import {ApplicationPool} from './app-pool';
     selector: 'app-pools',
     template: `
         <loading *ngIf="!_appPools && !lazy"></loading>
-        <div>
-            <button [class.background-active]="newAppPool.opened" (click)="newAppPool.toggle()">Create Application Pool <i class="fa fa-caret-down"></i></button>
-            <selector #newAppPool class="container-fluid">
-                <new-app-pool *ngIf="newAppPool.opened" (created)="newAppPool.close()" (cancel)="newAppPool.close()"></new-app-pool>
-            </selector>
-        </div>
-        <br/>
-        <app-pool-list *ngIf="_appPools" [model]="_appPools" (itemSelected)="onItemClicked($event)"></app-pool-list>
+        <app-pool-list
+            *ngIf="_appPools"
+            [model]="_appPools"
+            [listingOnly]="listingOnly"
+            (itemSelected)="onItemSelected($event)"></app-pool-list>
     `,
     styles: [`
         br {
@@ -24,16 +20,16 @@ import {ApplicationPool} from './app-pool';
     `]
 })
 export class AppPoolListComponent implements OnInit, OnDestroy {
-    @Input() actions: string = "recycle,start,stop,delete";
+    @Input() listingOnly: boolean = false;
     @Input() lazy: boolean = false;
     @Output() itemSelected: EventEmitter<any> = new EventEmitter();
 
     private _appPools: Array<ApplicationPool>;
     private _subs: Array<Subscription> = [];
 
-    constructor(@Inject("AppPoolsService") private _service: AppPoolsService,
-                private _router: Router) {
-    }
+    constructor(
+        @Inject("AppPoolsService") private _service: AppPoolsService,
+    ) {}
 
     ngOnInit() {
         if (!this.lazy) {
@@ -60,7 +56,7 @@ export class AppPoolListComponent implements OnInit, OnDestroy {
         });
     }
 
-    private onItemClicked(pool: ApplicationPool) {
+    onItemSelected(pool: ApplicationPool) {
         if (this.itemSelected.observers.length > 0) {
             this.itemSelected.emit(pool);
         }

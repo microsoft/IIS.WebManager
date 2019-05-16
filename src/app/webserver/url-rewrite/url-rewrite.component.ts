@@ -1,5 +1,4 @@
 ﻿import { Component, OnInit } from '@angular/core';
-
 import { Status } from '../../common/status';
 import { NotificationService } from '../../notification/notification.service';
 import { UrlRewriteService } from './service/url-rewrite.service';
@@ -8,7 +7,9 @@ import { UrlRewriteService } from './service/url-rewrite.service';
     template: `
         <loading *ngIf="service.status == 'unknown' && !service.error"></loading>
         <error [error]="service.error"></error>
-        <switch class="install" *ngIf="service.webserverScope && service.status != 'unknown'" #s
+        <switch label="Enable"
+                *ngIf="service.webserverScope && service.status != 'unknown'"
+                class="install" #s
                 [auto]="false"
                 [model]="service.status == 'started' || service.status == 'starting'"
                 [disabled]="service.status == 'starting' || service.status == 'stopping'"

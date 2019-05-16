@@ -8,8 +8,7 @@ import {IpRestrictions} from './ip-restrictions'
     template: `
         <div class="block">
             <fieldset class="inline-block">
-                <label>Restrict Concurrent Requests</label>
-                <switch class="block" [(model)]="model.deny_by_concurrent_requests.enabled" (modelChanged)="onModelChanged()">{{model.deny_by_concurrent_requests.enabled ? "Yes" : "No"}}</switch>
+                <switch label="Restrict Concurrent Requests" class="block" [(model)]="model.deny_by_concurrent_requests.enabled" (modelChanged)="onModelChanged()">{{model.deny_by_concurrent_requests.enabled ? "Yes" : "No"}}</switch>
             </fieldset>
             <fieldset class="inline-block" *ngIf="model.deny_by_concurrent_requests.enabled">
                 <label>Max Concurrent Requests</label>
@@ -19,8 +18,7 @@ import {IpRestrictions} from './ip-restrictions'
 
         <div class="block">
             <fieldset class="inline-block">
-                <label>Restrict Request Rate</label>
-                <switch class="block" [(model)]="model.deny_by_request_rate.enabled" (modelChanged)="onModelChanged()">{{model.deny_by_request_rate.enabled ? "Yes" : "No"}}</switch>
+                <switch label="Restrict Request Rate" class="block" [(model)]="model.deny_by_request_rate.enabled" (modelChanged)="onModelChanged()">{{model.deny_by_request_rate.enabled ? "Yes" : "No"}}</switch>
             </fieldset>
             <fieldset class="inline-block">
                 <fieldset class="inline-block" *ngIf="model.deny_by_request_rate.enabled">
@@ -35,8 +33,7 @@ import {IpRestrictions} from './ip-restrictions'
         </div>
 
         <fieldset>
-            <label>Log Only When Denied</label>
-            <switch class="block" [(model)]="model.logging_only_mode" (modelChanged)="onModelChanged()">{{model.logging_only_mode ? "Yes" : "No"}}</switch>
+            <switch label="Log Only When Denied" class="block" [(model)]="model.logging_only_mode" (modelChanged)="onModelChanged()">{{model.logging_only_mode ? "Yes" : "No"}}</switch>
         </fieldset>
     `,
     styles: [`

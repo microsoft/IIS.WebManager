@@ -1,4 +1,17 @@
-import { NgModule, Component, Input, Output, ContentChildren, QueryList, OnInit, OnDestroy, EventEmitter, AfterViewInit, ElementRef, ViewChildren } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    Input,
+    NgModule,
+    OnDestroy,
+    OnInit,
+    Output,
+    QueryList,
+    ViewChildren,
+} from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -9,6 +22,8 @@ import { Module as DynamicModule } from './dynamic.component';
 import { FeatureVTabsComponent } from './feature-vtabs.component';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { IsWAC } from 'environments/environment';
+import { TitlesModule } from 'header/titles.module';
+import { Heading } from 'header/feature-header.component';
 
 @Component({
     selector: 'vtabs',
@@ -17,52 +32,71 @@ import { IsWAC } from 'environments/environment';
     // That is because users are allowed to use only tab key, not arrow keys, unlike the WAC mode.
     template: `
         <div class="vtabs">
-            <ul class="items">
+            <div *ngIf="header" class="vtab-header items">{{header}}</div>
+            <ul class="items sme-focus-zone">
                 <ng-container *ngFor="let category of getCategories()">
-                    <div class="sme-focus-zone">
-                        <li [attr.tabindex]=" isWAC() ? '0' : null " *ngIf="!!category" class="separator">
-                            <div class="horizontal-strike">
-                                <span>{{category}}</span>
-                            </div>
+                    <ng-container *ngIf="!IsHidden(category)">
+                        <li *ngIf="category" class="separator">
+                            <div class="horizontal-strike"><span class="category">{{category}}</span></div>
                         </li>
-                        <li *ngFor="let tab of getTabs(category)"
-                            tabindex="0"
+                        <li tabindex="0"
                             #tabLabels
                             class="hover-edit"
+                            *ngFor="let tab of getTabs(category)"
                             [ngClass]="{active: tab.active}"
                             (keyup.space)="selectItem(tab)"
                             (keyup.enter)="selectItem(tab)"
-                            (focus)=" isWAC() ? selectItem(tab) : '' "
                             (click)="selectItem(tab)">
-                            <i [class]="tab.ico"></i>
-                            <span class="border-active">{{tab.name}}</span>
+                            <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
                         </li>
-                    </div>
+                    </ng-container>
                 </ng-container>
             </ul>
-            <div class="content sme-focus-zone">
-                <ng-content></ng-content>
-            </div>
+        </div>
+        <div class="content sme-focus-zone">
+            <ng-content></ng-content>
         </div>
     `,
     styles: [`
-        .content {
-            min-width: 320px;
-        }
+.content {
+    min-width: 320px;
+    height: 100vh;
+}
 
-        li:focus {
-            outline-style: dashed;
-            outline-color: #000;
-            outline-width: 2px;
-            outline-offset: -2px;
-            text-decoration: underline;
-        }
-    `],
+li:focus {
+    outline-style: dashed;
+    outline-color: #000;
+    outline-width: 2px;
+    outline-offset: -2px;
+    text-decoration: underline;
+}
+
+.vtab-header {
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    margin-left: 1em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.vtabs {
+    width: 200px;
+    position: sticky;
+    float: left;
+    height: 100vh;
+}
+
+.category {
+    color: #000;
+}
+`],
     host: {
         '(window:resize)': 'refresh()'
     }
 })
 export class VTabsComponent implements OnDestroy, AfterViewInit {
+    @Input() header: string;
     @Input() markLocation: boolean;
     @Input() defaultTab: string;
     @Output() activate: EventEmitter<Item> = new EventEmitter();
@@ -72,16 +106,17 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     private _sectionHelper: SectionHelper;
     private _subscriptions: Array<Subscription> = [];
     private logger: Logger;
+    private hiddenCategories: Set<string> = new Set<string>();
     categorizedTabs: Map<string, Item[]> = new Map<string, Item[]>();
+    onSelectItem: Subject<Item> = new ReplaySubject<Item>(1);
 
     @ViewChildren('tabLabels') tabLabels: QueryList<ElementRef>;
-    onSelectItem: Subject<string> = new ReplaySubject<string>();
 
     constructor(
         private _activatedRoute: ActivatedRoute,
         private _location: Location,
         private _router: Router,
-        private factory: LoggerFactory,
+        factory: LoggerFactory,
     ) {
         this.tabs = [];
         this.logger = factory.Create(this);
@@ -129,6 +164,10 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         this.onSelectItem.unsubscribe();
     }
 
+    public IsHidden(category: string) {
+        return this.hiddenCategories.has(category);
+    }
+
     public addTab(tab: Item) {
         const category = SectionHelper.normalize(tab.category || "");
         if (!this.categorizedTabs[category]) {
@@ -167,7 +206,15 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         })
     }
 
-    selectItem(tab: Item) {
+    public showCategory(name: string, show: boolean) {
+        if (show) {
+            this.hiddenCategories.delete(name);
+        } else {
+            this.hiddenCategories.add(name);
+        }
+    }
+
+    public selectItem(tab: Item) {
         if (!tab.routerLink) {
             this._sectionHelper.selectSection(tab.fullName);
         }
@@ -184,9 +231,10 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         }
 
         this.tabs.forEach(t => t.deactivate());
-        this.tabs[index].activate();
-        this.activate.emit(this.tabs[index]);
-        this.onSelectItem.next(section);
+        let selectedTab = this.tabs[index];
+        selectedTab.activate();
+        this.activate.emit(selectedTab);
+        this.onSelectItem.next(selectedTab);
     }
 
     private isWAC() {
@@ -197,34 +245,28 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
 @Component({
     selector: '[vtabs item][vtabs ng-container item]',
     template: `
-        <div *ngIf="!(!active)">
-            <h1 class="border-active">
-                <span>{{name}}</span>
-            </h1>
-            <ng-content></ng-content>
-        </div>
+<div *ngIf="active">
+    <titles></titles>
+    <div class="vtab-content">
+        <ng-content></ng-content>
+    </div>
+</div>
     `,
     styles: [`
-        h1 {
-            margin: 0;
-            padding: 0;
-            margin-bottom: 30px;
-            line-height: 34px;
-            font-size: 18px;
-            border-bottom-style: dotted;
-            border-bottom-width: 1px;
-        }
+span:focus {
+    outline-style: dashed;
+    outline-color: #000;
+    outline-width: 2px;
+    outline-offset: -2px;
+    text-decoration: underline;
+}
 
-        span:focus {
-            outline-style: dashed;
-            outline-color: #000;
-            outline-width: 2px;
-            outline-offset: -2px;
-            text-decoration: underline;
-        }
+.vtab-content {
+    padding-left: 20px;
+}
     `],
 })
-export class Item implements OnInit, OnDestroy {
+export class Item implements OnInit, OnDestroy, Heading {
 
     static Join(category: string, name: string) {
         return `${SectionHelper.normalize(category)}+${SectionHelper.normalize(name)}`;
@@ -243,15 +285,10 @@ export class Item implements OnInit, OnDestroy {
 
     @ContentChildren(DynamicComponent) dynamicChildren: QueryList<DynamicComponent>;
 
-    private logger: Logger;
-
     constructor(
         private _tabs: VTabsComponent,
         private _router: Router,
-        private factory: LoggerFactory,
-    ){
-        this.logger = factory.Create(this);
-    }
+    ){}
 
     ngOnInit() {
         this._tabs.addTab(this);
@@ -305,12 +342,13 @@ export const TABS: any[] = [
         FormsModule,
         CommonModule,
         DynamicModule,
+        TitlesModule,
     ],
     exports: [
-        TABS
+        TABS,
     ],
     declarations: [
-        TABS
+        TABS,
     ]
 })
 export class Module { }

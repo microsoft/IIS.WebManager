@@ -32,11 +32,10 @@ import { AuthorizationService } from './authorization.service';
                 </div>
             </fieldset>
             <fieldset>
-                <label class="inline-block">Use Specific HTTP Methods</label>
                 <tooltip>
                     When turned on, the rule will only be applied to requests that use one of the listed HTTP methods.
                 </tooltip>
-                <switch class="block" [model]="!_allVerbs" (modelChange)="_allVerbs=!$event">{{_allVerbs ? "No" : "Yes"}}</switch>
+                <switch label="Use Specific HTTP Methods" class="block" [model]="!_allVerbs" (modelChange)="_allVerbs=!$event">{{_allVerbs ? "No" : "Yes"}}</switch>
             </fieldset>
             <fieldset class="no-label" *ngIf="!_allVerbs">
                 <input placeholder="ex: GET, PUT, POST, DELETE" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="rule.verbs" />

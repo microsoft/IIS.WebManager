@@ -1,7 +1,7 @@
 
 import {Component, Input, Output, EventEmitter} from '@angular/core';
 
-import {RapidFailProtection, LoadBalancerCapabilities} from './app-pool';
+import {RapidFailProtection} from './app-pool';
 
 
 @Component({
@@ -9,7 +9,7 @@ import {RapidFailProtection, LoadBalancerCapabilities} from './app-pool';
     template: `            
         <div>
             <fieldset>
-                <switch class="block" [(model)]="model.enabled" (modelChanged)="onModelChanged()">
+                <switch label="Enable" class="block" [(model)]="model.enabled" (modelChanged)="onModelChanged()">
                     {{model.enabled ? "On" : "Off"}}
                 </switch>
             </fieldset>
@@ -31,8 +31,7 @@ import {RapidFailProtection, LoadBalancerCapabilities} from './app-pool';
                 </enum>
             </fieldset>
             <fieldset>
-                <label>Shutdown Action</label>
-                <switch class="block" [model]="model.auto_shutdown_exe" (modelChange)="onAutoShutdownExe($event)">
+                <switch label="Shutdown Action" class="block" [model]="model.auto_shutdown_exe" (modelChange)="onAutoShutdownExe($event)">
                     {{model.auto_shutdown_exe ? "On" : "Off"}}
                 </switch>
             </fieldset>

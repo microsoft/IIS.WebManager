@@ -3,55 +3,80 @@ import { ActivatedRoute } from '@angular/router';
 import { WebSite } from './site';
 import { WebSitesService } from './websites.service';
 import { DiffUtil } from 'utils/diff';
-import { OptionsService } from 'main/options.service';
-import { BreadcrumbsService } from 'header/breadcrumbs.service';
 import { BreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
-import { WebSitesModuleName } from 'main/settings';
+import { WebSitesModuleName, WebSiteModuleIcon } from 'main/settings';
+import { BreadcrumbsResolver, FeatureContext } from 'common/feature-vtabs.component';
+import { ModelStatusUpdater, UpdateType } from 'header/model-header.component';
+import { TitlesService } from 'header/titles.service';
+import { resolveWebsiteRoute } from 'webserver/webserver-routing.module';
+
+const crumbsRoot = BreadcrumbsRoot.concat(WebSitesCrumb);
+class WebSiteBreadcrumbResolver implements BreadcrumbsResolver {
+    resolve(model: FeatureContext): Breadcrumb[] {
+        const site = <WebSite> model;
+        return crumbsRoot.concat(<Breadcrumb>{ label: site.name, routerLink: [resolveWebsiteRoute(site.id)] });
+    }
+}
+
+class WebSiteStatusUpdater extends ModelStatusUpdater {
+    constructor(
+        service: WebSitesService,
+        site: WebSite,
+    ) {
+        super(
+            WebSitesModuleName,
+            WebSiteModuleIcon,
+            site.name,
+            site,
+            new Map<UpdateType, () => void>([
+                [UpdateType.Start, () => service.start(site)],
+                [UpdateType.Stop, () => service.stop(site)],
+                // TODO: consider if delete button is appropriate on model header
+                // [UpdateType.delete, () => service.delete(site)],
+            ]),
+        )
+    }
+}
 
 @Component({
     template: `
-        <not-found *ngIf="notFound"></not-found>
-        <loading *ngIf="!(site || notFound)"></loading>
-        <website-header *ngIf="site" [site]="site" class="crumb-content" [class.sidebar-nav-content]="_options.active"></website-header>
-        <feature-vtabs *ngIf="site" [model]="site" [resource]="'website'" [subcategory]="'${WebSitesModuleName}'">
-            <website-general class="general-tab" [site]="site" (modelChanged)="onModelChanged()"></website-general>
-        </feature-vtabs>
+<not-found *ngIf="notFound"></not-found>
+<loading *ngIf="!(site || notFound)"></loading>
+<feature-vtabs
+    *ngIf="site"
+    [model]="site"
+    [resource]="'website'"
+    [subcategory]="'${WebSitesModuleName}'"
+    [breadcrumbsResolver]="breadcrumbsResolver">
+    <website-general class="general-tab" [site]="site" (modelChanged)="onModelChanged()"></website-general>
+</feature-vtabs>
     `,
 })
 export class WebSiteComponent implements OnInit {
     id: string;
     site: WebSite;
     notFound: boolean;
+    breadcrumbsResolver = new WebSiteBreadcrumbResolver();
 
     private _original: any;
 
     constructor(
-        private _route: ActivatedRoute,
-        private _options: OptionsService,
-        private _crumbs: BreadcrumbsService,
-        @Inject("WebSitesService") private _service: WebSitesService,
+        private title: TitlesService,
+        private route: ActivatedRoute,
+        @Inject("WebSitesService") private service: WebSitesService,
     ){
-        this.id = this._route.snapshot.params['id'];
+        this.id = this.route.snapshot.params['id'];
     }
 
     ngOnInit() {
-        //
-        // Async get website
-        this._service.get(this.id)
-            .then(s => {
-                this.setSite(s);
-                this._crumbs.load(
-                    BreadcrumbsRoot.concat(
-                        WebSitesCrumb,
-                        <Breadcrumb>{ label: s.name },
-                    )
-                );
-            })
-            .catch(s => {
-                if (s && s.status == '404') {
-                    this.notFound = true;
-                }
-            });
+        var site = this.service.get(this.id);
+        site.then(s => {
+            this.setSite(s);
+        }).catch(s => {
+            if (s && s.status == '404') {
+                this.notFound = true;
+            }
+        });
     }
 
     onModelChanged() {
@@ -62,12 +87,13 @@ export class WebSiteComponent implements OnInit {
             var changes = DiffUtil.diff(this._original, this.site);
             
             if (Object.keys(changes).length > 0) {
-                this._service.update(this.site, changes).then(s => this.setSite(s));
+                this.service.update(this.site, changes).then(s => this.setSite(s));
             }
         }
     }
 
     private setSite(s) {
+        this.title.loadModelUpdater(new WebSiteStatusUpdater(this.service,s));
         this.site = s;
         this._original = JSON.parse(JSON.stringify(s));
     }

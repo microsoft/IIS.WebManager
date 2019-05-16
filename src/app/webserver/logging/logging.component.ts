@@ -11,7 +11,9 @@ import { NotificationService } from '../../notification/notification.service';
     template: `
         <loading *ngIf="service.status == 'unknown' && !service.error"></loading>
         <error [error]="service.error"></error>
-        <switch class="install" *ngIf="service.webserverScope && service.status != 'unknown'" #s
+        <switch label="Enable"
+                *ngIf="service.webserverScope && service.status != 'unknown'"
+                class="install" #s
                 [auto]="false"
                 [model]="service.status == 'started' || service.status == 'starting'"
                 [disabled]="service.status == 'starting' || service.status == 'stopping'"
@@ -23,8 +25,7 @@ import { NotificationService } from '../../notification/notification.service';
         <override-mode class="pull-right" *ngIf="logging" [scope]="logging.scope" [metadata]="logging.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="logging">
             <fieldset class="collect">
-                <label>Collect Logs</label>
-                <switch class="block" [(model)]="logging.enabled" (modelChanged)="onModelChanged()">{{logging.enabled ? "On" : "Off"}}</switch>
+                <switch label="Collect Logs" class="block" [(model)]="logging.enabled" (modelChanged)="onModelChanged()">{{logging.enabled ? "On" : "Off"}}</switch>
             </fieldset>
             <tabs [hidden]="!logging.enabled && logging.scope">
                 <tab *ngIf="this.logging.scope && logging.log_per_site" [name]="'Logs'">
@@ -38,8 +39,7 @@ import { NotificationService } from '../../notification/notification.service';
                         <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="logging.directory" (selected)="onSelectPath($event)"></server-file-selector>
                     </fieldset>
                     <fieldset *ngIf="!logging.website">
-                        <label>Separate Log per Web Site</label>
-                        <switch class="block" [(model)]="logging.log_per_site" (modelChanged)="onModelChanged()">{{logging.log_per_site ? "On" : "Off"}}</switch>
+                        <switch label="Separate Log per Web Site" class="block" [(model)]="logging.log_per_site" (modelChanged)="onModelChanged()">{{logging.log_per_site ? "On" : "Off"}}</switch>
                     </fieldset>
                     <fieldset>
                         <format [model]="logging" (modelChange)="onModelChanged()"></format>

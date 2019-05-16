@@ -1,12 +1,10 @@
 import { Component, Input, Inject, ViewChild } from '@angular/core';
-
-import { Selector } from '../../common/selector';
-import { Humanizer } from '../../common/primitives';
-import { HttpClient } from '../../common/http-client';
-
+import { Selector } from 'common/selector';
+import { Humanizer } from 'common/primitives';
+import { HttpClient } from 'common/http-client';
 import { TraceLog } from './request-tracing';
 import { RequestTracingService } from './request-tracing.service';
-import { FilesService } from '../../files/files.service';
+import { FilesService } from 'files/files.service';
 
 @Component({
     selector: 'trace-file',

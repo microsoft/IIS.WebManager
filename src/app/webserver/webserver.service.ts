@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, interval } from "rxjs";
+import { Observable, interval, ReplaySubject, Subject } from "rxjs";
 import { Status } from '../common/status';
 import { HttpClient } from '../common/http-client';
 import { ApiError, ApiErrorType } from '../error/api-error';
@@ -10,7 +10,7 @@ export class WebServerService {
     public error: ApiError;
 
     private _server: WebServer;
-    private _statusChanged: BehaviorSubject<Status> = new BehaviorSubject<Status>(Status.Unknown);
+    private _statusChanged: Subject<Status> = new ReplaySubject<Status>(1);
     private _installStatus: Status = Status.Unknown;
 
     constructor(private _http: HttpClient) {
@@ -79,7 +79,7 @@ export class WebServerService {
     }
 
     restart() {
-        if (this._statusChanged.getValue() != Status.Started) {
+        if (this._server.status != Status.Started) {
             this.start();
             return;
         }
@@ -130,8 +130,6 @@ export class WebServerService {
     }
 
     private triggerStatusUpdate() {
-        if (this._statusChanged.getValue() != this._server.status) {
-            this._statusChanged.next(this._server.status);
-        }
+        this._statusChanged.next(this._server.status);
     }
 }
