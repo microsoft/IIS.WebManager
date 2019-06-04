@@ -6,7 +6,7 @@ import { PowerShellScripts } from 'generated/powershell-scripts'
 import { Request, Response, ResponseOptions, Headers } from '@angular/http'
 import { WACInfo } from 'runtime/runtime.wac'
 import { LoggerFactory, Logger, LogLevel, logError, instrument } from 'diagnostics/logger'
-import { map, mergeMap, shareReplay } from 'rxjs/operators'
+import { map, mergeMap, shareReplay, catchError } from 'rxjs/operators'
 import { IsProduction } from 'environments/environment';
 
 const PS_SESSION_KEY = 'wac-iis'
@@ -116,6 +116,13 @@ export class PowershellService {
           }
           return rtnObject;
         });
+      }),
+      catchError((e, _) => {
+        let rethrow = e;
+        if (e.name == "AjaxError" && e.status == 400 && e.response.error) {
+          rethrow = e.response.error;
+        }
+        throw rethrow;
       }),
     );
   }

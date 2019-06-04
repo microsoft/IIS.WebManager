@@ -113,7 +113,7 @@ export class WebServerComponent implements OnInit {
                         }
                     })
                 } else {
-                    reject(this.failure = `Unknown error has occurred when trying to initialize Web Server Module: ${e}`)
+                    reject(this.failure = `Unknown error has occurred when trying to initialize Web Server Module: ${JSON.stringify(e)}`)
                 }
                 throw e
             }).then(ws => {
