@@ -31,7 +31,7 @@
           "conditions": [
             {
               "localhost": true,
-              "script": "@{ State = if (Get-Service w3svc -ErrorAction SilentlyContinue) { 'Available' } else { 'NotConfigured' }; Message = 'IIS Web Server cannot be found on the host. Enable \"Web Server\" windows feature to manage IIS Web Server' }"
+              "script": "@{ State = if (Get-Service w3svc -ErrorAction SilentlyContinue) { 'Available' } else { 'NotSupported' }; Message = 'IIS Web Server cannot be found on the host. Enable \"Web Server\" windows feature to manage IIS Web Server' }"
             }
           ]
         }
