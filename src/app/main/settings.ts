@@ -1,10 +1,12 @@
-export var SETTINGS : { [key:string]: string} = {
-    "version": "3.0.0",
-    "api_version": "2.2.1",
-    "api_setup_version": "2.2.1",
-    "api_download_url": "https://go.microsoft.com/fwlink/?linkid=2080134",
-    "iis_admin_api_service_name": "Microsoft IIS Administration",
-    "ga_track": "UA-XXXXXXXX-X",
+export const SETTINGS = {
+    Version: "3.0.0",
+    APIVersion: "2.3.0",
+    APISetupVersion: "2.3.0",
+    DotnetFrameworkVersion: "2.1.* (x64)",
+    AspnetSharedFrameworkVersion: "2.1.* (x64)",
+    APIDownloadUrl: "https://github.com/microsoft/IIS.Administration/releases/download/v2.3.0/IISAdministrationSetup.exe",
+    IISAdminApiServiceName: "Microsoft IIS Administration",
+    GATrack: "UA-XXXXXXXX-X",
 }
 
 export const WebServerRoute: string = "webserver";

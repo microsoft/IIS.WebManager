@@ -46,7 +46,7 @@ export class VersionService {
     private checkVersions() {
         this.makeApiRequest().then(res => {
             let userApiVersion = this.parseApiVersion(res);
-            let latestApiVersion = SETTINGS.api_version;
+            let latestApiVersion = SETTINGS.APIVersion;
 
             if (this.compareVersions(userApiVersion, latestApiVersion) < 0 && !this.notificationExists()) {
 
@@ -55,7 +55,7 @@ export class VersionService {
                     componentName: "NewVersionNotificationComponent",
                     module: AppModuleReference,
                     data: {
-                        version: SETTINGS.api_setup_version
+                        version: SETTINGS.APISetupVersion
                     },
                     highPriority: true
                 });

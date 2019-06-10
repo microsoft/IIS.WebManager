@@ -12,6 +12,9 @@ param(
     [string]
     $dotnetCoreLocation,
 
+    [string]
+    $aspnetSharedLocation,
+
     ## Not doing anything with this parameter yet
     [string]
     $sessionId,
@@ -48,10 +51,14 @@ function VerifySource([string] $source) {
 }
 
 $dotnetCoreInstallType = $null
+$aspnetInstallType = $null
 $iisAdminInstallType = $null
 if ($install) {
     if ($dotnetCoreLocation) {
         $dotnetCoreInstallType = VerifySource $dotnetCoreLocation
+    }
+    if ($aspnetSharedLocation) {
+        $aspnetInstallType = VerifySource $aspnetSharedLocation
     }
 
     if (!$adminAPILocation) {
@@ -100,7 +107,11 @@ function InstallComponents {
     if ($dotnetCoreLocation) {
         Install "dotnet-core-runtime" $dotnetCoreInstallType $dotnetCoreLocation
     }
+    if ($aspnetSharedLocation) {
+        Install "asp-net-shared-runtime" $aspnetInstallType $aspnetSharedLocation
+    }
     Install "iis-administration-api" $iisAdminInstallType $adminAPILocation
+    $script:groupModified = $true
     WaitForServerToStart $serviceName
     $script:adminAPIInstalled = $true
 }
@@ -122,7 +133,6 @@ function Install([string] $scenario, [string] $installType, [string] $location) 
     }
     LogVerbose "Running $installer"
     & $installer /s DefaultCors=false | Out-Null
-    $script:groupModified = $true
     LogVerbose "Successfully installed $scenario"
 }
 

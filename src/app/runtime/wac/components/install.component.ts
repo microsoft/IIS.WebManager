@@ -9,45 +9,49 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
 
 @Component({
     template: `
-    <div class="padded sme-focus-zone">
-        <div *ngIf='!inProgress' style="min-width:700px">
-            <h3>Internet Information Service (IIS)</h3>
-            <span>{{details}}</span>
-            <ul class="form">
-                <li><input type="radio" [(ngModel)]="useDefault" [value]="true" [checked]="useDefault">Install from Microsoft (internet connection required)</li>
-                <li>
-                    <input type="radio" [(ngModel)]="useDefault" [value]="false" [checked]="!useDefault">Install from specific location
-                    <ul *ngIf="!useDefault">
-                        <li>
-                            <ul>
-                                <li #apiPrompt>
-                                    <label>API Installer location</label>
-                                    <input class="form-control" type="text" [(ngModel)]="adminAPILocation"/>
-                                </li>
-                                <li #dotnetPrompt>
-                                    <label>.NET Core Runtime installer location</label>
-                                    <input class="form-control" type="text" [(ngModel)]="dotnetCoreLocation" />
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-            <div *ngIf='userInputError'>
-                <p class="color-error">
-                    {{userInputError}}
-                </p>
-            </div>
-            <p>
-                <button class="bttn background-active" (click)="install()">Install on {{targetHost}}</button>
+<div class="padded sme-focus-zone">
+    <div *ngIf='!inProgress' style="min-width:700px">
+        <h3>Internet Information Service (IIS)</h3>
+        <span>{{details}}</span>
+        <ul class="form">
+            <li><input type="radio" [(ngModel)]="useDefault" [value]="true" [checked]="useDefault">Install from Microsoft (internet connection required)</li>
+            <li>
+                <input type="radio" [(ngModel)]="useDefault" [value]="false" [checked]="!useDefault">Install from specific location
+                <ul *ngIf="!useDefault">
+                    <li>
+                        <ul>
+                            <li #apiPrompt>
+                                <label>API Installer location</label>
+                                <input class="form-control" type="text" [(ngModel)]="adminAPILocation"/>
+                            </li>
+                            <li #dotnetPrompt>
+                                <label>.NET Core Runtime installer location, required version: ${SETTINGS.DotnetFrameworkVersion}</label>
+                                <input class="form-control" type="text" [(ngModel)]="dotnetCoreLocation" />
+                            </li>
+                            <li #aspnetPrompt>
+                                <label>ASP.NET Core installer location, required version: ${SETTINGS.AspnetSharedFrameworkVersion}</label>
+                                <input class="form-control" type="text" [(ngModel)]="aspnetSharedLocation" />
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <div *ngIf='userInputError'>
+            <p class="color-error">
+                {{userInputError}}
             </p>
         </div>
-        <div *ngIf='inProgress'>
-            <h1>Installing...</h1>
-            <p><i class="fa fa-spinner fa-pulse fa-3x"></i></p>
-            <p><small class='block color-active'>{{status}}</small></p>
-        </div>
+        <p>
+            <button class="bttn background-active" (click)="install()">Install on {{targetHost}}</button>
+        </p>
     </div>
+    <div *ngIf='inProgress'>
+        <h1>Installing...</h1>
+        <p><i class="fa fa-spinner fa-pulse fa-3x"></i></p>
+        <p><small class='block color-active'>{{status}}</small></p>
+    </div>
+</div>
 `,
     styles: [`
     .padded {
@@ -118,11 +122,13 @@ export class InstallComponent implements OnInit {
     targetHost: string;
     adminAPILocation: string;
     dotnetCoreLocation: string;
+    aspnetSharedLocation: string;
     userInputError: string;
     details: string;
 
     @ViewChild('apiPrompt') apiPrompt: ElementRef;
     @ViewChild('dotnetPrompt') dotnetPrompt: ElementRef;
+    @ViewChild('aspnetPrompt') aspnetPrompt: ElementRef;
 
     constructor(
         private route: ActivatedRoute,
@@ -184,11 +190,12 @@ export class InstallComponent implements OnInit {
         };
 
         if (this.useDefault) {
-            args.adminAPILocation = SETTINGS.api_download_url
+            args.adminAPILocation = SETTINGS.APIDownloadUrl
         } else {
-            if (this.verifyLocationPrompt(this.apiPrompt) && this.verifyLocationPrompt(this.dotnetPrompt)) {
+            if (this.verifyLocationPrompt(this.apiPrompt) && this.verifyLocationPrompt(this.dotnetPrompt) && this.verifyLocationPrompt(this.aspnetPrompt)) {
                 args.adminAPILocation = this.adminAPILocation;
                 args.dotnetCoreLocation = this.dotnetCoreLocation;
+                args.aspnetSharedLocation = this.aspnetSharedLocation;
             }
         }
         

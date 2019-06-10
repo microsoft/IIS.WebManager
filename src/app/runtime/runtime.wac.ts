@@ -104,7 +104,7 @@ export class WACRuntime implements Runtime {
     }
 
     public PrepareIISHost(p: any): Observable<any> {
-        p.appMinVersion = SETTINGS.api_setup_version;
+        p.appMinVersion = SETTINGS.APISetupVersion;
         return this.powershellService.run(PowerShellScripts.Initialize_AdminAPI.script, p).pipe(
             map((status: HostStatus) => {
                 this._apiHost = status.apiHost;
