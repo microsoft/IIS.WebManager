@@ -11,7 +11,7 @@ import { FilesService } from 'files/files.service';
     template: `
         <div *ngIf="model" class="grid-item row" tabindex="-1">
             <div class="col-xs-9 col-sm-5 col-lg-4 valign" [ngClass]="[model.type, model.extension]">
-                    <a class="color-normal hover-color-active" [href]="url" (click)="onClickName($event)"><i></i>{{model.name}}</a>
+                <a class="color-normal hover-color-active"><i></i>{{model.name}}</a>
             </div>
             <div class="col-sm-3 col-md-2 hidden-xs valign support">
                 <span *ngIf="model.last_modified">{{displayDate}}</span>
@@ -85,30 +85,22 @@ export class LogFileComponent {
               private _http: HttpClient) {
     }
 
-    private get url() {
-        return window.location.pathname + "#" + this.model.name;
-    }
-
-    private get displayDate(): string {
+    get displayDate(): string {
         return Humanizer.date(this.model.last_modified);
     }
 
-    private onDownload(e: Event) {
+    onDownload(e: Event) {
         e.preventDefault();
         this.selector.close();
 
         this._fileService.download(this.model);
     }
 
-    private onClickName(e: Event) {
-        e.preventDefault();
-    }
-
-    private onDelete() {
+    onDelete() {
         this._svc.delete([this.model]);
     }
 
-    private getSize() {
+    getSize() {
         return this.model.size ? Humanizer.number(Math.ceil(this.model.size / 1024)) + ' KB' : null;
     }
 }

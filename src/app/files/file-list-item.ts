@@ -1,11 +1,10 @@
-import { Component, Input, Output, Inject, ViewChild, EventEmitter } from '@angular/core';
-
+import { Component, Input, Output, Inject, EventEmitter } from '@angular/core';
 import { NotificationService } from '../notification/notification.service';
 import { Humanizer } from '../common/primitives';
-
 import { FilesService } from '../files/files.service';
 import { FileNavService } from '../files/file-nav.service';
-import { ApiFile, ApiFileType } from './file';
+import { ApiFile } from './file';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'file',
@@ -13,7 +12,7 @@ import { ApiFile, ApiFileType } from './file';
         <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing && !_location" [class.background-selected]="_editing && _location" (keyup.f2)="onRename($event)" tabindex="-1">
             <div class="col-xs-9 col-sm-5 col-lg-4 fi" [ngClass]="[model.type, model.extension, (isRoot ? 'location' : '')]">
                 <div *ngIf="!_editing || _location">
-                    <a class="color-normal hover-color-active" [href]="href" nofocus (click)="onClickName($event)"><i></i>{{model.alias || model.name}}</a>
+                    <a class="color-normal hover-color-active" nofocus (click)="onClickName($event)"><i></i>{{model.alias || model.name}}</a>
                 </div>
                 <div *ngIf="_editing && !_location">
                     <i></i>
@@ -93,20 +92,19 @@ export class FileComponent {
     private _location = null;
     private _editing = false;
 
-    constructor(@Inject("FilesService") private _svc: FilesService,
-                private _nav: FileNavService,
-                private _notificationService: NotificationService) {
+    constructor(
+        @Inject("FilesService") private _svc: FilesService,
+        private _nav: FileNavService,
+        private _notificationService: NotificationService,
+        private _route: ActivatedRoute,
+    ) {
     }
 
-    private get isRoot(): boolean {
+    get isRoot(): boolean {
         return this.model.isLocation;
     }
 
-    private get href() {
-        return window.location.pathname + "#" + this.model.physical_path;
-    }
-
-    private get displayDate(): string {
+    get displayDate(): string {
         if (!this._date) {
             this._date = Humanizer.date(this.model.last_modified);
         }
@@ -114,7 +112,7 @@ export class FileComponent {
         return this._date;
     }
 
-    private rename(name: string) {
+    rename(name: string) {
         if (name) {
             this._svc.rename(this.model, name);
             this.modelChanged.emit(this.model);
@@ -123,13 +121,13 @@ export class FileComponent {
         this._editing = false;
     }
 
-    private onRename(e: Event) {
+    onRename(e: Event) {
         e.preventDefault();
 
         this._editing = true;
     }
 
-    private onEdit(e: Event) {
+    onEdit(e: Event) {
         e.preventDefault();
 
         this._svc.getLocation(this.model.id)
@@ -139,7 +137,7 @@ export class FileComponent {
             })
     }
 
-    private onBlur(event: Event) {
+    onBlur(event: Event) {
         if (event && event.target && (<HTMLInputElement>event.target).value === this.model.name) {
 
             //
@@ -148,13 +146,13 @@ export class FileComponent {
         }
     }
 
-    private onCancel(e: Event) {
+    onCancel(e: Event) {
         e.preventDefault();
 
         this.cancel();
     }
 
-    private onDelete(e: Event) {
+    onDelete(e: Event) {
         e.preventDefault();
 
         let title = this.model.isLocation ? "Remove Root Folder" : "Delete File";
@@ -176,27 +174,27 @@ export class FileComponent {
 
     }
 
-    private onDownload(e: Event) {
+    onDownload(e: Event) {
         e.preventDefault();
 
         this._svc.download(this.model);
     }
 
-    private prevent(e: Event) {
+    prevent(e: Event) {
         e.preventDefault();
     }
 
-    private cancel() {
+    cancel() {
         this._editing = false;
         this._location = null;
     }
 
-    private onClickName(e: Event) {
+     nClickName(e: Event) {
         e.preventDefault();
         this._nav.load(this.model.physical_path);
     }
 
-    private getSize() {
+    getSize() {
         return this.model.size ? Humanizer.number(Math.ceil(this.model.size / 1024)) + ' KB' : null;
     }
 }
