@@ -1,8 +1,8 @@
 import { Component, Input, Output, Inject, EventEmitter } from '@angular/core';
-import { NotificationService } from '../notification/notification.service';
-import { Humanizer } from '../common/primitives';
-import { FilesService } from '../files/files.service';
-import { FileNavService } from '../files/file-nav.service';
+import { NotificationService } from 'notification/notification.service';
+import { Humanizer } from 'common/primitives';
+import { FilesService } from 'files/files.service';
+import { FileNavService } from 'files/file-nav.service';
 import { ApiFile } from './file';
 import { ActivatedRoute } from '@angular/router';
 
@@ -12,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
         <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing && !_location" [class.background-selected]="_editing && _location" (keyup.f2)="onRename($event)" tabindex="-1">
             <div class="col-xs-9 col-sm-5 col-lg-4 fi" [ngClass]="[model.type, model.extension, (isRoot ? 'location' : '')]">
                 <div *ngIf="!_editing || _location">
-                    <a class="color-normal hover-color-active" nofocus (click)="onClickName($event)"><i></i>{{model.alias || model.name}}</a>
+                    <a tabIndex="0" class="color-normal hover-color-active" nofocus><i></i>{{model.alias || model.name}}</a>
                 </div>
                 <div *ngIf="_editing && !_location">
                     <i></i>
@@ -187,11 +187,6 @@ export class FileComponent {
     cancel() {
         this._editing = false;
         this._location = null;
-    }
-
-     nClickName(e: Event) {
-        e.preventDefault();
-        this._nav.load(this.model.physical_path);
     }
 
     getSize() {
