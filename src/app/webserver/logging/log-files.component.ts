@@ -4,8 +4,7 @@ import { OrderBy, SortPipe } from '../../common/sort.pipe';
 import { Range } from '../../common/virtual-list.component';
 import { ApiFile } from '../../files/file';
 import { LoggingService } from './logging.service';
-import { WebFile } from 'webserver/files/webfile';
-import { Location } from '@angular/common';
+
 
 @Component({
     selector: 'log-files',
@@ -38,8 +37,7 @@ import { Location } from '@angular/common';
                         (rangeChange)="onRangeChange($event)">
                 <li class="hover-editing" 
                     tabindex="-1" 
-                    *ngFor="let child of _view"
-                    (dblclick)="onBrowseChild(child, $event)">
+                    *ngFor="let child of _view">
                     <log-file [model]="child"></log-file>
                 </li>
             </virtual-list>
@@ -71,10 +69,7 @@ export class LogFilesComponent implements OnInit, OnDestroy {
     private _view: Array<ApiFile> = [];
     private _selected: Array<ApiFile> = [];
 
-    constructor(
-        private _service: LoggingService,
-        private _location: Location,
-    ) {
+    constructor(private _service: LoggingService) {
         this._subscriptions.push(this._service.logs.subscribe(t => {
             this._logs = t;
             this.doSort();
@@ -86,18 +81,18 @@ export class LogFilesComponent implements OnInit, OnDestroy {
         this.onRefresh();
     }
 
-    ngOnDestroy() {
+    public ngOnDestroy() {
         for (let sub of this._subscriptions) {
             sub.unsubscribe();
         }
     }
 
-    onRefresh() {
+    private onRefresh() {
         this._logs = [];
         this._service.loadLogs();
     }
 
-    onDelete() {
+    private onDelete() {
         let msg = this._selected.length == 1 ? "Are you sure you want to delete '" + this._selected[0].name + "'?" :
             "Are you sure you want to delete " + this._selected.length + " items?";
 
@@ -106,17 +101,17 @@ export class LogFilesComponent implements OnInit, OnDestroy {
         }
     }
 
-    sort(field: string) {
+    private sort(field: string) {
         this._orderBy.sort(field, false);
         this.doSort();
     }
 
-    doSort() {
+    private doSort() {
         this._logs = this._sortPipe.transform(this._logs, this._orderBy.Field, this._orderBy.Asc);
         this.onRangeChange(this._range);
     }
 
-    onRangeChange(range: Range) {
+    private onRangeChange(range: Range) {
         this._view.splice(0);
 
         let end = range.start + range.length < this._logs.length ? range.start + range.length : this._logs.length;
@@ -126,18 +121,5 @@ export class LogFilesComponent implements OnInit, OnDestroy {
         }
 
         this._range = range;
-    }
-
-    onBrowseChild(file: ApiFile, e) {
-        if (e && e.defaultPrevented) {
-            return;
-        }
-        this.clearSelection();
-        debugger
-        this._location.go(this._location.path(false) + `#${file.physical_path}`);
-    }
-
-    private clearSelection(file: WebFile = null) {
-        this._selected.splice(0);
     }
 }
