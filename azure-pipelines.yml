@@ -40,6 +40,12 @@ jobs:
   - task: NuGetToolInstaller@0
     displayName: 'Install Nuget tool'
 
+  - task: Npm@1
+    displayName: 'npm install'
+    inputs:
+      workingDir: src
+      verbose: true
+
   - task: PowerShell@2
     displayName: 'PowerShell Script build.ps1'
     inputs:
