@@ -38,7 +38,7 @@ import { ActivatedRoute } from '@angular/router';
             </div>
             <div class="actions">
                 <div class="action-selector">
-                    <button title="More" (click)="selector.toggle()" (dblclick)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
+                    <button title="More" (click)="selector.toggle()" (dblclick)="prevent($event)" (keyup.enter)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
                         <i class="fa fa-ellipsis-h"></i>
                     </button>
                     <selector #selector [right]="true">
