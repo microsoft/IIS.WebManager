@@ -119,7 +119,7 @@ export class PowershellService {
       }),
       catchError((e, _) => {
         let rethrow = e;
-        // WAC wrap the powershell error message around this AjaxError object. We would unwrap it for easier readability
+        // WAC wrap the powershell error (or exception) message around this AjaxError object. We would unwrap it for easier readability
         if (e.name == "AjaxError" && e.status == 400) {
           if (e.response.error && !e.response.exception) {
             rethrow = e.response.error;
