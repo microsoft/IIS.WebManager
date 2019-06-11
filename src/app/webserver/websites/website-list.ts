@@ -216,9 +216,7 @@ const perspectives = [
     <button
         class="list-operation-addon-left add list-action-button"
         [class.background-active]="newWebSite.opened"
-        (click)="newWebSite.toggle()">
-        Create
-    </button>
+        (click)="newWebSite.toggle()" title="Create">Create</button>
 </list-operations-bar>
 <div class="container-fluid">
     <div class="hidden-xs border-active grid-list-header row" [hidden]="model.length == 0">

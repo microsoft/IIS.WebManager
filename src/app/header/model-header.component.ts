@@ -46,7 +46,7 @@ export abstract class ModelStatusUpdater {
     <div *ngIf="!modelUpdater.displayName">fetching information for {{modelType}}...</div>
     <div class="status-digest"><i [class]="ico"></i><span *ngIf="modelUpdater.displayName" [ngClass]="status">{{modelUpdater.displayName}}</span></div>
     <div *ngIf="modelUpdater.controller" class="status-digest controller">
-        <button *ngFor="let action of applicableActions" [ngClass]="['compact-button', action.ico]" [attr.disabled]="isDisabled(action)" (click)="invoke(action)"></button>
+        <button *ngFor="let action of applicableActions" [ngClass]="['compact-button', action.ico]" [title]="getTitle(action)" [attr.disabled]="isDisabled(action)" (click)="invoke(action)"></button>
     </div>
 </div>
 `,
@@ -104,6 +104,10 @@ export class ModelHeaderComponent implements OnInit, OnDestroy {
         } else {
             return null;
         }
+    }
+
+    getTitle(action: ModelAction) {
+        return action.displayName;
     }
 
     ngOnDestroy() {
