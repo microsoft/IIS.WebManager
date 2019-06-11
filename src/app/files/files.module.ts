@@ -21,7 +21,6 @@ import { FileComponent } from './file-list-item';
 import { FileListComponent } from './file-list';
 import { FilesComponent } from './files.component';
 import { FileExplorer } from './file-explorer';
-import { FileEditor } from './file-editor';
 import { NewFileComponent } from './new-file.component';
 import { LocationEditComponent } from './edit-location.component';
 import { FileSelectorComponent } from './file-selector.component';

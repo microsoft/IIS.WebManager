@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { NotificationService } from '../../notification/notification.service';
-import { OrderBy, SortPipe } from '../../common/sort.pipe';
-import { Range } from '../../common/virtual-list.component';
+import { NotificationService } from 'notification/notification.service';
+import { OrderBy, SortPipe } from 'common/sort.pipe';
+import { Range } from 'common/virtual-list.component';
 import { WebFilesService } from './webfiles.service';
 import { WebFileType, WebFile } from './webfile';
 import { buffer, filter, take } from 'rxjs/operators'
@@ -56,6 +56,7 @@ import { interval } from 'rxjs';
                     #marker="itemMarker"
                     [class.background-selected]="_active == child || marker.isSelected"
                     (dblclick)="onBrowseChild(child, $event)"
+                    (keyup.enter)="onBrowseChild(child, $event)"
                     dragable="true"
                     (dragstart)="drag(child, $event)"
                     (dragenter)="onDragItemEnter(child, $event)"

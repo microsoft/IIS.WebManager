@@ -1,12 +1,11 @@
 import { Component, Input, Output, Inject, ViewChild, EventEmitter } from '@angular/core';
-
-import { Selector } from '../../common/selector';
-import { NotificationService } from '../../notification/notification.service';
-import { Humanizer } from '../../common/primitives';
-
-import { FilesService } from '../../files/files.service';
+import { Selector } from 'common/selector';
+import { NotificationService } from 'notification/notification.service';
+import { Humanizer } from 'common/primitives';
+import { FilesService } from 'files/files.service';
 import { WebFilesService } from './webfiles.service';
 import { WebFileType, WebFile } from './webfile';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'file',
@@ -14,7 +13,7 @@ import { WebFileType, WebFile } from './webfile';
         <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing" (keyup.f2)="onRename($event)" tabindex="-1">
             <div class="col-xs-9 col-sm-5 col-lg-4 fi" [ngClass]="[model.type, !model.file_info ? '' : model.file_info.extension]">
                 <div *ngIf="!_editing">
-                    <a class="color-normal hover-color-active" [href]="href" nofocus><i></i>{{model.name}}</a>
+                    <a tabIndex="0" class="color-normal hover-color-active" nofocus><i></i>{{model.name}}</a>
                 </div>
                 <div *ngIf="_editing">
                     <i></i>
@@ -40,7 +39,7 @@ import { WebFileType, WebFile } from './webfile';
             </div>
             <div class="actions">
                 <div class="selector-wrapper">
-                    <button title="More" *ngIf="!model.isVirtual" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
+                    <button title="More" *ngIf="!model.isVirtual" (click)="openSelector($event)" (keyup.enter)="prevent($event)" (dblclick)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
                         <i class="fa fa-ellipsis-h"></i>
                     </button>
                     <selector [right]="true">
@@ -111,25 +110,23 @@ import { WebFileType, WebFile } from './webfile';
 export class WebFileComponent {
     @Input() model: WebFile;
     @Output() modelChanged: EventEmitter<any> = new EventEmitter();
-
     @ViewChild(Selector) selector: Selector;
 
     private _editing = false;
 
-    constructor(private _service: WebFilesService,
-                @Inject("FilesService") private _fileService: FilesService,
-                private _notificationService: NotificationService) {
-    }
-    
-    private get href() {
-        return window.location.pathname + "#" + this.model.path;
+    constructor(
+        private _route: ActivatedRoute,
+        private _service: WebFilesService,
+        private _notificationService: NotificationService,
+        @Inject("FilesService") private _fileService: FilesService,
+    ) {
     }
 
-    private get displayDate(): string {
+    get displayDate(): string {
         return Humanizer.date(this.model.file_info.last_modified);
     }
     
-    private rename(name: string) {
+    rename(name: string) {
         if (name) {
             this._service.rename(this.model, name);
             this.modelChanged.emit(this.model);
@@ -138,14 +135,14 @@ export class WebFileComponent {
         this._editing = false;
     }
 
-    private onCancel(e: Event) {
+    onCancel(e: Event) {
         e.preventDefault();
         this.selector.close();
 
         this.cancel();
     }
 
-    private onBlur(event: Event) {
+    onBlur(event: Event) {
         if (event && event.target && (<HTMLInputElement>event.target).value === this.model.name) {
 
             //
@@ -154,7 +151,7 @@ export class WebFileComponent {
         }
     }
 
-    private onRename(e: Event) {
+    onRename(e: Event) {
         e.preventDefault();
         this.selector.close();
 
@@ -165,7 +162,7 @@ export class WebFileComponent {
         this._editing = true;
     }
 
-    private onDelete(e: Event) {
+    onDelete(e: Event) {
         e.preventDefault();
         this.selector.close();
 
@@ -177,27 +174,27 @@ export class WebFileComponent {
             });
     }
 
-    private onDownload(e: Event) {
+    onDownload(e: Event) {
         e.preventDefault();
         this.selector.close();
 
         this._fileService.download(this.model.file_info);
     }
 
-    private prevent(e: Event) {
+    prevent(e: Event) {
         e.preventDefault();
     }
 
-    private cancel() {
+    cancel() {
         this.selector.close();
         this._editing = false;
     }
 
-    private openSelector(e: Event) {
+    openSelector(e: Event) {
         this.selector.toggle();
     }
 
-    private getSize() {
+    getSize() {
         return this.model.file_info.size ? Humanizer.number(Math.ceil(this.model.file_info.size / 1024)) + ' KB': null;
     }   
 }

@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, Input, Inject, ViewChild, ElementRef } from '@angular/core';
 import { Subscription, interval } from 'rxjs';
-import { NotificationService } from '../notification/notification.service';
-import { OrderBy, SortPipe } from '../common/sort.pipe';
-import { Range } from '../common/virtual-list.component';
+import { NotificationService } from 'notification/notification.service';
+import { OrderBy, SortPipe } from 'common/sort.pipe';
+import { Range } from 'common/virtual-list.component';
 import { ApiFile, ApiFileType } from './file';
 import { Location } from './location';
 import { FilesService } from './files.service';
@@ -61,6 +61,7 @@ import { buffer, map, filter, take } from 'rxjs/operators'
                     #marker="itemMarker"
                     [class.background-selected]="_active == child || marker.isSelected"
                     (dblclick)="onBrowseChild(child, $event)"
+                    (keyup.enter)="onBrowseChild(child, $event)"
                     dragable="true"
                     (dragstart)="drag(child, $event)"
                     (drop)="drop($event, child)"

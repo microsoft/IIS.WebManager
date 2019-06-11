@@ -8,7 +8,6 @@ import {
     IconModule,
     SmeUxModule,
 } from "@microsoft/windows-admin-center-sdk/angular";
-import { LogsErrorHandler } from "diagnostics/logs-error-handler";
 import { PowershellService } from "runtime/wac/services/powershell-service";
 import { WACInfo, WACRuntime } from "runtime/runtime.wac";
 import { LocalHttpClient } from "runtime/wac/services/local-http-client";
@@ -28,7 +27,7 @@ export const ModulesAddon: any[] = [
 
 export const ProvidersAddon: Provider[] = [
     ResourceService,
-    { provide: ErrorHandler, useClass: LogsErrorHandler },
+    { provide: ErrorHandler, useClass: ErrorHandler },
     { provide: "Powershell", useClass: PowershellService },
     { provide: "WACInfo", useClass: WACInfo },
     { provide: "Http", useClass: LocalHttpClient },
