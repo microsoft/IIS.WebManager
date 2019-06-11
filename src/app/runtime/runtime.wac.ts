@@ -123,10 +123,11 @@ export class WACRuntime implements Runtime {
     private GetApiKey(): Observable<ApiKey> {
         return this.PrepareIISHost({ command: 'ensure' }).pipe(
             catchError((e, _) => {
-                if (e.status === 400 && e.response && e.response.exception) {
+                let errString = e as string;
+                if (errString) {
                     let errContent: any;
                     try {
-                        errContent = JSON.parse(e.response.exception);
+                        errContent = JSON.parse(errString);
                     } catch (e) {
                         this._logger.log(LogLevel.INFO,
                             `Unable to parse error message ${e}, the error must be unexpected`);
