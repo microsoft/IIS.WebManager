@@ -123,7 +123,7 @@ import { FormsModule } from '@angular/forms';
         .switch-line {
             display:inline-block;
             position: relative;
-            left: 105px;
+            left: 100px;
             top: -30px;
             font-weight: normal;
         }
