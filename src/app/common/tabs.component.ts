@@ -6,7 +6,6 @@ import { Subscription } from 'rxjs'
 import { DynamicComponent } from './dynamic.component';
 import { ComponentUtil } from '../utils/component';
 import { SectionHelper } from './section.helper';
-import { IsWAC } from 'environments/environment';
 
 @Component({
     selector: 'tabs',
@@ -169,39 +168,34 @@ import { IsWAC } from 'environments/environment';
     // In the site mode, we can't select the feature when input-focus is change.
     // That is because users are allowed to use only tab key, not arrow keys, unlike the WAC mode.    
     template: `
-        <div class='sme-focus-zone'>
-            <div class="tab-nav">
-                <div class="tabs-container">
-                    <div class='tabs border-active'>
-                        <ul>
-                            <li 
-                                #item 
-                                tabindex="0" 
-                                *ngFor="let tab of tabs; let i = index"
-                                class="border-active border-bottom-normal"
-                                [ngClass]="{active: tab.active}"
-                                (keyup.space)="selectTab(i)"
-                                (keyup.enter)="selectTab(i)" 
-                                (focus)=" isWAC() ? selectTab(i) : '' "
-                                (click)="selectTab(i)">
-                                <span>{{tab.name}}</span>
-                            </li>
-                            <li *ngIf="_selectedIndex != -1" class="sticky background-normal border-active border-bottom-normal" [ngClass]="{active: !!'true', hidden: tabs[_selectedIndex].visible}" (click)="selectTab(_selectedIndex)">
-                                <span class="border-active">{{tabs[_selectedIndex].name}}</span>
-                            </li>
-                        </ul>
-                        <div class="hider background-normal"></div>
-                    </div>
-                </div>
-                <div class='menu-btn color-active background-normal' #menuBtn (click)="showMenu(true)"><span class="border-active hover-active color-normal" [class.background-active]="_menuOn"><i class="fa fa-ellipsis-h"></i></span></div>
-                <div class='menu border-active background-normal' [hidden]="!_menuOn">
+        <div class="tab-nav">
+            <div class="tabs-container">
+                <div class='tabs border-active'>
                     <ul>
-                        <li tabindex="0" *ngFor="let tab of tabs; let i = index;" class="hover-active" [ngClass]="{'background-active': tab.active}" (keyup.space)="selectTab(i)" (keyup.enter)="selectTab(i)" (click)="selectTab(i)">{{tab.name}}</li>
+                        <li
+                            #item
+                            tabindex="0"
+                            *ngFor="let tab of tabs; let i = index"
+                            class="border-active border-bottom-normal"
+                            [ngClass]="{active: tab.active}"
+                            (keyup.space)="selectTab(i)"
+                            (keyup.enter)="selectTab(i)"
+                            (click)="selectTab(i)">
+                            <span>{{tab.name}}</span>
+                        </li>
+                        <li *ngIf="_selectedIndex != -1" class="sticky background-normal border-active border-bottom-normal" [ngClass]="{active: !!'true', hidden: tabs[_selectedIndex].visible}" (click)="selectTab(_selectedIndex)">
+                            <span class="border-active">{{tabs[_selectedIndex].name}}</span>
+                        </li>
                     </ul>
+                    <div class="hider background-normal"></div>
                 </div>
             </div>
-        </div>
-        <div class='sme-focus-zone'>
+            <div class='menu-btn color-active background-normal' #menuBtn (click)="showMenu(true)"><span class="border-active hover-active color-normal" [class.background-active]="_menuOn"><i class="fa fa-ellipsis-h"></i></span></div>
+            <div class='menu border-active background-normal' [hidden]="!_menuOn">
+                <ul>
+                    <li tabindex="0" *ngFor="let tab of tabs; let i = index;" class="hover-active" [ngClass]="{'background-active': tab.active}" (keyup.space)="selectTab(i)" (keyup.enter)="selectTab(i)" (click)="selectTab(i)">{{tab.name}}</li>
+                </ul>
+            </div>
             <ng-content></ng-content>
         </div>
     `,
@@ -323,10 +317,6 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
         if (diff < 0) {
             this.tabs[this._selectedIndex].visible = false;
         }
-    }
-    
-    private isWAC() {
-        return IsWAC;
     }
 }
 

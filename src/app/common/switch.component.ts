@@ -122,8 +122,10 @@ import { FormsModule } from '@angular/forms';
 
         .switch-line {
             display:inline-block;
-            vertical-align:bottom;
-            line-height:34px;
+            position: relative;
+            left: 100px;
+            top: -28px;
+            font-weight: normal;
         }
     `],
     template: `
@@ -135,9 +137,9 @@ import { FormsModule } from '@angular/forms';
                 <input #checkbox class="switch-input" type="checkbox"  [ngModel]="toBool()" (ngModelChange)="updateData($event)"/>
                 <span class="switch-content border-color background-normal" ><div class="switch-fill background-active"></div></span>
                 <span class="switch-handle border-active background-normal"></span>
+                <span class="switch-line"><ng-content></ng-content></span>
             </label>
         </div>
-        <div class="switch-line"><ng-content></ng-content></div>
     `,
     exportAs: 'switchVal'
 })
