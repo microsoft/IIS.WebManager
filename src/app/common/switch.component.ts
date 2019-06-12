@@ -124,7 +124,7 @@ import { FormsModule } from '@angular/forms';
             display:inline-block;
             position: relative;
             left: 100px;
-            top: -30px;
+            top: -28px;
             font-weight: normal;
         }
     `],
