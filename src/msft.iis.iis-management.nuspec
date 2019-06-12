@@ -6,7 +6,7 @@
     </packageTypes>
     <id>msft.iis.iis-management</id>
     <version>$version$</version>
-    <title>Microsoft IIS</title>
+    <title>msft.iis.iis-management</title>
     <authors>Microsoft</authors>
     <owners>Microsoft</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
