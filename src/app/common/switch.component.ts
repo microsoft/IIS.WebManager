@@ -125,6 +125,7 @@ import { FormsModule } from '@angular/forms';
             position: relative;
             left: 105px;
             top: -30px;
+            font-weight: normal;
         }
     `],
     template: `
