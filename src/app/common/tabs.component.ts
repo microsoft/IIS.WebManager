@@ -322,8 +322,13 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
 
 @Component({
     selector: 'tab',
+    styles: [`
+        .tab-page {
+          padding-top: 15px;
+        }
+    `],
     template: `
-        <div *ngIf="!(!active)">
+        <div *ngIf="!(!active)" class="tab-page">
             <ng-content></ng-content>
         </div>
     `
