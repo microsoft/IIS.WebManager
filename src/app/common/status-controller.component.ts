@@ -8,7 +8,7 @@ export interface StatusModel {
 }
 
 export abstract class StatusController {
-    private inProcess: boolean = false;
+    private inProgress: boolean = false;
     abstract StartImpl(): Promise<any>;
     abstract StopImpl(): Promise<any>;
     constructor(
@@ -20,7 +20,7 @@ export abstract class StatusController {
     }
 
     CanStart() {
-        return !this.inProcess && this.model.status == Status.Stopped;
+        return !this.inProgress && this.model.status == Status.Stopped;
     }
 
     Start() {
@@ -28,7 +28,7 @@ export abstract class StatusController {
     }
     
     CanStop() {
-        return !this.inProcess && this.model.status == Status.Started;
+        return !this.inProgress && this.model.status == Status.Started;
     }
 
     Stop() {
@@ -40,8 +40,8 @@ export abstract class StatusController {
     }
 
     Invoke(operation: Promise<any>) {
-        this.inProcess = true;
-        operation.finally(() => this.inProcess = false);
+        this.inProgress = true;
+        operation.finally(() => this.inProgress = false);
     }
 }
 
