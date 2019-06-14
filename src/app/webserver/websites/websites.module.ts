@@ -15,6 +15,7 @@ import { Module as Tabs } from 'common/tabs.component';
 import { Module as VirtualList } from 'common/virtual-list.component';
 import { Module as Enum } from 'common/enum.component';
 import { Module as AutoFocus } from 'common/focus';
+import { Module as StatusController } from 'common/status-controller.component';
 import { Module } from './module';
 import { Module as AppPoolModule } from '../app-pools/module';
 import { FilesModule } from 'files/files.module';
@@ -53,6 +54,7 @@ import { ListModule } from 'common/list';
         RouterModule,
         AutoFocus,
         ListModule,
+        StatusController,
     ],
     declarations: [
         WebSiteComponent,

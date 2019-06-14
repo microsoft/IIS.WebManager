@@ -16,9 +16,6 @@ import { LoggerFactory, LogLevel, Logger } from "diagnostics/logger";
         </li>
     </ul>
     <div class="headings">
-        <div class="model-header">
-            <model-header></model-header>
-        </div>
         <div class="feature-header">
             <feature-header></feature-header>
         </div>

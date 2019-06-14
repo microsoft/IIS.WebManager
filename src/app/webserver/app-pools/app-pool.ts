@@ -1,7 +1,8 @@
 import { Status } from 'common/status';
 import { FeatureContext } from 'common/feature-vtabs.component';
+import { StatusModel } from 'common/status-controller.component';
 
-export class ApplicationPool implements FeatureContext {
+export class ApplicationPool implements FeatureContext, StatusModel {
     name: string;
     id: string;
     status: Status;

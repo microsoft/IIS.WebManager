@@ -3,10 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DiffUtil } from '../../utils/diff';
 import { ApplicationPool } from './app-pool';
 import { AppPoolsService } from './app-pools.service';
-import { AppPoolsModuleName, AppPoolModuleIcon } from 'main/settings';
+import { AppPoolsModuleName } from 'main/settings';
 import { BreadcrumbsResolver, FeatureContext } from 'common/feature-vtabs.component';
 import { Breadcrumb, BreadcrumbsRoot, AppPoolsCrumb } from 'header/breadcrumb';
-import { ModelStatusUpdater, UpdateType } from 'header/model-header.component';
 import { TitlesService } from 'header/titles.service';
 import { resolveAppPoolRoute } from 'webserver/webserver-routing.module';
 
@@ -15,27 +14,6 @@ class AppPoolBreadcrumbResolver implements BreadcrumbsResolver {
     resolve(model: FeatureContext): Breadcrumb[] {
         const pool = <ApplicationPool> model;
         return crumbsRoot.concat(<Breadcrumb>{ label: pool.name, routerLink: [resolveAppPoolRoute(pool.id)] });
-    }
-}
-
-class AppPoolStatusUpdater extends ModelStatusUpdater {
-    constructor(
-        service: AppPoolsService,
-        pool: ApplicationPool,
-    ) {
-        super(
-            AppPoolsModuleName,
-            AppPoolModuleIcon,
-            pool.name,
-            pool,
-            new Map<UpdateType, () => void>([
-                [UpdateType.Recycle, () => service.recycle(pool)],
-                [UpdateType.Start, () => service.start(pool)],
-                [UpdateType.Stop, () => service.stop(pool)],
-                // TODO: consider if delete button is appropriate on model header
-                // [UpdateType.delete, () => service.delete(pool)],
-            ]),
-        )
     }
 }
 
@@ -104,7 +82,6 @@ export class AppPoolComponent implements OnInit {
     }
 
     private setAppPool(p: ApplicationPool) {
-        this.title.loadModelUpdater(new AppPoolStatusUpdater(this.service, p));
         this.pool = p;
         this.original = JSON.parse(JSON.stringify(p));
     }

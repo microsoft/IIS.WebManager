@@ -1,9 +1,9 @@
 import { Status } from 'common/status';
 import { Certificate } from 'certificates/certificate'
 import { FeatureContext } from 'common/feature-vtabs.component';
-import { BehaviorSubject } from 'rxjs';
+import { StatusModel } from 'common/status-controller.component';
 
-export class WebSite implements FeatureContext {
+export class WebSite implements FeatureContext, StatusModel {
     name: string;
     id: string;
     physical_path: string;
