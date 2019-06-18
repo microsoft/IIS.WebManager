@@ -126,23 +126,9 @@ export class AppPoolsService {
     recycle(pool: ApplicationPool) {
         if (pool.status == Status.Stopped) {
             return this.start(pool);
+        } else {
+            return this.stop(pool).then(_ => this.start(pool));
         }
-
-        return new Promise<ApplicationPool>((resolve, reject) => {
-            this.stop(pool).then(_ => {
-                this.start(pool).then(
-                    p => resolve(p),
-                ).catch(e => reject(e));
-            }).catch(e => reject(e));
-            if (pool.status == Status.Stopping) {
-                let ob = interval(200).subscribe(i => {
-                    if (pool.status == Status.Stopped || i >= 450) {
-                        ob.unsubscribe();
-                        this.start(pool);
-                    }
-                });
-            }
-        });
     }
 
     delete(pool: ApplicationPool): Promise<any> {
