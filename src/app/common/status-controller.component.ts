@@ -15,8 +15,9 @@ export abstract class StatusController {
         private model: StatusModel,
     ) {}
 
-    RestartImpl(): Promise<any> {
-        return this.StartImpl().then(this.StopImpl);
+    async RestartImpl(): Promise<any> {
+        await this.StopImpl();
+        await this.StartImpl();
     }
 
     CanStart() {

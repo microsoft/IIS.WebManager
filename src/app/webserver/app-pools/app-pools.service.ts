@@ -123,12 +123,17 @@ export class AppPoolsService {
         });
     }
 
-    recycle(pool: ApplicationPool) {
+    recycle(pool: ApplicationPool): Promise<any> {
         if (pool.status == Status.Stopped) {
             return this.start(pool);
         } else {
-            return this.stop(pool).then(_ => this.start(pool));
+            return this.restart(pool);
         }
+    }
+
+    async restart(pool: ApplicationPool): Promise<any> {
+        await this.stop(pool)
+        await this.start(pool);
     }
 
     delete(pool: ApplicationPool): Promise<any> {
