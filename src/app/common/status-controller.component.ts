@@ -60,6 +60,7 @@ export abstract class StatusController {
 `],
 })
 export class StatusControllerComponent {
+    // NOTE: restartLabel is a variable only because in the context AppPool, we call the action "Recycle"
     @Input() restartLabel: string = "Restart";
     @Input() controller: StatusController;
 }
