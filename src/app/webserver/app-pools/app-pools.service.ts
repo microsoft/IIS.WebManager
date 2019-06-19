@@ -132,7 +132,7 @@ export class AppPoolsService {
     }
 
     async restart(pool: ApplicationPool): Promise<any> {
-        await this.stop(pool)
+        await this.stop(pool);
         await this.start(pool);
     }
 

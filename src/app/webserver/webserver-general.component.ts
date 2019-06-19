@@ -17,10 +17,6 @@ class WebServerStatusController extends StatusController {
     StopImpl(): Promise<any> {
         return this.srv.stop();
     }
-
-    RestartImpl(): Promise<any> {
-        return this.srv.restart();
-    }
 }
 
 @Component({
