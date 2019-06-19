@@ -10,15 +10,15 @@ class AppPoolStatusController extends StatusController {
         private pool: ApplicationPool,
     ) { super(pool); }
 
-    StartImpl(): Promise<any> {
+    startImpl(): Promise<any> {
         return this.srv.start(this.pool);
     }
 
-    StopImpl(): Promise<any> {
+    stopImpl(): Promise<any> {
         return this.srv.stop(this.pool);
     }
 
-    RestartImpl(): Promise<any> {
+    restartImpl(): Promise<any> {
         return this.srv.recycle(this.pool);
     }
 }

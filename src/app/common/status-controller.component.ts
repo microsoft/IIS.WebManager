@@ -9,38 +9,38 @@ export interface StatusModel {
 
 export abstract class StatusController {
     private inProgress: boolean = false;
-    abstract StartImpl(): Promise<any>;
-    abstract StopImpl(): Promise<any>;
+    abstract startImpl(): Promise<any>;
+    abstract stopImpl(): Promise<any>;
     constructor(
         private model: StatusModel,
     ) {}
 
-    async RestartImpl(): Promise<any> {
-        await this.StopImpl();
-        await this.StartImpl();
+    async restartImpl(): Promise<any> {
+        await this.stopImpl();
+        await this.startImpl();
     }
 
-    CanStart() {
+    canStart() {
         return !this.inProgress && this.model.status == Status.Stopped;
     }
 
-    Start() {
-        this.Invoke(this.StartImpl());
+    start() {
+        this.invoke(this.startImpl());
     }
     
-    CanStop() {
+    canStop() {
         return !this.inProgress && this.model.status == Status.Started;
     }
 
-    Stop() {
-        this.Invoke(this.StopImpl());
+    stop() {
+        this.invoke(this.stopImpl());
     }
 
-    Restart() {
-        this.Invoke(this.RestartImpl());
+    restart() {
+        this.invoke(this.restartImpl());
     }
 
-    Invoke(operation: Promise<any>) {
+    invoke(operation: Promise<any>) {
         this.inProgress = true;
         operation.finally(() => this.inProgress = false);
     }
@@ -50,9 +50,9 @@ export abstract class StatusController {
     selector: 'status-controller',
     template: `
 <div class="controller">
-    <button class="refresh" title="{{restartLabel}}" [attr.disabled]="!controller.CanStop() || null" (click)="controller.Restart()">{{restartLabel}}</button>
-    <button class="start" title="Start" [attr.disabled]="!controller.CanStart() || null" (click)="controller.Start()">Start</button>
-    <button class="stop" title="Stop" [attr.disabled]="!controller.CanStop() || null" (click)="controller.Stop()">Stop</button>
+    <button class="refresh" title="{{restartLabel}}" [attr.disabled]="!controller.canStop() || null" (click)="controller.restart()">{{restartLabel}}</button>
+    <button class="start" title="Start" [attr.disabled]="!controller.canStart() || null" (click)="controller.start()">Start</button>
+    <button class="stop" title="Stop" [attr.disabled]="!controller.canStop() || null" (click)="controller.stop()">Stop</button>
 </div>`,
     styles: [`
 .controller {

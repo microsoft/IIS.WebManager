@@ -1,5 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component } from '@angular/core';
 import { TitlesService } from './titles.service';
 
 export interface Heading {
@@ -12,7 +11,7 @@ export interface Heading {
     template: `
 <div class="feature-title sme-focus-zone">
     <h1>
-        <i [class]="titles.heading.ico"></i><span class="border-active">{{titles.heading.name}}</span>
+        <i [class]="heading.ico"></i><span class="border-active">{{heading.name}}</span>
     </h1>
 </div>
     `,
@@ -43,4 +42,8 @@ export class FeatureHeaderComponent {
     constructor(
         private titles: TitlesService,
     ) {}
+
+    get heading() {
+        return this.titles.heading;
+    }
 }

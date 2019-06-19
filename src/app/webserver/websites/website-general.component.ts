@@ -15,11 +15,11 @@ class WebSiteStatusController extends StatusController {
         super(site);
     }
 
-    StartImpl(): Promise<any> {
+    startImpl(): Promise<any> {
         return this.srv.start(this.site);
     }
 
-    StopImpl(): Promise<any> {
+    stopImpl(): Promise<any> {
         return this.srv.stop(this.site);
     }
 }

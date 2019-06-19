@@ -10,11 +10,11 @@ class WebServerStatusController extends StatusController {
         model: WebServer,
     ) { super(model); }
 
-    StartImpl(): Promise<any> {
+    startImpl(): Promise<any> {
         return this.srv.start();
     }
 
-    StopImpl(): Promise<any> {
+    stopImpl(): Promise<any> {
         return this.srv.stop();
     }
 }
