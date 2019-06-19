@@ -12,7 +12,6 @@ import { GlobalModuleReference, HomeCategory, BreadcrumbsResolver, FeatureContex
 import { Subscription } from 'rxjs';
 import { BreadcrumbsRoot, Breadcrumb } from 'header/breadcrumb';
 import { TitlesService } from 'header/titles.service';
-import { ModelStatusUpdater, UpdateType } from 'header/model-header.component';
 import { ConnectService } from 'connect/connect.service';
 import { Item } from 'common/vtabs.component';
 import { filter, take } from 'rxjs/operators';
@@ -24,26 +23,6 @@ export class WebServerCrumbsResolver implements BreadcrumbsResolver {
 
     resolve(_: FeatureContext): Breadcrumb[] {
         return this.crumbs;
-    }
-}
-
-class WebServerStatusUpdater extends ModelStatusUpdater {
-    constructor(
-        displayName: string,
-        webServer: WebServer,
-        service: WebServerService,
-    ) {
-        super(
-            WebServerModuleName,
-            WebServerModuleIcon,
-            displayName,
-            webServer,
-            new Map<UpdateType, () => void>([
-                [UpdateType.Start, () => service.start()],
-                [UpdateType.Stop, () => service.stop()],
-                [UpdateType.Restart, () => service.restart()],
-            ]),
-        )
     }
 }
 
@@ -146,7 +125,7 @@ const subComponentList: string[] = [
 </feature-vtabs>
     `,
 })
-export class WebServerViewComponent implements OnInit, OnDestroy, AfterViewInit {
+export class WebServerViewComponent implements OnDestroy, AfterViewInit {
     @Input() webServer: WebServer;
 
     logger: Logger;
@@ -180,21 +159,6 @@ export class WebServerViewComponent implements OnInit, OnDestroy, AfterViewInit 
         factory: LoggerFactory,
     ){
         this.logger = factory.Create(this);
-    }
-
-    ngOnInit() {
-        this.connections.active.pipe(
-            filter(c => !!c),
-            take(1),
-        ).subscribe(conn =>
-            this.title.loadModelUpdater(
-                new WebServerStatusUpdater(
-                    conn.getDisplayName(),
-                    this.webServer,
-                    this.service,
-                ),
-            ),
-        );
     }
 
     ngOnDestroy() {

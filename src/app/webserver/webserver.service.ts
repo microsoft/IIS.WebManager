@@ -78,15 +78,6 @@ export class WebServerService {
         });
     }
 
-    restart() {
-        if (this._server.status != Status.Started) {
-            this.start();
-            return;
-        }
-
-        this.stop().then(() => this.start());
-    }
-
     private get(): Promise<WebServer> {
         return this._http.get("/webserver").then(ws => {
             this._server = new WebServer();

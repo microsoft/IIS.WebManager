@@ -564,7 +564,7 @@ select[enabled]:not(.inactive) {
     max-width: 100%;
     display: inline-block;
     white-space: nowrap;
-    padding-top: 25px;
+    padding-top: 15px;
     padding-left: 10px;
     padding-bottom: 15px;
 }

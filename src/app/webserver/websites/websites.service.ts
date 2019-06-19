@@ -9,8 +9,6 @@ import { AppPoolsService } from '../app-pools/app-pools.service';
 import { ApplicationPool } from '../app-pools/app-pool';
 import { ApiError, ApiErrorType } from 'error/api-error';
 import { NotificationService } from 'notification/notification.service';
-import { WebSiteItem } from './website-list';
-import { getUrlScheme } from '@angular/compiler';
 
 @Injectable()
 export class WebSitesService implements OnDestroy {

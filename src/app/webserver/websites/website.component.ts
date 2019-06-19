@@ -4,9 +4,8 @@ import { WebSite } from './site';
 import { WebSitesService } from './websites.service';
 import { DiffUtil } from 'utils/diff';
 import { BreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
-import { WebSitesModuleName, WebSiteModuleIcon } from 'main/settings';
+import { WebSitesModuleName } from 'main/settings';
 import { BreadcrumbsResolver, FeatureContext } from 'common/feature-vtabs.component';
-import { ModelStatusUpdater, UpdateType } from 'header/model-header.component';
 import { TitlesService } from 'header/titles.service';
 import { resolveWebsiteRoute } from 'webserver/webserver-routing.module';
 
@@ -15,26 +14,6 @@ class WebSiteBreadcrumbResolver implements BreadcrumbsResolver {
     resolve(model: FeatureContext): Breadcrumb[] {
         const site = <WebSite> model;
         return crumbsRoot.concat(<Breadcrumb>{ label: site.name, routerLink: [resolveWebsiteRoute(site.id)] });
-    }
-}
-
-class WebSiteStatusUpdater extends ModelStatusUpdater {
-    constructor(
-        service: WebSitesService,
-        site: WebSite,
-    ) {
-        super(
-            WebSitesModuleName,
-            WebSiteModuleIcon,
-            site.name,
-            site,
-            new Map<UpdateType, () => void>([
-                [UpdateType.Start, () => service.start(site)],
-                [UpdateType.Stop, () => service.stop(site)],
-                // TODO: consider if delete button is appropriate on model header
-                // [UpdateType.delete, () => service.delete(site)],
-            ]),
-        )
     }
 }
 
@@ -93,7 +72,6 @@ export class WebSiteComponent implements OnInit {
     }
 
     private setSite(s) {
-        this.title.loadModelUpdater(new WebSiteStatusUpdater(this.service,s));
         this.site = s;
         this._original = JSON.parse(JSON.stringify(s));
     }
