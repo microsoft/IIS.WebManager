@@ -691,9 +691,9 @@
       }
     },
     "@microsoft/windows-admin-center-sdk": {
-      "version": "1.361.0",
-      "resolved": "https://registry.npmjs.org/@microsoft/windows-admin-center-sdk/-/windows-admin-center-sdk-1.361.0.tgz",
-      "integrity": "sha512-R95eTXM3tUsPo45QFHkAqjFueruPauwqxLllVy9YuTfcN/CHimVSiS96nvymml84671YhHln6getcrEJ3I66tg==",
+      "version": "1.381.0",
+      "resolved": "https://registry.npmjs.org/@microsoft/windows-admin-center-sdk/-/windows-admin-center-sdk-1.381.0.tgz",
+      "integrity": "sha512-lUvD18Bqe6HJEplO6QiIcIMh4Eof5ncV1sizh/JO+7oMV3FrbYpUcqkpxCS4lV/+WQiszYVykHcsSedutxh/EA==",
       "requires": {
         "@angular/animations": "7.1.1",
         "@angular/common": "7.1.1",
@@ -705,7 +705,7 @@
         "@angular/router": "7.1.1",
         "chart.js": "2.7.3",
         "core-js": "2.6.0",
-        "marked": "0.6.1",
+        "marked": "0.6.2",
         "rxjs": "6.3.3",
         "zone.js": "0.8.26"
       },
@@ -854,6 +854,7 @@
       "version": "3.3.22",
       "resolved": "https://registry.npmjs.org/@types/jquery/-/jquery-3.3.22.tgz",
       "integrity": "sha512-a4JDcIhJhHYnoWCkG3xT2CZxXZeA92JeREESorg0DMQ3ZsjuKF48h7XK4l5Gl2GRa/ItGRpKMT0pyK88yRgqXQ==",
+      "dev": true,
       "requires": {
         "@types/sizzle": "*"
       }
@@ -894,7 +895,8 @@
     "@types/sizzle": {
       "version": "2.3.2",
       "resolved": "https://registry.npmjs.org/@types/sizzle/-/sizzle-2.3.2.tgz",
-      "integrity": "sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg=="
+      "integrity": "sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg==",
+      "dev": true
     },
     "@types/source-list-map": {
       "version": "0.1.2",
@@ -8751,9 +8753,9 @@
       }
     },
     "marked": {
-      "version": "0.6.1",
-      "resolved": "https://registry.npmjs.org/marked/-/marked-0.6.1.tgz",
-      "integrity": "sha512-+H0L3ibcWhAZE02SKMqmvYsErLo4EAVJxu5h3bHBBDvvjeWXtl92rGUSBYHL2++5Y+RSNgl8dYOAXcYe7lp1fA==",
+      "version": "0.6.2",
+      "resolved": "https://registry.npmjs.org/marked/-/marked-0.6.2.tgz",
+      "integrity": "sha512-LqxwVH3P/rqKX4EKGz7+c2G9r98WeM/SW34ybhgNGhUQNKtf1GmmSkJ6cDGJ/t6tiyae49qRkpyTw2B9HOrgUA==",
       "optional": true
     },
     "matchdep": {
