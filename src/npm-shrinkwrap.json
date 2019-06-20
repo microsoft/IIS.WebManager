@@ -691,9 +691,9 @@
       }
     },
     "@microsoft/windows-admin-center-sdk": {
-      "version": "1.381.0",
-      "resolved": "https://registry.npmjs.org/@microsoft/windows-admin-center-sdk/-/windows-admin-center-sdk-1.381.0.tgz",
-      "integrity": "sha512-lUvD18Bqe6HJEplO6QiIcIMh4Eof5ncV1sizh/JO+7oMV3FrbYpUcqkpxCS4lV/+WQiszYVykHcsSedutxh/EA==",
+      "version": "1.381.1",
+      "resolved": "https://registry.npmjs.org/@microsoft/windows-admin-center-sdk/-/windows-admin-center-sdk-1.381.1.tgz",
+      "integrity": "sha512-nac1zeUV7t646kOvuYSqFUQr8WNrvmYaEbm+IVx3kd+I9IXlSGNdqXM4VALcMu+6kXrvzNN+yLauFSCVxv5iNQ==",
       "requires": {
         "@angular/animations": "7.1.1",
         "@angular/common": "7.1.1",
