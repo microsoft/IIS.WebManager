@@ -45,7 +45,7 @@ export class ConnectionPickerComponent implements OnDestroy {
 
     private currentName(): string {
         if (!this._active) {
-            return "Not Connected";
+            return "Connect to server...";
         }
 
         return this._active.getDisplayName();
