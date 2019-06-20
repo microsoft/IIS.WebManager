@@ -8,7 +8,7 @@ import {ApiConnection} from './api-connection';
 @Component({
     selector: 'connection-picker',
     template: `
-        <a title="Manage Servers" class="background-active hover-primary2 nav-height button" [routerLink]="[_connections.length > 0 ? '/settings/servers' : '/connect']">{{currentName()}}</a>
+        <a title="Manage Servers" class="background-active hover-primary2 nav-height" [routerLink]="[_connections.length > 0 ? '/settings/servers' : '/connect']">{{currentName()}}</a>
     `,
     styles: [`
         a {
