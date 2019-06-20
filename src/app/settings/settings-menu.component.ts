@@ -16,7 +16,7 @@ import { Selector } from '../common/selector';
                     <a class="color-normal server" [routerLink]="['/settings/servers']" (click)="_settingsMenu.close()">Add or Remove Servers</a>
                 </li>
                 <li class="hover-editing">
-                    <a class="color-normal download" [routerLink]="['/get']" (click)="_settingsMenu.close()">Download Microsoft IIS Administration</a>
+                    <a class="color-normal download" [routerLink]="['/get']" (click)="_settingsMenu.close()">Download Microsoft IIS Administration API</a>
                 </li>
                 <li class="hover-editing">
                     <a class="color-normal dev" href="https://github.com/microsoft/iis.administration" target="_blank">Developers</a>

@@ -6,8 +6,8 @@ enum ViewState {
 }
 
 const viewStates = [
-    { icon: "more", title: "More..." },
-    { icon: "less", title: "less..." },
+    { icon: "more", title: "Expand" },
+    { icon: "less", title: "Collapse" },
 ]
 
 @Component({

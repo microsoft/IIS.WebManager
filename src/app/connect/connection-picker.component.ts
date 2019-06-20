@@ -8,7 +8,10 @@ import {ApiConnection} from './api-connection';
 @Component({
     selector: 'connection-picker',
     template: `
-        <a title="Manage Servers" class="background-active hover-primary2 nav-height" [routerLink]="[_connections.length > 0 ? '/settings/servers' : '/connect']">{{currentName()}}</a>
+        <a title="Manage Servers" class="background-active hover-primary2 nav-height button" [routerLink]="[_connections.length > 0 ? '/settings/servers' : '/connect']">{{currentName()}}</a>
+        <form>
+            <button title="Manage Servers" [formaction]="[_connections.length > 0 ? '/settings/servers' : '/connect']">{{currentName()}}</button>
+        </form>
     `,
     styles: [`
         a {
@@ -45,7 +48,7 @@ export class ConnectionPickerComponent implements OnDestroy {
 
     private currentName(): string {
         if (!this._active) {
-            return "Not Connected";
+            return "Connect Server";
         }
 
         return this._active.getDisplayName();

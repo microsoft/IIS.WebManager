@@ -15,11 +15,11 @@ import { HttpFacade } from 'common/http-facade';
                 <p>
                     Start managing your Microsoft IIS Server right here.
                     <br/>
-                    <a href="https://blogs.iis.net/adminapi">Learn More</a>
+                    For more information, go to <a href="https://blogs.iis.net/adminapi">Microsoft IIS Administration API Home</a> page.
                 </p>
                 <p>
                     <a class="bttn background-active" [attr.href]="DOWNLOAD_URL" (click)="download($event)">
-                        Download Microsoft IIS Administration
+                        Download Microsoft IIS Administration API
                     </a>
                     <small class='block'>
                         Version {{SETUP_VERSION}}

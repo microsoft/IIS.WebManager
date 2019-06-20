@@ -9,7 +9,7 @@ import { ApiConnection } from './api-connection';
 @Component({
     template: `
     <div class="get hidden-xs" *ngIf='!_connecting'>
-        <a class="bttn bordered" [routerLink]="['/get']"><small>Get Microsoft IIS Administration</small></a>
+        <a class="bttn bordered" [routerLink]="['/get']"><small>Get Microsoft IIS Administration API</small></a>
     </div>
     <div class="center">
         <div *ngIf='!_connecting'>
