@@ -82,7 +82,7 @@ li:focus {
     font-weight: bold;
     margin-left: 1em;
     margin-top: 0.5em;
-    margin-bottom: 0;
+    margin-bottom: 0.5em;
     padding-bottom: 0;
 }
 
