@@ -549,9 +549,12 @@ select[enabled]:not(.inactive) {
 }
 
 .center {
-    position: relative;;
+    position: fixed;
     width: 600px;
     max-width: 100%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
     padding-left: 15px;
     padding-right: 15px;
 }
