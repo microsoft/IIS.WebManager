@@ -4,13 +4,13 @@ import { FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 
 export interface StatusModel {
+    readonly name: string;
     readonly status: Status;
 }
 
 export abstract class StatusController {
     private inProgress: boolean = false;
-    abstract startImpl(): Promise<any>;
-    abstract stopImpl(): Promise<any>;
+
     constructor(
         private model: StatusModel,
     ) {}
@@ -20,30 +20,34 @@ export abstract class StatusController {
         await this.startImpl();
     }
 
-    canStart() {
+    canStart(): boolean {
+        console.log(`${this.model.name} status: ${this.model.status}`);
         return !this.inProgress && this.model.status == Status.Stopped;
     }
 
-    start() {
+    start(): void {
         this.invoke(this.startImpl());
     }
     
-    canStop() {
+    canStop(): boolean {
         return !this.inProgress && this.model.status == Status.Started;
     }
 
-    stop() {
+    stop(): void {
         this.invoke(this.stopImpl());
     }
 
-    restart() {
+    restart(): void {
         this.invoke(this.restartImpl());
     }
 
-    invoke(operation: Promise<any>) {
+    invoke(operation: Promise<any>): void {
         this.inProgress = true;
         operation.finally(() => this.inProgress = false);
     }
+
+    abstract startImpl(): Promise<any>;
+    abstract stopImpl(): Promise<any>;
 }
 
 @Component({
