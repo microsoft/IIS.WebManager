@@ -1,8 +1,9 @@
-﻿import { Component, Input, Optional, Inject, ViewChild } from '@angular/core';
+﻿import { Component, Input, Optional, Inject, ViewChild, OnInit } from '@angular/core';
 import { Selector } from 'common/selector';
 import { AppPoolsService } from '../app-pools/app-pools.service';
 import { ApplicationPool } from '../app-pools/app-pool';
 import { DiffUtil } from 'utils/diff';
+import { Status } from 'common/status';
 
 @Component({
     selector: 'app-pool-details',
@@ -65,7 +66,7 @@ import { DiffUtil } from 'utils/diff';
         }
     `]
 })
-export class AppPoolDetailsComponent {
+export class AppPoolDetailsComponent implements OnInit {
     @Input() public model: ApplicationPool;
 
     @ViewChild(Selector) private _selector: Selector;
@@ -82,7 +83,7 @@ export class AppPoolDetailsComponent {
         return this._svc;
     }
 
-    private onModelChanged(): void {
+    onModelChanged(): void {
         if (!this._svc) {
             return;
         }
@@ -103,12 +104,12 @@ export class AppPoolDetailsComponent {
         this._original = JSON.parse(JSON.stringify(p));
     }
 
-    private openSelector() {
+    openSelector() {
         this._selector.toggle();
     }
 
-    private get started(): boolean {
-        return this.model.status == 'started';
+    get started(): boolean {
+        return this.model.status == Status.Started;
     }
 
     onStart() {

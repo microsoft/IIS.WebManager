@@ -62,7 +62,7 @@ class WebSiteStatusController extends StatusController {
         <selector #poolSelect class="container-fluid create">
             <app-pools #appPools [listingOnly]="true" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
         </selector>
-        <app-pool-details [model]="site.application_pool"></app-pool-details>
+        <app-pool-details *ngIf="site.application_pool" [model]="site.application_pool"></app-pool-details>
     </tab>
 </tabs>`,
     styles:[`
