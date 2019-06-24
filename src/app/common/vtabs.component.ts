@@ -54,7 +54,7 @@ import { Heading } from 'header/feature-header.component';
                 </ng-container>
             </ul>
         </div>
-        <div class="content sme-focus-zone" [class.hidden-nav]="!IsActive">
+        <div class="content sme-focus-zone" [class.nav-hidden]="!IsActive">
             <ng-content></ng-content>
         </div>
     `,
@@ -64,7 +64,7 @@ import { Heading } from 'header/feature-header.component';
     height: 100vh;
 }
 
-.hidden-nav {
+.nav-hidden {
     padding-left:12px;
 }
 
