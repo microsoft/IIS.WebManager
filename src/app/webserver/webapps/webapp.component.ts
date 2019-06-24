@@ -1,13 +1,13 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {Router, ActivatedRoute} from '@angular/router';
-import {DiffUtil} from '../../utils/diff';
-import {WebApp} from './webapp';
-import {WebAppsService} from './webapps.service';
+import { Component, OnInit, Inject } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { DiffUtil } from 'utils/diff';
+import { WebApp } from './webapp';
+import { WebAppsService } from './webapps.service';
 import { WebAppsModuleName } from 'main/settings';
 import { BreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
 import { BreadcrumbsResolver, FeatureContext } from 'common/feature-vtabs.component';
 import { TitlesService } from 'header/titles.service';
-import { resolveWebsiteRoute, resolveWebAppRoute } from 'webserver/webserver-routing.module';
+import { resolveWebsiteRoute } from 'webserver/webserver-routing.module';
 
 const crumbsRoot = BreadcrumbsRoot.concat(WebSitesCrumb);
 class WebAppCrumbsResolver implements BreadcrumbsResolver {
@@ -15,7 +15,7 @@ class WebAppCrumbsResolver implements BreadcrumbsResolver {
         let app = <WebApp> model;
         return crumbsRoot.concat(
             <Breadcrumb>{ label: app.website.name, routerLink: [resolveWebsiteRoute(app.website.id)] },
-            <Breadcrumb>{ label: app.path, routerLink: [resolveWebAppRoute(app.id)] },
+            <Breadcrumb>{ label: app.path },
         );
     }
 }

@@ -1,16 +1,25 @@
 import { IsWAC } from "environments/environment";
-import { WebSitesModuleName, AppPoolsModuleName } from "main/settings";
+import { WebSitesModuleName, AppPoolsModuleName, WebServerRoute, WebServerModuleName } from "main/settings";
 import { SectionHelper } from "common/section.helper";
 
-const WebSiteModuleRoute = `/webserver/${SectionHelper.normalize(WebSitesModuleName)}`;
-const AppPoolModuleRoute = `/webserver/${SectionHelper.normalize(AppPoolsModuleName)}`;
+export const WebServerGeneralRoute = [ `/${WebServerRoute}/${SectionHelper.normalize(WebServerModuleName)}+general` ];
+export const WebSiteListRoute = [ `/${WebServerRoute}/${SectionHelper.normalize(WebSitesModuleName)}` ];
+export const AppPoolListRoute = [ `/${WebServerRoute}/${SectionHelper.normalize(AppPoolsModuleName)}` ];
 
 export const HomeModuleName = "Home";
-export const BreadcrumbsRoot = IsWAC ? [<Breadcrumb>{ label: "IIS Web Server" }] : [<Breadcrumb>{ label: HomeModuleName, routerLink: ["/"] }];
-export const WebSitesCrumb = <Breadcrumb>{ label: WebSitesModuleName, routerLink: [WebSiteModuleRoute]};
-export const AppPoolsCrumb = <Breadcrumb>{ label: AppPoolsModuleName, routerLink: [AppPoolModuleRoute]};
+export const WebServerBreadcrumbLabel = "IIS Web Server";
+export const BreadcrumbsRoot = IsWAC ? [<Breadcrumb>{ label: WebServerBreadcrumbLabel, routerLink: WebServerGeneralRoute }] : [<Breadcrumb>{ label: HomeModuleName, routerLink: ["/"] }];
+export const WebSitesCrumb = <Breadcrumb>{ label: WebSitesModuleName, routerLink: WebSiteListRoute };
+export const AppPoolsCrumb = <Breadcrumb>{ label: AppPoolsModuleName, routerLink: AppPoolListRoute };
+
+export interface Navigator {
+    navigate(): void;
+}
 
 export class Breadcrumb {
-    public label: string;
-    public routerLink: string[];
+    constructor(
+        public label: string,
+        public routerLink: string[],
+        public tabName: string,
+    ) {}
 }

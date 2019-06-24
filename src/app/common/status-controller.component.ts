@@ -21,7 +21,6 @@ export abstract class StatusController {
     }
 
     canStart(): boolean {
-        console.log(`${this.model.name} status: ${this.model.status}`);
         return !this.inProgress && this.model.status == Status.Stopped;
     }
 

@@ -25,6 +25,7 @@ import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { IsWAC } from 'environments/environment';
 import { TitlesModule } from 'header/titles.module';
 import { Heading } from 'header/feature-header.component';
+import { TitlesService } from 'header/titles.service';
 
 @Component({
     selector: 'vtabs',
@@ -119,6 +120,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     @ViewChildren('tabLabels') tabLabels: QueryList<ElementRef>;
 
     constructor(
+        private _titles: TitlesService,
         private _activatedRoute: ActivatedRoute,
         private _location: Location,
         private _router: Router,
@@ -160,6 +162,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         }
         this.logger.log(LogLevel.DEBUG, `Default tab selected ${selectedPath}`);
         this._sectionHelper = new SectionHelper(this.tabs.map(t => t.fullName), selectedPath, this.markLocation, this._location, this._router);
+        this._titles.sections = this._sectionHelper;
         this._subscriptions.push(this._sectionHelper.active.subscribe(sec => this.onSectionChange(sec)));
     }
 

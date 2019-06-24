@@ -1,19 +1,18 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DiffUtil } from '../../utils/diff';
+import { DiffUtil } from 'utils/diff';
 import { ApplicationPool } from './app-pool';
 import { AppPoolsService } from './app-pools.service';
 import { AppPoolsModuleName } from 'main/settings';
 import { BreadcrumbsResolver, FeatureContext } from 'common/feature-vtabs.component';
 import { Breadcrumb, BreadcrumbsRoot, AppPoolsCrumb } from 'header/breadcrumb';
 import { TitlesService } from 'header/titles.service';
-import { resolveAppPoolRoute } from 'webserver/webserver-routing.module';
 
 const crumbsRoot = BreadcrumbsRoot.concat(AppPoolsCrumb);
 class AppPoolBreadcrumbResolver implements BreadcrumbsResolver {
     resolve(model: FeatureContext): Breadcrumb[] {
         const pool = <ApplicationPool> model;
-        return crumbsRoot.concat(<Breadcrumb>{ label: pool.name, routerLink: [resolveAppPoolRoute(pool.id)] });
+        return crumbsRoot.concat(<Breadcrumb>{ label: pool.name });
     }
 }
 
