@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
+import { OptionsService } from "main/options.service";
 import { FormsModule } from '@angular/forms';
 import { Subscription, Subject, ReplaySubject } from 'rxjs';
 import { DynamicComponent } from './dynamic.component';
@@ -32,8 +33,8 @@ import { Heading } from 'header/feature-header.component';
     // That is because users are allowed to use only tab key, not arrow keys, unlike the WAC mode.
     template: `
         <div class="vtabs">
-            <div *ngIf="header" class="vtab-header items">{{header}}</div>
             <ul class="items sme-focus-zone">
+                <div *ngIf="header" class="vtab-header items">{{header}}</div>
                 <ng-container *ngFor="let category of getCategories()">
                     <ng-container *ngIf="!IsHidden(category)">
                         <li *ngIf="category" class="separator">
@@ -53,7 +54,7 @@ import { Heading } from 'header/feature-header.component';
                 </ng-container>
             </ul>
         </div>
-        <div class="content sme-focus-zone">
+        <div class="content sme-focus-zone" [class.nav-hidden]="!IsActive">
             <ng-content></ng-content>
         </div>
     `,
@@ -61,6 +62,10 @@ import { Heading } from 'header/feature-header.component';
 .content {
     min-width: 320px;
     height: 100vh;
+}
+
+.nav-hidden {
+    padding-left:12px;
 }
 
 li:focus {
@@ -78,6 +83,7 @@ li:focus {
     margin-left: 1em;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
+    padding-bottom: 0;
 }
 
 .vtabs {
@@ -116,10 +122,15 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         private _activatedRoute: ActivatedRoute,
         private _location: Location,
         private _router: Router,
+        private options: OptionsService,
         factory: LoggerFactory,
     ) {
         this.tabs = [];
         this.logger = factory.Create(this);
+    }
+
+    get IsActive() {
+        return this.options.active;
     }
 
     public ngAfterViewInit() {

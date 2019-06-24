@@ -11,12 +11,12 @@ import { CertificatesService } from './certificates.service';
         <loading *ngIf="!_items"></loading>
         <div class="toolbar">
             <span *ngIf="serviceLoading" class="loading">Retrieving certificates</span>
-            <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6 overflow-visible">
+            <div class="toolbar-right">
+                <button class="refresh" title="Refresh" (click)="refresh()"></button>
                 <div *ngIf="_items" class="col-xs-8 col-sm-5 col-md-4 col-lg-3 actions filter hidden-xs">
-                    <input type="search" aria-label="Filter" class="form-control" [class.border-active]="_filter" [(ngModel)]="_filter" (ngModelChange)="filter($event)" [throttle]="300" />
+                    <input placeholder="Search" type="search" aria-label="Filter" class="form-control" [class.border-active]="_filter" [(ngModel)]="_filter" (ngModelChange)="filter($event)" [throttle]="300" />
                 </div>
             </div>
-            <button class="refresh" title="Refresh" (click)="refresh()"></button>
             <div class="clear"></div>
         </div>
         <div *ngIf="_items" class="container-fluid">
@@ -87,15 +87,23 @@ import { CertificatesService } from './certificates.service';
 
         .toolbar button {
             border: none;
-            float: right;
         }
 
         .toolbar > span {
             vertical-align: sub;
         }
 
+        .toolbar-right {
+            float: right;
+        }
+
         .refresh {
-            margin-left: 10px;
+            padding-right: 12px;
+        }
+
+        .filter {
+            width: 300px;
+            margin-right:12px;
         }
     `]
 })

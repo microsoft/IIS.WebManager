@@ -16,7 +16,7 @@ import { buffer, map, filter, take } from 'rxjs/operators'
             {{_selected.length}}
         </div>
         <div *ngIf="_current" class="col-xs-8 col-sm-4 col-md-2 actions filter hidden-xs">
-            <input type="search" class="form-control" [class.border-active]="_filter" [(ngModel)]="_filter" (ngModelChange)="filter($event)" [throttle]="300" />
+            <input placeholder="Search" type="search" class="form-control" [class.border-active]="_filter" [(ngModel)]="_filter" (ngModelChange)="filter($event)" [throttle]="300" />
         </div>
         <div *ngIf="_current" tabindex="-1" class="wrapper" 
             [selectable]="_items"
