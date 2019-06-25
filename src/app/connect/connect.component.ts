@@ -11,7 +11,7 @@ import { ApiConnection } from './api-connection';
     <div class="get hidden-xs" *ngIf='!_connecting'>
         <a class="bttn bordered" [routerLink]="['/get']"><small>Get Microsoft IIS Administration API</small></a>
     </div>
-    <div class="center">
+    <div class="center-page">
         <div *ngIf='!_connecting'>
             <h1 [class.advanced]="_connectionType == 'advanced'">Connect</h1>
             <p *ngIf="_connectionType == 'simple'">to Local Server</p>
@@ -147,6 +147,13 @@ import { ApiConnection } from './api-connection';
 
         .rememberMe {
             margin-top: 35px;
+        }
+
+        .center-page {
+            position: relative;
+            width: 600px;
+            max-width: 100%;
+            padding: 30px;
         }
     `]
 })
