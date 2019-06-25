@@ -306,15 +306,14 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
 
     private showMenu(show: boolean) {
         this._menuOn = (show == null) ? true : show;
-        this._menuOn = show;
     }
 
     private toggleMenu() {
         if (this._menuOn) {
             this.showMenu(false);
-        } else {
-            this.showMenu(true);
+            return;
         }
+        this.showMenu(true);
     }
 
     private onClickToggleMenu() {
