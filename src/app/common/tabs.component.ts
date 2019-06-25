@@ -109,13 +109,6 @@ import { SectionHelper } from './section.helper';
           right: 0;
           cursor: pointer;
           z-index: 9;
-          
-          outline-style: dashed;
-          outline-width: 2px;
-          outline-offset: -2px;
-          outline-color: #000;
-          text-decoration: underline;
-          
           height: 25px;
         }
 
@@ -176,7 +169,7 @@ import { SectionHelper } from './section.helper';
                             #item
                             tabindex="0"
                             *ngFor="let tab of tabs; let i = index"
-                            class="border-active border-bottom-normal"
+                            class="border-active border-bottom-normal accessibility-focusable"
                             [ngClass]="{active: tab.active}"
                             (keyup.space)="selectTab(i)"
                             (keyup.enter)="selectTab(i)"
@@ -197,7 +190,7 @@ import { SectionHelper } from './section.helper';
                     (keyup.enter)="onKeyupToggleMenu()"
                     (click)="onClickToggleMenu()"
                     title="{{ (_menuOn) ? 'Shrink' : 'Expand' }}"
-                    class="border-active hover-active color-normal"
+                    class="border-active hover-active color-normal accessibility-focusable"
                     [class.background-active]="_menuOn">
                     <i class="fa fa-ellipsis-h"></i>
                 </span>
@@ -207,7 +200,7 @@ import { SectionHelper } from './section.helper';
                     <li
                         tabindex="0"
                         *ngFor="let tab of tabs; let i = index;"
-                        class="hover-active"
+                        class="hover-active accessibility-focusable"
                         [ngClass]="{'background-active': tab.active}"
                         (keyup.space)="selectTab(i)"
                         (keyup.enter)="selectTab(i)"
@@ -328,8 +321,8 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
 
     private onKeyupToggleMenu() {
         if (this._toggleOnProcessing) {
-            // when user click the more button with Enter or Space, this function can be called together with onClickToggleMenu().
-            // In that case, we should skip this function call.
+            // Ignore this if this is called shortly after onClickToggleMenu().
+            // This happens because we used <span> tag instead of button control.
             return;
         }
 
