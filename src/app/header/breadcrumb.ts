@@ -8,9 +8,16 @@ export const AppPoolListRoute = [ `/${WebServerRoute}/${SectionHelper.normalize(
 
 export const HomeModuleName = "Home";
 export const WebServerBreadcrumbLabel = "IIS Web Server";
-export const BreadcrumbsRoot = IsWAC ? [<Breadcrumb>{ label: WebServerBreadcrumbLabel, routerLink: WebServerGeneralRoute }] : [<Breadcrumb>{ label: HomeModuleName, routerLink: ["/"] }];
 export const WebSitesCrumb = <Breadcrumb>{ label: WebSitesModuleName, routerLink: WebSiteListRoute };
 export const AppPoolsCrumb = <Breadcrumb>{ label: AppPoolsModuleName, routerLink: AppPoolListRoute };
+
+export function GetBreadcrumbsRoot(): Breadcrumb[] {
+    if (IsWAC) {
+        return [<Breadcrumb>{ label: WebServerBreadcrumbLabel, routerLink: WebServerGeneralRoute }];
+    } else {
+        return [<Breadcrumb>{ label: HomeModuleName, routerLink: ["/"] }];
+    }
+}
 
 export interface Navigator {
     navigate(): void;

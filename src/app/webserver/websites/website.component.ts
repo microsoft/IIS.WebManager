@@ -3,11 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { WebSite } from './site';
 import { WebSitesService } from './websites.service';
 import { DiffUtil } from 'utils/diff';
-import { BreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
+import { GetBreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
 import { WebSitesModuleName } from 'main/settings';
 import { BreadcrumbsResolver, FeatureContext } from 'common/feature-vtabs.component';
 
-const crumbsRoot = BreadcrumbsRoot.concat(WebSitesCrumb);
+const crumbsRoot = GetBreadcrumbsRoot().concat(WebSitesCrumb);
 class WebSiteBreadcrumbResolver implements BreadcrumbsResolver {
     resolve(model: FeatureContext): Breadcrumb[] {
         const site = <WebSite> model;

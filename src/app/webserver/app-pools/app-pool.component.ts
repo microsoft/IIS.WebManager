@@ -5,10 +5,9 @@ import { ApplicationPool } from './app-pool';
 import { AppPoolsService } from './app-pools.service';
 import { AppPoolsModuleName } from 'main/settings';
 import { BreadcrumbsResolver, FeatureContext } from 'common/feature-vtabs.component';
-import { Breadcrumb, BreadcrumbsRoot, AppPoolsCrumb } from 'header/breadcrumb';
-import { TitlesService } from 'header/titles.service';
+import { Breadcrumb, GetBreadcrumbsRoot, AppPoolsCrumb } from 'header/breadcrumb';
 
-const crumbsRoot = BreadcrumbsRoot.concat(AppPoolsCrumb);
+const crumbsRoot = GetBreadcrumbsRoot().concat(AppPoolsCrumb);
 class AppPoolBreadcrumbResolver implements BreadcrumbsResolver {
     resolve(model: FeatureContext): Breadcrumb[] {
         const pool = <ApplicationPool> model;
@@ -37,7 +36,6 @@ export class AppPoolComponent implements OnInit {
     private original: ApplicationPool;
 
     constructor(
-        private title: TitlesService,
         private route: ActivatedRoute,
         private router: Router,
         @Inject("AppPoolsService") private service: AppPoolsService,

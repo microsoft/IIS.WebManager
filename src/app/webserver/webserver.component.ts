@@ -10,13 +10,14 @@ import { Runtime } from 'runtime/runtime';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { GlobalModuleReference, HomeCategory, BreadcrumbsResolver, FeatureContext, FeatureVTabsComponent } from 'common/feature-vtabs.component';
 import { Subscription } from 'rxjs';
-import { Breadcrumb, BreadcrumbsRoot } from 'header/breadcrumb';
+import { Breadcrumb, GetBreadcrumbsRoot } from 'header/breadcrumb';
 import { Item } from 'common/vtabs.component';
 import { Status } from 'common/status';
 
+const crumbs = GetBreadcrumbsRoot();
 export class WebServerCrumbsResolver implements BreadcrumbsResolver {
     resolve(_: FeatureContext): Breadcrumb[] {
-        return BreadcrumbsRoot;
+        return crumbs;
     }
 }
 

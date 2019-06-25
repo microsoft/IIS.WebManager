@@ -4,12 +4,11 @@ import { DiffUtil } from 'utils/diff';
 import { WebApp } from './webapp';
 import { WebAppsService } from './webapps.service';
 import { WebAppsModuleName } from 'main/settings';
-import { BreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
+import { GetBreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
 import { BreadcrumbsResolver, FeatureContext } from 'common/feature-vtabs.component';
-import { TitlesService } from 'header/titles.service';
 import { resolveWebsiteRoute } from 'webserver/webserver-routing.module';
 
-const crumbsRoot = BreadcrumbsRoot.concat(WebSitesCrumb);
+const crumbsRoot = GetBreadcrumbsRoot().concat(WebSitesCrumb);
 class WebAppCrumbsResolver implements BreadcrumbsResolver {
     resolve(model: FeatureContext): Breadcrumb[] {
         let app = <WebApp> model;
@@ -43,7 +42,6 @@ export class WebAppComponent implements OnInit {
     private _original: any;
 
     constructor(
-        private title: TitlesService,
         private _route: ActivatedRoute,
         private _router: Router,
         @Inject("WebAppsService") private _service: WebAppsService,
