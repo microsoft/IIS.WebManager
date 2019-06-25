@@ -55,7 +55,7 @@ import { TitlesService } from 'header/titles.service';
                 </ng-container>
             </ul>
         </div>
-        <div class="content sme-focus-zone" [class.nav-hidden]="!IsActive">
+        <div class="content sme-focus-zone" [class.nav-hidden]="!isActive">
             <ng-content></ng-content>
         </div>
     `,
@@ -131,8 +131,12 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         this.logger = factory.Create(this);
     }
 
-    get IsActive() {
+    get isActive() {
         return this.options.active;
+    }
+
+    refresh() {
+        this.options.refresh();
     }
 
     public ngAfterViewInit() {
