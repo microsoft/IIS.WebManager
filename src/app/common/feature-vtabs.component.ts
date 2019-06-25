@@ -54,7 +54,7 @@ export class GlobalModuleReference {
     selector: 'feature-vtabs',
     // NOTE: when [routerLink] is used, Angular automatically set tabindex="0". In order to avoid that behavior, we decided to add tabindex="-1".
     template: `
-<div class="sidebar crumb" [class.nav]="IsActive">
+<div class="sidebar crumb" [class.nav]="isActive">
     <vtabs [header]="header" [markLocation]="true" (activate)="refresh()" [defaultTab]="default" [categories]="['${HomeCategory}', subcategory]">
         <item [name]="generalTabName" [ico]="generalTabIcon" [category]="generalTabCategory || subcategory">
             <ng-content select=".general-tab"></ng-content>
@@ -96,7 +96,7 @@ export class GlobalModuleReference {
         this.logger = factory.Create(this);
     }
 
-    get IsActive() {
+    get isActive() {
         return this.options.active;
     }
 

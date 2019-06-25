@@ -22,7 +22,6 @@ import { SectionHelper } from './section.helper';
 import { Module as DynamicModule } from './dynamic.component';
 import { FeatureVTabsComponent } from './feature-vtabs.component';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
-import { IsWAC } from 'environments/environment';
 import { TitlesModule } from 'header/titles.module';
 import { Heading } from 'header/feature-header.component';
 import { TitlesService } from 'header/titles.service';
@@ -247,16 +246,11 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         if (index == -1) {
             index = 0;
         }
-
         this.tabs.forEach(t => t.deactivate());
         let selectedTab = this.tabs[index];
         selectedTab.activate();
         this.activate.emit(selectedTab);
         this.onSelectItem.next(selectedTab);
-    }
-
-    private isWAC() {
-        return IsWAC;
     }
 }
 
@@ -295,10 +289,10 @@ export class Item implements OnInit, OnDestroy, Heading {
     }
 
     @Input() ico: string = "";
-    @Input() active: boolean;
     @Input() routerLink: Array<any>;
     @Input() category: string = "";
     @Input() name: string;
+    active: boolean;
     private _fullName: string;
 
     @ContentChildren(DynamicComponent) dynamicChildren: QueryList<DynamicComponent>;
@@ -327,7 +321,6 @@ export class Item implements OnInit, OnDestroy, Heading {
                 replaceUrl: true,
             });
         }
-
         this.active = true;
     }
 
@@ -335,7 +328,6 @@ export class Item implements OnInit, OnDestroy, Heading {
         if (this.dynamicChildren) {
             this.dynamicChildren.forEach(child => child.deactivate());
         }
-
         this.active = false;
     }
 
