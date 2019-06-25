@@ -33,7 +33,8 @@ a:focus{
 div:focus,
 label:focus,
 a:focus,
-button:focus {
+button:focus,
+.accessibility-focusable:focus {
     outline-style: dashed;
     outline-width: 2px;
     outline-offset: -2px;
@@ -549,7 +550,7 @@ select[enabled]:not(.inactive) {
 }
 
 .center {
-    position:fixed;
+    position: fixed;
     width: 600px;
     max-width: 100%;
     left: 50%;

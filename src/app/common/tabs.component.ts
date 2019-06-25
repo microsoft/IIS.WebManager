@@ -109,13 +109,6 @@ import { SectionHelper } from './section.helper';
           right: 0;
           cursor: pointer;
           z-index: 9;
-          
-          outline-style: dashed;
-          outline-width: 2px;
-          outline-offset: -2px;
-          outline-color: #000;
-          text-decoration: underline;
-          
           height: 25px;
         }
 
@@ -176,7 +169,7 @@ import { SectionHelper } from './section.helper';
                             #item
                             tabindex="0"
                             *ngFor="let tab of tabs; let i = index"
-                            class="border-active border-bottom-normal"
+                            class="border-active border-bottom-normal accessibility-focusable"
                             [ngClass]="{active: tab.active}"
                             (keyup.space)="selectTab(i)"
                             (keyup.enter)="selectTab(i)"
@@ -190,10 +183,29 @@ import { SectionHelper } from './section.helper';
                     <div class="hider background-normal"></div>
                 </div>
             </div>
-            <div class='menu-btn color-active background-normal' #menuBtn (click)="showMenu(true)"><span class="border-active hover-active color-normal" [class.background-active]="_menuOn"><i class="fa fa-ellipsis-h"></i></span></div>
+            <div class='menu-btn color-active background-normal' #menuBtn>
+                <span
+                    tabindex="0"
+                    (keyup.space)="onToggleMenu()"
+                    (keyup.enter)="onToggleMenu()"
+                    (click)="onToggleMenu()"
+                    title="{{ (_menuOn) ? 'Shrink' : 'Expand' }}"
+                    class="border-active hover-active color-normal accessibility-focusable"
+                    [class.background-active]="_menuOn">
+                    <i class="fa fa-ellipsis-h"></i>
+                </span>
+            </div>
             <div class='menu border-active background-normal' [hidden]="!_menuOn">
                 <ul>
-                    <li tabindex="0" *ngFor="let tab of tabs; let i = index;" class="hover-active" [ngClass]="{'background-active': tab.active}" (keyup.space)="selectTab(i)" (keyup.enter)="selectTab(i)" (click)="selectTab(i)">{{tab.name}}</li>
+                    <li
+                        tabindex="0"
+                        *ngFor="let tab of tabs; let i = index;"
+                        class="hover-active accessibility-focusable"
+                        [ngClass]="{'background-active': tab.active}"
+                        (keyup.space)="selectTab(i)"
+                        (keyup.enter)="selectTab(i)"
+                        (click)="selectTab(i)"
+                    >{{tab.name}}</li>
                 </ul>
             </div>
             <ng-content></ng-content>
@@ -226,7 +238,6 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
                 private _activatedRoute: ActivatedRoute,
                 private _location: Location,
                 private _router: Router) {
-
         this.tabs = [];
         this._default = this._activatedRoute.snapshot.params["section"];
     }
@@ -265,7 +276,14 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
         this.tabs.push(tab);
     }
 
-    private selectTab(index: number) {
+    onToggleMenu() {
+        this._menuOn = !this._menuOn;
+    }
+
+    selectTab(index: number) {
+        if (this._menuOn) {
+            this.showMenu(false);
+        }
         this._sectionHelper.selectSection(this.tabs[index].name);
     }
 
@@ -283,7 +301,7 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
     }
 
     private showMenu(show: boolean) {
-        this._menuOn = (show == null) ? true : show;
+        this._menuOn = show;
     }
 
     private dClick(evt) {

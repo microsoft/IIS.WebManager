@@ -9,7 +9,7 @@ import { HttpFacade } from 'common/http-facade';
 
 @Component({
     template: `
-        <div class="center">
+        <div class="center-page">
             <div *ngIf='!_inProgress'>
                 <h1>Hi there!</h1>
                 <p>
@@ -43,7 +43,11 @@ import { HttpFacade } from 'common/http-facade';
         </div>
     `,
     styles: [`
-        .center {
+        .center-page {
+            position: relative;
+            width: 600px;
+            max-width: 100%;
+            padding: 30px;
             text-align: center;
         }
 
