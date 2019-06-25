@@ -11,6 +11,7 @@
         "webapps",
         "Unsubscribable",
         "tabindex",
-        "valign"
+        "valign",
+        "focusable"
     ]
 }

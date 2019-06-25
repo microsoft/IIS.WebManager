@@ -11,7 +11,7 @@ import { Router } from "@angular/router";
 <div class="titles">
     <ul class="breadcrumbs">
         <li *ngFor="let crumb of breadcrumbs; index as i">
-            <span class="accessibility-focusable" [ngClass]="{root: !i}" [class.color-active]="canNavigate(crumb)" tabIndex="0" (click)="navigate(crumb)">{{crumb.label}}</span>
+            <span class="focusable" [ngClass]="{root: !i}" [class.color-active]="canNavigate(crumb)" tabIndex="0" (click)="navigate(crumb)">{{crumb.label}}</span>
             <span class="separator" *ngIf="i != breadcrumbs.length - 1">&gt;</span>
         </li>
     </ul>
