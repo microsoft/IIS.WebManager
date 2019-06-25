@@ -186,9 +186,9 @@ import { SectionHelper } from './section.helper';
             <div class='menu-btn color-active background-normal' #menuBtn>
                 <span
                     tabindex="0"
-                    (keyup.space)="onKeyupToggleMenu()"
-                    (keyup.enter)="onKeyupToggleMenu()"
-                    (click)="onClickToggleMenu()"
+                    (keyup.space)="onToggleMenu($event)"
+                    (keyup.enter)="onToggleMenu($event)"
+                    (click)="onToggleMenu($event)"
                     title="{{ (_menuOn) ? 'Shrink' : 'Expand' }}"
                     class="border-active hover-active color-normal accessibility-focusable"
                     [class.background-active]="_menuOn">
@@ -227,7 +227,6 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
     private _tabsItems: Array<ElementRef>;
     private _hashCache: Array<string> = [];
     private _sectionHelper: SectionHelper;
-    private _toggleOnProcessing: boolean = false;
 
     @ViewChild('menuBtn') menuBtn: ElementRef;
     @ViewChildren('item') tabList: QueryList<ElementRef>;
@@ -277,11 +276,15 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
         this.tabs.push(tab);
     }
 
-    private selectTab(index: number) {
-        this._sectionHelper.selectSection(this.tabs[index].name);
+    onToggleMenu(e: Event) {
+        this._menuOn = !this._menuOn;
+    }
+
+    selectTab(index: number) {
         if (this._menuOn) {
             this.showMenu(false);
         }
+        this._sectionHelper.selectSection(this.tabs[index].name);
     }
 
     private onSectionChange(section: string) {
@@ -298,35 +301,7 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
     }
 
     private showMenu(show: boolean) {
-        this._menuOn = (show == null) ? true : show;
-    }
-
-    private toggleMenu() {
-        if (this._menuOn) {
-            this.showMenu(false);
-            return;
-        }
-        this.showMenu(true);
-    }
-
-    private onClickToggleMenu() {
-        this._toggleOnProcessing = true;
-
-        window.setTimeout(() => {
-            this._toggleOnProcessing = false;
-        }, 3000);
-
-        this.toggleMenu();
-    }
-
-    private onKeyupToggleMenu() {
-        if (this._toggleOnProcessing) {
-            // Ignore this if this is called shortly after onClickToggleMenu().
-            // This happens because we used <span> tag instead of button control.
-            return;
-        }
-
-        this.toggleMenu();
+        this._menuOn = show;
     }
 
     private dClick(evt) {
