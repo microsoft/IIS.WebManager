@@ -153,8 +153,7 @@ import { ApiConnection } from './api-connection';
             position: relative;
             width: 600px;
             max-width: 100%;
-            padding-left: 15px;
-            padding-right: 15px;
+            padding: 30px;
         }
     `]
 })

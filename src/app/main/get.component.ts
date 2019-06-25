@@ -47,8 +47,7 @@ import { HttpFacade } from 'common/http-facade';
             position: relative;
             width: 600px;
             max-width: 100%;
-            padding-left: 15px;
-            padding-right: 15px;
+            padding: 30px;
             text-align: center;
         }
 
