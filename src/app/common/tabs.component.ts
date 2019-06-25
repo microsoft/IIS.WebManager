@@ -193,9 +193,9 @@ import { SectionHelper } from './section.helper';
             <div class='menu-btn color-active background-normal' #menuBtn>
                 <span
                     tabindex="0"
-                    (keyup.space)="toggleMenu(true)"
-                    (keyup.enter)="toggleMenu(true)"
-                    (click)="toggleMenu(false)"
+                    (keyup.space)="onKeyHitToggleMenu()"
+                    (keyup.enter)="onKeyHitToggleMenu()"
+                    (click)="onClickToggleMenu()"
                     title="{{ (_menuOn) ? 'Shrink' : 'Expand' }}"
                     class="border-active hover-active color-normal"
                     [class.background-active]="_menuOn">
@@ -309,23 +309,32 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
         this._menuOn = show;
     }
 
-    private toggleMenu(useKey: boolean) {
-        //// when users use Enter or space key, this function can be called twice if onClick() event happens together.
-        //// To avoid the issue, we should ignore the second call which happens within 1 second after the first call.
-        if (this._toggleOnProcessing && useKey) {
-            return;
-        }
-
-        this._toggleOnProcessing = true;
-        window.setTimeout(() => {
-            this._toggleOnProcessing = false;
-        }, 1000);
-
+    private toggleMenu() {
         if (this._menuOn) {
             this.showMenu(false);
         } else {
             this.showMenu(true);
         }
+    }
+
+    private onClickToggleMenu() {
+        this._toggleOnProcessing = true;
+
+        window.setTimeout(() => {
+            this._toggleOnProcessing = false;
+        }, 3000);
+
+        this.toggleMenu();
+    }
+
+    private onKeyHitToggleMenu() {
+        if (this._toggleOnProcessing) {
+            // when user click the more button with Enter or Space, this function can be called together with onClickToggleMenu().
+            // In that case, we should skip this function call.
+            return;
+        }
+
+        this.toggleMenu();
     }
 
     private dClick(evt) {
