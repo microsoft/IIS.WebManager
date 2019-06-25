@@ -186,9 +186,9 @@ import { SectionHelper } from './section.helper';
             <div class='menu-btn color-active background-normal' #menuBtn>
                 <span
                     tabindex="0"
-                    (keyup.space)="onToggleMenu($event)"
-                    (keyup.enter)="onToggleMenu($event)"
-                    (click)="onToggleMenu($event)"
+                    (keyup.space)="onToggleMenu()"
+                    (keyup.enter)="onToggleMenu()"
+                    (click)="onToggleMenu()"
                     title="{{ (_menuOn) ? 'Shrink' : 'Expand' }}"
                     class="border-active hover-active color-normal accessibility-focusable"
                     [class.background-active]="_menuOn">
@@ -276,7 +276,7 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
         this.tabs.push(tab);
     }
 
-    onToggleMenu(e: Event) {
+    onToggleMenu() {
         this._menuOn = !this._menuOn;
     }
 
