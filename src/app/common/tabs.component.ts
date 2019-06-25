@@ -193,8 +193,8 @@ import { SectionHelper } from './section.helper';
             <div class='menu-btn color-active background-normal' #menuBtn>
                 <span
                     tabindex="0"
-                    (keyup.space)="onKeyHitToggleMenu()"
-                    (keyup.enter)="onKeyHitToggleMenu()"
+                    (keyup.space)="onKeyupToggleMenu()"
+                    (keyup.enter)="onKeyupToggleMenu()"
                     (click)="onClickToggleMenu()"
                     title="{{ (_menuOn) ? 'Shrink' : 'Expand' }}"
                     class="border-active hover-active color-normal"
@@ -326,7 +326,7 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
         this.toggleMenu();
     }
 
-    private onKeyHitToggleMenu() {
+    private onKeyupToggleMenu() {
         if (this._toggleOnProcessing) {
             // when user click the more button with Enter or Space, this function can be called together with onClickToggleMenu().
             // In that case, we should skip this function call.
