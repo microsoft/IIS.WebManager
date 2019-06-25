@@ -190,10 +190,29 @@ import { SectionHelper } from './section.helper';
                     <div class="hider background-normal"></div>
                 </div>
             </div>
-            <div class='menu-btn color-active background-normal' #menuBtn (click)="showMenu(true)"><span class="border-active hover-active color-normal" [class.background-active]="_menuOn"><i class="fa fa-ellipsis-h"></i></span></div>
+            <div class='menu-btn color-active background-normal' #menuBtn>
+                <span
+                    tabindex="0"
+                    (keyup.space)="toggleMenu(true)"
+                    (keyup.enter)="toggleMenu(true)"
+                    (click)="toggleMenu(false)"
+                    title="{{ (_menuOn) ? 'Shrink' : 'Expand' }}"
+                    class="border-active hover-active color-normal"
+                    [class.background-active]="_menuOn">
+                    <i class="fa fa-ellipsis-h"></i>
+                </span>
+            </div>
             <div class='menu border-active background-normal' [hidden]="!_menuOn">
                 <ul>
-                    <li tabindex="0" *ngFor="let tab of tabs; let i = index;" class="hover-active" [ngClass]="{'background-active': tab.active}" (keyup.space)="selectTab(i)" (keyup.enter)="selectTab(i)" (click)="selectTab(i)">{{tab.name}}</li>
+                    <li
+                        tabindex="0"
+                        *ngFor="let tab of tabs; let i = index;"
+                        class="hover-active"
+                        [ngClass]="{'background-active': tab.active}"
+                        (keyup.space)="selectTab(i)"
+                        (keyup.enter)="selectTab(i)"
+                        (click)="selectTab(i)"
+                    >{{tab.name}}</li>
                 </ul>
             </div>
             <ng-content></ng-content>
@@ -215,6 +234,7 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
     private _tabsItems: Array<ElementRef>;
     private _hashCache: Array<string> = [];
     private _sectionHelper: SectionHelper;
+    private _toggleOnProcessing: boolean = false;
 
     @ViewChild('menuBtn') menuBtn: ElementRef;
     @ViewChildren('item') tabList: QueryList<ElementRef>;
@@ -226,7 +246,6 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
                 private _activatedRoute: ActivatedRoute,
                 private _location: Location,
                 private _router: Router) {
-
         this.tabs = [];
         this._default = this._activatedRoute.snapshot.params["section"];
     }
@@ -267,6 +286,9 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
 
     private selectTab(index: number) {
         this._sectionHelper.selectSection(this.tabs[index].name);
+        if (this._menuOn) {
+            this.showMenu(false);
+        }
     }
 
     private onSectionChange(section: string) {
@@ -284,6 +306,26 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
 
     private showMenu(show: boolean) {
         this._menuOn = (show == null) ? true : show;
+        this._menuOn = show;
+    }
+
+    private toggleMenu(useKey: boolean) {
+        //// when users use Enter or space key, this function can be called twice if onClick() event happens together.
+        //// To avoid the issue, we should ignore the second call which happens within 1 second after the first call.
+        if (this._toggleOnProcessing && useKey) {
+            return;
+        }
+
+        this._toggleOnProcessing = true;
+        window.setTimeout(() => {
+            this._toggleOnProcessing = false;
+        }, 1000);
+
+        if (this._menuOn) {
+            this.showMenu(false);
+        } else {
+            this.showMenu(true);
+        }
     }
 
     private dClick(evt) {
