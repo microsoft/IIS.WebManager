@@ -25,7 +25,7 @@ import { NotificationService } from '../../notification/notification.service';
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="service.status == 'stopped' && !service.webserverScope">Default Documents are off. Turn them on <a [routerLink]="['/webserver/default-documents']">here</a></span>
+        <span *ngIf="service.status == 'stopped' && !service.webserverScope">Default Documents are off. <a [routerLink]="['/webserver/default-documents']">Click here to turn this feature on.</a></span>
         <div *ngIf="_defDoc" [attr.disabled]="_defDoc.metadata.is_locked ? true : null">
             <fieldset>
                 <switch [label]="_defDoc.scope ? 'Enable' : 'Web Site Default'" class="block" [(model)]="_defDoc.enabled" (modelChanged)="onModelChanged()">{{_defDoc.enabled ? "On" : "Off"}}</switch>

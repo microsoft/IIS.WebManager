@@ -21,7 +21,7 @@ import { NotificationService } from '../../notification/notification.service';
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="service.status == 'stopped' && !service.webserverScope">Static Content is off. Turn it on <a [routerLink]="['/webserver/static-content']">here</a></span>
+        <span *ngIf="service.status == 'stopped' && !service.webserverScope">Static Content is off. <a [routerLink]="['/webserver/static-content']">Click here to turn this feature on.</a></span>
         <div *ngIf="staticContent">
             <client-cache [model]="staticContent.client_cache" [locked]="_locked" (modelChange)="onModelChanged()"></client-cache>
         </div>

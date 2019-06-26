@@ -20,7 +20,7 @@ import { Authorization } from './authorization'
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="service.status == 'stopped' && !service.webserverScope">Authorization is off. Turn it on <a [routerLink]="['/webserver/authorization']">here</a></span>
+        <span *ngIf="service.status == 'stopped' && !service.webserverScope">Authorization is off. <a [routerLink]="['/webserver/authorization']">Click here to turn this feature on.</a></span>
         <override-mode class="pull-right"
             *ngIf="_authorization"
             [scope]="_authorization.scope"

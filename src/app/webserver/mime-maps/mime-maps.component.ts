@@ -8,7 +8,7 @@ import { StaticContent } from '../static-content/static-content';
     template: `
         <loading *ngIf="service.status == 'unknown' && !service.error"></loading>
         <error [error]="service.error"></error>
-        <span *ngIf="service.status == 'stopped'">Mime Maps are off. Turn them on <a [routerLink]="['/webserver/static-content']">here</a></span>
+        <span *ngIf="service.status == 'stopped'">Mime Maps are off. <a [routerLink]="['/webserver/static-content']">Click here to turn this feature on.</a></span>
         <override-mode class="pull-right" *ngIf="staticContent" [scope]="staticContent.scope" [metadata]="staticContent.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="staticContent">
             <mime-maps (modelChanged)="onSave($event)" (delete)="onDelete($event)" (add)="onAdd($event)"><mime-maps>

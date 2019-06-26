@@ -21,7 +21,7 @@ import { NotificationService } from '../../notification/notification.service';
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="service.status == 'stopped' && !service.webserverScope">Response Compression is off. Turn it on <a [routerLink]="['/webserver/response-compression']">here</a></span>
+        <span *ngIf="service.status == 'stopped' && !service.webserverScope">Response Compression is off. <a [routerLink]="['/webserver/response-compression']">Click here to turn this feature on.</a></span>
         <override-mode class="pull-right" *ngIf="model" [scope]="model.scope" (revert)="onRevert()" [metadata]="model.metadata" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="model">
             <fieldset>
