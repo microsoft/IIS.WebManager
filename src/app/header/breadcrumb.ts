@@ -1,8 +1,9 @@
 import { IsWAC } from "environments/environment";
 import { WebSitesModuleName, AppPoolsModuleName, WebServerRoute, WebServerModuleName } from "main/settings";
 import { SectionHelper } from "common/section.helper";
+export const WebServerGeneralTabName = WebServerModuleName;
 
-export const WebServerGeneralRoute = [ `/${WebServerRoute}/${SectionHelper.normalize(WebServerModuleName)}+general` ];
+export const WebServerGeneralRoute = [ `/${WebServerRoute}/${SectionHelper.normalize(`${WebServerModuleName}+${WebServerGeneralTabName}`)}` ];
 export const WebSiteListRoute = [ `/${WebServerRoute}/${SectionHelper.normalize(WebSitesModuleName)}` ];
 export const AppPoolListRoute = [ `/${WebServerRoute}/${SectionHelper.normalize(AppPoolsModuleName)}` ];
 

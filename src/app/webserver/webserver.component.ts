@@ -10,7 +10,7 @@ import { Runtime } from 'runtime/runtime';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { GlobalModuleReference, HomeCategory, BreadcrumbsResolver, FeatureContext, FeatureVTabsComponent } from 'common/feature-vtabs.component';
 import { Subscription } from 'rxjs';
-import { Breadcrumb, GetBreadcrumbsRoot } from 'header/breadcrumb';
+import { Breadcrumb, GetBreadcrumbsRoot, WebServerGeneralTabName } from 'header/breadcrumb';
 import { Item } from 'common/vtabs.component';
 import { Status } from 'common/status';
 
@@ -108,7 +108,7 @@ const subComponentList: string[] = [
 <feature-vtabs
     [model]="webServer"
     [resource]="'webserver'"
-    [generalTabName]="'${WebServerModuleName}'"
+    [generalTabName]="'${WebServerGeneralTabName}'"
     [generalTabIcon]="'${WebServerModuleIcon}'"
     [generalTabCategory]="'${HomeCategory}'"
     [default]="'${WebSitesModuleName}'"

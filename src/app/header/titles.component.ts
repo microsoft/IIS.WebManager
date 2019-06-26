@@ -70,10 +70,10 @@ export class TitlesComponent implements OnInit, OnDestroy {
     navigate(crumb: Breadcrumb): void {
         if (crumb.tabName) {
             this.service.sections.selectSection(crumb.tabName);
-        }
-        if (crumb.routerLink) {
+        } else if (crumb.routerLink) {
             this.router.navigate(crumb.routerLink);
+        } else {
+            throw `Unable to process crumb ${crumb.label}`;
         }
-        throw `Unable to process crumb ${crumb.label}`;
     }
 }
