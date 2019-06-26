@@ -14,7 +14,7 @@ import { Status } from 'common/status';
             <span class="status" *ngIf="!started">({{model.status}})</span>
             <div class="actions">
                 <div class="selector-wrapper">
-                    <button title="Actions" (click)="openSelector()" [class.background-active]="(_selector && _selector.opened) || false"><i class="fa fa-caret-down"></i></button>
+                    <button title="Actions" (click)="openSelector()" [class.background-active]="(_selector && _selector.opened) || false"><i aria-hidden="true" class="fa fa-caret-down"></i></button>
                     <selector [right]="true">
                         <ul>
                             <li><a class="bttn edit" title="Edit" [routerLink]="['/webserver/app-pools', model.id]">Edit</a></li>

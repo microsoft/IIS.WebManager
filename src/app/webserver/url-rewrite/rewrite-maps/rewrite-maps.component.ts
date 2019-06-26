@@ -15,7 +15,7 @@ import { RewriteMapsSection, RewriteMap, RewriteMapping } from '../url-rewrite';
                 (revert)="onRevert()" 
                 (modelChanged)="onModelChanged()"></override-mode>
             <div>
-                <button [class.background-active]="newMap.opened" (click)="newMap.toggle()">Create Rewrite Map <i class="fa fa-caret-down"></i></button>
+                <button [class.background-active]="newMap.opened" (click)="newMap.toggle()">Create Rewrite Map <i aria-hidden="true" class="fa fa-caret-down"></i></button>
                 <selector #newMap class="container-fluid create" (hide)="initializeNewRewriteMap()">
                     <rewrite-map-edit [map]="_newRewriteMap" (save)="saveNew()" (cancel)="newMap.close()"></rewrite-map-edit>
                 </selector>

@@ -18,7 +18,7 @@ import {StringListComponent} from '../../common/string-list.component';
                 </switch>
             </fieldset>
             <fieldset class='inline-block add' *ngIf='model.length > 0'>
-                <button (click)="addTime()"><i class="fa fa-plus color-active"></i>Add Time</button>
+                <button (click)="addTime()"><i aria-hidden="true" class="fa fa-plus color-active"></i>Add Time</button>
             </fieldset>
             <string-list #times="stringList" [(model)]="model" (modelChanged)="onModelChanged($event)" [validator]="validator" [title]="'HH:MM'"></string-list>
         </div>

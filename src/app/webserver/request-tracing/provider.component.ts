@@ -26,22 +26,22 @@ import {RequestTracingService} from './request-tracing.service';
                     <span *ngIf="model.id" class="editing form-control">{{model.guid}}</span>
                 </fieldset>
                 <fieldset>
-                    <button (click)="areas.add()" class="background-normal" ><i class="fa fa-plus color-active" ></i><span>Add Area</span></button>
+                    <button (click)="areas.add()" class="background-normal" ><i aria-hidden="true" class="fa fa-plus color-active" ></i><span>Add Area</span></button>
                 </fieldset>
                 <string-list class="name"  #areas="stringList" [(model)]="model.areas"></string-list>
             </div>
             <div class="actions">
                 <button class="no-border no-editing" [class.inactive]="readonly" title="Edit" (click)="onEdit()">
-                    <i class="fa fa-pencil color-active"></i>
+                    <i aria-hidden="true" class="fa fa-pencil color-active"></i>
                 </button>
                 <button class="no-border editing" title="Ok" (click)="onOk()" [disabled]="!isValid() || null">
-                    <i class="fa fa-check color-active"></i>
+                    <i aria-hidden="true" class="fa fa-check color-active"></i>
                 </button>
                 <button class="no-border editing" title="Cancel" (click)="onCancel()">
-                    <i class="fa fa-times red"></i>
+                    <i aria-hidden="true" class="fa fa-times red"></i>
                 </button>
                 <button class="no-border" *ngIf="model.id" title="Delete" [class.inactive]="readonly" (click)="onDelete()">
-                    <i class="fa fa-trash-o red"></i>
+                    <i aria-hidden="true" class="fa fa-trash-o red"></i>
                 </button>
             </div>
         </div>

@@ -51,17 +51,17 @@ import { ApiConnection } from './api-connection';
             </fieldset>
 
             <div class="advanced" *ngIf="_connectionType == 'simple'">
-                <button (click)="onAdvanced()">Remote Server or Manual Setup<i class="fa fa-arrow-right"></i></button>
+                <button (click)="onAdvanced()">Remote Server or Manual Setup<i aria-hidden="true" class="fa fa-arrow-right"></i></button>
             </div>
             <div class="simple" *ngIf="_connectionType == 'advanced' && !_disableSimple">
-                <button (click)="onSimple()">Local Server Setup<i class="fa fa-arrow-right"></i></button>
+                <button (click)="onSimple()">Local Server Setup<i aria-hidden="true" class="fa fa-arrow-right"></i></button>
             </div>
         </div>
 
         <div class="in-progress" *ngIf='_connecting'>
             <h1>Connecting</h1>
             to <a [attr.href]="_conn.url">{{connName()}}</a>
-            <p><i class="fa fa-spinner fa-pulse fa-3x"></i></p>
+            <p><i aria-hidden="true" class="fa fa-spinner fa-pulse fa-3x"></i></p>
             <button class="bordered" (click)="cancel()">Cancel</button>
         </div>
     </div>

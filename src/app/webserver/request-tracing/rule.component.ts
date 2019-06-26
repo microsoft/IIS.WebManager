@@ -33,10 +33,10 @@ import { RequestTracingService } from './request-tracing.service';
                     <fieldset class="inline-block has-list">
                         <label>Status Code(s)</label>
                     </fieldset>
-                    <button class="pull-right background-normal" *ngIf="!!(!(statusCodes && statusCodes.list) && model.status_codes.length > 0 || statusCodes.list && statusCodes.list.length> 0)" (click)="statusCodes.add()" ><i class="fa fa-plus color-active" ></i><span>Add</span></button>
+                    <button class="pull-right background-normal" *ngIf="!!(!(statusCodes && statusCodes.list) && model.status_codes.length > 0 || statusCodes.list && statusCodes.list.length> 0)" (click)="statusCodes.add()" ><i aria-hidden="true" class="fa fa-plus color-active" ></i><span>Add</span></button>
                     <fieldset>
                         <string-list #statusCodes="stringList" [(model)]="model.status_codes"></string-list>
-                        <button class="background-normal" *ngIf="statusCodes.list.length == 0" (click)="statusCodes.add()"><i class="fa fa-plus color-active"></i><span>Add</span></button>
+                        <button class="background-normal" *ngIf="statusCodes.list.length == 0" (click)="statusCodes.add()"><i aria-hidden="true" class="fa fa-plus color-active"></i><span>Add</span></button>
                     </fieldset>
                 </div>
                 <fieldset *ngIf="_isEditing" class="col-xs-12">
@@ -68,16 +68,16 @@ import { RequestTracingService } from './request-tracing.service';
             </div>
             <div class="actions">
                 <button class="no-border no-editing" [class.inactive]="readonly" title="Edit" (click)="onEdit()">
-                    <i class="fa fa-pencil color-active"></i>
+                    <i aria-hidden="true" class="fa fa-pencil color-active"></i>
                 </button>
                 <button class="no-border editing" title="Ok" (click)="onOk()" [disabled]="!isValid() || null">
-                    <i class="fa fa-check color-active"></i>
+                    <i aria-hidden="true" class="fa fa-check color-active"></i>
                 </button>
                 <button class="no-border editing" title="Cancel" (click)="onCancel()">
-                    <i class="fa fa-times red"></i>
+                    <i aria-hidden="true" class="fa fa-times red"></i>
                 </button>
                 <button class="no-border" *ngIf="model.id" title="Delete" [class.inactive]="readonly" (click)="onDelete()">
-                    <i class="fa fa-trash-o red"></i>
+                    <i aria-hidden="true" class="fa fa-trash-o red"></i>
                 </button>
             </div>
         </div>

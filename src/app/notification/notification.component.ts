@@ -33,12 +33,12 @@ import { DynamicComponent } from '../common/dynamic.component';
     template: `
         <div class="notifications shadow">
             <div *ngIf="_warning" class="entry warning border-active" (keyup.esc)="clearWarning()" tabindex="-1" autofocus (blur)="onBlur()" (focus)="onFocus()">
-                <i class="fa fa-times exit" (click)="clearWarning()" title="Dismiss"></i>
+                <i aria-hidden="true" class="fa fa-times exit" (click)="clearWarning()" title="Dismiss"></i>
                 <dynamic [name]="_warning.componentName" [module]="_warning.module" [data]="_warning.data" [eager]="true"></dynamic>
             </div>
             <div [hidden]="!_active">
                 <div *ngFor="let notification of _notifications; let i = index;" [hidden]="notification._hidden" class="entry background-normal border-active">
-                    <i class="fa fa-times fa-lg exit" (click)="dismiss(i)" title="Dismiss"></i>
+                    <i aria-hidden="true" class="fa fa-times fa-lg exit" (click)="dismiss(i)" title="Dismiss"></i>
                     <dynamic [name]="notification.componentName" [module]="notification.module" [data]="notification.data" [eager]="true"></dynamic>
                 </div>
             </div>

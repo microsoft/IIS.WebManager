@@ -78,16 +78,16 @@ import { WebApp } from '../webapps/webapp';
             </div>
             <div class="actions">
                 <button class="no-border no-editing" title="Edit" [class.inactive]="readonly" (click)="onEdit()">
-                    <i class="fa fa-pencil color-active"></i>
+                    <i aria-hidden="true" class="fa fa-pencil color-active"></i>
                 </button>
                 <button [disabled]="!isValid()" class="no-border editing" title="Ok" (click)="onSave()">
-                    <i class="fa fa-check color-active"></i>
+                    <i aria-hidden="true" class="fa fa-check color-active"></i>
                 </button>
                 <button class="no-border editing" title="Cancel" (click)="onCancel()">
-                    <i class="fa fa-times red"></i>
+                    <i aria-hidden="true" class="fa fa-times red"></i>
                 </button>
                 <button class="no-border" *ngIf="model.id" title="Delete" [class.inactive]="readonly" (click)="onDelete()">
-                    <i class="fa fa-trash-o red"></i>
+                    <i aria-hidden="true" class="fa fa-trash-o red"></i>
                 </button>
             </div>
         </div>
@@ -255,7 +255,7 @@ export class VdirListItem implements OnInit, OnChanges {
 @Component({
     selector: 'vdir-list',
     template: `
-        <button class="create" (click)="onCreate()"><i class="fa fa-plus color-active"></i><span>Create Virtual Directory</span></button>
+        <button class="create" (click)="onCreate()"><i aria-hidden="true" class="fa fa-plus color-active"></i><span>Create Virtual Directory</span></button>
         <div class="container-fluid" [hidden]="!_vdirs || _vdirs.length < 1">
             <div class="row hidden-xs border-active grid-list-header">
                 <label class="col-sm-4 col-lg-3" [ngClass]="sortStyle('path')" (click)="sort('path')">Path</label>

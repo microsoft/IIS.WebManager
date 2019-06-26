@@ -34,7 +34,7 @@ import { HttpFacade } from 'common/http-facade';
                     Please follow up the download and complete the installation.<br/><br/>
                     Then we'll continue from here automatically.
                 </p>
-                <p><i class="fa fa-spinner fa-pulse fa-3x"></i></p>
+                <p><i aria-hidden="true" class="fa fa-spinner fa-pulse fa-3x"></i></p>
                 <p><small class='block color-active'>{{_status}}</small></p>
             </div>
             <div class="skip">

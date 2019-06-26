@@ -33,7 +33,7 @@ import { AppPoolListComponent } from '../app-pools/app-pool-list.component';
                 </fieldset>
             </tab>
             <tab [name]="'Application Pool'">
-                <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Change Application Pool <i class="fa fa-caret-down"></i></button>
+                <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Change Application Pool <i aria-hidden="true" class="fa fa-caret-down"></i></button>
                 <selector #poolSelect class="container-fluid create">
                     <app-pools #appPools [listingOnly]="true" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
                 </selector>

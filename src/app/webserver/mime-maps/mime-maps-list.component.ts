@@ -29,16 +29,16 @@ import { StaticContentService } from '../static-content/static-content.service';
 
             <div class="actions">
                 <button *ngIf="!_editing" class="no-border" [class.inactive]="!_editable" title="Edit" (click)="onEdit()">
-                    <i class="fa fa-pencil color-active"></i>
+                    <i aria-hidden="true" class="fa fa-pencil color-active"></i>
                 </button>
                 <button *ngIf="_editing" class="no-border" [disabled]="!isValid(model)" title="Ok" (click)="onSave()">
-                    <i class="fa fa-check color-active"></i>
+                    <i aria-hidden="true" class="fa fa-check color-active"></i>
                 </button>
                 <button *ngIf="_editing" class="no-border" title="Cancel" (click)="onDiscard()">
-                    <i class="fa fa-times red"></i>
+                    <i aria-hidden="true" class="fa fa-times red"></i>
                 </button>
                 <button class="no-border" *ngIf="model.id" title="Delete" [class.inactive]="!_editable" (click)="onDelete()">
-                    <i class="fa fa-trash-o red"></i>
+                    <i aria-hidden="true" class="fa fa-trash-o red"></i>
                 </button>
             </div>
 
@@ -152,7 +152,7 @@ export class MimeMapListItem implements OnInit, OnChanges {
     selector: 'mime-maps',
     template: `
         <div *ngIf="mimeMaps">
-            <button class="create" (click)="onAdd()" [class.inactive]="_editing"><i class="fa fa-plus color-active"></i><span>Add</span></button>
+            <button class="create" (click)="onAdd()" [class.inactive]="_editing"><i aria-hidden="true" class="fa fa-plus color-active"></i><span>Add</span></button>
 
             <div class="container-fluid" [hidden]="!mimeMaps || mimeMaps.length < 1">
                 <div class="row hidden-xs border-active grid-list-header">

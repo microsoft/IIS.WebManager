@@ -5,7 +5,7 @@ import {HttpResponseHeaders, CustomHeader} from './http-response-headers';
 @Component({
     selector: 'custom-headers',
     template: `
-        <button class="create" (click)="create()" [disabled]="locked" [class.inactive]="_editing != -1"><i class="fa fa-plus color-active"></i><span>Add</span></button>
+        <button class="create" (click)="create()" [disabled]="locked" [class.inactive]="_editing != -1"><i aria-hidden="true" class="fa fa-plus color-active"></i><span>Add</span></button>
         <div class="container-fluid">
             <div class="row hidden-xs border-active grid-list-header" [hidden]="headers.length == 0">
                 <label class="col-sm-4 col-lg-5">Name</label>
@@ -34,16 +34,16 @@ import {HttpResponseHeaders, CustomHeader} from './http-response-headers';
                     </fieldset>
                     <div class="actions">
                         <button class="no-border" title="Ok" [disabled]="locked || !isValid(header) || null" *ngIf="_editing == i" (click)="onFinishEditing(i)">
-                            <i class="fa fa-check color-active"></i>
+                            <i aria-hidden="true" class="fa fa-check color-active"></i>
                         </button>
                         <button class="no-border" title="Cancel" *ngIf="_editing == i" (click)="discard()">
-                            <i class="fa fa-times red"></i>
+                            <i aria-hidden="true" class="fa fa-times red"></i>
                         </button>
                         <button class="no-border" title="Edit" [class.inactive]="_editing != -1" *ngIf="_editing != i" (click)="edit(i)">
-                            <i class="fa fa-pencil color-active"></i>
+                            <i aria-hidden="true" class="fa fa-pencil color-active"></i>
                         </button>
                         <button class="no-border" *ngIf="header.id" title="Delete" [disabled]="locked || _editing == i" [class.inactive]="_editing !== -1 && _editing !== i" (click)="onDelete(i)">
-                            <i class="fa fa-trash-o red"></i>
+                            <i aria-hidden="true" class="fa fa-trash-o red"></i>
                         </button>
                     </div>
                 </div>

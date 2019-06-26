@@ -36,11 +36,11 @@ import {LocalModule, GlobalModule, ModuleType} from './modules';
                 </div>
             </div>
             <div class="actions">
-                <button class="no-border" [disabled]="!isValid()" (click)="onSave()">
-                    <i class="fa fa-check color-active" title="Save"></i>
+                <button class="no-border" title="Save" [disabled]="!isValid()" (click)="onSave()">
+                    <i aria-hidden="true" class="fa fa-check color-active"></i>
                 </button>
-                <button class="no-border" (click)="onCancel()">
-                    <i class="fa fa-times red" title="Cancel"></i>
+                <button class="no-border" title="Cancel" (click)="onCancel()">
+                    <i aria-hidden="true" class="fa fa-times red"></i>
                 </button>
             </div>
         </div>

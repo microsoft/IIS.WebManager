@@ -25,7 +25,7 @@ import { FilesService } from 'files/files.service';
             <div class="actions">
                 <div class="selector-wrapper">
                     <button title="More" (click)="selector.toggle()" (dblclick)="prevent($event)" [class.background-active]="selector && selector.opened">
-                        <i class="fa fa-ellipsis-h"></i>
+                        <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
                     <selector #selector [right]="true">
                         <ul>

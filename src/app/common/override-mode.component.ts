@@ -39,11 +39,11 @@ import {Module as Switch} from './switch.component';
             <!-- Override mode -->
             <button class="no-border" *ngIf="!metadata.is_locked" [class.active]="_focused" (click)="onClick()">
                 <span>{{metadata.override_mode_effective}}</span>
-                Override <i class="fa fa-caret-down"></i>
+                Override <i aria-hidden="true" class="fa fa-caret-down"></i>
             </button>
             <!-- Locked -->
             <button enabled class="no-border background-warning hover-warning" *ngIf="metadata.is_locked" [class.active]="_focused" (click)="onClick()">
-                <i class="fa fa-lock large left-icon"></i> Locked
+                <i aria-hidden="true" class="fa fa-lock large left-icon"></i> Locked
             </button>
             <div id="menu" class="background-normal" [ngClass]="menuClasses()" [hidden]="!_focused && !(metadata.is_locked && _entered)">
                 <!-- Override mode -->
@@ -55,7 +55,7 @@ import {Module as Switch} from './switch.component';
                     </fieldset>
                     <fieldset>
                         <button *ngIf="scope" class="no-border" [disabled]="!metadata.is_local" title="Undo local settings" aria-label="Undo local settings" (click)="onRevert()">
-                            <i class="fa fa-undo red"></i> Reset to inherited
+                            <i aria-hidden="true" class="fa fa-undo red"></i> Reset to inherited
                         </button>
                     </fieldset>
                 </div>

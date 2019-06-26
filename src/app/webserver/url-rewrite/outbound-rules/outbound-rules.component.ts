@@ -19,7 +19,7 @@ import { OutboundSection, OutboundRule, PatternSyntax, OutboundTags, ConditionMa
                     <switch label="Rewrite Before Caching" *ngIf="_settings.rewrite_before_cache !== undefined" [(model)]="_settings.rewrite_before_cache" (modelChanged)="onModelChanged()">{{_settings.rewrite_before_cache ? "On" : "Off"}}</switch>
                 </fieldset>
                 
-                <button class="create" [class.background-active]="newRule.opened" (click)="newRule.toggle()">Create Rule <i class="fa fa-caret-down"></i></button>
+                <button class="create" [class.background-active]="newRule.opened" (click)="newRule.toggle()">Create Rule <i aria-hidden="true" class="fa fa-caret-down"></i></button>
                 <selector #newRule class="container-fluid create" (hide)="initializeNewRule()">
                     <outbound-rule-edit *ngIf="newRule.opened" [rule]="_newRule" (save)="saveNew()" (cancel)="newRule.close()"></outbound-rule-edit>
                 </selector>

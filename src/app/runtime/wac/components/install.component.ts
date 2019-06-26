@@ -48,7 +48,7 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
     </div>
     <div *ngIf='inProgress'>
         <h1>Installing...</h1>
-        <p><i class="fa fa-spinner fa-pulse fa-3x"></i></p>
+        <p><i aria-hidden="true" class="fa fa-spinner fa-pulse fa-3x"></i></p>
         <p><small class='block color-active'>{{status}}</small></p>
     </div>
 </div>
