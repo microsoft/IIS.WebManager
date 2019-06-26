@@ -4,7 +4,7 @@ export const SETTINGS = {
     APISetupVersion: "2.3.0",
     DotnetFrameworkVersion: "2.1.* (x64)",
     AspnetSharedFrameworkVersion: "2.1.* (x64)",
-    APIDownloadUrl: "https://github.com/microsoft/IIS.Administration/releases/download/v2.3.0/IISAdministrationSetup.exe",
+    APIDownloadUrl: "http://go.microsoft.com/fwlink/?LinkId=829373",
     IISAdminApiServiceName: "Microsoft IIS Administration",
     GATrack: "UA-XXXXXXXX-X",
 }
