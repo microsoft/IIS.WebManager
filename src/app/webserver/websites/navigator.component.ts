@@ -10,7 +10,7 @@ import {WebSitesService} from './websites.service';
         <div class="wrapper">
             <div class="url inline-block">
                 <div tabindex="0"
-                    class="hidden-xs hover-active"
+                    class="hidden-xs hover-active overflow"
                     *ngIf="model.length > 0"
                     [hidden]="small"
                     [class.cert]="isHttps(0)"
@@ -30,7 +30,7 @@ import {WebSitesService} from './websites.service';
                         <ul class="grid-list">
                             <li *ngFor="let b of model; let i = index" class="grid-item hover-active">
                                 <div tabindex="0"
-                                    class="hover-active"
+                                    class="hover-active overflow-grid-item"
                                     [class.cert]="isHttps(i)"
                                     title="{{getUrl(i)}}"
                                     (click)="onNavigate($event, getUrl(i))"
@@ -51,6 +51,7 @@ import {WebSitesService} from './websites.service';
 
         .url {
             float: left;
+            max-width:90%;
         }
 
         .selector-wrapper {
@@ -85,6 +86,18 @@ import {WebSitesService} from './websites.service';
             width: 300px;
             border-width: 0px;
         }
+
+        .overflow,
+        .overflow-grid-item {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .overflow-grid-item {
+            width:300px;
+        }
+
 
         a {
             content: " ";
@@ -124,6 +137,7 @@ import {WebSitesService} from './websites.service';
         .browse.cert:after {
             content: "\\f0d7";
         }
+
         .browse:after {
             margin-left: 5px;
         }
