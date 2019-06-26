@@ -3,17 +3,15 @@ import { ActivatedRoute } from '@angular/router';
 import { WebSite } from './site';
 import { WebSitesService } from './websites.service';
 import { DiffUtil } from 'utils/diff';
-import { BreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
+import { GetBreadcrumbsRoot, WebSitesCrumb, Breadcrumb } from 'header/breadcrumb';
 import { WebSitesModuleName } from 'main/settings';
 import { BreadcrumbsResolver, FeatureContext } from 'common/feature-vtabs.component';
-import { TitlesService } from 'header/titles.service';
-import { resolveWebsiteRoute } from 'webserver/webserver-routing.module';
 
-const crumbsRoot = BreadcrumbsRoot.concat(WebSitesCrumb);
+const crumbsRoot = GetBreadcrumbsRoot().concat(WebSitesCrumb);
 class WebSiteBreadcrumbResolver implements BreadcrumbsResolver {
     resolve(model: FeatureContext): Breadcrumb[] {
         const site = <WebSite> model;
-        return crumbsRoot.concat(<Breadcrumb>{ label: site.name, routerLink: [resolveWebsiteRoute(site.id)] });
+        return crumbsRoot.concat(<Breadcrumb>{ label: site.name });
     }
 }
 
@@ -40,7 +38,6 @@ export class WebSiteComponent implements OnInit {
     private _original: any;
 
     constructor(
-        private title: TitlesService,
         private route: ActivatedRoute,
         @Inject("WebSitesService") private service: WebSitesService,
     ){

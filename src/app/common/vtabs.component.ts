@@ -22,9 +22,9 @@ import { SectionHelper } from './section.helper';
 import { Module as DynamicModule } from './dynamic.component';
 import { FeatureVTabsComponent } from './feature-vtabs.component';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
-import { IsWAC } from 'environments/environment';
 import { TitlesModule } from 'header/titles.module';
 import { Heading } from 'header/feature-header.component';
+import { TitlesService } from 'header/titles.service';
 
 @Component({
     selector: 'vtabs',
@@ -54,7 +54,7 @@ import { Heading } from 'header/feature-header.component';
                 </ng-container>
             </ul>
         </div>
-        <div class="content sme-focus-zone" [class.nav-hidden]="!IsActive">
+        <div class="content sme-focus-zone" [class.nav-hidden]="!isActive">
             <ng-content></ng-content>
         </div>
     `,
@@ -119,6 +119,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     @ViewChildren('tabLabels') tabLabels: QueryList<ElementRef>;
 
     constructor(
+        private _titles: TitlesService,
         private _activatedRoute: ActivatedRoute,
         private _location: Location,
         private _router: Router,
@@ -129,8 +130,12 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         this.logger = factory.Create(this);
     }
 
-    get IsActive() {
+    get isActive() {
         return this.options.active;
+    }
+
+    refresh() {
+        this.options.refresh();
     }
 
     public ngAfterViewInit() {
@@ -160,6 +165,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         }
         this.logger.log(LogLevel.DEBUG, `Default tab selected ${selectedPath}`);
         this._sectionHelper = new SectionHelper(this.tabs.map(t => t.fullName), selectedPath, this.markLocation, this._location, this._router);
+        this._titles.sections = this._sectionHelper;
         this._subscriptions.push(this._sectionHelper.active.subscribe(sec => this.onSectionChange(sec)));
     }
 
@@ -240,16 +246,11 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         if (index == -1) {
             index = 0;
         }
-
         this.tabs.forEach(t => t.deactivate());
         let selectedTab = this.tabs[index];
         selectedTab.activate();
         this.activate.emit(selectedTab);
         this.onSelectItem.next(selectedTab);
-    }
-
-    private isWAC() {
-        return IsWAC;
     }
 }
 
@@ -288,10 +289,10 @@ export class Item implements OnInit, OnDestroy, Heading {
     }
 
     @Input() ico: string = "";
-    @Input() active: boolean;
     @Input() routerLink: Array<any>;
     @Input() category: string = "";
     @Input() name: string;
+    active: boolean;
     private _fullName: string;
 
     @ContentChildren(DynamicComponent) dynamicChildren: QueryList<DynamicComponent>;
@@ -320,7 +321,6 @@ export class Item implements OnInit, OnDestroy, Heading {
                 replaceUrl: true,
             });
         }
-
         this.active = true;
     }
 
@@ -328,7 +328,6 @@ export class Item implements OnInit, OnDestroy, Heading {
         if (this.dynamicChildren) {
             this.dynamicChildren.forEach(child => child.deactivate());
         }
-
         this.active = false;
     }
 

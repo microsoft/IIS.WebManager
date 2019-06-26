@@ -1,4 +1,3 @@
-
 import {
     GLOBAL_MODULES,
     AppPoolsModuleName,
@@ -13,9 +12,8 @@ import { OptionsService } from "main/options.service";
 import { UrlUtil } from "utils/url";
 import { LoggerFactory, Logger, LogLevel } from "diagnostics/logger";
 import { VTabsComponent, Item } from "./vtabs.component";
-import { SectionHelper } from "./section.helper";
 import { IsWAC } from "environments/environment.wac";
-import { Breadcrumb } from "header/breadcrumb";
+import { Breadcrumb, WebServerGeneralRoute, AppPoolListRoute, WebSiteListRoute } from "header/breadcrumb";
 import { Subscription } from "rxjs";
 import { TitlesService } from "header/titles.service";
 
@@ -25,9 +23,9 @@ export class RouteReference {
 }
 
 export const CONTEXT_MODULES = [
-    new RouteReference(WebServerModuleName, WebServerModuleIcon, [`/webserver/${SectionHelper.normalize(WebServerModuleName)}+general`]),
-    new RouteReference(WebSitesModuleName, "fa fa-globe", [`/webserver/${SectionHelper.normalize(WebSitesModuleName)}`]),
-    new RouteReference(AppPoolsModuleName, "fa fa-cogs", [`/webserver/${SectionHelper.normalize(AppPoolsModuleName)}`]),
+    new RouteReference(WebServerModuleName, WebServerModuleIcon, WebServerGeneralRoute ),
+    new RouteReference(WebSitesModuleName, "fa fa-globe", WebSiteListRoute ),
+    new RouteReference(AppPoolsModuleName, "fa fa-cogs", AppPoolListRoute ),
 ];
 
 export class Feature extends ComponentReference {
@@ -56,8 +54,8 @@ export class GlobalModuleReference {
     selector: 'feature-vtabs',
     // NOTE: when [routerLink] is used, Angular automatically set tabindex="0". In order to avoid that behavior, we decided to add tabindex="-1".
     template: `
-<div class="sidebar crumb" [class.nav]="IsActive">
-    <vtabs [header]="header" [markLocation]="true" (activate)="Refresh()" [defaultTab]="default" [categories]="['${HomeCategory}', subcategory]">
+<div class="sidebar crumb" [class.nav]="isActive">
+    <vtabs [header]="header" [markLocation]="true" (activate)="refresh()" [defaultTab]="default" [categories]="['${HomeCategory}', subcategory]">
         <item [name]="generalTabName" [ico]="generalTabIcon" [category]="generalTabCategory || subcategory">
             <ng-content select=".general-tab"></ng-content>
         </item>
@@ -80,8 +78,9 @@ export class GlobalModuleReference {
     @Input() subcategory: string;
     @Input() includeModules: GlobalModuleReference[] = [];
     @Input() promoteToContext: string[] = [];
-    @Input() contexts: any[] = [];
     @Input() breadcrumbsResolver: BreadcrumbsResolver;
+
+    contexts: any[] = [];
     features: Feature[];
     header = IsWAC ? "IIS" : null;
 
@@ -97,11 +96,11 @@ export class GlobalModuleReference {
         this.logger = factory.Create(this);
     }
 
-    get IsActive() {
+    get isActive() {
         return this.options.active;
     }
 
-    Refresh() {
+    refresh() {
         this.options.refresh();
     }
 
@@ -169,6 +168,8 @@ export class GlobalModuleReference {
         this.breadcrumbsUpdate = this.vtabs.onSelectItem.subscribe(
             (item: Item) => {
                 let crumbsRoot = this.breadcrumbsResolver.resolve(this.model);
+                var lastCrumb = crumbsRoot[crumbsRoot.length - 1];
+                crumbsRoot[crumbsRoot.length - 1] = <Breadcrumb> { label: lastCrumb.label, tabName: this.generalTabName};
                 this.titles.loadCrumbs(crumbsRoot.concat(<Breadcrumb>{ label: item.name }));
                 this.titles.heading = item;
             },

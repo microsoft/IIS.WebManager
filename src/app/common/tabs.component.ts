@@ -169,7 +169,7 @@ import { SectionHelper } from './section.helper';
                             #item
                             tabindex="0"
                             *ngFor="let tab of tabs; let i = index"
-                            class="border-active border-bottom-normal accessibility-focusable"
+                            class="border-active border-bottom-normal focusable"
                             [ngClass]="{active: tab.active}"
                             (keyup.space)="selectTab(i)"
                             (keyup.enter)="selectTab(i)"
@@ -190,7 +190,7 @@ import { SectionHelper } from './section.helper';
                     (keyup.enter)="onToggleMenu()"
                     (click)="onToggleMenu()"
                     title="{{ (_menuOn) ? 'Shrink' : 'Expand' }}"
-                    class="border-active hover-active color-normal accessibility-focusable"
+                    class="border-active hover-active color-normal focusable"
                     [class.background-active]="_menuOn">
                     <i class="fa fa-ellipsis-h"></i>
                 </span>
@@ -200,7 +200,7 @@ import { SectionHelper } from './section.helper';
                     <li
                         tabindex="0"
                         *ngFor="let tab of tabs; let i = index;"
-                        class="hover-active accessibility-focusable"
+                        class="hover-active focusable"
                         [ngClass]="{'background-active': tab.active}"
                         (keyup.space)="selectTab(i)"
                         (keyup.enter)="selectTab(i)"

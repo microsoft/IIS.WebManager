@@ -10,19 +10,14 @@ import { Runtime } from 'runtime/runtime';
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { GlobalModuleReference, HomeCategory, BreadcrumbsResolver, FeatureContext, FeatureVTabsComponent } from 'common/feature-vtabs.component';
 import { Subscription } from 'rxjs';
-import { BreadcrumbsRoot, Breadcrumb } from 'header/breadcrumb';
-import { TitlesService } from 'header/titles.service';
-import { ConnectService } from 'connect/connect.service';
+import { Breadcrumb, GetBreadcrumbsRoot, WebServerGeneralTabName } from 'header/breadcrumb';
 import { Item } from 'common/vtabs.component';
-import { filter, take } from 'rxjs/operators';
+import { Status } from 'common/status';
 
+const crumbs = GetBreadcrumbsRoot();
 export class WebServerCrumbsResolver implements BreadcrumbsResolver {
-    constructor(
-        private crumbs: Breadcrumb[],
-    ) {}
-
     resolve(_: FeatureContext): Breadcrumb[] {
-        return this.crumbs;
+        return crumbs;
     }
 }
 
@@ -63,7 +58,7 @@ export class WebServerComponent implements OnInit {
     }
 
     get notInstalled() {
-        return this.service.installStatus == 'stopped';
+        return this.service.installStatus == Status.Stopped;
     }
 
     get server(): Promise<WebServer> {
@@ -113,7 +108,7 @@ const subComponentList: string[] = [
 <feature-vtabs
     [model]="webServer"
     [resource]="'webserver'"
-    [generalTabName]="'${WebServerModuleName}'"
+    [generalTabName]="'${WebServerGeneralTabName}'"
     [generalTabIcon]="'${WebServerModuleIcon}'"
     [generalTabCategory]="'${HomeCategory}'"
     [default]="'${WebSitesModuleName}'"
@@ -147,15 +142,12 @@ export class WebServerViewComponent implements OnDestroy, AfterViewInit {
         AppPoolsModuleName,
         WebSitesModuleName,
     ]
-    breadcrumbsResolver: BreadcrumbsResolver = new WebServerCrumbsResolver(BreadcrumbsRoot);
+    breadcrumbsResolver: BreadcrumbsResolver = new WebServerCrumbsResolver();
     subscriptions: Subscription[] = [];
     @ViewChild(forwardRef(() => FeatureVTabsComponent)) features: FeatureVTabsComponent;
 
     constructor(
         private httpClient: HttpClient,
-        private title: TitlesService,
-        private connections: ConnectService,
-        @Inject('WebServerService') private service: WebServerService,
         factory: LoggerFactory,
     ){
         this.logger = factory.Create(this);
