@@ -10,7 +10,7 @@ import {WebSitesService} from './websites.service';
         <div class="wrapper">
             <div class="url inline-block">
                 <div tabindex="0"
-                    class="hidden-xs hover-active overflow"
+                    class="hidden-xs hover-active text-wrapper"
                     *ngIf="model.length > 0"
                     [hidden]="small"
                     [class.cert]="isHttps(0)"
@@ -30,7 +30,7 @@ import {WebSitesService} from './websites.service';
                         <ul class="grid-list">
                             <li *ngFor="let b of model; let i = index" class="grid-item hover-active">
                                 <div tabindex="0"
-                                    class="hover-active overflow-grid-item"
+                                    class="hover-active text-wrapper"
                                     [class.cert]="isHttps(i)"
                                     title="{{getUrl(i)}}"
                                     (click)="onNavigate($event, getUrl(i))"
@@ -81,41 +81,31 @@ import {WebSitesService} from './websites.service';
             margin-bottom: 0px;
         }
 
+        .text-wrapper {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            content: " ";
+        }
+
         .grid-item {
             padding: 0;
             width: 300px;
             border-width: 0px;
         }
 
-        .overflow,
-        .overflow-grid-item {
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-        }
-
-        .overflow-grid-item {
-            width:300px;
-        }
-
-
-        a {
-            content: " ";
-            padding-left: 15px;
-        }
-
-        a.cert {
+        .cert {
             padding-left: 0px;
         }
 
-        .grid-item a {
+        .grid-item .text-wrapper {
             line-height: 35px;
             width: 100%;
             padding-right: 10px;
             padding-left: 20px;
         }
 
-        .grid-item a.cert {
+        .grid-item .cert {
             padding-left: 5px;
         }
 
