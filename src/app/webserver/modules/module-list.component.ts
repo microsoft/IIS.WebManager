@@ -7,7 +7,7 @@ import {ModuleComponent} from './module.component'
     selector: 'module-list',
     template: `
         <button class="create" (click)="create()" [class.inactive]="_creating">
-            <i title="New Module" class="fa fa-plus color-active"></i><span>Add</span>
+            <i title="New Module" aria-hidden="true" class="fa fa-plus color-active"></i><span>Add</span>
         </button>
 
         <div class="container-fluid">

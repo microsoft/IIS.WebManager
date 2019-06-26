@@ -15,7 +15,7 @@ import { first } from 'rxjs/operators'
     `],
     template: `
         <div class="hover-primary2 nav-button" title="Notifications" *ngIf="_notifications.length > 0" (click)="toggleNotifications()">
-            <i class="fa fa-bell"></i>
+            <i aria-hidden="true" class="fa fa-bell"></i>
             {{_notifications.length}}
         </div>
     `

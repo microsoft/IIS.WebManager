@@ -59,7 +59,7 @@ import { first } from 'rxjs/operators'
                     </fieldset>
                     <fieldset class="inline-block cert bottom" *ngIf="model.is_https">
                         <button (click)="selectCert()" class="background-normal select-cert" [class.background-active]="!!_certSelect.first && _certSelect.first.opened">
-                            <span>{{!model.certificate ? 'Select Certificate' : name()}}</span><i class="fa fa-caret-down"></i>
+                            <span>{{!model.certificate ? 'Select Certificate' : name()}}</span><i aria-hidden="true" class="fa fa-caret-down"></i>
                         </button>
                     </fieldset>
                     <fieldset class="inline-block bottom" *ngIf="model.is_https && _supportsSni">
@@ -92,16 +92,16 @@ import { first } from 'rxjs/operators'
             <div>
                 <div class="actions">
                     <button title="Edit" [disabled]="!allowed('edit')" class='no-editing' (click)="onEdit()">
-                        <i class="fa fa-pencil color-active"></i>
+                        <i aria-hidden="true" class="fa fa-pencil color-active"></i>
                     </button>
                     <button title="Save" [disabled]="!isValid()" class="editing" (click)="onSave()">
-                        <i class="fa fa-check color-active"></i>
+                        <i aria-hidden="true" class="fa fa-check color-active"></i>
                     </button>
                     <button title="Cancel" class="editing" (click)="onCancel()">
-                        <i class="fa fa-times red"></i>
+                        <i aria-hidden="true" class="fa fa-times red"></i>
                     </button>
                     <button title="Delete" *ngIf="!model.isNew" [disabled]="!allowed('delete')" (click)="onDelete()">
-                        <i class="fa fa-trash-o red"></i>
+                        <i aria-hidden="true" class="fa fa-trash-o red"></i>
                     </button>
                 </div>
             </div>
@@ -426,7 +426,7 @@ export class BindingItem implements OnInit, OnChanges {
     `],
     template: `
         <button class="create" [disabled]="_editing >= 0 && _editing < model.length" (click)="add()">
-            <i class="fa fa-plus color-active"></i> Add
+            <i aria-hidden="true" class="fa fa-plus color-active"></i> Add
         </button>
         <div class="container-fluid" [hidden]="!model || model.length < 1">
             <div class="row hidden-xs hidden-sm border-active grid-list-header">

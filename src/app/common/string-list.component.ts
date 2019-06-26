@@ -8,7 +8,7 @@ import { Module as Validators } from './validators';
     selector: 'string-list',
     template: `        
         <fieldset *ngIf="useAddButton">
-            <button (click)="onAdd()"><i class="fa fa-plus color-active"></i><span>Add</span></button>
+            <button (click)="onAdd()"><i aria-hidden="true" class="fa fa-plus color-active"></i><span>Add</span></button>
         </fieldset>
         <div *ngIf='list.length > 0'>
             <ul class="grid-list container-fluid">
@@ -23,16 +23,16 @@ import { Module as Validators } from './validators';
                         </div>
                         <div class="actions">
                             <button [disabled]="shouldDisable(i)" *ngIf="_editing == i" title="Ok" (click)="save(i)">
-                                <i class="fa fa-check color-active"></i>
+                                <i aria-hidden="true" class="fa fa-check color-active"></i>
                             </button>
                             <button *ngIf="_editing == i" title="Cancel" (click)="cancel(i)">
-                                <i class="fa fa-times red"></i>
+                                <i aria-hidden="true" class="fa fa-times red"></i>
                             </button>
                             <button *ngIf="_editing != i" title="Edit" (click)="onEdit(i)">
-                                <i class="fa fa-pencil color-active"></i>
+                                <i aria-hidden="true" class="fa fa-pencil color-active"></i>
                             </button>
                             <button title="Delete" (click)="delete(i)">
-                                <i class="fa fa-trash-o red"></i>
+                                <i aria-hidden="true" class="fa fa-trash-o red"></i>
                             </button>
                         </div>
                 </li>

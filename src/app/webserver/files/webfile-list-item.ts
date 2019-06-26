@@ -40,7 +40,7 @@ import { ActivatedRoute } from '@angular/router';
             <div class="actions">
                 <div class="selector-wrapper">
                     <button title="More" *ngIf="!model.isVirtual" (click)="openSelector($event)" (keyup.enter)="prevent($event)" (dblclick)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
-                        <i class="fa fa-ellipsis-h"></i>
+                        <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
                     <selector [right]="true">
                         <ul>

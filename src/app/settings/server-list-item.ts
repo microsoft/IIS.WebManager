@@ -21,7 +21,7 @@ import { NotificationService } from '../notification/notification.service';
             <div *ngIf="!_editing" class="actions">
                 <div class="selector-wrapper">
                     <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="(_selector && _selector.opened) || false">
-                        <i class="fa fa-ellipsis-h"></i>
+                        <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
                     <selector [right]="true">
                         <ul>

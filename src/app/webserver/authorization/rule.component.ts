@@ -11,7 +11,7 @@ import { AuthorizationService } from './authorization.service';
             <div class="actions">
                 <div class="action-selector">
                     <button title="More" (click)="selector.toggle()" (dblclick)="$event.preventDefault()" [class.background-active]="(selector && selector.opened) || _editing || false">
-                        <i class="fa fa-ellipsis-h"></i>
+                        <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
                     <selector #selector [right]="true">
                         <ul>
@@ -23,8 +23,8 @@ import { AuthorizationService } from './authorization.service';
             </div>
             <fieldset class="col-xs-8 col-sm-8 col-md-2">
                 <label class="visible-xs visible-sm">Access Type</label>
-                <i class="fa fa-circle green hidden-xs hidden-sm" *ngIf="rule.access_type == 'allow'"></i>
-                <i class="fa fa-ban red hidden-xs hidden-sm" *ngIf="rule.access_type == 'deny'"></i>
+                <i aria-hidden="true" class="fa fa-circle green hidden-xs hidden-sm" *ngIf="rule.access_type == 'allow'"></i>
+                <i aria-hidden="true" class="fa fa-ban red hidden-xs hidden-sm" *ngIf="rule.access_type == 'deny'"></i>
                 <span class="capitalize">{{rule.access_type}}</span>
             </fieldset> 
             <fieldset class="col-xs-12 col-sm-12 col-md-4">

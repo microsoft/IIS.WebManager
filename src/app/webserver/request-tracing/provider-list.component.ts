@@ -10,7 +10,7 @@ import {RequestTracingService} from './request-tracing.service';
     selector: 'provider-list',
     template: `
         <div *ngIf="_providers">
-            <button class="create" (click)="create()" [class.inactive]="_editing"><i class="fa fa-plus color-active"></i><span>Create Provider</span></button>
+            <button class="create" (click)="create()" [class.inactive]="_editing"><i aria-hidden="true" class="fa fa-plus color-active"></i><span>Create Provider</span></button>
             <div class="container-fluid">
                 <div class="hidden-xs border-active grid-list-header row" [hidden]="_providers.length < 1">
                     <label [ngClass]="css('name')" (click)="sort('name')">Name</label>

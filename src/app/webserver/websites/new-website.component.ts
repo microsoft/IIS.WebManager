@@ -33,7 +33,7 @@ import { ApplicationPool } from '../app-pools/app-pool';
                     <switch label="Create Own Application Pool" class="block" [(model)]="_createAppPool" (modelChange)="onNewAppPool($event)">{{_createAppPool ? "Yes" : "No"}}</switch>
                 </fieldset>
                 <div class="app-pool" *ngIf="!_createAppPool">
-                    <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">{{!site.application_pool ? "Choose Application Pool" : "Change Application Pool" }} <i class="fa fa-caret-down"></i></button>
+                    <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">{{!site.application_pool ? "Choose Application Pool" : "Change Application Pool" }} <i aria-hidden="true" class="fa fa-caret-down"></i></button>
                     <selector #poolSelect class="container-fluid create">
                         <app-pools #appPools [listingOnly]="true" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
                     </selector>
@@ -45,10 +45,10 @@ import { ApplicationPool } from '../app-pools/app-pool';
         </tabs>
         <p class="pull-right">
             <button (click)="onSave()" [disabled]="!IsValid() || bindingList.isEditing()">
-                <i title="Create" class="fa fa-check color-active"></i> Create
+                <i title="Create" aria-hidden="true" class="fa fa-check color-active"></i> Create
             </button>
             <button (click)="onCancel()">
-                <i class="fa fa-times red"></i> Cancel
+                <i aria-hidden="true" class="fa fa-times red"></i> Cancel
             </button>
         </p>
     `,
