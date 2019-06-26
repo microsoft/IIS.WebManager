@@ -93,8 +93,8 @@ import { HttpFacade } from 'common/http-facade';
 })
 export class GetComponent implements OnDestroy {
     private _inProgress: boolean;
-    private DOWNLOAD_URL: string = SETTINGS.api_download_url;
-    private SETUP_VERSION: string = SETTINGS.api_setup_version;
+    private DOWNLOAD_URL: string = SETTINGS.APIDownloadUrl;
+    private SETUP_VERSION: string = SETTINGS.APISetupVersion;
     private static STATUS_MSG: string[] = [
         'Checking on your progress',
         'Searching for Microsoft IIS Administration',

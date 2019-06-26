@@ -28,7 +28,7 @@ export class ServerAnalyticService implements OnDestroy {
     }
 
     private get gaTrackCode() {
-        return SETTINGS && SETTINGS.ga_track;
+        return SETTINGS && SETTINGS.GATrack;
     }
 
     private getServerId(connection: ApiConnection) {

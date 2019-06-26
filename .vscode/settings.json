@@ -12,6 +12,7 @@
         "Unsubscribable",
         "tabindex",
         "valign",
-        "focusable"
+        "focusable",
+        "aspnet"
     ]
 }
