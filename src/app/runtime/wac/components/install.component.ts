@@ -30,7 +30,7 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
                             </li>
                             <li #aspnetPrompt>
                                 <label>ASP.NET Core installer location, required version: ${SETTINGS.AspnetSharedFrameworkVersion}</label>
-                                <input class="form-control" type="text" [(ngModel)]="aspnetSharedLocation" />
+                                <input class="form-control" type="text" [(ngModel)]="aspnetCoreLocation" />
                             </li>
                         </ul>
                     </li>
@@ -122,7 +122,7 @@ export class InstallComponent implements OnInit {
     targetHost: string;
     adminAPILocation: string;
     dotnetCoreLocation: string;
-    aspnetSharedLocation: string;
+    aspnetCoreLocation: string;
     userInputError: string;
     details: string;
 
@@ -195,7 +195,7 @@ export class InstallComponent implements OnInit {
             if (this.verifyLocationPrompt(this.apiPrompt) && this.verifyLocationPrompt(this.dotnetPrompt) && this.verifyLocationPrompt(this.aspnetPrompt)) {
                 args.adminAPILocation = this.adminAPILocation;
                 args.dotnetCoreLocation = this.dotnetCoreLocation;
-                args.aspnetSharedLocation = this.aspnetSharedLocation;
+                args.aspnetCoreLocation = this.aspnetCoreLocation;
             }
         }
         

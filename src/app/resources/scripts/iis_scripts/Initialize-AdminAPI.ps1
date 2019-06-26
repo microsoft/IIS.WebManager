@@ -13,7 +13,7 @@ param(
     $dotnetCoreLocation,
 
     [string]
-    $aspnetSharedLocation,
+    $aspnetCoreLocation,
 
     ## Not doing anything with this parameter yet
     [string]
@@ -57,8 +57,8 @@ if ($install) {
     if ($dotnetCoreLocation) {
         $dotnetCoreInstallType = VerifySource $dotnetCoreLocation
     }
-    if ($aspnetSharedLocation) {
-        $aspnetInstallType = VerifySource $aspnetSharedLocation
+    if ($aspnetCoreLocation) {
+        $aspnetInstallType = VerifySource $aspnetCoreLocation
     }
 
     if (!$adminAPILocation) {
@@ -107,8 +107,8 @@ function InstallComponents {
     if ($dotnetCoreLocation) {
         Install "dotnet-core-runtime" $dotnetCoreInstallType $dotnetCoreLocation
     }
-    if ($aspnetSharedLocation) {
-        Install "asp-net-shared-runtime" $aspnetInstallType $aspnetSharedLocation
+    if ($aspnetCoreLocation) {
+        Install "asp-net-shared-runtime" $aspnetInstallType $aspnetCoreLocation
     }
     Install "iis-administration-api" $iisAdminInstallType $adminAPILocation
     $script:groupModified = $true
