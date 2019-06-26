@@ -17,7 +17,7 @@ import { UrlRewriteService } from './service/url-rewrite.service';
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="service.status == 'stopped' && !service.webserverScope">URL Rewrite is not installed. Install it <a [routerLink]="['/webserver/url-rewrite']">here</a></span>
+        <span *ngIf="service.status == 'stopped' && !service.webserverScope">URL Rewrite is not installed. <a [routerLink]="['/webserver/url-rewrite']">Click here to install this feature.</a></span>
         <div *ngIf="service.status == 'started'">
             <tabs>
                 <tab [name]="'Inbound Rules'">

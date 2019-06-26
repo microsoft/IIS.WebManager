@@ -21,7 +21,7 @@ import { NotificationService } from '../../notification/notification.service';
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="service.status == 'stopped' && !service.webserverScope">Logging is off. Turn it on <a [routerLink]="['/webserver/logging']">here</a></span>
+        <span *ngIf="service.status == 'stopped' && !service.webserverScope">Logging is off. <a [routerLink]="['/webserver/logging']">Click here to turn this feature on.</a></span>
         <override-mode class="pull-right" *ngIf="logging" [scope]="logging.scope" [metadata]="logging.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="logging">
             <fieldset class="collect">

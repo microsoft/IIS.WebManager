@@ -19,7 +19,7 @@ import { NotificationService } from '../../notification/notification.service';
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf= "service.status == 'stopped' && !service.webserverScope">Directory Browsing is off. Turn it on <a [routerLink]="['/webserver/directory-browsing']">here</a></span>
+        <span *ngIf= "service.status == 'stopped' && !service.webserverScope">Directory Browsing is off. <a [routerLink]="['/webserver/directory-browsing']">Click here to turn this feature on.</a></span>
         <override-mode class="pull-right" *ngIf="feature" [scope]="feature.scope" [metadata]="feature.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="feature">
             <fieldset>

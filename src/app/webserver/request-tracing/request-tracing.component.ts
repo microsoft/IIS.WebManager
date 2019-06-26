@@ -22,7 +22,7 @@ import { RequestTracing, RequestTracingRule, Trace, EventSeverity, Verbosity } f
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="service.status == 'stopped' && !service.webserverScope">Request Tracing is off. Turn it on <a [routerLink]="['/webserver/request-tracing']">here</a></span>
+        <span *ngIf="service.status == 'stopped' && !service.webserverScope">Request Tracing is off. <a [routerLink]="['/webserver/request-tracing']">Click here to turn this feature on.</a></span>
         <override-mode class="pull-right"
             *ngIf="requestTracing"
             [scope]="requestTracing.scope"

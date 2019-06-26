@@ -20,7 +20,7 @@ import { NotificationService } from '../../notification/notification.service';
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="service.status == 'stopped' && !service.webserverScope">IP Restrictions are off. Turn them on <a [routerLink]="['/webserver/ip-restrictions']">here</a></span>
+        <span *ngIf="service.status == 'stopped' && !service.webserverScope">IP Restrictions are off. <a [routerLink]="['/webserver/ip-restrictions']">Click here to turn this feature on.</a></span>
         <override-mode class="pull-right" *ngIf="ipRestrictions" [scope]="ipRestrictions.scope" [metadata]="ipRestrictions.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="ipRestrictions" [attr.disabled]="_locked || null">
             <fieldset>

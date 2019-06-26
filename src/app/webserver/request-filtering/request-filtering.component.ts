@@ -21,7 +21,7 @@ import { RequestFilteringSettings, RequestFiltering } from './request-filtering'
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="service.status == 'stopped' && !service.webserverScope">Request Filtering is off. Turn it on <a [routerLink]="['/webserver/request-filtering']">here</a></span>
+        <span *ngIf="service.status == 'stopped' && !service.webserverScope">Request Filtering is off. <a [routerLink]="['/webserver/request-filtering']">Click here to turn this feature on.</a></span>
         <div *ngIf="settings">
             <tabs>
                 <tab [name]="'Settings'">

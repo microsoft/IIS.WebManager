@@ -20,7 +20,7 @@ import { NotificationService } from '../../notification/notification.service';
                     <span *ngIf="!isPending()">{{s.model ? "On" : "Off"}}</span>
                     <span *ngIf="isPending()" class="loading"></span>
         </switch>
-        <span *ngIf="service.windowsStatus == 'stopped' && !service.webserverScope">Windows Authentication is off. Turn it on <a [routerLink]="['/webserver/authentication']">here</a></span>
+        <span *ngIf="service.windowsStatus == 'stopped' && !service.webserverScope">Windows Authentication is off. <a [routerLink]="['/webserver/authentication']">Click here to turn this feature on.</a></span>
         <override-mode class="pull-right" *ngIf="_model" [scope]="_model.scope" [metadata]="_model.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
         <div *ngIf="_model">
             <fieldset>
