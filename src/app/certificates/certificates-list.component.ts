@@ -12,7 +12,9 @@ import { CertificatesService } from './certificates.service';
         <div class="toolbar">
             <span *ngIf="serviceLoading" class="loading">Retrieving certificates</span>
             <div class="toolbar-right">
-                <button class="refresh" title="Refresh" (click)="refresh()"></button>
+                <button title="Refresh" (click)="refresh()">
+                    <i aria-hidden="true" class="fa fa-refresh"></i>
+                </button>
                 <div *ngIf="_items" class="col-xs-8 col-sm-5 col-md-4 col-lg-3 actions filter hidden-xs">
                     <input placeholder="Search" type="search" aria-label="Filter" class="form-control" [class.border-active]="_filter" [(ngModel)]="_filter" (ngModelChange)="filter($event)" [throttle]="300" />
                 </div>
@@ -97,7 +99,7 @@ import { CertificatesService } from './certificates.service';
             float: right;
         }
 
-        .refresh {
+        .toolbar-right button {
             padding-right: 12px;
         }
 
