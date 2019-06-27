@@ -257,7 +257,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
 @Component({
     selector: '[vtabs item][vtabs ng-container item]',
     template: `
-<div *ngIf="active">
+<div class="content-wrapper" *ngIf="active">
     <titles></titles>
     <div class="vtab-content">
         <ng-content></ng-content>
@@ -276,6 +276,12 @@ span:focus {
 .vtab-content {
     padding-left: 20px;
 }
+
+.content-wrapper {
+    margin: -1px;
+    border-left: 1px solid #ccc;
+}
+
     `],
 })
 export class Item implements OnInit, OnDestroy, Heading {
