@@ -180,12 +180,12 @@ import { SectionHelper } from './section.helper';
                             <span class="border-active">{{tabs[_selectedIndex].name}}</span>
                         </li>
                     </ul>
-                    <div class="hider background-normal"></div>
+                    <div aria-hidden="true" class="hider background-normal" #menuBtnHider></div>
                 </div>
             </div>
             <div class='menu-btn color-active background-normal' #menuBtn>
                 <span
-                    tabindex="0"
+                    tabindex="{{(isTabMenuHidden()) ? -1 : 0}}"
                     (keyup.space)="onToggleMenu()"
                     (keyup.enter)="onToggleMenu()"
                     (click)="onToggleMenu()"
@@ -228,7 +228,12 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
     private _hashCache: Array<string> = [];
     private _sectionHelper: SectionHelper;
 
-    @ViewChild('menuBtn') menuBtn: ElementRef;
+    @ViewChild('menuBtn')
+    menuBtn: ElementRef;
+
+    @ViewChild('menuBtnHider')
+    private _menuBtnHider: ElementRef;
+
     @ViewChildren('item') tabList: QueryList<ElementRef>;
 
     private _subscriptions: Array<Subscription> = [];
@@ -285,6 +290,16 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
             this.showMenu(false);
         }
         this._sectionHelper.selectSection(this.tabs[index].name);
+    }
+
+    isTabMenuHidden() {
+        let offset = this._menuBtnHider.nativeElement.getBoundingClientRect().top - this.menuBtn.nativeElement.getBoundingClientRect().top;
+        let height = this._menuBtnHider.nativeElement.getBoundingClientRect().height;
+        if (offset < 0) {
+            offset *= -1;
+        }
+        // TabMenuHider overlap the tabMenu when they are in the same line, causing that the tabMenu becomes hidden.
+        return (offset < height / 2);
     }
 
     private onSectionChange(section: string) {
