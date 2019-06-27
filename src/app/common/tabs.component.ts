@@ -293,13 +293,11 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
     }
 
     isTabMenuHidden() {
-        let offset = this._menuBtnHider.nativeElement.getBoundingClientRect().top - this.menuBtn.nativeElement.getBoundingClientRect().top;
-        let height = this._menuBtnHider.nativeElement.getBoundingClientRect().height;
-        if (offset < 0) {
-            offset *= -1;
-        }
-        // TabMenuHider overlap the tabMenu when they are in the same line, causing that the tabMenu becomes hidden.
-        return (offset < height / 2);
+        // The hider element goes to the next line when the window size is reduced and that causes the previously hiden tabMenu button now visible.
+        // So, when the tabMenu is not hidden, hiderTop is bigger than the menuBottom.
+        let menuBottom = this.menuBtn.nativeElement.getBoundingClientRect().bottom;
+        let hiderTop = this._menuBtnHider.nativeElement.getBoundingClientRect().top;
+        return !(hiderTop > menuBottom);
     }
 
     private onSectionChange(section: string) {
