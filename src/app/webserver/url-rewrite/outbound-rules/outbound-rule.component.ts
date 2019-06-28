@@ -24,7 +24,7 @@ import { OutboundRule, OutboundMatchTypeHelper } from '../url-rewrite';
                     <button title="More" (click)="selector.toggle()" (dblclick)="$event.preventDefault()" [class.background-active]="(selector && selector.opened) || _editing || false">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
-                    <selector #selector [right]="true">
+                    <selector aria-hidden="true" #selector [right]="true">
                         <ul>
                             <li><button #menuButton class="edit" title="Edit" (click)="edit()">Edit</button></li>
                             <li><button #menuButton class="copy" title="Copy" (click)="_service.copyOutboundRule(rule)">Clone</button></li>
@@ -36,7 +36,7 @@ import { OutboundRule, OutboundMatchTypeHelper } from '../url-rewrite';
                 </div>
             </div>
         </div>
-        <selector #editSelector [opened]="true" *ngIf="_editing" class="container-fluid" (hide)="discard()">
+        <selector aria-hidden="true" #editSelector [opened]="true" *ngIf="_editing" class="container-fluid" (hide)="discard()">
             <outbound-rule-edit [rule]="rule" (save)="save($event)" (cancel)="discard()"></outbound-rule-edit>
         </selector>
     `

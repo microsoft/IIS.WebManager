@@ -204,7 +204,7 @@ const perspectives = [
     template: `
 <list-operations-bar *ngIf="!canAdd" [operations]="operations" [context]="selected"></list-operations-bar>
 <list-operations-bar *ngIf="canAdd" [operations]="operations" [context]="selected">
-    <selector
+    <selector aria-hidden="true"
         class="container-fluid list-operation-addon-view"
         #newWebSite>
         <new-website
