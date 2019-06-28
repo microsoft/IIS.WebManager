@@ -33,7 +33,7 @@ import { FilesService } from 'files/files.service';
                     <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="selector && selector.opened">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
-                    <selector aria-hidden="true" [right]="true">
+                    <selector [right]="true">
                         <ul>
                             <li><button title="Download" class="download" *ngIf="model.file_info.type=='file'" (click)="onDownload($event)">Download</button></li>
                             <li><button class="delete" *ngIf="model && model.file_info.name.endsWith('.xml')" click="onDelete($event)">Delete</button></li>

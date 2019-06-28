@@ -9,7 +9,7 @@ import { FilesComponent } from './files.component';
 @Component({
     selector: 'server-file-selector',
     template: `
-        <selector aria-hidden="true" class="container-fluid" #selector>
+        <selector class="container-fluid" #selector>
             <div class="fixed">
                 <file-viewer
                     *ngIf="selector.opened"

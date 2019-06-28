@@ -11,7 +11,7 @@ import { Authorization, AuthRule } from './authorization'
         <div *ngIf="_rules">
 
             <button [disabled]="_locked" [class.background-active]="newRule.opened" (click)="newRule.toggle()">Create Rule <i aria-hidden="true" class="fa fa-caret-down"></i></button>
-            <selector aria-hidden="true" #newRule class="container-fluid create" (hide)="initializeNewRule()">
+            <selector #newRule class="container-fluid create" (hide)="initializeNewRule()">
                 <edit-rule *ngIf="newRule.opened" [rule]="_newRule" (save)="saveNew($event)" (cancel)="newRule.close()"></edit-rule>
             </selector>
 

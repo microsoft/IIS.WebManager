@@ -46,7 +46,7 @@ import { buffer, map, filter, take } from 'rxjs/operators'
                         tabindex="0" aria-label="Size Header" role="button" (keyup.enter)="sort('size')" (keyup.space)="sort('size')">Size</label>
                 </div>
             </div>
-            <selector aria-hidden="true" #editSelector [opened]="true" *ngIf="_newLocation" class="container-fluid" (hide)="_newLocation=null">
+            <selector #editSelector [opened]="true" *ngIf="_newLocation" class="container-fluid" (hide)="_newLocation=null">
                 <edit-location [model]="_newLocation" (cancel)="_newLocation=null" (save)="onSaveNewLocation()"></edit-location>
             </selector>
             <div class="grid-list container-fluid" *ngIf="_newDir">

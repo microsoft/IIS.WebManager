@@ -66,7 +66,7 @@ import { first } from 'rxjs/operators'
                         <checkbox2 [(model)]="model.require_sni">Require SNI</checkbox2>
                     </fieldset>
                     <div class="selector" *ngIf="model.is_https">
-                        <selector aria-hidden="true" #certSelect [hidden]="!certSelect || !certSelect.isOpen()" (hide)="onCertSelected()" class="container-fluid">
+                        <selector #certSelect [hidden]="!certSelect || !certSelect.isOpen()" (hide)="onCertSelected()" class="container-fluid">
                             <certificates-list #list (itemSelected)="onCertSelected($event)"></certificates-list>
                         </selector>
                     </div>

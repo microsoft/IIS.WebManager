@@ -15,7 +15,7 @@ import { Status } from 'common/status';
             <div class="actions">
                 <div class="selector-wrapper">
                     <button title="Actions" (click)="openSelector()" [class.background-active]="(_selector && _selector.opened) || false"><i aria-hidden="true" class="fa fa-caret-down"></i></button>
-                    <selector aria-hidden="true" [right]="true">
+                    <selector [right]="true">
                         <ul>
                             <li><a class="bttn edit" title="Edit" [routerLink]="['/webserver/app-pools', model.id]">Edit</a></li>
                             <li><button class="refresh" title="Recycle" [attr.disabled]="!started || null" (click)="onRecycle()">Recycle</button></li>

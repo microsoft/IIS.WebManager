@@ -34,7 +34,7 @@ import { ApplicationPool } from '../app-pools/app-pool';
                 </fieldset>
                 <div class="app-pool" *ngIf="_customPool">
                     <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">{{!model.application_pool ? "Choose Application Pool" : "Change Application Pool" }} <i aria-hidden="true" class="fa fa-caret-down"></i></button>
-                    <selector aria-hidden="true" #poolSelect class="container-fluid create">
+                    <selector #poolSelect class="container-fluid create">
                         <app-pools #appPools [listingOnly]="true" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
                     </selector>
                     <fieldset>

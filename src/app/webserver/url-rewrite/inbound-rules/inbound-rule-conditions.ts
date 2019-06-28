@@ -97,7 +97,7 @@ export class InboundRuleConditionsComponent {
                     <button title="More" (click)="selector.toggle()" (dblclick)="$event.preventDefault()" [class.background-active]="(selector && selector.opened) || false">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
-                    <selector aria-hidden="true" #selector [right]="true">
+                    <selector #selector [right]="true">
                         <ul>
                             <li><button #menuButton class="edit" title="Edit" (click)="edit()">Edit</button></li>
                             <li><button #menuButton class="delete" title="Delete" (click)="delete()">Delete</button></li>

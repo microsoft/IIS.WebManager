@@ -13,7 +13,7 @@ import { AuthorizationService } from './authorization.service';
                     <button title="More" (click)="selector.toggle()" (dblclick)="$event.preventDefault()" [class.background-active]="(selector && selector.opened) || _editing || false">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
-                    <selector aria-hidden="true" #selector [right]="true">
+                    <selector #selector [right]="true">
                         <ul>
                             <li><button #menuButton class="edit" title="Edit" [disabled]="locked" (click)="edit()">Edit</button></li>
                             <li><button #menuButton class="delete" title="Delete" [disabled]="locked" (click)="delete()">Delete</button></li>
@@ -36,7 +36,7 @@ import { AuthorizationService } from './authorization.service';
                 <span>{{_allVerbs ? "All" : rule.verbs}}</span>
             </fieldset>
         </div>
-        <selector aria-hidden="true" #editSelector [opened]="true" *ngIf="_editing" class="container-fluid" (hide)="discard()">
+        <selector #editSelector [opened]="true" *ngIf="_editing" class="container-fluid" (hide)="discard()">
             <edit-rule [rule]="rule" (save)="save($event)" (cancel)="discard()"></edit-rule>
         </selector>
     `,

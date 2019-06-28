@@ -41,7 +41,7 @@ import { ActivatedRoute } from '@angular/router';
                     <button title="More" (click)="selector.toggle()" (dblclick)="prevent($event)" (keyup.enter)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
-                    <selector aria-hidden="true" #selector [right]="true">
+                    <selector #selector [right]="true">
                         <ul>
                             <li><button *ngIf="!isRoot" #menuButton class="edit" title="Rename" (click)="onRename($event)">Rename</button></li>
                             <li><button *ngIf="isRoot" #menuButton class="edit" title="Edit" (click)="onEdit($event)">Edit</button></li>
@@ -53,7 +53,7 @@ import { ActivatedRoute } from '@angular/router';
                 </div>
             </div>
         </div>
-        <selector aria-hidden="true" #editSelector [opened]="true" *ngIf="_location && _editing" class="container-fluid" (hide)="cancel()">
+        <selector #editSelector [opened]="true" *ngIf="_location && _editing" class="container-fluid" (hide)="cancel()">
             <edit-location *ngIf="_location && _editing" [model]="_location" (cancel)="cancel()" (dblclick)="prevent($event)" (keyup.delete)="prevent($event)"></edit-location>
         </selector>
     `,
