@@ -22,6 +22,8 @@ import { FormsModule } from '@angular/forms';
         }
         .symbol {
             display: inline-block;
+            vertical-align: top;
+            margin-top: 0.5em;
         }
     `],
     template: `
