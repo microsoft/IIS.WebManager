@@ -180,7 +180,7 @@ export class WebAppItem extends ListOperationContext<WebAppOp> implements OnInit
     template: `
 <list-operations-bar *ngIf="!canAdd" [operations]="operations" [context]="selected"></list-operations-bar>
 <list-operations-bar *ngIf="canAdd" [operations]="operations" [context]="selected">
-    <selector #newWebApp
+    <selector aria-hidden="true" #newWebApp
         class="container-fluid list-operation-addon-view">
         <new-webapp *ngIf="newWebApp.opened"
                     [website]="website"

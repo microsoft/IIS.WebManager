@@ -183,7 +183,7 @@ export class AppPoolItem extends ListOperationContext<AppPoolOp> {
         class="list-operation-addon-left add list-action-button"
         [class.background-active]="newAppPool.opened"
         (click)="newAppPool.toggle()" title="Create">Create</button>
-    <selector #newAppPool
+    <selector aria-hidden="true" #newAppPool
             class="container-fluid list-operation-addon-view">
         <new-app-pool *ngIf="newAppPool.opened"
             (created)="newAppPool.close()"

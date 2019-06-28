@@ -41,7 +41,7 @@ import { InboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
                 </div>
                 <input type="text" required [title]="_result" class="form-control left-with-button" [(ngModel)]="rule.action.url" (modelChanged)="testRegex()" />
                 <button class="input" (click)="macros.toggle()" [class.background-active]="(macros && macros.opened) || false">Macros</button>
-                <selector class="stretch" #macros>
+                <selector aria-hidden="true" class="stretch" #macros>
                     <div class="table-scroll">
                         <table>
                             <tr *ngFor="let match of _matches; let i = index;" (dblclick)="addMatch(i)" (click)="select(i)" class="hover-editing" [class.background-selected]="_selected == i">
