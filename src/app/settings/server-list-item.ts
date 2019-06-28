@@ -23,7 +23,7 @@ import { NotificationService } from '../notification/notification.service';
                     <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="(_selector && _selector.opened) || false">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
-                    <selector aria-hidden="true" [right]="true">
+                    <selector [right]="true">
                         <ul>
                             <li><button class="go" title="Connect" (click)="onConnect()">Connect</button></li>
                             <li><button class="edit" title="Edit" (click)="onEdit()">Edit</button></li>

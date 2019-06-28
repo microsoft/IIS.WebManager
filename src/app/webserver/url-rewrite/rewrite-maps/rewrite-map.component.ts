@@ -18,7 +18,7 @@ import { RewriteMap } from '../url-rewrite';
                     <button title="More" (click)="selector.toggle()" (dblclick)="$event.preventDefault()" [class.background-active]="(selector && selector.opened) || _editing || false">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
-                    <selector aria-hidden="true" #selector [right]="true">
+                    <selector #selector [right]="true">
                         <ul>
                             <li><button #menuButton class="edit" title="Edit" (click)="edit()">Edit</button></li>
                             <li><button #menuButton class="delete" title="Delete" (click)="delete()">Delete</button></li>
@@ -28,7 +28,7 @@ import { RewriteMap } from '../url-rewrite';
                 </div>
             </div>
         </div>
-        <selector aria-hidden="true" #editSelector [opened]="true" *ngIf="_editing" class="container-fluid" (hide)="discard()">
+        <selector #editSelector [opened]="true" *ngIf="_editing" class="container-fluid" (hide)="discard()">
             <rewrite-map-edit [map]="map" (save)="save($event)" (cancel)="discard()"></rewrite-map-edit>
         </selector>
     `

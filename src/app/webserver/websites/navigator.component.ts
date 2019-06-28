@@ -26,7 +26,7 @@ import {WebSitesService} from './websites.service';
                     <span class="hidden-xs" *ngIf="!small"></span>
                 </button>
                 <div class="selector" [class.right-align]="right" [class.left-align]="left">
-                    <selector aria-hidden="true" #navigator>
+                    <selector #navigator>
                         <ul class="grid-list">
                             <li *ngFor="let b of model; let i = index" class="grid-item hover-active">
                                 <div tabindex="0"

@@ -42,7 +42,7 @@ import { ActivatedRoute } from '@angular/router';
                     <button title="More" *ngIf="!model.isVirtual" (click)="openSelector($event)" (keyup.enter)="prevent($event)" (dblclick)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
-                    <selector aria-hidden="true" [right]="true">
+                    <selector [right]="true">
                         <ul>
                             <li><button class="edit" title="Rename" *ngIf="model.type!='vdir' && model.file_info" (click)="onRename($event)">Rename</button></li>
                             <li><button class="download" title="Download" *ngIf="model.type=='file' && model.file_info" (click)="onDownload($event)">Download</button></li>

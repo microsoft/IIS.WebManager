@@ -24,7 +24,7 @@ import { InboundRule, ActionTypeHelper } from '../url-rewrite';
                     <button title="More" (click)="selector.toggle()" (dblclick)="$event.preventDefault()" [class.background-active]="(selector && selector.opened) || _editing || false">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
-                    <selector aria-hidden="true" #selector [right]="true">
+                    <selector #selector [right]="true">
                         <ul>
                             <li><button #menuButton class="edit" title="Edit" (click)="edit()">Edit</button></li>
                             <li><button #menuButton class="up" title="Up" (click)="_service.moveInboundUp(rule)">Move Up</button></li>
@@ -36,7 +36,7 @@ import { InboundRule, ActionTypeHelper } from '../url-rewrite';
                 </div>
             </div>
         </div>
-        <selector aria-hidden="true" #editSelector [opened]="true" *ngIf="_editing" class="container-fluid" (hide)="discard()">
+        <selector #editSelector [opened]="true" *ngIf="_editing" class="container-fluid" (hide)="discard()">
             <inbound-rule-edit [rule]="rule" (save)="save($event)" (cancel)="discard()"></inbound-rule-edit>
         </selector>
     `
