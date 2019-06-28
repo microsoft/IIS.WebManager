@@ -69,6 +69,7 @@ export const GLOBAL_MODULES: ComponentReference[] = [
     new ComponentReference("Default Documents", "fa fa-file-text-o", DefaultDocumentsComponentName, "default_document", "/api/webserver/default-documents/{id}"),
     new ComponentReference("Directory Browsing", "fa fa-folder-open-o", DirectoryBrowsingComponentName, "directory_browsing", "/api/webserver/directory-browsing/{id}"),
     new ComponentReference(WebFilesModuleName, "fa fa-files-o", WebFilesComponentName, FilesApiName, "/api/webserver/files/{id}"),
+    new ComponentReference(FileSystemModuleName, "fa fa-files-o", FilesComponentName, "files", "/api/files/{id}"),
     new ComponentReference("IP Restrictions", "fa fa-ban", IpRestrictionsComponentName, "ip_restrictions", "/api/webserver/ip-restrictions/{id}"),
     new ComponentReference("Logging","fa fa-pencil", LoggingComponentName, "logging","/api/webserver/logging/{id}"),
     new ComponentReference("Mime Maps", "fa fa-arrows-h", MimeMapsComponentName, "static_content", "/api/webserver/static-content/{id}"),
@@ -80,5 +81,4 @@ export const GLOBAL_MODULES: ComponentReference[] = [
     new ComponentReference("Request Tracing", "fa fa-flag-o", RequestTracingComponentName, "request_tracing", "/api/webserver/http-request-tracing/{id}"),
     new ComponentReference("Static Content", "fa fa-file-o", StaticContentComponentName, "static_content", "/api/webserver/static-content/{id}"),
     new ComponentReference("Url Rewrite", "fa fa-exchange", UrlRewriteComponentName, "url_rewrite", "/api/webserver/url-rewrite/{id}"),
-    new ComponentReference(FileSystemModuleName, "fa fa-files-o", FilesComponentName, "files", "/api/files/{id}"),
 ]
