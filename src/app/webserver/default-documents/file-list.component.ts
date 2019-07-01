@@ -141,7 +141,9 @@ export class FileListItem {
             <div *ngIf="_files">
                 <div class="col-sm-6 col-lg-4">
                     <div class="row hidden-xs border-active grid-list-header" [hidden]="_files.length < 1">
-                        <label [ngClass]="_orderBy.css('name')" (click)="_orderBy.sort('name')">File Name</label>
+                        <label [ngClass]="_orderBy.css('name')"
+                            (click)="_orderBy.sort('name')" (keyup.enter)="_orderBy.sort('name')" (keyup.space)="_orderBy.sort('name')"
+                            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('name')" role="columnheader">File Name</label>
                     </div>
                     <div class="grid-list">
                         <file *ngIf="_newFile" [model]="_newFile" (close)="close()"></file>
