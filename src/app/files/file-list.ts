@@ -36,14 +36,18 @@ import { buffer, map, filter, take } from 'rxjs/operators'
             <input tabindex="-1" class="out" type="text"/>
             <div #header class="container-fluid hidden-xs">
                 <div class="border-active grid-list-header row">
-                    <label class="col-xs-8 col-sm-5 col-lg-4 hidden-xs" [ngClass]="_orderBy.css('name')" (click)="sort('name')"
-                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('name')" role="columnheader" (keyup.enter)="sort('name')" (keyup.space)="sort('name')">Name</label>
-                    <label class="col-sm-3 col-md-2 hidden-xs" [ngClass]="_orderBy.css('last_modified')" (click)="sort('last_modified')"
-                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('last_modified')" role="columnheader" (keyup.enter)="sort('last_modified')" (keyup.space)="sort('last_modified')">Last Modified</label>
-                    <label class="col-md-2 visible-lg visible-md" [ngClass]="_orderBy.css('description')" (click)="sort('description')"
-                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('description')" role="columnheader" (keyup.enter)="sort('description')" (keyup.space)="sort('description')">Type</label>
-                    <label class="col-md-1 visible-lg visible-md text-right" [ngClass]="_orderBy.css('size')" (click)="sort('size')"
-                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('size')" role="columnheader" (keyup.enter)="sort('size')" (keyup.space)="sort('size')">Size</label>
+                    <label class="col-xs-8 col-sm-5 col-lg-4 hidden-xs" [ngClass]="_orderBy.css('name')"
+                        (click)="sort('name')" (keyup.enter)="sort('name')" (keyup.space)="sort('name')"
+                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('name')" role="columnheader">Name</label>
+                    <label class="col-sm-3 col-md-2 hidden-xs" [ngClass]="_orderBy.css('last_modified')"
+                        (click)="sort('last_modified')" (keyup.enter)="sort('last_modified')" (keyup.space)="sort('last_modified')"
+                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('last_modified')" role="columnheader">Last Modified</label>
+                    <label class="col-md-2 visible-lg visible-md" [ngClass]="_orderBy.css('description')"
+                        (click)="sort('description')" (keyup.enter)="sort('description')" (keyup.space)="sort('description')"
+                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('description')" role="columnheader">Type</label>
+                    <label class="col-md-1 visible-lg visible-md text-right" [ngClass]="_orderBy.css('size')"
+                        (click)="sort('size')" (keyup.enter)="sort('size')" (keyup.space)="sort('size')"
+                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('size')" role="columnheader">Size</label>
                 </div>
             </div>
             <selector #editSelector [opened]="true" *ngIf="_newLocation" class="container-fluid" (hide)="_newLocation=null">

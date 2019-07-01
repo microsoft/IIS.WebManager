@@ -196,12 +196,15 @@ export class WebAppItem extends ListOperationContext<WebAppOp> implements OnInit
 </list-operations-bar>
 <div class="container-fluid">
     <div class="hidden-xs border-active grid-list-header row" [hidden]="model.length == 0">
-        <label class="col-xs-8 col-sm-4" [ngClass]="_orderBy.css('path')" (click)="_orderBy.sort('path')"
-            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('path')" role="columnheader" (keyup.enter)="_orderBy.sort('path')" (keyup.space)="_orderBy.sort('path')">Path</label>
-        <label class="col-sm-2" *ngIf="field(${WebAppFields.appPool})" [ngClass]="_orderBy.css('application_pool.name')" (click)="_orderBy.sort('application_pool.name')"
-            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('application_pool.name')" role="columnheader" (keyup.enter)="_orderBy.sort('application_pool.name')" (keyup.space)="_orderBy.sort('application_pool.name')">Application Pool</label>
-        <label class="col-sm-2" *ngIf="field(${WebAppFields.site})" [ngClass]="_orderBy.css('website.name')" (click)="_orderBy.sort('website.name')"
-            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('website.name')" role="columnheader" (keyup.enter)="_orderBy.sort('website.name')" (keyup.space)="_orderBy.sort('website.name')">Web Site</label>
+        <label class="col-xs-8 col-sm-4" [ngClass]="_orderBy.css('path')"
+            (click)="_orderBy.sort('path')" (keyup.enter)="_orderBy.sort('path')" (keyup.space)="_orderBy.sort('path')"
+            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('path')" role="columnheader">Path</label>
+        <label class="col-sm-2" *ngIf="field(${WebAppFields.appPool})" [ngClass]="_orderBy.css('application_pool.name')"
+            (click)="_orderBy.sort('application_pool.name')" (keyup.enter)="_orderBy.sort('application_pool.name')" (keyup.space)="_orderBy.sort('application_pool.name')"
+            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('application_pool.name')" role="columnheader">Application Pool</label>
+        <label class="col-sm-2" *ngIf="field(${WebAppFields.site})" [ngClass]="_orderBy.css('website.name')"
+            (click)="_orderBy.sort('website.name')" (keyup.enter)="_orderBy.sort('website.name')" (keyup.space)="_orderBy.sort('website.name')"
+            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('website.name')" role="columnheader">Web Site</label>
     </div>
     <ul class="grid-list">
         <li *ngFor="let app of model | orderby: _orderBy.Field: _orderBy.Asc" class="border-color hover-editing">
