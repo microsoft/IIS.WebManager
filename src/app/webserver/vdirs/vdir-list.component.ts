@@ -38,7 +38,9 @@ import { WebApp } from '../webapps/webapp';
                     <fieldset class="col-xs-12 overflow">
                         <label class="block">Physical Path</label>
                         <input type="text" class="form-control block left-with-button" [(ngModel)]="model.physical_path" throttle required />
-                        <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="select" (click)="fileSelector.toggle()"></button>
+                        <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" (click)="fileSelector.toggle()">
+                            <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
+                        </button>
                         <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="model.physical_path" (selected)="onSelectPath($event)"></server-file-selector>
                     </fieldset>
                     <div class="col-xs-12">

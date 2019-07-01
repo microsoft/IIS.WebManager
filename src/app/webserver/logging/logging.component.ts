@@ -35,7 +35,9 @@ import { NotificationService } from '../../notification/notification.service';
                     <fieldset class="path">
                         <label>Directory</label>
                         <input [disabled]="!logging.log_per_site && logging.website" type="text" class="form-control left-with-button" [(ngModel)]="logging.directory" throttle (modelChanged)="onModelChanged()" throttle required />
-                        <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="select" (click)="fileSelector.toggle()"></button>
+                        <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" (click)="fileSelector.toggle()">
+                            <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
+                        </button>
                         <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="logging.directory" (selected)="onSelectPath($event)"></server-file-selector>
                     </fieldset>
                     <fieldset *ngIf="!logging.website">
