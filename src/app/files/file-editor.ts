@@ -157,11 +157,21 @@ export class FileEditor {
     selector: 'toolbar',
     template: `
         <div>
-            <button title="Save (Ctrl+S)" class="save" (click)="onsave.next($event)" *ngIf="save !== null" [attr.disabled]="save === false || null"></button>
-            <button title="Replace with Unmodified" class="undo color-active" (click)="onreload.next($event)" *ngIf="reload !== null" [attr.disabled]="reload === false || null"></button>
-            <button title="Compare with Unmodified" class="compare" (click)="oncompare.next($event)" *ngIf="compare !== null" [attr.disabled]="compare === false || null"></button>
-            <button title="Exit Compare Mode" class="uncompare active" (click)="onuncompare.next($event)" *ngIf="uncompare !== null" [attr.disabled]="uncompare === false || null"></button>
-            <button title="Download" class="download" (click)="ondownload.next($event)" *ngIf="download !== null" [attr.disabled]="download === false || null"></button>
+            <button title="Save (Ctrl+S)" (click)="onsave.next($event)" *ngIf="save !== null" [attr.disabled]="save === false || null">
+                <i aria-hidden="true" class="fa fa-floppy-o"></i>
+            </button>
+            <button title="Replace with Unmodified" class="undo color-active" (click)="onreload.next($event)" *ngIf="reload !== null" [attr.disabled]="reload === false || null">
+                <i aria-hidden="true" class="fa fa-arrow-down"></i>
+            </button>
+            <button title="Compare with Unmodified" class="compare" (click)="oncompare.next($event)" *ngIf="compare !== null" [attr.disabled]="compare === false || null">
+                <i aria-hidden="true" class="fa fa-eye-slash"></i>
+            </button>
+            <button title="Exit Compare Mode" class="uncompare active" (click)="onuncompare.next($event)" *ngIf="uncompare !== null" [attr.disabled]="uncompare === false || null">
+                <i aria-hidden="true" class="fa fa-eye-slash"></i>
+            </button>
+            <button title="Download" (click)="ondownload.next($event)" *ngIf="download !== null" [attr.disabled]="download === false || null">
+                <i aria-hidden="true" class="fa fa-long-arrow-down"></i>
+            </button>
         </div>
         <div class="clear"></div>
     `,
@@ -169,15 +179,6 @@ export class FileEditor {
         button {
             border: none;
             float: right;
-        }
-
-        button.uncompare::before,
-        button.compare::before {
-            content: "\\f070";
-        }
-
-        button.undo::before {
-            content: "\\f063";
         }
     `]
 })

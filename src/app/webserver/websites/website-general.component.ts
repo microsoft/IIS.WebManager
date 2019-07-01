@@ -37,7 +37,9 @@ class WebSiteStatusController extends StatusController {
         <fieldset class="path">
             <label>Physical Path</label>
             <input type="text" class="form-control left-with-button" [(ngModel)]="site.physical_path" (modelChanged)="onModelChanged()" throttle required />
-            <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="select" (click)="fileSelector.toggle()"></button>
+            <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" (click)="fileSelector.toggle()">
+                <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
+            </button>
             <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="site.physical_path" (selected)="onSelectPath($event)"></server-file-selector>
         </fieldset>
         <fieldset>

@@ -23,7 +23,9 @@ import { CentralCertificateConfiguration } from './central-certificates';
             <fieldset class="path">
                 <label>Physical Path</label>
                 <input type="text" class="form-control left-with-button" [(ngModel)]="_configuration.path" (modelChanged)="onModelChanged()" throttle required [attr.disabled]="isPending || null" />
-                <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" class="select" (click)="fileSelector.toggle()" [attr.disabled]="isPending || null" ></button>
+                <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" (click)="fileSelector.toggle()" [attr.disabled]="isPending || null" >
+                    <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
+                </button>
                 <server-file-selector #fileSelector (selected)="onSelectPath($event)" [defaultPath]="_configuration.path" [types]="['directory']"></server-file-selector>
             </fieldset>
             <label class="block">Connection Credentials</label>
