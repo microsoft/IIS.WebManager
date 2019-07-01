@@ -11,17 +11,14 @@ import { DynamicComponent } from '../common/dynamic.component';
     styles: [`
         .notifications {
             width: 100%;
-            position: absolute;
-            top: 0;
             color: #444;
-            overflow: hidden;
             font-size:12px;
         }
         .exit {
             cursor: pointer;
             position: absolute;
             right: 2em;
-            top: 0.5em;
+            top: 1em;
         }
         .entry {
             position:relative;
