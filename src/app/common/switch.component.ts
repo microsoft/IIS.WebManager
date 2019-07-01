@@ -134,7 +134,7 @@ import { FormsModule } from '@angular/forms';
                 <div class="switch-label"><label>{{label}}</label></div>
             </div>
             <label class="switch">
-                <input #checkbox class="switch-input" type="button" [attr.aria-pressed]="toBool()" [ngModel]="toBool()" (ngModelChange)="updateData($event)"/>
+                <input #checkbox class="switch-input" type="checkbox" role="button" [attr.aria-pressed]="toBool()" [ngModel]="toBool()" (ngModelChange)="updateData($event)"/>
                 <span class="switch-content border-color background-normal" ><div class="switch-fill background-active"></div></span>
                 <span class="switch-handle border-active background-normal"></span>
                 <span class="switch-line"><ng-content></ng-content></span>
