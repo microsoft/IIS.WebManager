@@ -38,7 +38,7 @@ import { AuthorizationService } from './authorization.service';
                 <switch label="Use Specific HTTP Methods" class="block" [model]="!_allVerbs" (modelChange)="_allVerbs=!$event">{{_allVerbs ? "No" : "Yes"}}</switch>
             </fieldset>
             <fieldset class="no-label" *ngIf="!_allVerbs">
-                <input placeholder="ex: GET, PUT, POST, DELETE" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="rule.verbs" />
+                <input placeholder="Example: GET, PUT, POST, DELETE" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="rule.verbs" />
             </fieldset>
             <p class="pull-right">
                 <button [disabled]="!isValid()" class="ok" (click)="onOk()">OK</button>
