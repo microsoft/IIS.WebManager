@@ -193,11 +193,16 @@ export class AppPoolItem extends ListOperationContext<AppPoolOp> {
 </list-operations-bar>
 <div class="container-fluid">
     <div class="hidden-xs border-active grid-list-header row" [hidden]="model.length == 0">
-        <label class="col-xs-7 col-sm-4 col-md-3" [ngClass]="_orderBy.css('name')" (click)="_orderBy.sort('name')">Name</label>
-        <label class="col-xs-3 col-md-2" [ngClass]="_orderBy.css('status')" (click)="_orderBy.sort('status')">Status</label>
-        <label class="col-md-2 hidden-sm" [ngClass]="_orderBy.css('pipeline_mode')" (click)="_orderBy.sort('pipeline_mode')">Pipeline</label>
-        <label class="col-md-2" [ngClass]="_orderBy.css('managed_runtime_version')" (click)="_orderBy.sort('managed_runtime_version')">.NET Framework</label>
-        <label class="col-lg-2 visible-lg">Identity</label>
+        <label class="col-xs-7 col-sm-4 col-md-3" [ngClass]="_orderBy.css('name')" (click)="_orderBy.sort('name')"
+            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('name')" role="columnheader">Name</label>
+        <label class="col-xs-3 col-md-2" [ngClass]="_orderBy.css('status')" (click)="_orderBy.sort('status')"
+            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('status')" role="columnheader">Status</label>
+        <label class="col-md-2 hidden-sm" [ngClass]="_orderBy.css('pipeline_mode')" (click)="_orderBy.sort('pipeline_mode')"
+            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('pipeline_mode')" role="columnheader">Pipeline</label>
+        <label class="col-md-2" [ngClass]="_orderBy.css('managed_runtime_version')" (click)="_orderBy.sort('managed_runtime_version')"
+            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('managed_runtime_version')" role="columnheader">.NET Framework</label>
+        <label class="col-lg-2 visible-lg"
+            role="columnheader">Identity</label>
     </div>
     <ul class="grid-list">
         <li *ngFor="let p of model | orderby: _orderBy.Field: _orderBy.Asc"

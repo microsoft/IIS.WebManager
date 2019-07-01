@@ -1,6 +1,7 @@
 import { Component, Input, Inject, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
-import { WebApp } from './webapp'
+import { WebApp } from './webapp';
+import { OrderBy, SortPipe } from 'common/sort.pipe';
 import { WebAppsService } from './webapps.service';
 import { WebSitesService } from '../websites/websites.service';
 import { ListOperationDef, ListOperationContext } from 'common/list';
@@ -195,15 +196,15 @@ export class WebAppItem extends ListOperationContext<WebAppOp> implements OnInit
 </list-operations-bar>
 <div class="container-fluid">
     <div class="hidden-xs border-active grid-list-header row" [hidden]="model.length == 0">
-        <label class="col-xs-8 col-sm-4" [ngClass]="css('path')" (click)="sort('path')"
-            tabindex="0" aria-label="Path Header" role="button" (keyup.enter)="sort('path')" (keyup.space)="sort('path')">Path</label>
-        <label class="col-sm-2" *ngIf="field(${WebAppFields.appPool})" [ngClass]="css('application_pool.name')" (click)="sort('application_pool.name')"
-            tabindex="0" aria-label="Application Pool Header" role="button" (keyup.enter)="sort('application_pool.name')" (keyup.space)="sort('application_pool.name')">Application Pool</label>
-        <label class="col-sm-2" *ngIf="field(${WebAppFields.site})" [ngClass]="css('website.name')" (click)="sort('website.name')"
-            tabindex="0" aria-label="Web Site Header" role="button" (keyup.enter)="sort('website.name')" (keyup.space)="sort('website.name')">Web Site</label>
+        <label class="col-xs-8 col-sm-4" [ngClass]="_orderBy.css('path')" (click)="_orderBy.sort('path')"
+            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('path')" role="columnheader" (keyup.enter)="_orderBy.sort('path')" (keyup.space)="_orderBy.sort('path')">Path</label>
+        <label class="col-sm-2" *ngIf="field(${WebAppFields.appPool})" [ngClass]="_orderBy.css('application_pool.name')" (click)="_orderBy.sort('application_pool.name')"
+            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('application_pool.name')" role="columnheader" (keyup.enter)="_orderBy.sort('application_pool.name')" (keyup.space)="_orderBy.sort('application_pool.name')">Application Pool</label>
+        <label class="col-sm-2" *ngIf="field(${WebAppFields.site})" [ngClass]="_orderBy.css('website.name')" (click)="_orderBy.sort('website.name')"
+            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('website.name')" role="columnheader" (keyup.enter)="_orderBy.sort('website.name')" (keyup.space)="_orderBy.sort('website.name')">Web Site</label>
     </div>
     <ul class="grid-list">
-        <li *ngFor="let app of model | orderby: _orderBy: _orderByAsc" class="border-color hover-editing">
+        <li *ngFor="let app of model | orderby: _orderBy.Field: _orderBy.Asc" class="border-color hover-editing">
             <webapp-item [model]="app" [fields]="fields" (onSelected)="onItemSelected($event)"></webapp-item>
         </li>
     </ul>
@@ -223,12 +224,11 @@ export class WebAppList implements OnInit {
     @Input() model: Array<WebApp>;
 
     fields: WebAppFields;
-    private _orderBy: string;
-    private _orderByAsc: boolean;
+    _orderBy: OrderBy = new OrderBy();
     private _selected: WebAppItem;
 
     constructor() {
-        this.sort("path");
+        this._orderBy.sort("path");
     }
 
     get canAdd() {
@@ -262,20 +262,5 @@ export class WebAppList implements OnInit {
 
     field(f: WebAppFields) {
         return this.fields & f;
-    }
-
-    sort(field: string) {
-        this._orderByAsc = (field == this._orderBy) ? !this._orderByAsc : true;
-        this._orderBy = field;
-    }
-
-    css(field: string): any {
-        if (this._orderBy == field) {
-            return {
-                "orderby": true,
-                "desc": !this._orderByAsc
-            };
-        }
-        return {};
     }
 }

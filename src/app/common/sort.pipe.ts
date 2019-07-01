@@ -124,4 +124,11 @@ export class OrderBy {
 
         return {};
     }
+
+    public ariaSort(field: string): string {
+        if (this._orderBy === field) {
+            return this._orderByAsc ? 'ascending' : 'descending';
+        }
+        return 'none';
+    }
 }
