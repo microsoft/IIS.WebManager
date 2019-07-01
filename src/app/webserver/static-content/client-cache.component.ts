@@ -30,7 +30,7 @@ import {ClientCache} from './static-content'
         </fieldset>
         <fieldset *ngIf="_useCustom" class="fill">
             <label>&nbsp;</label>
-            <input class="form-control name" type="text" [disabled]="locked" [(ngModel)]="model.control_custom" (modelChanged)="onModelChanged()" throttle />
+            <input title="Value of cacheControlCustom" class="form-control name" type="text" [disabled]="locked" [(ngModel)]="model.control_custom" (modelChanged)="onModelChanged()" throttle />
         </fieldset>
     `,
     styles: [`
