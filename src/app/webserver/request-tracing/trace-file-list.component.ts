@@ -21,23 +21,23 @@ import { RequestTracingService } from './request-tracing.service';
             <div #header class="container-fluid">
                 <div class="hidden-xs border-active grid-list-header row">
                     <label class="col-xs-8 col-sm-3 col-lg-2" [ngClass]="_orderBy.css('file_info.name')"
-                        (click)="sort('file_info.name')"
-                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('file_info.name')" role="columnheader" (keyup.enter)="sort('name')" (keyup.space)="sort('name')">Name</label>
+                        (click)="sort('file_info.name')" (keyup.enter)="sort('name')" (keyup.space)="sort('name')"
+                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('file_info.name')" role="columnheader">Name</label>
                     <label class="col-sm-4 col-lg-3 hidden-xs" [ngClass]="_orderBy.css('url')"
-                        (click)="sort('url')"
-                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('url')" role="columnheader" (keyup.enter)="sort('url')" (keyup.space)="sort('url')">Url</label>
+                        (click)="sort('url')" (keyup.enter)="sort('url')" (keyup.space)="sort('url')"
+                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('url')" role="columnheader">Url</label>
                     <label class="col-md-1 visible-lg text-right" [ngClass]="_orderBy.css('method')"
-                        (click)="sort('method')"
-                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('method')" role="columnheader" (keyup.enter)="sort('method')" (keyup.space)="sort('method')">Method</label>
+                        (click)="sort('method')" (keyup.enter)="sort('method')" (keyup.space)="sort('method')"
+                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('method')" role="columnheader">Method</label>
                     <label class="col-md-1 visible-lg visible-md text-right" [ngClass]="_orderBy.css('status_code')"
-                        (click)="sort('status_code')"
-                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('status_code')" role="columnheader" (keyup.enter)="sort('status_code')" (keyup.space)="sort('status_code')">Status</label>
+                        (click)="sort('status_code')" (keyup.enter)="sort('status_code')" (keyup.space)="sort('status_code')"
+                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('status_code')" role="columnheader">Status</label>
                     <label class="col-md-1 visible-lg visible-md text-right" [ngClass]="_orderBy.css('time_taken')"
-                        (click)="sort('time_taken')"
-                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('time_taken')" role="columnheader" (keyup.enter)="sort('time_taken')" (keyup.space)="sort('time_taken')">Duration</label>
+                        (click)="sort('time_taken')" (keyup.enter)="sort('time_taken')" (keyup.space)="sort('time_taken')"
+                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('time_taken')" role="columnheader">Duration</label>
                     <label class="col-sm-3 col-md-2 hidden-xs" [ngClass]="_orderBy.css('date')"
-                        (click)="sort('date')"
-                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('date')" role="columnheader" (keyup.enter)="sort('date')" (keyup.space)="sort('date')">Date</label>
+                        (click)="sort('date')" (keyup.enter)="sort('date')" (keyup.space)="sort('date')"
+                        tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('date')" role="columnheader">Date</label>
                 </div>
             </div>
             <div *ngIf="_error && _error.message">

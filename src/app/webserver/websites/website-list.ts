@@ -220,12 +220,15 @@ const perspectives = [
 </list-operations-bar>
 <div class="container-fluid">
     <div class="hidden-xs border-active grid-list-header row" [hidden]="model.length == 0">
-        <label class="col-xs-8 col-sm-4 col-md-3 col-lg-3" [ngClass]="_orderBy.css('name')" (click)="doSort('name')"
-            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('name')" role="columnheader" (keyup.enter)="doSort('name')" (keyup.space)="doSort('name')">Name</label>
-        <label class="col-xs-3 col-md-1 col-lg-1" [ngClass]="_orderBy.css('status')" (click)="doSort('status')"
-            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('status')" role="columnheader" (keyup.space)="doSort('status')" (keyup.enter)="doSort('status')">Status</label>
-        <label class="col-lg-2 visible-lg" *ngIf="hasField(${WebSiteFields.appPool})" [ngClass]="_orderBy.css('application_pool.name')" (click)="doSort('application_pool.name')"
-            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('application_pool.name')" role="columnheader" (keyup.enter)="doSort('application_pool.name')" (keyup.space)="doSort('application_pool.name')">Application Pool</label>
+        <label class="col-xs-8 col-sm-4 col-md-3 col-lg-3" [ngClass]="_orderBy.css('name')"
+            (click)="doSort('name')" (keyup.enter)="doSort('name')" (keyup.space)="doSort('name')"
+            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('name')" role="columnheader">Name</label>
+        <label class="col-xs-3 col-md-1 col-lg-1" [ngClass]="_orderBy.css('status')"
+            (click)="doSort('status')" (keyup.space)="doSort('status')" (keyup.enter)="doSort('status')"
+            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('status')" role="columnheader">Status</label>
+        <label class="col-lg-2 visible-lg" *ngIf="hasField(${WebSiteFields.appPool})" [ngClass]="_orderBy.css('application_pool.name')"
+            (click)="doSort('application_pool.name')" (keyup.enter)="doSort('application_pool.name')" (keyup.space)="doSort('application_pool.name')"
+            tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('application_pool.name')" role="columnheader">Application Pool</label>
     </div>
     <virtual-list class="grid-list"
                 *ngIf="model"
