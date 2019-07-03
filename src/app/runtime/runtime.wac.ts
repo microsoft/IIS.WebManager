@@ -48,10 +48,10 @@ export class WACRuntime implements Runtime {
     private _logger: Logger;
 
     constructor(
+        loggerFactory: LoggerFactory,
         private router: Router,
         private appContext: AppContextService,
         private connectService: ConnectService,
-        private loggerFactory: LoggerFactory,
         private navigationService: NavigationService,
         @Inject("Powershell") private powershellService: PowershellService,
         @Inject("WACInfo") private wac: WACInfo,

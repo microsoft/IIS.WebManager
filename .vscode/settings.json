@@ -13,6 +13,8 @@
         "tabindex",
         "valign",
         "focusable",
-        "aspnet"
+        "aspnet",
+        "keyvalue",
+        "prereq"
     ]
 }

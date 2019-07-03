@@ -9,6 +9,10 @@ import { LoggerFactory, Logger, LogLevel, logError, instrument } from 'diagnosti
 import { map, mergeMap, shareReplay, catchError } from 'rxjs/operators'
 import { IsProduction } from 'environments/environment';
 
+class EnvVar {
+  value: string;
+}
+
 const PS_SESSION_KEY = 'wac-iis'
 
 @Injectable()
@@ -18,7 +22,7 @@ export class PowershellService {
   private sessionId = Math.random().toString(36).substring(2, 15) // TODO: modify this with WAC session ID
 
   constructor(
-    private loggerFactory: LoggerFactory,
+    loggerFactory: LoggerFactory,
     private appContext: AppContextService,
     @Inject('WACInfo') private wac: WACInfo,
   ) {
@@ -41,6 +45,18 @@ export class PowershellService {
       s.dispose()
       this.scheduleSession()
     })
+  }
+
+  public getEnv(name: string): Observable<string> {
+    var compiled: string = PowerShell.createScript(PowerShellScripts.Get_Env.script, { name: name });
+    return this.session.pipe(
+      mergeMap(ps => ps.powerShell.run(compiled).pipe(instrument(this.logger, `Get-Env`))),
+      map((response: PowerShellResult) => {
+        let result = response.results.join();
+        this.logger.log(LogLevel.DEBUG, `Env: ${name}: ${result}`);
+        return result;
+      }),
+    )
   }
 
   public run<T>(pwCmdString: string, psParameters: any): Observable<T> {
@@ -109,6 +125,7 @@ export class PowershellService {
           throw `Powershell command ${scriptName} returns empty response`;
         }
         return response.results.map(result => {
+          this.logger.log(LogLevel.DEBUG, `Powershell command ${scriptName}, raw result: ${result}`);
           let rtnObject: any = JSON.parse(result, reviver);
           if (rtnObject && rtnObject.errorsReported) {
             this.logger.log(LogLevel.ERROR,

@@ -718,6 +718,24 @@
           "requires": {
             "tslib": "^1.9.0"
           }
+        },
+        "@angular/platform-browser": {
+          "version": "7.1.1",
+          "resolved": "https://registry.npmjs.org/@angular/platform-browser/-/platform-browser-7.1.1.tgz",
+          "integrity": "sha512-I6OPjecynGJSbPtzu0gvEgSmIR6X6/xEAhg4L9PycW1ryjzptTC9klWRTWIqsIBqMxhVnY44uKLeRNrDwMOwyA==",
+          "optional": true,
+          "requires": {
+            "tslib": "^1.9.0"
+          }
+        },
+        "@angular/platform-browser-dynamic": {
+          "version": "7.1.1",
+          "resolved": "https://registry.npmjs.org/@angular/platform-browser-dynamic/-/platform-browser-dynamic-7.1.1.tgz",
+          "integrity": "sha512-ZIu48Vn4S6gjD7CMbGlKGaPQ8v9rYkWzlNYi4vTYzgiqKKNC3hqLsVESU3mSvr5oeQBxSIBidTdHSyafHFrA2w==",
+          "optional": true,
+          "requires": {
+            "tslib": "^1.9.0"
+          }
         }
       }
     },
@@ -851,19 +869,17 @@
       "dev": true
     },
     "@types/jquery": {
-      "version": "3.3.22",
-      "resolved": "https://registry.npmjs.org/@types/jquery/-/jquery-3.3.22.tgz",
-      "integrity": "sha512-a4JDcIhJhHYnoWCkG3xT2CZxXZeA92JeREESorg0DMQ3ZsjuKF48h7XK4l5Gl2GRa/ItGRpKMT0pyK88yRgqXQ==",
-      "dev": true,
+      "version": "3.3.29",
+      "resolved": "https://registry.npmjs.org/@types/jquery/-/jquery-3.3.29.tgz",
+      "integrity": "sha512-FhJvBninYD36v3k6c+bVk1DSZwh7B5Dpb/Pyk3HKVsiohn0nhbefZZ+3JXbWQhFyt0MxSl2jRDdGQPHeOHFXrQ==",
       "requires": {
         "@types/sizzle": "*"
       }
     },
     "@types/node": {
-      "version": "8.9.5",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-8.9.5.tgz",
-      "integrity": "sha512-jRHfWsvyMtXdbhnz5CVHxaBgnV6duZnPlQuRSo/dm/GnmikNcmZhxIES4E9OZjUmQ8C+HCl4KJux+cXN/ErGDQ==",
-      "dev": true
+      "version": "12.0.10",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-12.0.10.tgz",
+      "integrity": "sha512-LcsGbPomWsad6wmMNv7nBLw7YYYyfdYcz6xryKYQhx89c3XXan+8Q6AJ43G5XDIaklaVkK3mE4fCb0SBvMiPSQ=="
     },
     "@types/q": {
       "version": "0.0.32",
@@ -895,8 +911,7 @@
     "@types/sizzle": {
       "version": "2.3.2",
       "resolved": "https://registry.npmjs.org/@types/sizzle/-/sizzle-2.3.2.tgz",
-      "integrity": "sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg==",
-      "dev": true
+      "integrity": "sha512-7EJYyKTL7tFR8+gDbB6Wwz/arpGa0Mywk1TJbNzKzHtzbwVmY4HR9WqS5VV7dsBUKQmPNr192jHr/VpBluj/hg=="
     },
     "@types/source-list-map": {
       "version": "0.1.2",
