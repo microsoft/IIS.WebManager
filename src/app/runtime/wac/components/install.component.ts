@@ -7,7 +7,6 @@ import { WACRuntime } from "runtime/runtime.wac";
 import { Logger, LoggerFactory, LogLevel } from "diagnostics/logger";
 import { Observable, of, forkJoin, Observer } from "rxjs";
 import { map, mergeMap } from "rxjs/operators";
-import { FileUploadOptions, CancellationToken } from "@microsoft/windows-admin-center-sdk/core";
 import { HttpClient } from "@angular/common/http";
 import { PowershellService } from "runtime/wac/services/powershell-service";
 
@@ -389,6 +388,9 @@ export class InstallComponent implements OnInit {
         //         if (dotnetCoreLocation) {
         //             args.dotnetCoreLocation = dotnetCoreLocation;
         //         }
+        // if (aspnetCoreLocation) {
+        //     args.aspnetCoreLocation = aspnetCoreLocation;
+        // }
         //         return args;
         //     })
         // );
