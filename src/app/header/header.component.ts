@@ -29,7 +29,6 @@ import { HomeModuleName } from './breadcrumb';
     styles: [`
         .nav {
             height:35px; 
-            position:absolute; 
             top:0px;
             left:0px;
             right:0px;
@@ -49,7 +48,8 @@ import { HomeModuleName } from './breadcrumb';
         }
 
         .nav-options {
-            padding: 10px;
+            margin: 0px;
+            padding: 0px 10px;
             height: 35px;
             border: none;
         }
