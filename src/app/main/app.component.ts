@@ -23,29 +23,29 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
 </div>
 `,
     styles: [`
-        .content {
-            height: 100%;
-        }
+.content {
+    height: 100%;
+}
 
-        #mainContainer {
-             height: 100%;
-             width:100%;
-             overflow-x:hidden;
-             min-width:initial;
-        }
+#mainContainer {
+    height: 100%;
+    width:100%;
+    overflow-x:hidden;
+    min-width:initial;
+}
 
-        #mainContainer.fixed {
-            min-width: 500px;
-        }
+#mainContainer.fixed {
+    min-width: 500px;
+}
 
-        #mainRow {
-            height: 100%
-        }
+#mainRow {
+    height: 100%
+}
 
-        #bodyContent {
-            height: 100%;
-        }
-    `],
+#bodyContent {
+    height: 100%;
+}
+`],
     encapsulation: ViewEncapsulation.None,  // Use to disable CSS Encapsulation for this component
 })
 export class AppComponent implements OnInit {

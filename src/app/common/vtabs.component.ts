@@ -32,32 +32,32 @@ import { TitlesService } from 'header/titles.service';
     // In the site mode, we can't select the feature when input-focus is change.
     // That is because users are allowed to use only tab key, not arrow keys, unlike the WAC mode.
     template: `
-        <div class="vtabs">
-            <ul class="items sme-focus-zone">
-                <div *ngIf="header" class="vtab-header items">{{header}}</div>
-                <ng-container *ngFor="let category of getCategories()">
-                    <ng-container *ngIf="!IsHidden(category)">
-                        <li *ngIf="category" class="separator">
-                            <div class="horizontal-strike"><span class="category">{{category}}</span></div>
-                        </li>
-                        <li tabindex="0"
-                            #tabLabels
-                            class="hover-edit"
-                            *ngFor="let tab of getTabs(category)"
-                            [ngClass]="{active: tab.active}"
-                            (keyup.space)="selectItem(tab)"
-                            (keyup.enter)="selectItem(tab)"
-                            (click)="selectItem(tab)">
-                            <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
-                        </li>
-                    </ng-container>
-                </ng-container>
-            </ul>
-        </div>
-        <div class="content sme-focus-zone" [class.nav-hidden]="!isActive">
-            <ng-content></ng-content>
-        </div>
-    `,
+<div class="vtabs">
+    <ul class="items sme-focus-zone">
+        <div *ngIf="header" class="vtab-header items">{{header}}</div>
+        <ng-container *ngFor="let category of getCategories()">
+            <ng-container *ngIf="!IsHidden(category)">
+                <li *ngIf="category" class="separator">
+                    <div class="horizontal-strike"><span class="category">{{category}}</span></div>
+                </li>
+                <li tabindex="0"
+                    #tabLabels
+                    class="hover-edit"
+                    *ngFor="let tab of getTabs(category)"
+                    [ngClass]="{active: tab.active}"
+                    (keyup.space)="selectItem(tab)"
+                    (keyup.enter)="selectItem(tab)"
+                    (click)="selectItem(tab)">
+                    <i [class]="tab.ico"></i><span class="border-active">{{tab.name}}</span>
+                </li>
+            </ng-container>
+        </ng-container>
+    </ul>
+</div>
+<div class="content sme-focus-zone" [class.nav-hidden]="!isActive">
+    <ng-content></ng-content>
+</div>
+`,
     styles: [`
 .content {
     min-width: 320px;
@@ -106,7 +106,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     @Input() markLocation: boolean;
     @Input() defaultTab: string;
     @Output() activate: EventEmitter<Item> = new EventEmitter();
-    @Input() categories: string[];
+    @Input() categories: string[] = [ '' ];
 
     private tabs: Item[];
     private _sectionHelper: SectionHelper;

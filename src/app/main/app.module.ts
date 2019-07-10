@@ -22,7 +22,6 @@ import { ConnectService } from "../connect/connect.service";
 import { LoggerFactory } from "../diagnostics/logger";
 import { OptionsService } from "./options.service";
 import { AppComponent } from "./app.component";
-import { HomeComponent } from "./home.component";
 import { ConnectComponent } from "../connect/connect.component";
 import { ConnectionPickerComponent } from "../connect/connection-picker.component";
 import { GetComponent } from "./get.component";
@@ -73,7 +72,6 @@ import { TitlesModule } from "header/titles.module";
     ],
     declarations: [
         AppComponent,
-        HomeComponent,
         ConnectComponent,
         ConnectionPickerComponent,
         GetComponent,

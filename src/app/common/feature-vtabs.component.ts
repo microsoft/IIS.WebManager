@@ -12,7 +12,7 @@ import { OptionsService } from "main/options.service";
 import { UrlUtil } from "utils/url";
 import { LoggerFactory, Logger, LogLevel } from "diagnostics/logger";
 import { VTabsComponent, Item } from "./vtabs.component";
-import { IsWAC } from "environments/environment.wac";
+import { IsWAC } from "environments/environment";
 import { Breadcrumb, WebServerGeneralRoute, AppPoolListRoute, WebSiteListRoute } from "header/breadcrumb";
 import { Subscription } from "rxjs";
 import { TitlesService } from "header/titles.service";
@@ -82,7 +82,6 @@ export class GlobalModuleReference {
 
     contexts: any[] = [];
     features: Feature[];
-    header = IsWAC ? "IIS" : null;
 
     @ViewChild(forwardRef(() => VTabsComponent)) vtabs: VTabsComponent;
     private logger: Logger;
@@ -94,6 +93,10 @@ export class GlobalModuleReference {
         factory: LoggerFactory,
     ){
         this.logger = factory.Create(this);
+    }
+
+    get header() {
+        return IsWAC ? "IIS" : null;
     }
 
     get isActive() {
