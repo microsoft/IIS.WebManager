@@ -9,7 +9,7 @@ import { WebServerRoute } from "./settings";
   imports: [
     RouterModule.forRoot([
         // common routes
-        { path: "", redirectTo: "/webserver", pathMatch: "full" },
+        { path: "", redirectTo: WebServerRoute, pathMatch: "full" },
         { path: "get", component: GetComponent },
         { path: "connect", component: ConnectComponent },
         { path: "settings", loadChildren: "../settings/settings.module#SettingsModule" },
