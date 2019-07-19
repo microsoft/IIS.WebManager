@@ -33,9 +33,8 @@ export class WebServerService {
     }
 
     start(): Promise<WebServer> {
-        return this.updateStatus("started").then(ws => {
+        return this.updateStatus(Status.Starting, Status.Started).then(ws => {
             this.triggerStatusUpdate();
-
             if (ws.status == Status.Starting) {
                 //
                 // Ping
@@ -55,9 +54,8 @@ export class WebServerService {
     }
 
     stop(): Promise<WebServer> {
-        return this.updateStatus("stopped").then(ws => {
+        return this.updateStatus(Status.Stopping, Status.Stopped).then(ws => {
             this.triggerStatusUpdate();
-
             if (ws.status == Status.Stopping) {
                 return new Promise<WebServer>((resolve, _) => {
                     //
@@ -108,12 +106,12 @@ export class WebServerService {
         })
     }
 
-    private updateStatus(status: string): Promise<WebServer> {
+    private updateStatus(intermediate: Status, final: Status): Promise<WebServer> {
         if (!this._server._links || !this._server._links.service_controller) {
             return Promise.resolve(this._server);
         }
-
-        return this._http.patch(this._server._links.service_controller.href.replace("/api", ""), JSON.stringify({ status: status }))
+        this._server.status = intermediate;
+        return this._http.patch(this._server._links.service_controller.href.replace("/api", ""), JSON.stringify({ status: final }))
             .then(sc => {
                 this._server.status = sc.status; // Update the status
                 return this._server;

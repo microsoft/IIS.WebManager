@@ -9,7 +9,7 @@ export interface StatusModel {
 }
 
 export abstract class StatusController {
-    private inProgress: boolean = false;
+    private _inProgress: boolean = false;
 
     constructor(
         private model: StatusModel,
@@ -21,7 +21,7 @@ export abstract class StatusController {
     }
 
     canStart(): boolean {
-        return !this.inProgress && this.model.status == Status.Stopped;
+        return !this._inProgress && this.model.status == Status.Stopped;
     }
 
     start(): void {
@@ -29,7 +29,7 @@ export abstract class StatusController {
     }
     
     canStop(): boolean {
-        return !this.inProgress && this.model.status == Status.Started;
+        return !this._inProgress && this.model.status == Status.Started;
     }
 
     stop(): void {
@@ -41,8 +41,16 @@ export abstract class StatusController {
     }
 
     invoke(operation: Promise<any>): void {
-        this.inProgress = true;
-        operation.finally(() => this.inProgress = false);
+        this._inProgress = true;
+        operation.finally(() => this._inProgress = false);
+    }
+
+    get inProgress() {
+        return this._inProgress;
+    }
+
+    get status() {
+        return this.model.status;
     }
 
     abstract startImpl(): Promise<any>;
@@ -56,10 +64,21 @@ export abstract class StatusController {
     <button class="refresh" title="{{restartLabel}}" [attr.disabled]="!controller.canStop() || null" (click)="controller.restart()">{{restartLabel}}</button>
     <button class="start" title="Start" [attr.disabled]="!controller.canStart() || null" (click)="controller.start()">Start</button>
     <button class="stop" title="Stop" [attr.disabled]="!controller.canStop() || null" (click)="controller.stop()">Stop</button>
-</div>`,
+    <div *ngIf="inProgress" class="processing"><i aria-hidden="true" class="fa fa-spinner fa-spin"></i><span>{{status}}...</span></div>
+</div>
+`,
     styles: [`
 .controller {
     padding-bottom: 15px;
+}
+
+.processing {
+    display: inline-block;
+}
+
+.processing i {
+    font-size: 18px;
+    padding: 3px;
 }
 `],
 })
@@ -67,6 +86,14 @@ export class StatusControllerComponent {
     // NOTE: restartLabel is a variable only because in the context AppPool, we call the action "Recycle"
     @Input() restartLabel: string = "Restart";
     @Input() controller: StatusController;
+
+    get inProgress() {
+        return this.controller.inProgress;
+    }
+
+    get status() {
+        return this.controller.status;
+    }
 }
 
 @NgModule({
