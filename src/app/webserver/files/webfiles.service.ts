@@ -95,7 +95,11 @@ export class WebFilesService implements IDisposable {
             let previous = pair[0];
             let hash = pair[1];
 
-            this.loadDir(hash || '/');
+            this.loadDir(hash || '/').catch(
+                e => {
+                    this._notificationService.warn(e.message);
+                }
+            );
         }));
     }
 
@@ -113,7 +117,11 @@ export class WebFilesService implements IDisposable {
             this._hashWatcher.setHash(path);
         }
         else {
-            this.loadDir(path || '/');
+            this.loadDir(path || '/').catch(
+                e => {
+                    this._notificationService.warn(e.message);
+                }
+            )
         }
     }
 
@@ -215,41 +223,33 @@ export class WebFilesService implements IDisposable {
         this._svc.clipboardCopy(e, files.map(f => f.file_info));
     }
 
-    private loadDir(path: string): Promise<WebFile> {
-        if (!this._website) {
-            Promise.reject("WebSite is not specified");
+    private async loadDir(path: string): Promise<WebFile> {
+        try {
+            if (!this._website) {
+                Promise.reject("WebSite is not specified");
+            }
+            this._notificationService.clearWarnings();
+            const fileObj = await this.getFile(path);
+            this._current.next(WebFile.fromObj(fileObj));
+            if (this.isDir(fileObj)) {
+                await this.loadFiles();
+            }
+            return this._current.getValue();
+        } catch (e) {
+            this._current.next(null);
+            // Clear files
+            this._files.getValue().splice(0);
+            this._files.next(this._files.getValue());
+            this._svc.handleError(e, path);
+            throw e;
         }
-
-        this._notificationService.clearWarnings();
-
-        // Get dir
-        return this.getFile(path)
-            .then(dir => {
-                this._current.next(WebFile.fromObj(dir));
-
-                if (this.isDir(dir)) {
-                    this.loadFiles();
-                }
-
-                return this._current.getValue();
-            })
-            .catch(e => {
-                this._current.next(null);
-
-                // Clear files
-                this._files.getValue().splice(0);
-                this._files.next(this._files.getValue());
-
-                this._svc.handleError(e, path);
-                throw e;
-            });
     }
 
-    private loadFiles() {
+    private loadFiles(): Promise<any> {
         let dir = this._current.getValue();
         let files = this._files.getValue();
 
-        this._http.get("/webserver/files?parent.id=" + dir.id + "&fields=name,type,path," + this._fileInfoFields)
+        const promise = this._http.get("/webserver/files?parent.id=" + dir.id + "&fields=name,type,path," + this._fileInfoFields)
             .then(res => {
                 res = (<Array<WebFile>>(res.files)).map(f => WebFile.fromObj(f));
 
@@ -259,13 +259,33 @@ export class WebFilesService implements IDisposable {
 
                 this._files.next(files);
             });
+        return this.handleAccessDeniedError(dir.path, promise);
     }
 
     private getFile(path: string): Promise<WebFile> {
+        // ultimately called from web-file component
         path = path.replace("//", "/");
 
-        return this._http.get("/webserver/files?website.id=" + this._website.id + "&path=" + encodeURIComponent(path) + "&fields=name,type,path," + this._fileInfoFields, null, false)
-                         .then(f => WebFile.fromObj(f));
+        const promise = this._http
+            .get("/webserver/files?website.id=" + this._website.id + "&path=" + encodeURIComponent(path) + "&fields=name,type,path," + this._fileInfoFields, null, false)
+            .then(f => WebFile.fromObj(f));
+        return this.handleAccessDeniedError(path, promise);
+    }
+
+    private handleAccessDeniedError(path: string, promise: Promise<any>): Promise<any> {
+        return promise.catch(e => {
+            // TODO: unify 403 handling
+            // This is called from website file page, therefore 403 should really never happen adding this to be safe
+            if (e.status === 403) {
+                const message = `IIS has no access to ${path}. if the path exists, click "Create New Mapping" button to map the path to IIS file system.`;
+                throw new Error(message);
+            } else if (!e.message) {
+                // special case where some empty error was thrown. This happens somehow during testing.
+                throw new Error(`Cannot access path ${path}`);
+            } else {
+                throw e;
+            }
+        })
     }
 
     private isDir(file: WebFile) {

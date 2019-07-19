@@ -336,8 +336,9 @@ export class WebSitesService implements OnDestroy {
         if (e.type && e.type == ApiErrorType.FeatureNotInstalled) {
             this._installStatus = Status.Stopped;
         }
+        // TODO: unify 403 handling
         if (e.title && e.title.toLowerCase() == 'forbidden' && e.name == 'physical_path') {
-            this._notificationService.warn("Access denied\n\n" + site.physical_path);
+            this._notificationService.warn(`IIS has no access to ${site.physical_path}. if the path exists, click "Create New Mapping" button to map the path to IIS file system.`);
         }
     }
 }

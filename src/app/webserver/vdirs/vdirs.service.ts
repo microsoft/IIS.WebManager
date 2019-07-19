@@ -231,8 +231,9 @@ export class VdirsService {
     }
 
     private handleError(e: ApiError, vdir: Vdir) {
+        // TODO: unify 403 handling
         if (e.title && e.title.toLowerCase() == 'forbidden' && e.name == 'physical_path') {
-            this._notificationService.warn("Access denied\n\n" + vdir.physical_path);
+            this._notificationService.warn(`IIS has no access to ${vdir.physical_path}. if the path exists, click "Create New Mapping" button to map the path to IIS file system.`);
         }
     }
 }
