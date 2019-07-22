@@ -9,11 +9,11 @@ import { LoggingService } from './logging.service';
 @Component({
     selector: 'log-files',
     template: `
-        <toolbar
+        <file-system-toolbar
             [refresh]="true"
             [delete]="_selected.length > 0"
             (onRefresh)="onRefresh()"
-            (onDelete)="onDelete()"></toolbar>
+            (onDelete)="onDelete()"></file-system-toolbar>
         <div tabindex="-1" class="wrapper"
                         [selectable]="_logs"
                         [selected]="_selected"

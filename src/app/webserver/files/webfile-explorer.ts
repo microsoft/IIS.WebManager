@@ -10,7 +10,7 @@ import { filter } from 'rxjs/operators';
     template: `
         <file-selector #fileSelector class="right" (selected)="upload($event)" [multiple]="true">
         </file-selector>
-        <toolbar
+        <file-system-toolbar
             [newLocation]="null"
             [refresh]="true"
             [newFile]="_list && !_list.creating"
@@ -22,7 +22,7 @@ import { filter } from 'rxjs/operators';
             (onNewFile)="createFile()"
             (onUpload)="fileSelector.open()"
             (onDelete)="deleteFiles(_list.selected)">
-	    </toolbar>
+	    </file-system-toolbar>
         <navigation></navigation>
         <webfile-list *ngIf="isDir(_current)"></webfile-list>
     `,

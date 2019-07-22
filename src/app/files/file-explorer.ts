@@ -11,19 +11,19 @@ import { filter } from 'rxjs/operators';
     template: `
         <file-selector #fileSelector class="right" (selected)="upload($event)" [multiple]="true">
         </file-selector>
-        <toolbar
+        <file-system-toolbar
             [refresh]="options.EnableRefresh || null"
             [newFile]="(options.EnableNewFile || null) && !atRoot()"
             [newLocation]="(options.EnableNewFolder || null) && showNewLocation()"
             [newFolder]="(options.EnableNewFolder || null) && showNewFolder()"
             [upload]="(options.EnableUpload || null) && !atRoot()"
             [delete]="(options.EnableDelete || null) && selected && selected.length > 0"
-            (onNewLocation)="createLocation()"
+            (onNewLocation)="createMapping()"
             (onRefresh)="refresh()"
             (onNewFolder)="createDirectory()"
             (onNewFile)="createFile()"
             (onUpload)="fileSelector.open()"
-            (onDelete)="deleteFiles($event, selected)"></toolbar>
+            (onDelete)="deleteFiles($event, selected)"></file-system-toolbar>
         <navigation></navigation>
         <file-list *ngIf="isDir(_current)" [types]="types"></file-list>
     `,
@@ -63,7 +63,7 @@ export class FileExplorer implements OnDestroy {
         this._list.refresh();
     }
 
-    private createLocation() {
+    private createMapping() {
         this._list.createLocation();
     }
 

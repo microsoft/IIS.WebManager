@@ -715,6 +715,22 @@ button.refresh:before {
     content: "\f021";
 }
 
+button.new-root:before {
+    content: "\f0a0";
+}
+
+button.new-file:before {
+    content: "\f15b";
+}
+
+button.new-folder:before {
+    content: "\f07c";
+}
+
+button.upload:before {
+    content: "\f093";
+}
+
 button.comment:before {
     content: "\f0e5";
 }

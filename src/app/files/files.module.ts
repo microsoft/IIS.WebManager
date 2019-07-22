@@ -13,7 +13,7 @@ import { Module as FileSelector } from '../common/file-selector';
 import { Module as VirtualList } from '../common/virtual-list.component';
 import { Module as AutoFocus } from '../common/focus';
 import { Module as Selectable } from '../common/selectable';
-import { Module as Toolbar } from './toolbar.component';
+import { Module as Toolbar } from './file-system-toolbar.component';
 import { Module as Navigation } from './navigation.component';
 import { Module as Editor } from "./file-editor";
 
