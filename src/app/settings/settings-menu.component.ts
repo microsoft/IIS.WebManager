@@ -10,7 +10,7 @@ import { Selector } from '../common/selector';
         <div tabindex="0" title="Options" class="s-container nav-button hover-primary2" [class.background-primary2]="settingsMenu && settingsMenu.isOpen()" (keyup.space)="onClickSettings()" (keyup.enter)="onClickSettings()" (click)="onClickSettings()">
             <i aria-hidden="true" class="fa fa-cog"></i>
         </div>
-        <selector #settingsMenu class="color-normal" [right]="true">
+        <selector #settingsMenu class="color-normal" [right]="true"  [isQuickMenu]="true">
             <ul>
                 <li class="hover-editing">
                     <a class="color-normal server" [routerLink]="['/settings/servers']" (click)="_settingsMenu.close()">Add or Remove Servers</a>

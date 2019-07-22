@@ -1,13 +1,16 @@
-import { NgModule, Component, Input, Output, EventEmitter, ElementRef, OnInit, AfterViewInit , OnDestroy, ContentChildren, QueryList, Renderer } from '@angular/core';
+import { NgModule, Component, Input, Output, EventEmitter, ElementRef, OnInit, AfterViewInit , OnDestroy, ContentChildren, QueryList, Renderer, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { WindowService } from '../main/window.service';
 
 @Component({
     selector: 'selector',
     template: `
-        <div [hidden]="!opened || false" class="wrapper border-active background-normal shadow" [class.align-right]="right" [class.container-fluid]='_fluid' [class.stretch]='_stretch'>
+        <div [hidden]="!opened || false"
+            class="wrapper border-active background-normal shadow"
+            [class.align-right]="right"
+            [class.container-fluid]='_fluid'
+            [class.stretch]='_stretch'>
             <ng-content></ng-content>
         </div>
     `,
@@ -51,12 +54,15 @@ import { WindowService } from '../main/window.service';
     ],
     host: {
         '(document:click)': 'docClick($event)',
-        '(click)': 'insideClick($event)'
+        '(click)': 'insideClick($event)',
+        // '(document:keydown)': 'handleKeyboardEvents($event)',
     }
 })
 export class Selector implements OnInit, AfterViewInit, OnDestroy {
     private _subscriptions: Array<any> = [];
 
+    // isQuickMenu simple modal such as context menu and should be closed when focus went away
+    @Input() isQuickMenu = false;
     @Input() right: boolean;
     @Input() public opened: boolean = false;
 
@@ -144,13 +150,24 @@ export class Selector implements OnInit, AfterViewInit, OnDestroy {
         return n;
     }
 
-    private docClick(evt: Event) {
-        if (!this.opened || this._pending) {
+    docClick(evt: Event) {
+        if (!this.opened || this._pending || !this.isQuickMenu) {
             return;
         }
 
         let e = <any>evt;
         if (!e._selectors || !e._selectors[this._id]) {
+            this.close();
+        }
+    }
+
+    @HostListener('keydown', ['$event'])
+    handleKeyboardEvent(event: KeyboardEvent) {
+        if (event.defaultPrevented) {
+            return;
+        }
+        event.preventDefault();
+        if (event.key === 'Escape') {
             this.close();
         }
     }
