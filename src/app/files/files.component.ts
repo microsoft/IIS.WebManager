@@ -5,7 +5,6 @@ import { FilesService } from './files.service';
 import { FileNavService } from './file-nav.service';
 import { NavigationHelper } from './navigation-helper';
 import { FileExplorer } from './file-explorer';
-import { filter } from 'rxjs/operators';
 
 @Component({
     selector: 'file-viewer',
@@ -31,14 +30,21 @@ export class FilesComponent implements OnInit, OnDestroy {
     constructor(@Inject("FilesService") private _svc: FilesService,
                 private _navSvc: FileNavService) {
         
-        this._subscriptions.push(this._navSvc.current.pipe(
-            filter(dir => !!dir)
-        ).subscribe(dir => this._current = dir));
+        this._subscriptions.push(this._navSvc.current.subscribe(dir => {
+            if (dir) {
+                this._current = dir;
+            }
+        }));
     }
 
     public get selected(): Array<ApiFile> {
-        const empty = [];
-        return !this._list ? empty : this._list.selected;
+        if (this._list && this._list.selected && this._list.selected.length > 0) {
+            return this._list.selected;
+        } else if (this._current && this._current.physical_path) {
+            return [ this._current ];
+        } else {
+            return [];
+        }
     }
 
     public ngOnInit() {
