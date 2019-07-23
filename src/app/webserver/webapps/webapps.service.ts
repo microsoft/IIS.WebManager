@@ -242,7 +242,7 @@ export class WebAppsService {
     private handleError(e: ApiError, app: WebApp) {
         // TODO: unify 403 handling
         if (e.title && e.title.toLowerCase() == 'forbidden' && e.name == 'physical_path') {
-            this._notificationService.warn(`IIS has no access to ${app.physical_path}. if the path exists, click "Create New Mapping" button to map the path to IIS file system.`);
+            this._notificationService.warn(`IIS has no access to ${app.physical_path}. if the path exists, use "New IIS File System Mapping" button to map the path to IIS file system.`);
         }
     }
 }
