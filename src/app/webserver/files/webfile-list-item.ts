@@ -13,7 +13,10 @@ import { ActivatedRoute } from '@angular/router';
         <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing" (keyup.f2)="onRename($event)" tabindex="-1">
             <div class="col-xs-9 col-sm-5 col-lg-4 fi" [ngClass]="[model.type, !model.file_info ? '' : model.file_info.extension]">
                 <div *ngIf="!_editing">
-                    <a tabIndex="0" class="color-normal hover-color-active" nofocus><i></i>{{model.name}}</a>
+                    <a tabIndex="0"
+                        class="color-normal hover-color-active"
+                        (click)="browse($event)"
+                        nofocus><i></i>{{model.name}}</a>
                 </div>
                 <div *ngIf="_editing">
                     <i></i>
@@ -196,5 +199,13 @@ export class WebFileComponent {
 
     getSize() {
         return this.model.file_info.size ? Humanizer.number(Math.ceil(this.model.file_info.size / 1024)) + ' KB': null;
-    }   
+    }
+
+    browse(e: Event) {
+        if (e && e.defaultPrevented) {
+            return;
+        }
+
+        this._service.load(this.model.path);
+    }
 }

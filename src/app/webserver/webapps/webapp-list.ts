@@ -36,7 +36,7 @@ enum WebAppFields {
     <div>
         <div class='col-xs-8 col-sm-4'>
             <div class='name'>
-                <div tabindex="0" class="color-normal hover-color-active">{{model.path}}</div>
+                <a tabindex="0" class="focusable color-normal hover-color-active" (click)="onEnter($event)">{{model.path}}</a>
                 <div>
                     <small class='physical-path' [class.hidden-xs]="field(${WebAppFields.site})">{{model.physical_path}}</small>
                     <div *ngIf="field(${WebAppFields.site})">

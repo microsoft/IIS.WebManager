@@ -4,7 +4,6 @@ import { Humanizer } from 'common/primitives';
 import { FilesService } from 'files/files.service';
 import { FileNavService } from 'files/file-nav.service';
 import { ApiFile } from './file';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'file',
@@ -12,7 +11,10 @@ import { ActivatedRoute } from '@angular/router';
         <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing && !_location" [class.background-selected]="_editing && _location" (keyup.f2)="onRename($event)" tabindex="-1">
             <div class="col-xs-9 col-sm-5 col-lg-4 fi" [ngClass]="[model.type, model.extension, (isRoot ? 'location' : '')]">
                 <div *ngIf="!_editing || _location">
-                    <a tabIndex="0" class="color-normal hover-color-active" nofocus><i></i>{{model.alias || model.name}}</a>
+                    <a tabIndex="0"
+                        class="color-normal hover-color-active"
+                        (click)="browse($event)"
+                        nofocus><i></i>{{model.alias || model.name}}</a>
                 </div>
                 <div *ngIf="_editing && !_location">
                     <i></i>
@@ -96,7 +98,6 @@ export class FileComponent {
         @Inject("FilesService") private _svc: FilesService,
         private _nav: FileNavService,
         private _notificationService: NotificationService,
-        private _route: ActivatedRoute,
     ) {
     }
 
@@ -191,5 +192,12 @@ export class FileComponent {
 
     getSize() {
         return this.model.size ? Humanizer.number(Math.ceil(this.model.size / 1024)) + ' KB' : null;
+    }
+
+    browse(e: Event) {
+        if (e && e.defaultPrevented) {
+            return;
+        }
+        this._nav.load(this.model.physical_path);
     }
 }
