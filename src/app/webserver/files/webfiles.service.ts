@@ -277,7 +277,7 @@ export class WebFilesService implements IDisposable {
             // TODO: unify 403 handling
             // This is called from website file page, therefore 403 should really never happen adding this to be safe
             if (e.status === 403) {
-                const message = `IIS has no access to ${path}. if the path exists, use "New IIS File System Mapping" button to map the path to IIS file system.`;
+                const message = `IIS has no access to ${path}. if the path exists, use "New File System Mapping" button to map the path to IIS file system.`;
                 throw new Error(message);
             } else if (!e.message) {
                 // special case where some empty error was thrown. This happens somehow during testing.

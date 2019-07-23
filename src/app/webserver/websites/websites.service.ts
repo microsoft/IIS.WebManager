@@ -338,7 +338,7 @@ export class WebSitesService implements OnDestroy {
         }
         // TODO: unify 403 handling
         if (e.title && e.title.toLowerCase() == 'forbidden' && e.name == 'physical_path') {
-            this._notificationService.warn(`IIS has no access to ${site.physical_path}. if the path exists, use "New IIS File System Mapping" button to map the path to IIS file system.`);
+            this._notificationService.warn(`IIS has no access to ${site.physical_path}. if the path exists, use "New File System Mapping" button to map the path to IIS file system.`);
         }
     }
 }
