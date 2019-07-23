@@ -41,7 +41,7 @@ enum WebSiteFields {
     (keydown.enter)="onEnter($event)">
     <div class='col-xs-7 col-sm-4 col-md-3 col-lg-3'>
         <div class='name'>
-            <span tabindex="0" class="focusable color-normal hover-color-active" (click)="onEnter($event)">{{model.name}}</span>
+            <a tabindex="0" class="focusable color-normal hover-color-active" (click)="onEnter($event)">{{model.name}}</a>
             <small class='physical-path' *ngIf="field(${WebSiteFields.path})">{{model.physical_path}}</small>
         </div>
     </div>

@@ -72,6 +72,11 @@ a {
     color: #0077ce;
 }
 
+a.hover-color-active:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 a:hover,
 a:focus {
     color: inherit;

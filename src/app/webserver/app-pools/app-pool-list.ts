@@ -37,7 +37,7 @@ const actionRestrictions: Map<AppPoolOp, Status> = new Map<AppPoolOp, Status>([
     (dblclick)="onEnter($event)"
     (keydown.enter)="onEnter($event)">
     <div class='col-xs-7 col-sm-4 col-md-3 v-align big'>
-        <span tabindex="0" class="focusable color-normal hover-color-active" (click)="onEnter($event)">{{model.name}}</span>
+        <a tabindex="0" class="focusable color-normal hover-color-active" (click)="onEnter($event)">{{model.name}}</a>
     </div>
     <div class='col-xs-3 col-md-2 v-align'>
         <span class='status' [ngClass]="model.status">{{model.status}}</span>
