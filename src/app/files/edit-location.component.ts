@@ -6,7 +6,7 @@ import { Location } from './location';
 @Component({
     selector: 'edit-location',
     template: `
-        <div class="sme-focus-zone">
+        <div>
             <fieldset class="name">
                 <label>Alias</label>
                 <input [(ngModel)]="model.alias" class="form-control" type="text" autofocus>
