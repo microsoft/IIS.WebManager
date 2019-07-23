@@ -997,3 +997,8 @@ button.less:before {
     line-height: 2em;
     vertical-align: middle;
 }
+
+.close-button {
+    float: right;
+    border: none;
+}

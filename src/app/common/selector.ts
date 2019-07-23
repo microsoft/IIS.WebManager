@@ -55,7 +55,6 @@ import { WindowService } from '../main/window.service';
     host: {
         '(document:click)': 'docClick($event)',
         '(click)': 'insideClick($event)',
-        // '(document:keydown)': 'handleKeyboardEvents($event)',
     }
 })
 export class Selector implements OnInit, AfterViewInit, OnDestroy {
