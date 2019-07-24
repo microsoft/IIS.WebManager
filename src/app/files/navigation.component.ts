@@ -15,7 +15,12 @@ export class Drop {
     selector: 'navigation',
     template: `
         <div>
-            <button class="no-border pull-left color-active" title="Go to the parent directory" (click)="onClickUp()"><i aria-hidden="true" class="fa fa-level-up"></i></button>
+            <button [disabled]="canReturn ? null : 'disabled'"
+                    class="no-border pull-left color-active"
+                    title="Go to the parent directory"
+                    (click)="onClickUp()">
+                        <i aria-hidden="true" class="fa fa-level-up"></i>
+            </button>
             <div class="fill">
                 <ul aria-label="Hit the spacebar key to select." tabindex="0" *ngIf="_crumbs.length > 0" [hidden]="_typing" class="nav border-color" (keyup.space)="onClickAddress($event)" (keyup.enter)="onClickAddress($event)" (click)="onClickAddress($event)">
                     <li *ngFor="let item of _crumbs; let i = index;" 
@@ -178,6 +183,13 @@ export class NavigationComponent implements OnInit, OnDestroy {
         setTimeout(() => {
             this._addressBar.nativeElement.focus();
         }, 1);
+    }
+
+    get canReturn() {
+        if (!this._path) {
+            return false;
+        }
+        return this._path !== '/';
     }
 
     private onClickUp() {
