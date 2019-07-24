@@ -12,7 +12,7 @@ import { NotificationService } from './notification.service';
             <h2 *ngIf="title" class="color-normal border-active">{{title}}</h2>
             <p class="message">{{message}}</p>
             <p>
-                <button (click)="onConfirm()">OK</button>
+                <button (click)="onConfirm()" autofocus>OK</button>
                 <button (click)="onCancel()">Cancel</button>
             </p>
           </div>
