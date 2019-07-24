@@ -92,6 +92,10 @@ import { buffer, map, filter, take } from 'rxjs/operators'
             min-height: 40vh;
         }
 
+        .wrapper:focus {
+            outline: None;
+        }
+
         .out {
             position: absolute; 
             left: -1000px;
