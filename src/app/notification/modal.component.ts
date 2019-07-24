@@ -7,7 +7,7 @@ import { NotificationService } from './notification.service';
     template: `
         <div *ngIf="_display" class="modal">
 
-          <div class="modal-content center">
+          <div class="modal-content center sme-focus-zone">
             <span class="exit" title="Close" (click)="onCancel()">&times;</span>
             <h2 *ngIf="title" class="color-normal border-active">{{title}}</h2>
             <p class="message">{{message}}</p>
