@@ -43,7 +43,7 @@ import { ApiFile } from './file';
                     <button title="More" (click)="selector.toggle()" (dblclick)="prevent($event)" (keyup.enter)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
-                    <selector #selector [right]="true">
+                    <selector #selector [right]="true" [isQuickMenu]="true">
                         <ul>
                             <li><button *ngIf="!isRoot" #menuButton class="edit" title="Rename" (click)="onRename($event)">Rename</button></li>
                             <li><button *ngIf="isRoot" #menuButton class="edit" title="Edit" (click)="onEdit($event)">Edit</button></li>

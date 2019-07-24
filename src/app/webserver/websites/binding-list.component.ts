@@ -67,6 +67,7 @@ import { first } from 'rxjs/operators'
                     </fieldset>
                     <div class="selector" *ngIf="model.is_https">
                         <selector #certSelect [hidden]="!certSelect || !certSelect.isOpen()" (hide)="onCertSelected()" class="container-fluid">
+                            <button (click)="certSelect.close()" class="close-button" title="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
                             <certificates-list #list (itemSelected)="onCertSelected($event)"></certificates-list>
                         </selector>
                     </div>
