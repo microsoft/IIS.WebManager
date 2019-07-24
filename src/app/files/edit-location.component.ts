@@ -6,27 +6,29 @@ import { Location } from './location';
 @Component({
     selector: 'edit-location',
     template: `
-        <div>
-            <fieldset class="name">
-                <label>Alias</label>
-                <input [(ngModel)]="model.alias" class="form-control" type="text" autofocus>
-            </fieldset>
-            <fieldset class="path">
-                <label>Physical Path</label>
-                <input [(ngModel)]="model.path" class="form-control" type="text">
-            </fieldset>
-            <fieldset>
-                <label>Permissions</label>
-                <div class="flags">
-                    <checkbox2 [(model)]="_read">Read</checkbox2>
-                    <checkbox2 [(model)]="_write">Write</checkbox2>
-                </div>
-            </fieldset>
-            <p class="pull-right">
-                <button class="ok" (click)="onOk()">{{model.id ? 'OK' : 'Create'}}</button>
-                <button class="cancel" (click)="cancel.next()">Cancel</button>
-            </p>
+<div>
+    <h4>New File System Mapping</h4>
+    <p>File system mappings make directories accessible by IIS</p>
+    <fieldset class="name">
+        <label>Alias</label>
+        <input [(ngModel)]="model.alias" class="form-control" type="text" autofocus>
+    </fieldset>
+    <fieldset class="path">
+        <label>Physical Path</label>
+        <input [(ngModel)]="model.path" class="form-control" type="text">
+    </fieldset>
+    <fieldset>
+        <label>Permissions</label>
+        <div class="flags">
+            <checkbox2 [(model)]="_read">Read</checkbox2>
+            <checkbox2 [(model)]="_write">Write</checkbox2>
         </div>
+    </fieldset>
+    <p class="pull-right">
+        <button class="ok" (click)="onOk()" title="OK">{{model.id ? 'OK' : 'Create'}}</button>
+        <button class="cancel" (click)="cancel.next()" title="Cancel">Cancel</button>
+    </p>
+</div>
     `
 })
 export class LocationEditComponent implements OnInit {

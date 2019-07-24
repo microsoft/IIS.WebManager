@@ -11,10 +11,10 @@ export type FileSystemFunc = () => Promise<any>;
     <div class="file-toolbar">
         <button *ngIf="newLocation !== null"
             class="list-action-button new-root"
-            title="New IIS File System Mapping"
+            title="New File System Mapping"
             (click)="onNewLocation.next()"
             [attr.disabled]="newLocation === false || null">
-            New IIS File System Mapping
+            New File System Mapping
         </button>
         <button *ngIf="refresh !== null"
             class="list-action-button refresh"
