@@ -208,12 +208,15 @@ export class AppPoolItem extends ListOperationContext<AppPoolOp> {
         <label class="col-lg-2 visible-lg"
             role="columnheader">Identity</label>
     </div>
-    <ul class="grid-list">
+    <virtual-list class="grid-list"
+        [count]="model.length"
+        [loaded]="this.model"
+        emptyText="No application pool found">
         <li *ngFor="let p of model | orderby: _orderBy.Field: _orderBy.Asc"
             class="hover-editing">
             <app-pool-item [model]="p" (onSelected)="onItemSelected($event)"></app-pool-item>
         </li>
-    </ul>
+    </virtual-list>
 </div>
     `,
     styles: [`

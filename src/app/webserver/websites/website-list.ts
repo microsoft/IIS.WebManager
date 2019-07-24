@@ -233,6 +233,8 @@ const perspectives = [
     <virtual-list class="grid-list"
                 *ngIf="model"
                 [count]="model.length"
+                [loaded]="this.model"
+                emptyText="No website found"
                 (rangeChange)="onRangeChange($event)">
         <li class="hover-editing" tabindex="-1" *ngFor="let s of _view">
             <website-item [model]="s" [fields]="fields" (onSelected)="onItemSelected($event)"></website-item>
