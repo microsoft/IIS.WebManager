@@ -8,7 +8,7 @@ import { Module as Loading } from '../notification/loading.component';
 import { Module as Navigation } from './navigation.component';
 import { CodeEditorComponent } from "./code-editor.component";
 
-
+// TODO: fix compare feature https://github.com/microsoft/IIS.WebManager/issues/452
 @Component({
     selector: 'file-editor',
     template: `
@@ -16,8 +16,8 @@ import { CodeEditorComponent } from "./code-editor.component";
         <toolbar *ngIf="!_unsupported" 
             [save]="!!_dirty"
             [reload]="true"
-            [compare]="!comparer || null"
-            [uncompare]="comparer || null"
+            [compare]="null"
+            [uncompare]="null"
             [download]="true"
             (onsave)="save($event)"
             (onreload)="reload()"
