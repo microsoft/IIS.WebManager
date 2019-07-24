@@ -8,11 +8,11 @@ import { RequestTracingService } from './request-tracing.service';
 @Component({
     selector: 'trace-files',
     template: `
-        <toolbar
+        <file-system-toolbar
             [refresh]="true"
             [delete]="_selected.length > 0"
             (onRefresh)="onRefresh()"
-            (onDelete)="onDelete()"></toolbar>
+            (onDelete)="onDelete()"></file-system-toolbar>
         <div tabindex="-1" class="wrapper"
                         [selectable]="_traces"
                         [selected]="_selected"
@@ -56,31 +56,31 @@ import { RequestTracingService } from './request-tracing.service';
         </div>
     `,
     styles: [`
-        .container-fluid,
-        .row {
-            margin: 0;
-            padding: 0;
-        }
+.container-fluid,
+.row {
+    margin: 0;
+    padding: 0;
+}
 
-        navigation {
-            margin-bottom: 10px;
-        }
+navigation {
+    margin-bottom: 10px;
+}
 
-        .wrapper {
-            min-height: 50vh;
-        }
+.wrapper {
+    min-height: 50vh;
+}
 
-        .out {
-            position: absolute; 
-            left: -1000px;
-        }
+.out {
+    position: absolute;
+    left: -1000px;
+}
 
-        .drag-info {
-            position: absolute;
-            transform: translateX(-500px);
-            padding: 0 5px;
-            font-size: 120%;
-        }
+.drag-info {
+    position: absolute;
+    transform: translateX(-500px);
+    padding: 0 5px;
+    font-size: 120%;
+}
     `]
 })
 export class TraceFileListComponent implements OnInit, OnDestroy {
