@@ -15,6 +15,7 @@ import { ApiFile } from './file';
                         class="color-normal hover-color-active"
                         (click)="browse($event)"
                         nofocus><i></i>{{model.alias || model.name}}</a>
+                    <small *ngIf="isRoot" class='physical-path'>{{model.physical_path}}</small>
                 </div>
                 <div *ngIf="_editing && !_location">
                     <i></i>
