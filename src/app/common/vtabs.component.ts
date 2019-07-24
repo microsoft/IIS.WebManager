@@ -274,6 +274,7 @@ span:focus {
 }
 
 .vtab-content {
+    padding-right: 20px;
     padding-left: 20px;
 }
 
