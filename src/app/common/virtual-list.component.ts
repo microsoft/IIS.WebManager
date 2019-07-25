@@ -37,16 +37,35 @@ export class VirtualListItem {
 @Component({
     selector: 'virtual-list',
     template: `
-        <ul #container>
-            <li [style.height]="preHeight + 'px'"></li>
-            <ng-content></ng-content>
-            <li [style.height]="postHeight + 'px'"></li>
-        </ul>
+<ul #container>
+    <li [style.height]="preHeight + 'px'"></li>
+    <ng-content></ng-content>
+    <li [style.height]="postHeight + 'px'"></li>
+</ul>
+<div *ngIf="emptyText">
+    <div *ngIf="!loaded" class="processing">
+        <i aria-hidden="true" class="fa fa-spinner fa-spin"></i><span>loading...</span>
+    </div>
+    <div *ngIf="loaded && count == 0">{{emptyText}}</div>
+</div>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styles: [
+`
+.processing  {
+    font-size: 14px;
+}
+
+.processing i {
+    padding: 5px;
+}
+`
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VirtualListComponent implements OnDestroy, OnChanges, AfterContentInit {
 
+    @Input() loaded: boolean;
+    @Input() emptyText: boolean;
     @Input() count: number = -1;
     @Input() list: Array<any>;
     @Output() rangeChange: EventEmitter<Range> = new EventEmitter<Range>();
@@ -143,7 +162,9 @@ export class VirtualListComponent implements OnDestroy, OnChanges, AfterContentI
                 this._prevLength = length;
                 this._prevStart = startIndex;
 
-                this.rangeChange.next(new Range(startIndex, length));
+                if (this.rangeChange) {
+                    this.rangeChange.next(new Range(startIndex, length));
+                }
 
                 if (this.list) {
                     this._filtered.next(this.list.filter((f, i) => {

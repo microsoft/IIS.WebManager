@@ -9,11 +9,10 @@ import { Module as Switch } from '../../common/switch.component';
 import { Module as Sort } from '../../common/sort.pipe';
 import { Module as Enum } from '../../common/enum.component';
 import { Module as AutoFocus } from '../../common/focus';
-
 import { FilesModule } from '../../files/files.module';
-
 import { VdirsService } from './vdirs.service';
 import { VdirListComponent, VdirListItem } from './vdir-list.component';
+import { Module as VirtualListModule } from 'common/virtual-list.component'
 
 @NgModule({
     imports: [
@@ -27,13 +26,14 @@ import { VdirListComponent, VdirListItem } from './vdir-list.component';
         Sort,
         Enum,
         AutoFocus,
+        VirtualListModule,
     ],
     declarations: [
         VdirListComponent,
-        VdirListItem
+        VdirListItem,
     ],
     providers: [
-        VdirsService
+        VdirsService,
     ]
 })
 export class VdirsModule implements OnDestroy {

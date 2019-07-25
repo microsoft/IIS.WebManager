@@ -206,11 +206,14 @@ export class WebAppItem extends ListOperationContext<WebAppOp> implements OnInit
             (click)="_orderBy.sort('website.name')" (keyup.enter)="_orderBy.sort('website.name')" (keyup.space)="_orderBy.sort('website.name')"
             tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('website.name')" role="columnheader">Web Site</label>
     </div>
-    <ul class="grid-list">
+    <virtual-list class="grid-list"
+            [count]="model.length"
+            [loaded]="this.model"
+            emptyText="No application found">
         <li *ngFor="let app of model | orderby: _orderBy.Field: _orderBy.Asc" class="border-color hover-editing">
             <webapp-item [model]="app" [fields]="fields" (onSelected)="onItemSelected($event)"></webapp-item>
         </li>
-    </ul>
+    </virtual-list>
 </div>
     `,
     styles: [`

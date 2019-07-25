@@ -4,6 +4,7 @@ import { OrderBy, SortPipe } from '../../common/sort.pipe';
 import { Range } from '../../common/virtual-list.component';
 import { TraceLog } from './request-tracing';
 import { RequestTracingService } from './request-tracing.service';
+import { skip } from 'rxjs/operators';
 
 @Component({
     selector: 'trace-files',
@@ -46,6 +47,8 @@ import { RequestTracingService } from './request-tracing.service';
             <virtual-list class="container-fluid grid-list"
                         *ngIf="!!_traces"
                         [count]="_traces.length"
+                        [loaded]="loaded"
+                        emptyText="No files found"
                         (rangeChange)="onRangeChange($event)">
                 <li class="hover-editing" 
                     tabindex="-1" 
@@ -92,9 +95,15 @@ export class TraceFileListComponent implements OnInit, OnDestroy {
     private _traces: Array<TraceLog>;
     private _view: Array<TraceLog> = [];
     private _selected: Array<TraceLog> = [];
+    private loaded = false;
 
     constructor(private _service: RequestTracingService) {
-        this._subscriptions.push(this._service.traces.subscribe(t => {
+        this._subscriptions.push(this._service.traces.pipe(
+            skip(1),    // files are implemented as BehaviorSubject which is not ideal. Skipping the initial value to workaround the dummy first value
+        ).subscribe(t => {
+            if (t) {
+                this.loaded = true;
+            }
             this._traces = t;
             this.doSort();
         }));
@@ -116,6 +125,7 @@ export class TraceFileListComponent implements OnInit, OnDestroy {
 
     private onRefresh() {
         this._traces = [];
+        this.loaded = false;
         this._service.loadTraces();
     }
 

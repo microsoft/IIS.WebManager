@@ -28,7 +28,6 @@ export class CertificatesService {
 
     public load(): Promise<any> {
         this._certificates.getValue().splice(0);
-        this._certificates.next(this._certificates.getValue());
 
         return this.supportsRange()
             .then(result => {
