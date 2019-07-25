@@ -8,6 +8,7 @@ import { NotificationService } from '../../notification/notification.service';
 import { ApiFile } from '../../files/file';
 import { WebSite } from '../websites/site';
 import { WebApp } from '../webapps/webapp';
+import { skip } from 'rxjs/operators';
 
 @Component({
     selector: 'vdir',
@@ -264,7 +265,11 @@ export class VdirListItem implements OnInit, OnChanges {
                 <label class="col-sm-4 col-md-7" [ngClass]="sortStyle('physical_path')" (click)="sort('physical_path')">Physical Path</label>
             </div>
         </div>
-        <ul class="grid-list container-fluid" *ngIf="_vdirs">
+        <virtual-list *ngIf="_vdirs"
+            class="grid-list container-fluid"
+            [count]="_vdirs.length"
+            [loaded]="loaded"
+            emptyText="No virtual directory found">
             <li *ngIf="_new">
                 <vdir [model]="_new" (leave)="onLeave()"></vdir>
             </li>
@@ -274,7 +279,7 @@ export class VdirListItem implements OnInit, OnChanges {
                       (edit)="onEdit($event)"
                       (leave)="onLeave()"></vdir>
             </li>
-        </ul>
+        </virtual-list>
     `,
     styles: [`
         [class*="col-"] {
@@ -291,6 +296,7 @@ export class VdirListComponent implements OnInit {
     private _editing: Vdir = null;
     private _orderBy: string;
     private _orderByAsc: boolean;
+    private loaded = false;
 
     @ViewChildren(VdirListItem) vdirItems: QueryList<VdirListItem>;
 
@@ -312,6 +318,7 @@ export class VdirListComponent implements OnInit {
             // Load by WebSite
             this._service.getBySite(this.website).then(_ => {
                 this._service.vdirs.subscribe(vdirs => {
+                    this.loaded = true;
                     this._vdirs = [];
                     vdirs.forEach(v => {
                         if (v.website.id == this.website.id
@@ -328,6 +335,7 @@ export class VdirListComponent implements OnInit {
             // Load by WebApp
             this._service.getByApp(this.webapp).then(_ => {
                 this._service.vdirs.subscribe(vdirs => {
+                    this.loaded = true;
                     this._vdirs = [];
                     vdirs.forEach(v => {
                         if (v.webapp.id == this.webapp.id && v.path != '/') {
