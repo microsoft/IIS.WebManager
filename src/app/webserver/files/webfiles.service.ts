@@ -279,9 +279,9 @@ export class WebFilesService implements IDisposable {
             if (e.status === 403 && e.title && e.title.toLowerCase() == 'forbidden') {
                 if (path) {
                     const fullPath = (this._website.physical_path + path).replace('/', '\\');
-                    e.message = `Access denied on path: ${fullPath}. Please verify the physical path exists in IIS File System Mapping.`;
+                    e.message = `Access denied on path: ${fullPath}. Please go to [Web Server]/[File System] to verify IIS File System Mapping to ensure sufficient access for this operation.`;
                 } else {
-                    e.message = `Access denied. Please verify IIS File System Mapping to ensure sufficient access for this operation.`;
+                    e.message = `Access denied. Please go to [Web Server]/[File System] to verify IIS File System Mapping to ensure sufficient access for this operation.`;
                 }
                 throw e;
             } else if (!e.message) {

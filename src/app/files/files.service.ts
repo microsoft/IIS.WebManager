@@ -334,9 +334,9 @@ export class FilesService implements IDisposable {
                 // TODO: unify 403 handling
                 if (!e.message) {
                     if (path) {
-                        e.message = `Access denied on path: ${path}. Please verify the physical path exists in IIS File System Mapping.`;
+                        e.message = `Access denied on path: ${path}. Please go to [Web Server]/[File System] to verify IIS File System Mapping to ensure sufficient access for this operation.`;
                     } else {
-                        e.message = `Access denied. Please verify IIS File System Mapping to ensure sufficient access for this operation.`;
+                        e.message = `Access denied. Please go to [Web Server]/[File System] to verify IIS File System Mapping to ensure sufficient access for this operation.`;
                     }
                 }
             }
