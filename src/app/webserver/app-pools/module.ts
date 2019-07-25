@@ -16,6 +16,7 @@ import { AppPoolListComponent } from './app-pool-list.component';
 import { NewAppPoolComponent } from './new-app-pool.component';
 import { IdentityComponent } from './identity.component';
 import { ListModule } from 'common/list';
+import { Module as VirtualListModule } from 'common/virtual-list.component';
 
 @NgModule({
     imports: [
@@ -31,6 +32,7 @@ import { ListModule } from 'common/list';
         Enum,
         AutoFocus,
         ListModule,
+        VirtualListModule,
     ],
     exports: [
         AppPoolList,

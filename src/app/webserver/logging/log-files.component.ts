@@ -4,6 +4,8 @@ import { OrderBy, SortPipe } from '../../common/sort.pipe';
 import { Range } from '../../common/virtual-list.component';
 import { ApiFile } from '../../files/file';
 import { LoggingService } from './logging.service';
+import { skip } from 'rxjs/operators';
+import { load } from '@angular/core/src/render3';
 
 
 @Component({
@@ -38,6 +40,8 @@ import { LoggingService } from './logging.service';
             <virtual-list class="container-fluid grid-list"
                         *ngIf="!!_logs"
                         [count]="_logs.length"
+                        [loaded]="loaded"
+                        emptyText="No files found"
                         (rangeChange)="onRangeChange($event)">
                 <li class="hover-editing" 
                     tabindex="-1" 
@@ -72,9 +76,15 @@ export class LogFilesComponent implements OnInit, OnDestroy {
     private _logs: Array<ApiFile>;
     private _view: Array<ApiFile> = [];
     private _selected: Array<ApiFile> = [];
+    private loaded = false;
 
     constructor(private _service: LoggingService) {
-        this._subscriptions.push(this._service.logs.subscribe(t => {
+        this._subscriptions.push(this._service.logs.pipe(
+            skip(1),    // files are implemented as BehaviorSubject which is not ideal. Skipping the initial value to workaround the dummy first value
+        ).subscribe(t => {
+            if (t) {
+                this.loaded = true;
+            }
             this._logs = t;
             this.doSort();
         }));
@@ -93,6 +103,7 @@ export class LogFilesComponent implements OnInit, OnDestroy {
 
     private onRefresh() {
         this._logs = [];
+        this.loaded = false;
         this._service.loadLogs();
     }
 

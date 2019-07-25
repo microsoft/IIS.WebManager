@@ -4,13 +4,12 @@ import { CertificateListItem } from './certificate-list-item';
 import { Certificate } from './certificate';
 import { Range } from '../common/virtual-list.component';
 import { CertificatesService } from './certificates.service';
+import { skip } from 'rxjs/operators';
 
 @Component({
     selector: 'certificates-list',
     template: `
-        <loading *ngIf="!_items"></loading>
         <div class="toolbar">
-            <span *ngIf="serviceLoading" class="loading">Retrieving certificates</span>
             <div class="toolbar-right">
                 <button title="Refresh" (click)="refresh()">
                     <i aria-hidden="true" class="fa fa-refresh"></i>
@@ -33,6 +32,8 @@ import { CertificatesService } from './certificates.service';
         <virtual-list class="container-fluid grid-list"
                         *ngIf="_items"
                         [count]="_items.length"
+                        [loaded]="loaded"
+                        emptyText="No certificates found"
                         (rangeChange)="onRangeChange($event)">
             <li class="hover-editing"
                             *ngFor="let cert of _view; let i = index;"
@@ -118,6 +119,7 @@ export class CertificatesListComponent implements OnInit, OnDestroy {
     private _items: Array<Certificate>;
     private _range: Range = new Range(0, 0);
     private _subscriptions: Array<Subscription> = [];
+    private loaded = false;
     @ViewChildren(CertificateListItem) private _listItems: QueryList<CertificateListItem>;
 
     constructor(private _service: CertificatesService) {
@@ -129,16 +131,15 @@ export class CertificatesListComponent implements OnInit, OnDestroy {
         }
     }
 
-    get serviceLoading() {
-        return this._service.loading;
-    }
-
     public ngOnDestroy() {
         this._subscriptions.forEach(s => s.unsubscribe());
     }
 
     activate() {
-        this._service.certificates.subscribe(certs => {
+        this._service.certificates.pipe(
+            skip(1),    // certs are implemented as BehaviorSubject which is not ideal. Skipping the initial value to workaround the dummy first value
+        ).subscribe(certs => {
+            this.loaded = true;
             this.certs = certs;
             this.filter(this._filter);
         });
@@ -172,6 +173,7 @@ export class CertificatesListComponent implements OnInit, OnDestroy {
     }
 
     private refresh() {
+        this.loaded = false;
         this._service.load();
     }
 

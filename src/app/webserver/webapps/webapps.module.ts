@@ -25,7 +25,7 @@ import { WebAppItem, WebAppList } from './webapp-list';
 import { WebAppGeneralComponent } from './webapp-general.component';
 import { NewWebAppComponent } from './new-webapp.component';
 import { ListModule } from 'common/list';
-
+import { Module as VirtualListModule } from 'common/virtual-list.component'
 
 @NgModule({
     imports: [
@@ -46,6 +46,7 @@ import { ListModule } from 'common/list';
         Tabs,
         AutoFocus,
         ListModule,
+        VirtualListModule,
     ],
     declarations: [
         WebAppComponent,
