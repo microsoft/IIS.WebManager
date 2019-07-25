@@ -57,7 +57,11 @@ import { ApiFile } from './file';
             </div>
         </div>
         <selector #editSelector [opened]="true" *ngIf="_location && _editing" class="container-fluid" (hide)="cancel()">
-            <edit-location *ngIf="_location && _editing" [model]="_location" (cancel)="cancel()" (dblclick)="prevent($event)" (keyup.delete)="prevent($event)"></edit-location>
+            <edit-location *ngIf="_location && _editing"
+                modalTitle="Edit File System Mapping"
+                [model]="_location" (cancel)="cancel()"
+                (dblclick)="prevent($event)"
+                (keyup.delete)="prevent($event)"></edit-location>
         </selector>
     `,
     styles: [`

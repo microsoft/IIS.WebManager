@@ -276,9 +276,14 @@ export class WebFilesService implements IDisposable {
         return promise.catch(e => {
             // TODO: unify 403 handling
             // This is called from website file page, therefore 403 should really never happen adding this to be safe
-            if (e.status === 403) {
-                const message = `IIS has no access to ${path}. if the path exists, use "New File System Mapping" button to map the path to IIS file system.`;
-                throw new Error(message);
+            if (e.status === 403 && e.title && e.title.toLowerCase() == 'forbidden') {
+                if (path) {
+                    const fullPath = (this._website.physical_path + path).replace('/', '\\');
+                    e.message = `Access denied on path: ${fullPath}. Please verify the physical path exists in IIS File System Mapping.`;
+                } else {
+                    e.message = `Access denied. Please verify IIS File System Mapping to ensure sufficient access for this operation.`;
+                }
+                throw e;
             } else if (!e.message) {
                 // special case where some empty error was thrown. This happens somehow during testing.
                 throw new Error(`Cannot access path ${path}`);

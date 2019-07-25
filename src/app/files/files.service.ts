@@ -332,7 +332,13 @@ export class FilesService implements IDisposable {
             if (e.status === 403 && e.title && e.title.toLowerCase() == 'forbidden') {
                 // This is called on webserver file system page
                 // TODO: unify 403 handling
-                e.message = `IIS has no access to ${path}. if the path exists, use "New File System Mapping" button to map the path to IIS file system.\n\n`;
+                if (!e.message) {
+                    if (path) {
+                        e.message = `Access denied on path: ${path}. Please verify the physical path exists in IIS File System Mapping.`;
+                    } else {
+                        e.message = `Access denied. Please verify IIS File System Mapping to ensure sufficient access for this operation.`;
+                    }
+                }
             }
             else if ((e.status === 404 || e.status == 400) && e.name && (e.name.toLowerCase() == 'path' || e.name.toLowerCase() == 'physical_path')) {
                 e.message = "Path not found\n\n" + (path || "");
