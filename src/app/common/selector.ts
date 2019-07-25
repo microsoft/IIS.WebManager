@@ -162,12 +162,9 @@ export class Selector implements OnInit, AfterViewInit, OnDestroy {
 
     @HostListener('keydown', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {
-        if (event.defaultPrevented) {
-            return;
-        }
-        event.preventDefault();
         if (event.key === 'Escape') {
             this.close();
+            event.stopPropagation();
         }
     }
 
