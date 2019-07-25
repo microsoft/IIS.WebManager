@@ -44,7 +44,7 @@ import { WindowService } from '../main/window.service';
         :host >>> li > button,
         :host >>> li > .bttn {
             min-width: 125px;
-            width: 100%;
+            width: 90%;
         }
 
         :host.container-fluid {
