@@ -186,7 +186,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     public createLocation() {
         this.clearSelection();
 
-        let alias = "sites"
+        let alias = ""
         let index = 0;
 
         //

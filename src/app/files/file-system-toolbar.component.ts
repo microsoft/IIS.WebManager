@@ -56,7 +56,7 @@ export type FileSystemFunc = () => Promise<any>;
             title="Delete"
             (click)="onDelete.next($event)"
             [attr.disabled]="delete === false || null">
-            Delete
+            {{deleteButtonText}}
         </button>
     </div>
     <div class="clear"></div>
@@ -79,6 +79,7 @@ export class FileSystemToolbarComponent {
     @Input() upload: boolean = null;
     @Input() edit: boolean = null;
     @Input() delete: boolean = null;
+    @Input() atRoot: boolean = false;
 
     @Output() onNewLocation: EventEmitter<any> = new EventEmitter<any>();
     @Output() onRefresh: EventEmitter<any> = new EventEmitter<any>();
@@ -87,6 +88,14 @@ export class FileSystemToolbarComponent {
     @Output() onUpload: EventEmitter<any> = new EventEmitter<any>();
     @Output() onEdit: EventEmitter<any> = new EventEmitter<any>();
     @Output() onDelete: EventEmitter<any> = new EventEmitter<any>();
+
+    get deleteButtonText() {
+        if (this.atRoot) {
+            return "Remove";
+        } else {
+            return "Delete";
+        }
+    }
 }
 
 @NgModule({

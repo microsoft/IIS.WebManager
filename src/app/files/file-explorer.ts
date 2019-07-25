@@ -17,13 +17,14 @@ import { filter } from 'rxjs/operators';
             [newLocation]="showNewLocation"
             [newFolder]="showNewFolder"
             [upload]="showUpload"
-            [delete]="(options.EnableDelete || null) && selected && selected.length > 0"
+            [delete]="showDelete"
             (onNewLocation)="createMapping()"
             (onRefresh)="refresh()"
             (onNewFolder)="createDirectory()"
             (onNewFile)="createFile()"
             (onUpload)="fileSelector.open()"
-            (onDelete)="deleteFiles($event, selected)"></file-system-toolbar>
+            (onDelete)="deleteFiles($event, selected)"
+            [atRoot]="isRoot"></file-system-toolbar>
         <navigation></navigation>
         <file-list *ngIf="isDir(_current)" [types]="types"></file-list>
     `,
@@ -70,6 +71,13 @@ export class FileExplorer implements OnDestroy {
         } else {
             return !this._list.creating && !this.atRoot();
         }
+    }
+
+    public get isRoot() {
+        if (!this._list) {
+            return false;
+        }
+        return this.atRoot();
     }
 
     public get showNewLocation() {
