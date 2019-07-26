@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, Subscribable, Subject } from 'rxjs';
 import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
 import { ApiError } from '../../error/api-error';
@@ -140,70 +140,34 @@ export class AuthenticationService {
         }
     }
 
+    private async loadSafe<T>(linkName: string, subject: Subject<T>, featureStatus: string = null): Promise<T> {
+        try {
+            const result: T = await this._http.get(this._settings.getValue()._links[linkName].href.replace("/api", ""));
+            subject.next(result);
+            return result;
+        } catch (e) {
+            subject.error(e);
+            if (featureStatus && e.type && e.type == 'FeatureNotInstalled') {
+                this[featureStatus] = Status.Stopped;
+            }
+            throw e;
+        }
+    }
+
     private loadAnon(): Promise<AnonymousAuthentication> {
-        return this._http.get(this._settings.getValue()._links.anonymous.href.replace("/api", ""))
-            .then(anonymous => {
-                this._anonAuth.next(anonymous);
-                return anonymous;
-            })
-            .catch(e => {
-                this.anonymousError = e;
-                throw e;
-            })
+        return this.loadSafe<AnonymousAuthentication>("anonymous", this._anonAuth);
     }
 
     private loadBasic(): Promise<BasicAuthentication> {
-        return this._http.get(this._settings.getValue()._links.basic.href.replace("/api", ""))
-            .then(basic => {
-                this._basicStatus = Status.Started;
-                this._basicAuth.next(basic);
-                return basic;
-            })
-            .catch(e => {
-                this.basicError = e;
-
-                if (e.type && e.type == 'FeatureNotInstalled') {
-                    this._basicStatus = Status.Stopped;
-                }
-
-                throw e;
-            })
+        return this.loadSafe<BasicAuthentication>("basic", this._basicAuth, "_basicStatus");
     }
 
     private loadDigest(): Promise<DigestAuthentication> {
-        return this._http.get(this._settings.getValue()._links.digest.href.replace("/api", ""))
-            .then(digest => {
-                this._digestStatus = Status.Started;
-                this._digestAuth.next(digest);
-                return digest;
-            })
-            .catch(e => {
-                this.digestError = e;
-
-                if (e.type && e.type == 'FeatureNotInstalled') {
-                    this._digestStatus = Status.Stopped;
-                }
-
-                throw e;
-            })
+        return this.loadSafe<DigestAuthentication>("digest", this._digestAuth, "_digestStatus");
     }
 
     private loadWindows(): Promise<WindowsAuthentication> {
-        return this._http.get(this._settings.getValue()._links.windows.href.replace("/api", ""))
-            .then(windows => {
-                this._windowsStatus = Status.Started;
-                this._windowsAuth.next(windows);
-                return windows;
-            })
-            .catch(e => {
-                this.windowsError = e;
-
-                if (e.type && e.type == 'FeatureNotInstalled') {
-                    this._windowsStatus = Status.Stopped;
-                }
-
-                throw e;
-            })
+        return this.loadSafe<WindowsAuthentication>("windows", this._windowsAuth, "_windowsStatus");
     }
 
     private installAuth(type: string): Promise<any> {

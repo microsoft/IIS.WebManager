@@ -29,13 +29,17 @@ export class AuthenticationComponent implements OnInit, OnDestroy {
     private _original: any;
     private _subscriptions: Array<Subscription> = [];
 
-    constructor(private _service: AuthenticationService, private _notificationService: NotificationService) {
+    constructor(
+        private _service: AuthenticationService,
+        private _notificationService: NotificationService,
+    ) {
     }
 
     public ngOnInit() {
-        this._subscriptions.push(this._service.settings.subscribe(settings => {
-            this.setFeature(settings);
-        }));
+        this._subscriptions.push(this._service.settings.subscribe(
+            settings => this.setFeature(settings),
+            e => { this._notificationService.apiError(e) },
+        ));
         this._service.initialize(this.id);
     }
 
