@@ -124,7 +124,8 @@ export class NotificationService {
 
         // Do not show programming error. They will be logged on the console window
         if (error instanceof TypeError) {
-            this.warn("An unknown error has occurred while processing your request.");
+            // TODO: create a wiki page and point to the troubleshoot wiki instead
+            this.warn("An unknown error has occurred while processing your request. Please visit the project's home https://github.com/microsoft/IIS.WebManager to report and troubleshoot this issue.");
             return
         }
 
