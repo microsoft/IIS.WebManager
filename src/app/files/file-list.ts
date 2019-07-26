@@ -51,7 +51,11 @@ import { buffer, map, filter, take, skip } from 'rxjs/operators'
                 </div>
             </div>
             <selector #editSelector [opened]="true" *ngIf="_newLocation" class="container-fluid" (hide)="_newLocation=null">
-                <edit-location [model]="_newLocation" (cancel)="_newLocation=null" (save)="onSaveNewLocation()"></edit-location>
+                <edit-location
+                    modalTitle="New File System Mapping"
+                    [model]="_newLocation"
+                    (cancel)="_newLocation=null"
+                    (save)="onSaveNewLocation()"></edit-location>
             </selector>
             <div class="grid-list container-fluid" *ngIf="_newDir">
                 <new-file [model]="_newDir" (cancel)="_newDir=null" (save)="onSaveNewDir()"></new-file>

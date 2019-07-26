@@ -7,7 +7,7 @@ import { Location } from './location';
     selector: 'edit-location',
     template: `
 <div>
-    <h4>New File System Mapping</h4>
+    <h4>{{modalTitle}}</h4>
     <p>File system mappings make directories accessible by IIS</p>
     <fieldset class="name">
         <label>Alias</label>
@@ -36,6 +36,7 @@ export class LocationEditComponent implements OnInit {
     private _read: boolean;
     private _write: boolean;
 
+    @Input() public modalTitle: string;
     @Input() public model: Location;
 
     @Output() public cancel: EventEmitter<any> = new EventEmitter<any>();
