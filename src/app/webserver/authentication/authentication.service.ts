@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, Subscribable, Subject } from 'rxjs';
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
-import { ApiError } from '../../error/api-error';
 import { HttpClient } from '../../common/http-client';
 import { NotificationService } from '../../notification/notification.service';
 import { AnonymousAuthentication, BasicAuthentication, DigestAuthentication, WindowsAuthentication } from './authentication';
@@ -11,11 +10,6 @@ import { ActivatedRoute } from '@angular/router';
 
 @Injectable()
 export class AuthenticationService {
-    public anonymousError: ApiError;
-    public basicError: ApiError;
-    public digestError: ApiError;
-    public windowsError: ApiError;
-
     private _settings: BehaviorSubject<any> = new BehaviorSubject<any>(null);
     private _anonAuth: BehaviorSubject<AnonymousAuthentication> = new BehaviorSubject<AnonymousAuthentication>(null);
     private _basicAuth: BehaviorSubject<BasicAuthentication> = new BehaviorSubject<BasicAuthentication>(null);
