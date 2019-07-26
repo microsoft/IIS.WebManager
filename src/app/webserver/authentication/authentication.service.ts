@@ -137,6 +137,9 @@ export class AuthenticationService {
     private async loadSafe<T>(linkName: string, subject: Subject<T>, featureStatus: string = null): Promise<T> {
         try {
             const result: T = await this._http.get(this._settings.getValue()._links[linkName].href.replace("/api", ""));
+            if (featureStatus) {
+                this[featureStatus] = Status.Started;
+            }
             subject.next(result);
             return result;
         } catch (e) {
