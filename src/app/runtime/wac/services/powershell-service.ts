@@ -48,10 +48,18 @@ export class PowershellService {
   }
 
   public invokeHttp(req: Request): Observable<Response> {
-    let requestEncoded = btoa(JSON.stringify(req));
+    //jhkimdebug
+    if (req.url.includes("/files/content?id=")) {
+      debugger
+    }
+
+    req["_body_Uint8Array"] = new Uint8Array(req["_body"]);
+    req["_body_Uint8Array_Length"] = req["_body_Uint8Array"]["length"];
+    let tempString = JSON.stringify(req);  // first suspicious line  
+    let requestEncoded = btoa(tempString); // second ""
     return this.invoke<ResponseOptions>(
       PowerShellScripts.Invoke_LocalHttp.script,
-      { requestBase64: requestEncoded },
+      { requestBase64: requestEncoded, requestBody: "testjhkim" },
       (k, v) => {
         switch (k) {
           case 'body':

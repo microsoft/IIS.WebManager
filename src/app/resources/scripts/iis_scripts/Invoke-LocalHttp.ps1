@@ -4,11 +4,18 @@ param(
     [string]
     $requestBase64,
 
+    [Parameter(Mandatory=$false)]
+    [string]
+    $requestBody,
+
     [Parameter(Mandatory=$true)]
     [string]
     $sessionId
 
 )
+
+$traceLog = ""
+$traceLog += ";requestBody: [" + $requestBody + "]";
 
 $ErrorActionPreference = "Stop"
 Add-Type -AssemblyName System.Net.Http
@@ -68,7 +75,19 @@ $uri = $uriBuilder.ToString()
 try {
     $httpMsg = New-Object System.Net.Http.HttpRequestMessage -ArgumentList $httpMethod, $uri
     if ($reqObj._body) {
-        $requestContent = New-Object System.Net.Http.StringContent ([string] $reqObj._body)
+        # Jhkimdebug
+        #
+        # old implementation
+        # $requestContent = New-Object System.Net.Http.StringContent ([string] $reqObj._body)
+
+        # new implementation start
+        $byteArray = new-object byte[] $reqObj._body_Uint8Array_Length
+        for ($i = 0; $i -lt $reqObj._body_Uint8Array_Length; $i++) {
+            $byteArray[$i] = $reqObj._body_Uint8Array.$i;
+        }
+        $requestContent = New-Object System.Net.Http.ByteArrayContent($byteArray, 0, $reqObj._body_Uint8Array_Length)
+        # new implementation end
+
         $httpMsg.Content = $requestContent
     }
     foreach ($prop in $reqObj.headers | Get-Member -MemberType NoteProperty | Microsoft.PowerShell.Utility\Select-Object -ExpandProperty Name) {
@@ -80,7 +99,7 @@ try {
                     $httpMsg.Content.Headers.ContentType = New-Object System.Net.Http.Headers.MediaTypeHeaderValue $headerValue
                     $headerFixed = $true
                 } elseif ($prop -like "content-range") {
-                    $tokens = $prop.Split("/-")
+                    $tokens = $headerValue.Split("/-")
                     $from = [int]::Parse(($tokens[0].Trim() -split " ")[-1])
                     $to = [int]::Parse($tokens[1].Trim())
                     $length = [int]::Parse($tokens[2].Trim())
@@ -111,7 +130,8 @@ try {
         "statusText" = $responseMsg.ReasonPhrase;
         "type" = $responseMsg.Content.Headers.ContentType.MediaType;
         "headers" = $responseMsg.Content.Headers;
-        "body" = $resContent
+        "body" = $resContent;
+        "traceLog" = $traceLog
     } -Compress -Depth 100
 } finally {
     if ($responseMsg) {
