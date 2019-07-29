@@ -4,18 +4,11 @@ param(
     [string]
     $requestBase64,
 
-    [Parameter(Mandatory=$false)]
-    [string]
-    $requestBody,
-
     [Parameter(Mandatory=$true)]
     [string]
     $sessionId
 
 )
-
-$traceLog = ""
-$traceLog += ";requestBody: [" + $requestBody + "]";
 
 $ErrorActionPreference = "Stop"
 Add-Type -AssemblyName System.Net.Http
@@ -75,19 +68,15 @@ $uri = $uriBuilder.ToString()
 try {
     $httpMsg = New-Object System.Net.Http.HttpRequestMessage -ArgumentList $httpMethod, $uri
     if ($reqObj._body) {
-        # Jhkimdebug
-        #
-        # old implementation
-        # $requestContent = New-Object System.Net.Http.StringContent ([string] $reqObj._body)
-
-        # new implementation start
-        $byteArray = new-object byte[] $reqObj._body_Uint8Array_Length
-        for ($i = 0; $i -lt $reqObj._body_Uint8Array_Length; $i++) {
+        if (-not $reqObj._body_Uint8Array) {
+          $requestContent = New-Object System.Net.Http.StringContent ([string] $reqObj._body)
+        } else {
+          $byteArray = new-object byte[] $reqObj._body_Uint8Array_Length
+          for ($i = 0; $i -lt $reqObj._body_Uint8Array_Length; $i++) {
             $byteArray[$i] = $reqObj._body_Uint8Array.$i;
+          }
+          $requestContent = New-Object System.Net.Http.ByteArrayContent($byteArray, 0, $reqObj._body_Uint8Array_Length)
         }
-        $requestContent = New-Object System.Net.Http.ByteArrayContent($byteArray, 0, $reqObj._body_Uint8Array_Length)
-        # new implementation end
-
         $httpMsg.Content = $requestContent
     }
     foreach ($prop in $reqObj.headers | Get-Member -MemberType NoteProperty | Microsoft.PowerShell.Utility\Select-Object -ExpandProperty Name) {
@@ -130,8 +119,7 @@ try {
         "statusText" = $responseMsg.ReasonPhrase;
         "type" = $responseMsg.Content.Headers.ContentType.MediaType;
         "headers" = $responseMsg.Content.Headers;
-        "body" = $resContent;
-        "traceLog" = $traceLog
+        "body" = $resContent
     } -Compress -Depth 100
 } finally {
     if ($responseMsg) {

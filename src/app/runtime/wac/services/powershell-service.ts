@@ -48,18 +48,20 @@ export class PowershellService {
   }
 
   public invokeHttp(req: Request): Observable<Response> {
-    //jhkimdebug
-    if (req.url.includes("/files/content?id=")) {
-      debugger
+    if (req["_body"] instanceof ArrayBuffer) {
+      req["_body_Uint8Array"] = new Uint8Array(req["_body"]);
+      req["_body_Uint8Array_Length"] = req["_body_Uint8Array"]["length"];
+      req["_body"] = null;
     }
-
-    req["_body_Uint8Array"] = new Uint8Array(req["_body"]);
-    req["_body_Uint8Array_Length"] = req["_body_Uint8Array"]["length"];
-    let tempString = JSON.stringify(req);  // first suspicious line  
-    let requestEncoded = btoa(tempString); // second ""
+    else
+    {
+      req["_body_Uint8Array"] = null;
+    }
+    ;
+    let requestEncoded = btoa(JSON.stringify(req));
     return this.invoke<ResponseOptions>(
       PowerShellScripts.Invoke_LocalHttp.script,
-      { requestBase64: requestEncoded, requestBody: "testjhkim" },
+      { requestBase64: requestEncoded },
       (k, v) => {
         switch (k) {
           case 'body':
