@@ -1018,3 +1018,13 @@ button.less:before {
     float: right;
     border: none;
 }
+
+.processing-large {
+    display: inline-block;
+    font-size: 25px;
+    padding: 10px;
+}
+
+.processing-large i {
+    padding: 5px;
+}
