@@ -238,11 +238,13 @@ export class TabsComponent implements OnDestroy, AfterViewInit {
 
     private _subscriptions: Array<Subscription> = [];
 
-    constructor(private _elem: ElementRef,
-                private _renderer: Renderer,
-                private _activatedRoute: ActivatedRoute,
-                private _location: Location,
-                private _router: Router) {
+    constructor(
+        private _elem: ElementRef,
+        private _renderer: Renderer,
+        private _activatedRoute: ActivatedRoute,
+        private _location: Location,
+        private _router: Router,
+    ) {
         this.tabs = [];
         this._default = this._activatedRoute.snapshot.params["section"];
     }

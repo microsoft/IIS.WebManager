@@ -25,6 +25,7 @@ import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { TitlesModule } from 'header/titles.module';
 import { Heading } from 'header/feature-header.component';
 import { TitlesService } from 'header/titles.service';
+import { NotificationService } from 'notification/notification.service';
 
 @Component({
     selector: 'vtabs',
@@ -124,6 +125,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         private _location: Location,
         private _router: Router,
         private options: OptionsService,
+        private _notifications: NotificationService,
         factory: LoggerFactory,
     ) {
         this.tabs = [];
@@ -241,6 +243,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     }
 
     private onSectionChange(section: string) {
+        this._notifications.clearWarnings();
         let index = this.tabs.findIndex(t => t.fullName === section);
 
         if (index == -1) {
