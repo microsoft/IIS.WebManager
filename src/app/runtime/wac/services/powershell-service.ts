@@ -64,9 +64,13 @@ export class PowershellService {
         switch (k) {
           case 'body':
             try {
-              return atob(v)
+              if (Object.keys(v).length === 0) {
+                // if v is empty object({}), return empty string
+                return "";
+              }
+              return atob(v);
             } catch {
-              return v
+              return v;
             }
 
           case 'headers':

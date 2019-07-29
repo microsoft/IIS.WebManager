@@ -70,10 +70,10 @@ try {
     if ($reqObj._body -or $reqObj._body_Uint8Array) {
         if ($reqObj._body_Uint8Array) {
           #
-          # convert $reqObj._body_Uint8Array to ByteArray(byte[])
+          # Convert retreived JSON object like {0:byte1,1:byte2...} to a Byte array like {byte1, byte2...}.
           #
-          $byteArray = new-object byte[] $reqObj._body_Uint8Array_Length
-          for ($i = 0; $i -lt $reqObj._body_Uint8Array_Length; $i++) {
+          $byteArray = New-Object Byte[] $reqObj._body_Uint8Array_Length
+          for ($i = 0; $i -lt $reqObj._body_Uint8Array_Length; $i++) { 
             $byteArray[$i] = $reqObj._body_Uint8Array.$i;
           }
           $requestContent = New-Object System.Net.Http.ByteArrayContent($byteArray, 0, $reqObj._body_Uint8Array_Length)
