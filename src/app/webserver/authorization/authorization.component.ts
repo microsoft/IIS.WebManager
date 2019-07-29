@@ -46,10 +46,24 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
 
     constructor(private _service: AuthorizationService,
                 private _notificationService: NotificationService) {
-        this._subscriptions.push(this._service.authorization.subscribe(settings => this.setFeature(settings)));
     }
 
     public ngOnInit() {
+        this._subscriptions.push(
+            this._service.authorization.subscribe(
+                settings => {
+                    if (settings) {
+                        this.setFeature(settings);
+                    }
+                },
+                e => {
+                    this._notificationService.apiError(e);
+                },
+        ));
+        this.activate();
+    }
+
+    public activate() {
         this._service.initialize(this.id);
     }
 

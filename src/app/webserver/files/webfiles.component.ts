@@ -19,13 +19,24 @@ export class WebFilesComponent implements OnInit, OnDestroy {
     
     public website: WebSite;
 
-    constructor(private _svc: WebFilesService) {
-        this._subscriptions.push(_svc.current.pipe(
-            filter(dir => !!dir)
-        ).subscribe(dir => this._current = dir));
+    constructor(
+        private _svc: WebFilesService,
+    ) {
     }
 
     public ngOnInit() {
+        this._subscriptions.push(this._svc.current.pipe(
+        ).subscribe(
+            dir => {
+                if (dir) {
+                    this._current = dir;
+                }
+            },
+        ));
+        this.activate();
+    }
+
+    public activate() {
         this._svc.init(this.website);
     }
 
