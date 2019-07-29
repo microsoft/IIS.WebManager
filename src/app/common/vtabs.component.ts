@@ -243,6 +243,8 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     }
 
     private onSectionChange(section: string) {
+        // clear warnings on section change, for next step we need to move this line to SectionHelper so the warnings
+        // can be cleared on both vtabs and tabs. However, that require changes on every sub-tabs
         this._notifications.clearWarnings();
         let index = this.tabs.findIndex(t => t.fullName === section);
 
