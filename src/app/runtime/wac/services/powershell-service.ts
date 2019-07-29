@@ -50,8 +50,8 @@ export class PowershellService {
   public invokeHttp(req: Request): Observable<Response> {
     req["_body_Uint8Array"] = null;
     if (req["_body"] instanceof ArrayBuffer) {
-      // ArrayBuffer is not supported by JSON.stringify. Som if _body is ArrayBuffer value,
-      // create a new field called _body_Unit8Array with its Uint8Array value which is supported by JSON.stringify.
+      // Because ArrayBuffer is not supported by JSON.stringify, if _body is ArrayBuffer type value,
+      // we should create a new field named _body_Unit8Array with its Uint8Array value because Uint8Array is supported by JSON.stringify.
       req["_body_Uint8Array"] = new Uint8Array(req["_body"]);
       req["_body_Uint8Array_Length"] = req["_body_Uint8Array"]["length"];
       req["_body"] = null;
