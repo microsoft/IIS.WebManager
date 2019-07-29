@@ -47,7 +47,6 @@ export class NotificationComponent implements OnDestroy {
     private _warning: Notification;
     private _notifications: Array<Notification> = [];
     private _subscriptions: Subscription[] = [];
-    private _warningTimeout: number = 30 * 1000; // warning is shown for 30 seconds unless closed manually
     private _showNext: boolean = true;
 
     @ViewChildren(DynamicComponent) private _dynamics: QueryList<DynamicComponent>;
