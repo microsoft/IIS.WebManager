@@ -64,7 +64,9 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
     }
 
     public activate() {
-        this._service.initialize(this.id);
+        if (!this._authorization) {
+            this._service.initialize(this.id);
+        }
     }
 
     public ngOnDestroy(): void {

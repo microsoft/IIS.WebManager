@@ -48,7 +48,9 @@ export class AuthenticationComponent implements OnInit, OnDestroy {
     }
 
     public activate() {
-        this._service.initialize(this.id);
+        if (!this.settings) {
+            this._service.initialize(this.id);
+        }
     }
 
     public ngOnDestroy() {

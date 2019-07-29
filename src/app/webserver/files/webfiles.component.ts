@@ -37,7 +37,9 @@ export class WebFilesComponent implements OnInit, OnDestroy {
     }
 
     public activate() {
-        this._svc.init(this.website);
+        if (!this._current) {
+            this._svc.init(this.website);
+        }
     }
 
     public ngOnDestroy() {
