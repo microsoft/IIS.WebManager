@@ -71,10 +71,21 @@ export class DirectoryBrowsingComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this._subscriptions.push(this._service.directoryBrowsing.subscribe(feature => {
-            this.setFeature(feature);
-        }));
-        this._service.init(this.id);
+        this._subscriptions.push(this._service.directoryBrowsing.subscribe(
+            feature => {
+                this.setFeature(feature);
+            },
+            e => {
+                this._notificationService.apiError(e);
+            },
+        ));
+        this.activate();
+    }
+
+    public activate() {
+        if (!this.feature) {
+            this._service.init(this.id);
+        }
     }
 
     public ngOnDestroy() {

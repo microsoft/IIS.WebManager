@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { DiffUtil } from '../../utils/diff';
 import { StaticContentService } from '../static-content/static-content.service';
 import { StaticContent } from '../static-content/static-content';
+import { NotificationService } from 'notification/notification.service';
 
 @Component({
     template: `
@@ -24,12 +25,28 @@ export class MimeMapsComponent implements OnInit, OnDestroy {
     private _locked: boolean;
     private _subscriptions: Array<Subscription> = [];
 
-    constructor(private _service: StaticContentService) {
+    constructor(
+        private _service: StaticContentService,
+        private _notifications: NotificationService,
+    ) {
     }
 
     public ngOnInit() {
-        this._subscriptions.push(this._service.staticContent.subscribe(feature => this.setFeature(feature)));
-        this._service.initialize(this.id);
+        this._subscriptions.push(this._service.staticContent.subscribe(
+            feature => {
+                this.setFeature(feature);
+            },
+            e => {
+                this._notifications.apiError(e);
+            }
+        ));
+        this.activate();
+    }
+
+    public activate() {
+        if (!this.staticContent) {
+            this._service.initialize(this.id);
+        }
     }
 
     public ngOnDestroy() {

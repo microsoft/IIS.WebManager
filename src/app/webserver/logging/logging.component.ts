@@ -85,8 +85,21 @@ export class LoggingComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this._subscriptions.push(this._service.logging.subscribe(logging => this.setFeature(logging)));
-        this._service.initialize(this.id);
+        this._subscriptions.push(this._service.logging.subscribe(
+            logging => {
+                this.setFeature(logging);
+            },
+            e => {
+                this._notificationService.apiError(e);
+            },
+        ));
+        this.activate();
+    }
+
+    public activate() {
+        if (!this.logging) {
+            this._service.initialize(this.id);
+        }
     }
 
     public ngOnDestroy() {

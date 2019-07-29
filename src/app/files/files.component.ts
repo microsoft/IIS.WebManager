@@ -48,7 +48,13 @@ export class FilesComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this._navSvc.init(this.useHash, this.defaultPath);
+        this.activate();
+    }
+
+    public activate() {
+        if (!this._current) {
+            this._navSvc.init(this.useHash, this.defaultPath);
+        }
     }
 
     public ngOnDestroy() {

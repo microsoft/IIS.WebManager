@@ -51,10 +51,21 @@ export class DefaultDocumentsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.reset();
-        this._subscriptions.push(this._service.defaultDocument.subscribe(doc => {
-            this.setFeature(doc);
-        }));
+        this._subscriptions.push(this._service.defaultDocument.subscribe(
+            doc => {
+                this.setFeature(doc);
+            },
+            e => {
+                this._notificationService.apiError(e);
+            }
+        ));
+        this.activate();
+    }
+
+    public activate() {
+        if (!this._defDoc) {
+            this.reset();
+        }
     }
 
     get service() {

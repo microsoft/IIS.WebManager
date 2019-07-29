@@ -6,6 +6,7 @@ import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
 import { CentralCertificateService } from './central-certificate.service';
 import { CentralCertificateConfiguration } from './central-certificates';
+import { NotificationService } from 'notification/notification.service';
 
 @Component({
     template: `
@@ -84,7 +85,10 @@ export class CentralCertificateComponent implements OnInit, OnDestroy {
     private _original: CentralCertificateConfiguration;
     @ViewChildren(NgModel) private _validators: QueryList<NgModel>;
 
-    constructor(private _service: CentralCertificateService) {
+    constructor(
+        private _service: CentralCertificateService,
+        private _notifications: NotificationService,
+    ) {
     }
 
     get service() {
@@ -105,15 +109,27 @@ export class CentralCertificateComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this._service.initialize(this.id);
-
         this._subscriptions.push(this._service.enabled.subscribe(enabled => {
             this._enabled = enabled;
         }));
 
-        this._subscriptions.push(this._service.configuration.subscribe(config => {
-            this.setFeature(config);
-        }));
+        this._subscriptions.push(this._service.configuration.subscribe(
+            config => {
+                if (config) {
+                    this.setFeature(config);
+                }
+            },
+            e => {
+                this._notifications.apiError(e);
+            }
+        ));
+        this.activate();
+    }
+
+    public activate() {
+        if (!this._configuration) {
+            this._service.initialize(this.id);
+        }
     }
 
     public ngOnDestroy() {
