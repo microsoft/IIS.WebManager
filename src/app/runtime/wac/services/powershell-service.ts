@@ -48,16 +48,14 @@ export class PowershellService {
   }
 
   public invokeHttp(req: Request): Observable<Response> {
+    req["_body_Uint8Array"] = null;
     if (req["_body"] instanceof ArrayBuffer) {
+      // If _body is ArrayBuffer value, create a new field called _body_Unit8Array with its Uint8Array value
+      // so that we can use it instead of the _body because ArrayBuffer is not supported by JSON.stringify.
       req["_body_Uint8Array"] = new Uint8Array(req["_body"]);
       req["_body_Uint8Array_Length"] = req["_body_Uint8Array"]["length"];
       req["_body"] = null;
     }
-    else
-    {
-      req["_body_Uint8Array"] = null;
-    }
-    ;
     let requestEncoded = btoa(JSON.stringify(req));
     return this.invoke<ResponseOptions>(
       PowerShellScripts.Invoke_LocalHttp.script,

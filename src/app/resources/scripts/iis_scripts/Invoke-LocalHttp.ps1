@@ -67,15 +67,18 @@ $uri = $uriBuilder.ToString()
 
 try {
     $httpMsg = New-Object System.Net.Http.HttpRequestMessage -ArgumentList $httpMethod, $uri
-    if ($reqObj._body) {
-        if (-not $reqObj._body_Uint8Array) {
-          $requestContent = New-Object System.Net.Http.StringContent ([string] $reqObj._body)
-        } else {
+    if ($reqObj._body -or $reqObj._body_Uint8Array) {
+        if ($reqObj._body_Uint8Array) {
+          #
+          # convert $reqObj._body_Uint8Array to ByteArray(byte[])
+          #
           $byteArray = new-object byte[] $reqObj._body_Uint8Array_Length
           for ($i = 0; $i -lt $reqObj._body_Uint8Array_Length; $i++) {
             $byteArray[$i] = $reqObj._body_Uint8Array.$i;
           }
           $requestContent = New-Object System.Net.Http.ByteArrayContent($byteArray, 0, $reqObj._body_Uint8Array_Length)
+        } else {
+          $requestContent = New-Object System.Net.Http.StringContent ([string] $reqObj._body)
         }
         $httpMsg.Content = $requestContent
     }
