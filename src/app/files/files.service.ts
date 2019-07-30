@@ -140,7 +140,7 @@ export class FilesService implements IDisposable {
         let opts: RequestOptionsArgs = this._http.getOptions(RequestMethod.Get, url, null);
 
         //
-        // Set a custom header to indicate this is for FileSystem's /api/files/content API call with GET rmethod
+        // Set a custom header called waciisflags to indicate that this request is for FileSystem's /api/files/content API call with GET method.
         opts.headers.set("waciisflags", "GetFileSystemContent");
 
         return this._http.request(url, opts);

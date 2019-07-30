@@ -78,7 +78,7 @@ export class PowershellService {
         }
       }).pipe(map(res => {
         if (req.headers.get('waciisflags') === 'GetFileSystemContent') {
-          // for FileSystem content API call with GET method, use bodyString value instead of body
+          // for FileSystem content API call with GET method which is to read file content, we should use bodyString.
           res.body = res["bodyString"];
         }
         
