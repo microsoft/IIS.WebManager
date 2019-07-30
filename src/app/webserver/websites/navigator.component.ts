@@ -20,7 +20,7 @@ import {WebSitesService} from './websites.service';
                     <span>{{getFriendlyUrl(0)}}</span>
                 </div>
             </div>
-            <div class="selector-wrapper" *ngIf="model.length > 0">
+            <div class="selector-wrapper action-selector" *ngIf="model.length > 0">
                 <button class="no-border" [class.visible-xs]="model.length == 1 && !small" [class.background-active]="navigator.opened" (click)="openNavigator($event)">
                     <span [class.visible-xs]="!small" class="browse">Browse </span>
                     <span class="hidden-xs" *ngIf="!small"></span>

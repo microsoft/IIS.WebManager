@@ -60,7 +60,7 @@ class WebSiteStatusController extends StatusController {
         <limits [model]="site.limits" (modelChanged)="onModelChanged()"></limits>
     </tab>
     <tab [name]="'Application Pool'">
-        <button [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Change Application Pool <i aria-hidden="true" class="fa fa-caret-down"></i></button>
+        <button class="exchange" [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Change Application Pool</button>
         <selector #poolSelect class="container-fluid create">
             <button (click)="poolSelect.close()" class="close-button" title="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
             <app-pools #appPools [listingOnly]="true" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>

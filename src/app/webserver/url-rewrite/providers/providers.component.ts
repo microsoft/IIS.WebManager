@@ -15,7 +15,7 @@ import { ProvidersSection, Provider, ProviderSetting } from '../url-rewrite';
                 (revert)="onRevert()" 
                 (modelChanged)="onModelChanged()"></override-mode>
             <div>
-                <button [class.background-active]="newProvider.opened" (click)="newProvider.toggle()">Create Provider <i aria-hidden="true" class="fa fa-caret-down"></i></button>
+                <button class="add" [class.background-active]="newProvider.opened" (click)="newProvider.toggle()">Create Provider</button>
                 <selector #newProvider class="container-fluid create" (hide)="initializeNewProvider()">
                     <provider-edit [provider]="_newProvider" (save)="saveNew()" (cancel)="newProvider.close()"></provider-edit>
                 </selector>

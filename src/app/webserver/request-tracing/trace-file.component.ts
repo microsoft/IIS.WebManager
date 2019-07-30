@@ -28,7 +28,7 @@ import { FilesService } from 'files/files.service';
             <div class="col-sm-3 col-md-2 hidden-xs valign support">
                 {{displayDate}}
             </div>
-            <div class="actions">
+            <div class="actions action-selector">
                 <div class="selector-wrapper">
                     <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="selector && selector.opened">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>

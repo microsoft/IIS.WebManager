@@ -12,7 +12,7 @@ import { Status } from 'common/status';
             <label>Name</label>
             <span class="name">{{model.name}}</span>
             <span class="status" *ngIf="!started">({{model.status}})</span>
-            <div class="actions">
+            <div class="actions action-selector">
                 <div class="selector-wrapper">
                     <button title="Actions" (click)="openSelector()" [class.background-active]="(_selector && _selector.opened) || false"><i aria-hidden="true" class="fa fa-caret-down"></i></button>
                     <selector [right]="true" [isQuickMenu]="true">

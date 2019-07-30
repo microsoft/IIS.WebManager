@@ -22,7 +22,7 @@ import { FilesService } from 'files/files.service';
             <div class="col-md-1 visible-lg visible-md valign text-right support">
                 <span *ngIf="model.size">{{getSize()}}</span>
             </div>
-            <div class="actions">
+            <div class="actions action-selector">
                 <div class="selector-wrapper">
                     <button title="More" (click)="selector.toggle()" (dblclick)="prevent($event)" [class.background-active]="selector && selector.opened">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
