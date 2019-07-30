@@ -69,9 +69,7 @@ try {
     $httpMsg = New-Object System.Net.Http.HttpRequestMessage -ArgumentList $httpMethod, $uri
     if ($reqObj._body -or $reqObj._body_Uint8Array) {
         if ($reqObj._body_Uint8Array) {
-          #
-          # Convert retreived JSON object like {0:byte1,1:byte2...} to a Byte array like {byte1, byte2...}.
-          #
+          ## Convert retreived JSON object like {0:byte1,1:byte2...} to a Byte array like {byte1, byte2...}.
           $byteArray = New-Object Byte[] $reqObj._body_Uint8Array_Length
           for ($i = 0; $i -lt $reqObj._body_Uint8Array_Length; $i++) { 
             $byteArray[$i] = $reqObj._body_Uint8Array.$i;
@@ -112,17 +110,23 @@ try {
     $client = New-Object System.Net.Http.HttpClient -ArgumentList $clientHandler
     $responseMsg = $client.SendAsync($httpMsg).GetAwaiter().GetResult()
 
+    $bodyString = "";
     if ($responseMsg.Content) {
-        $resContent = stringify $responseMsg.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult()
+        ## for FileSystem content API call with GET method, additionally set $bodyString
+        if ($uri.Contains("/api/files/content?id=") -and $reqObj.method -eq 0) {
+            $resContentString = $responseMsg.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+        }
+        $resContent = stringify $responseMsg.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
     }
-
+    
     $result = ConvertTo-Json @{
         "url" = $responseMsg.RequestMessage.RequestUri
         "status" = $responseMsg.StatusCode;
         "statusText" = $responseMsg.ReasonPhrase;
         "type" = $responseMsg.Content.Headers.ContentType.MediaType;
         "headers" = $responseMsg.Content.Headers;
-        "body" = $resContent
+        "body" = $resContent;
+        "bodyString" = $resContentString;
     } -Compress -Depth 100
 } finally {
     if ($responseMsg) {

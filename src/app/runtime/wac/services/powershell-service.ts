@@ -3,7 +3,7 @@ import { AppContextService } from '@microsoft/windows-admin-center-sdk/angular'
 import { PowerShell, PowerShellSession, PowerShellResult } from '@microsoft/windows-admin-center-sdk/core'
 import { Observable } from 'rxjs'
 import { PowerShellScripts } from 'generated/powershell-scripts'
-import { Request, Response, ResponseOptions, Headers } from '@angular/http'
+import { Request, Response, ResponseOptions, Headers, RequestMethod } from '@angular/http'
 import { WACInfo } from 'runtime/runtime.wac'
 import { LoggerFactory, Logger, LogLevel, logError, instrument } from 'diagnostics/logger'
 import { map, mergeMap, shareReplay, catchError } from 'rxjs/operators'
@@ -64,10 +64,6 @@ export class PowershellService {
         switch (k) {
           case 'body':
             try {
-              if (Object.keys(v).length === 0) {
-                // if v is empty object({}), return empty string
-                return "";
-              }
               return atob(v);
             } catch {
               return v;
@@ -81,6 +77,11 @@ export class PowershellService {
             return v
         }
       }).pipe(map(res => {
+        if (req.url.includes("/api/files/content?id=") && req.method === RequestMethod.Get && res["bodyString"]) {
+          // for FileSystem content API call with GET method, use bodyString value instead of body
+          res.body = res["bodyString"];
+        }
+        
         let response = new Response(res);
         if (res.status < 200 || res.status >= 400) {
           throw response;
