@@ -112,7 +112,7 @@ try {
 
     if ($responseMsg.Content) {
         ## for FileSystem content API call with GET method, additionally set $bodyString.
-        ## NOTE: The value "waciisflags" and "GetFileSystemContent" is from \IIS.WebManager\src\app\files\files.service.ts.
+        ## NOTE: "waciisflags" and "GetFileSystemContent" are set by files.service.ts of IIS.WebManager.
         if ($reqObj.headers.waciisflags -eq "GetFileSystemContent") {
             $resContentString = $responseMsg.Content.ReadAsStringAsync().GetAwaiter().GetResult();
         }
