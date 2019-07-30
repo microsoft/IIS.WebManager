@@ -110,10 +110,9 @@ try {
     $client = New-Object System.Net.Http.HttpClient -ArgumentList $clientHandler
     $responseMsg = $client.SendAsync($httpMsg).GetAwaiter().GetResult()
 
-    $bodyString = "";
     if ($responseMsg.Content) {
         ## for FileSystem content API call with GET method, additionally set $bodyString.
-        ## The value "waciisflags" and "GetFileSystemContent" is from \IIS.WebManager\src\app\files\files.service.ts.
+        ## NOTE: The value "waciisflags" and "GetFileSystemContent" is from \IIS.WebManager\src\app\files\files.service.ts.
         if ($reqObj.headers.waciisflags -eq "GetFileSystemContent") {
             $resContentString = $responseMsg.Content.ReadAsStringAsync().GetAwaiter().GetResult();
         }
