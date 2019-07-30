@@ -291,7 +291,7 @@ export class VdirListComponent implements OnInit {
     @Input() website: WebSite;
     @Input() webapp: WebApp;
 
-    private _vdirs: Array<any>;
+    private _vdirs: Array<any> = [];
     private _new: Vdir;
     private _editing: Vdir = null;
     private _orderBy: string;

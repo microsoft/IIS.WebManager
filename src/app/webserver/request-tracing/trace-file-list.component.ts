@@ -92,7 +92,7 @@ export class TraceFileListComponent implements OnInit, OnDestroy {
     private _sortPipe: SortPipe = new SortPipe();
     private _subscriptions: Array<Subscription> = [];
     private _range: Range = new Range(0, 0);
-    private _traces: Array<TraceLog>;
+    private _traces: Array<TraceLog> = [];
     private _view: Array<TraceLog> = [];
     private _selected: Array<TraceLog> = [];
     private loaded = false;
