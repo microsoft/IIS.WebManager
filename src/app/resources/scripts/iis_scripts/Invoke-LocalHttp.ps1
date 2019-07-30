@@ -127,7 +127,7 @@ try {
         "statusText" = $responseMsg.ReasonPhrase;
         "type" = $responseMsg.Content.Headers.ContentType.MediaType;
         "headers" = $responseMsg.Content.Headers;
-        "body" = $resContent;
+        "body" = $resContent
     } -Compress -Depth 100
 } finally {
     if ($responseMsg) {
