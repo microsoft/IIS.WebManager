@@ -112,13 +112,14 @@ try {
 
     $bodyString = "";
     if ($responseMsg.Content) {
-        ## for FileSystem content API call with GET method, additionally set $bodyString
-        if ($uri.Contains("/api/files/content?id=") -and $reqObj.method -eq 0) {
+        ## for FileSystem content API call with GET method, additionally set $bodyString.
+        ## The value "waciisflags" and "GetFileSystemContent" is from \IIS.WebManager\src\app\files\files.service.ts.
+        if ($reqObj.headers.waciisflags -eq "GetFileSystemContent") {
             $resContentString = $responseMsg.Content.ReadAsStringAsync().GetAwaiter().GetResult();
         }
         $resContent = stringify $responseMsg.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
     }
-    
+
     $result = ConvertTo-Json @{
         "url" = $responseMsg.RequestMessage.RequestUri
         "status" = $responseMsg.StatusCode;
