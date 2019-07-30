@@ -51,7 +51,7 @@ export class PowershellService {
     req["_body_Uint8Array"] = null;
     if (req["_body"] instanceof ArrayBuffer) {
       // Because ArrayBuffer is not supported by JSON.stringify, if _body is ArrayBuffer type value,
-      // we should create a new field named _body_Unit8Array with its Uint8Array value because Uint8Array is supported by JSON.stringify.
+      // we should create a new field named _body_Unit8Array with its Uint8Array value which supports JSON.stringify.
       req["_body_Uint8Array"] = new Uint8Array(req["_body"]);
       req["_body_Uint8Array_Length"] = req["_body_Uint8Array"]["length"];
       req["_body"] = null;
