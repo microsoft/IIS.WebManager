@@ -111,12 +111,14 @@ try {
     $responseMsg = $client.SendAsync($httpMsg).GetAwaiter().GetResult()
 
     if ($responseMsg.Content) {
-        ## for FileSystem content API call with GET method, additionally set $bodyString.
-        ## NOTE: "waciisflags" and "GetFileSystemContent" are set by files.service.ts of IIS.WebManager.
+        $resContent = "";
         if ($reqObj.headers.waciisflags -eq "GetFileSystemContent") {
-            $resContentString = $responseMsg.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            ## for FileSystem content API call with GET method, we should use ReadAsStringAsync() and send the text data as it is.
+            $resContent = $responseMsg.Content.ReadAsStringAsync().GetAwaiter().GetResult();
         }
-        $resContent = stringify $responseMsg.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+        else {
+            $resContent = stringify $responseMsg.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+        }
     }
 
     $result = ConvertTo-Json @{
@@ -126,7 +128,6 @@ try {
         "type" = $responseMsg.Content.Headers.ContentType.MediaType;
         "headers" = $responseMsg.Content.Headers;
         "body" = $resContent;
-        "bodyString" = $resContentString;
     } -Compress -Depth 100
 } finally {
     if ($responseMsg) {

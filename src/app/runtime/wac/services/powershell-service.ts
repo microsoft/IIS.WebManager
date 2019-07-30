@@ -63,9 +63,12 @@ export class PowershellService {
         switch (k) {
           case 'body':
             try {
-              return atob(v)
+              if (req.headers.get('waciisflags') === 'GetFileSystemContent') {
+                return v;
+              }
+              return atob(v);
             } catch {
-              return v
+              return v;
             }
 
           case 'headers':
@@ -73,14 +76,9 @@ export class PowershellService {
             return new Headers(v);
 
           default:
-            return v
+            return v;
         }
       }).pipe(map(res => {
-        if (req.headers.get('waciisflags') === 'GetFileSystemContent' && res["bodyString"]) {
-          // if this is the FileSystem content API call with GET method in order to read file content, we should use res.bodyString instead of res.body.
-          res.body = res["bodyString"];
-        }
-        
         let response = new Response(res);
         if (res.status < 200 || res.status >= 400) {
           throw response;
