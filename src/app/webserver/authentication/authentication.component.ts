@@ -37,10 +37,20 @@ export class AuthenticationComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this._subscriptions.push(this._service.settings.subscribe(
-            settings => this.setFeature(settings),
+            settings => {
+                if (settings) {
+                    this.setFeature(settings)
+                }
+            },
             e => { this._notificationService.apiError(e) },
         ));
-        this._service.initialize(this.id);
+        this.activate();
+    }
+
+    public activate() {
+        if (!this.settings) {
+            this._service.initialize(this.id);
+        }
     }
 
     public ngOnDestroy() {

@@ -70,8 +70,21 @@ export class IpRestrictionsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this._subscriptions.push(this._service.ipRestrictions.subscribe(feature => this.setFeature(feature)));
-        this._service.initialize(this.id);
+        this._subscriptions.push(this._service.ipRestrictions.subscribe(
+            feature => {
+                this.setFeature(feature);
+            },
+            e => {
+                this._notificationService.apiError(e);
+            }
+        ));
+        this.activate();
+    }
+
+    public activate() {
+        if (!this.ipRestrictions) {
+            this._service.initialize(this.id);
+        }
     }
 
     get service() {

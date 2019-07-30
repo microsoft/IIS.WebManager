@@ -51,7 +51,13 @@ export class ModulesComponent implements OnInit {
 
     ngOnInit() {
         this.initialize();
-    }    
+    }
+
+    public activate() {
+        if (!this.modules) {
+            this.initialize();
+        }
+    }
     
     onModelChanged() {
 
@@ -205,6 +211,7 @@ export class ModulesComponent implements OnInit {
             })
             .catch(e => {
                 this._error = e;
+                this._notificationService.apiError(e);
             });
     }
 

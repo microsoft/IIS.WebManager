@@ -61,6 +61,8 @@ export class WebSiteListComponent implements OnInit {
             return;
         }
 
+        // TODO: fix - If subscribe is called for every activate, how many subscribes are there?
+        // Same for AppPoolList, WebAppList VDirList
         if (this.appPool) {
             this.service.getByAppPool(this.appPool).then(_ => {
                 this._subs.push(this.service.webSites.subscribe(sites => {

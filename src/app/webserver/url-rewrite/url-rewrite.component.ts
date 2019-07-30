@@ -52,6 +52,10 @@ export class UrlRewriteComponent implements OnInit {
     }
 
     public ngOnInit() {
+        this.activate();
+    }
+
+    public activate() {
         this._service.initialize(this.id);
     }
 

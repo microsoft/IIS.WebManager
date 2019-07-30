@@ -57,6 +57,12 @@ export class HttpResponseHeadersComponent implements OnInit {
         this.initialize();
     }
 
+    public activate() {
+        if (!this.httpResponseHeaders) {
+            this.initialize();
+        }
+    }
+
     onModelChanged() {
 
         if (this.httpResponseHeaders) {
@@ -148,6 +154,7 @@ export class HttpResponseHeadersComponent implements OnInit {
             })
             .catch(e => {
                 this._error = e;
+                this._notificationService.apiError(e);
             });
     }
 
