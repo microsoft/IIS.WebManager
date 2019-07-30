@@ -50,7 +50,7 @@ export class PowershellService {
   public invokeHttp(req: Request): Observable<Response> {
     req["_body_Uint8Array"] = null;
     if (req["_body"] instanceof ArrayBuffer) {
-      // If _body is ArrayBuffer type value, we should use _body_Unit8Array instead of _body because Uint8Array can be used with JSON.stringify.
+      // If _body is ArrayBuffer type value, we should use req._body_Unit8Array instead of req._body because Uint8Array can be used with JSON.stringify.
       req["_body_Uint8Array"] = new Uint8Array(req["_body"]);
       req["_body_Uint8Array_Length"] = req["_body_Uint8Array"]["length"];
       req["_body"] = null;
@@ -77,7 +77,7 @@ export class PowershellService {
         }
       }).pipe(map(res => {
         if (req.headers.get('waciisflags') === 'GetFileSystemContent' && res["bodyString"]) {
-          // for FileSystem content API call with GET method which is to read file content, we should use bodyString.
+          // if this is the FileSystem content API call with GET method in order to read file content, we should use res.bodyString instead of res.body.
           res.body = res["bodyString"];
         }
         
