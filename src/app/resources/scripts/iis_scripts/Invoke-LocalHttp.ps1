@@ -67,14 +67,14 @@ $uri = $uriBuilder.ToString()
 
 try {
     $httpMsg = New-Object System.Net.Http.HttpRequestMessage -ArgumentList $httpMethod, $uri
-    if ($reqObj._body -or $reqObj._body_Uint8Array) {
-        if ($reqObj._body_Uint8Array) {
+    if ($reqObj._body -or $reqObj._bodyUint8Array) {
+        if ($reqObj._bodyUint8Array) {
           ## Convert retreived JSON object like {0:byte1,1:byte2...} to a Byte array like {byte1, byte2...}.
-          $byteArray = New-Object Byte[] $reqObj._body_Uint8Array_Length
-          for ($i = 0; $i -lt $reqObj._body_Uint8Array_Length; $i++) { 
-            $byteArray[$i] = $reqObj._body_Uint8Array.$i;
+          $byteArray = New-Object Byte[] $reqObj._bodyUint8ArrayLength
+          for ($i = 0; $i -lt $reqObj._bodyUint8ArrayLength; $i++) { 
+            $byteArray[$i] = $reqObj._bodyUint8Array.$i;
           }
-          $requestContent = New-Object System.Net.Http.ByteArrayContent($byteArray, 0, $reqObj._body_Uint8Array_Length)
+          $requestContent = New-Object System.Net.Http.ByteArrayContent($byteArray, 0, $reqObj._bodyUint8ArrayLength)
         } else {
           $requestContent = New-Object System.Net.Http.StringContent ([string] $reqObj._body)
         }
