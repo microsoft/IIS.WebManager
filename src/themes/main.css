@@ -1041,3 +1041,7 @@ button.less:before {
 .processing-large i {
     padding: 5px;
 }
+
+switch.block {
+    margin-bottom: 10px;
+}
