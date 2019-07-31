@@ -139,6 +139,10 @@ export class FilesService implements IDisposable {
 
         let opts: RequestOptionsArgs = this._http.getOptions(RequestMethod.Get, url, null);
 
+        //
+        // Set a custom header called waciisflags to indicate that this request is for FileSystem's /api/files/content API call with GET method.
+        opts.headers.set("waciisflags", "GetFileSystemContent");
+
         return this._http.request(url, opts);
     }
 
@@ -892,7 +896,7 @@ export class FilesService implements IDisposable {
     }
 
     private updateMetadata(file: ApiFile, metaData: File): Promise<ApiFile> {
-        return this.updateInternal(file, { last_modified: metaData.lastModified })
+        return this.updateInternal(file, { last_modified: new Date(metaData.lastModified).toISOString() })
             .then(fileInfo => {
                 return ApiFile.fromObj(fileInfo);
             });
