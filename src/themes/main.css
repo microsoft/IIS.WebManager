@@ -146,6 +146,10 @@ input:not(:required).ng-invalid {
     width: 80%;
 }
 
+.left-with-button + button {
+    margin-top: 0;
+}
+
 .bttn {
     display: inline-block;
     margin-bottom: 0;
