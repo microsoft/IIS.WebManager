@@ -409,7 +409,8 @@ tooltip {
 
 .grid-list-header {
     border-bottom-style: solid;
-    border-bottom-width: 3px;
+    border-bottom-width: 1px;
+    border-bottom-color: #e6e6e6;
 
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -419,7 +420,7 @@ tooltip {
 }
 
 .grid-list-header label {
-    padding-bottom: 22px;
+    padding-bottom: 5px;
     margin-bottom: 0;
     font-weight: 600;
     cursor: pointer;

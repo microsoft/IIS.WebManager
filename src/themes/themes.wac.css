@@ -43,7 +43,7 @@ a.link:not([disabled]):not(:hover):not(:active)::before {
 
 .dataGroup,
 .grid-list .grid-item {
-    border-color: #d9d9d9;
+    border-color: #e6e6e6;
 }
 
 .background-normal {
@@ -110,7 +110,7 @@ button:hover::before,
 .border-active,
 button,
 .bttn.bordered {
-    border-color: #0077ce;
+    border-color: #c0c0c0;
 }
 
 .border-bottom-normal {
