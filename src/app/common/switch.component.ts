@@ -129,7 +129,7 @@ import { FormsModule } from '@angular/forms';
         }
     `],
     template: `
-        <div class="switch-container" [attr.disabled]="disabled ? true : null">
+        <div style="margin-bottom:20px" class="switch-container" [attr.disabled]="disabled ? true : null">
             <div *ngIf="label">
                 <div class="switch-label"><label>{{label}}</label></div>
             </div>
