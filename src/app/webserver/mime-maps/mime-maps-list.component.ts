@@ -152,7 +152,10 @@ export class MimeMapListItem implements OnInit, OnChanges {
     selector: 'mime-maps',
     template: `
         <div *ngIf="mimeMaps">
-            <button class="create" (click)="onAdd()" [class.inactive]="_editing"><i aria-hidden="true" class="fa fa-plus color-active"></i><span>Add</span></button>
+            <button class="create add list-action-button"
+                (click)="onAdd()"
+                [class.inactive]="_editing"
+                title="Add Mime Map">Add Mime Map</button>
 
             <div class="container-fluid" [hidden]="!mimeMaps || mimeMaps.length < 1">
                 <div class="row hidden-xs border-active grid-list-header">

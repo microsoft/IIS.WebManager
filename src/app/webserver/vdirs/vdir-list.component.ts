@@ -96,39 +96,44 @@ import { skip } from 'rxjs/operators';
         </div>
     `,
     styles: [`
-        .grid-item:not(.background-editing) fieldset {
-            padding-top: 5px;
-            padding-bottom: 0;
-        }
+.grid-item:not(.background-editing) fieldset {
+    padding-top: 5px;
+    padding-bottom: 0;
+}
 
-        .grid-item:not(.background-editing) [class*="col-"] {
-            padding-left: 0;
-        }
+.grid-item:not(.background-editing) [class*="col-"] {
+    padding-left: 0;
+}
 
-        >>> [hidden] {
-            display: none !important;
-        }
+>>> [hidden] {
+    display: none !important;
+}
 
-        .name span:first-of-type {            
-            font-size: 16px;
-        }
+.name span:first-of-type {            
+    font-size: 16px;
+}
 
-        .name small {
-            font-size: 12px;
-        }
+.name small {
+    font-size: 12px;
+}
 
-        div.h-align {
-            min-height: 1px;
-            display:inline-block;
-        }
+div.h-align {
+    min-height: 1px;
+    display:inline-block;
+}
 
-        .v-align {
-            padding-top: 5px;
-        }
+.v-align {
+    padding-top: 5px;
+}
 
-        .overflow {
-            overflow: visible !important;
-        }
+.overflow {
+    overflow: visible !important;
+}
+
+.row {
+    margin: 0;
+    padding: 0;
+}
     `]
 })
 export class VdirListItem implements OnInit, OnChanges {
@@ -258,15 +263,15 @@ export class VdirListItem implements OnInit, OnChanges {
 @Component({
     selector: 'vdir-list',
     template: `
-        <button class="create" (click)="onCreate()"><i aria-hidden="true" class="fa fa-plus color-active"></i><span>Create Virtual Directory</span></button>
-        <div class="container-fluid" [hidden]="!_vdirs || _vdirs.length < 1">
+        <button class="create add list-action-button" (click)="onCreate()" title="Create Virtual Directory">Create Virtual Directory</button>
+        <div [hidden]="!_vdirs || _vdirs.length < 1">
             <div class="row hidden-xs border-active grid-list-header">
                 <label class="col-sm-4 col-lg-3" [ngClass]="sortStyle('path')" (click)="sort('path')">Path</label>
                 <label class="col-sm-4 col-md-7" [ngClass]="sortStyle('physical_path')" (click)="sort('physical_path')">Physical Path</label>
             </div>
         </div>
         <virtual-list *ngIf="_vdirs"
-            class="grid-list container-fluid"
+            class="grid-list"
             [count]="_vdirs.length"
             [loaded]="loaded"
             emptyText="No virtual directory found">
@@ -282,9 +287,14 @@ export class VdirListItem implements OnInit, OnChanges {
         </virtual-list>
     `,
     styles: [`
-        [class*="col-"] {
-            padding-left: 0;
-        }
+[class*="col-"] {
+    padding-left: 0;
+}
+
+.row {
+    margin: 0;
+    padding: 0;
+}
     `]
 })
 export class VdirListComponent implements OnInit {
@@ -310,7 +320,7 @@ export class VdirListComponent implements OnInit {
     }
 
     activate() {
-        if (this._vdirs) {
+        if (this.loaded) {
             return;
         }
         if (this.website) {
