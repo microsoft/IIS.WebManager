@@ -110,7 +110,8 @@ button:hover::before,
 .border-active,
 button,
 .bttn.bordered {
-    border-color: #c0c0c0;
+    border-color: #ccc;
+    border-collapse: collapse;
 }
 
 .border-bottom-normal {
