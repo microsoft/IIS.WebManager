@@ -111,7 +111,7 @@ import { FormsModule } from '@angular/forms';
         }        
         .switch-container {
             display: inline-block;
-            height: 34px;
+            height: 58px;
             margin-bottom:20px;
         }
         .switch-content, .switch-handle {
