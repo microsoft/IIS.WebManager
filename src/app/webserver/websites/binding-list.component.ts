@@ -58,8 +58,8 @@ import { first } from 'rxjs/operators'
                         <switch label="HTTPS" class="block" (modelChange)="model.is_https=$event" [model]="model.is_https" (modelChanged)=onHttps()>{{model.is_https ? "On" : "Off"}}</switch>
                     </fieldset>
                     <fieldset class="inline-block cert bottom" *ngIf="model.is_https">
-                        <button (click)="selectCert()" class="background-normal select-cert" [class.background-active]="!!_certSelect.first && _certSelect.first.opened">
-                            <span>{{!model.certificate ? 'Select Certificate' : name()}}</span><i aria-hidden="true" class="fa fa-caret-down"></i>
+                        <button (click)="selectCert()" class="exchange background-normal select-cert" [class.background-active]="!!_certSelect.first && _certSelect.first.opened">
+                            {{!model.certificate ? 'Select Certificate' : name()}}
                         </button>
                     </fieldset>
                     <fieldset class="inline-block bottom" *ngIf="model.is_https && _supportsSni">

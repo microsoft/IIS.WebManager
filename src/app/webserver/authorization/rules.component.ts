@@ -8,27 +8,27 @@ import { Authorization, AuthRule } from './authorization'
 @Component({
     selector: 'auth-rules',
     template: `
-        <div *ngIf="_rules">
+<div *ngIf="_rules">
 
-            <button [disabled]="_locked" [class.background-active]="newRule.opened" (click)="newRule.toggle()">Create Rule <i aria-hidden="true" class="fa fa-caret-down"></i></button>
-            <selector #newRule class="container-fluid create" (hide)="initializeNewRule()">
-                <edit-rule *ngIf="newRule.opened" [rule]="_newRule" (save)="saveNew($event)" (cancel)="newRule.close()"></edit-rule>
-            </selector>
+    <button class="add" [disabled]="_locked" [class.background-active]="newRule.opened" (click)="newRule.toggle()">Create Rule</button>
+    <selector #newRule class="container-fluid create" (hide)="initializeNewRule()">
+        <edit-rule *ngIf="newRule.opened" [rule]="_newRule" (save)="saveNew($event)" (cancel)="newRule.close()"></edit-rule>
+    </selector>
 
-            <div class="container-fluid">
-                <div class="row hidden-xs hidden-sm border-active grid-list-header" [hidden]="_rules.length == 0">
-                    <label class="col-md-2">Access Type</label>
-                    <label class="col-md-4">Users</label>
-                    <label class="col-sm-4">Http Methods</label>
-                </div>
-            </div>
-            <ul class="grid-list container-fluid">
-                <li *ngFor="let rule of _rules; let i = index;">
-                    <rule [rule]="rule" (modelChanged)="saveRule(rule)" [locked]="_locked"></rule>
-                </li>
-            </ul>
+    <div class="container-fluid">
+        <div class="row hidden-xs hidden-sm border-active grid-list-header" [hidden]="_rules.length == 0">
+            <label class="col-md-2">Access Type</label>
+            <label class="col-md-4">Users</label>
+            <label class="col-sm-4">Http Methods</label>
         </div>
-    `
+    </div>
+    <ul class="grid-list container-fluid">
+        <li *ngFor="let rule of _rules; let i = index;">
+            <rule [rule]="rule" (modelChanged)="saveRule(rule)" [locked]="_locked"></rule>
+        </li>
+    </ul>
+</div>
+`,
 })
 export class RulesComponent implements OnDestroy {
     id: string;

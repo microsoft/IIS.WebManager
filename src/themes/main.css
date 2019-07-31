@@ -528,6 +528,7 @@ tooltip {
 .action-selector selector button {
     min-width: 125px;
     width: 100%;
+    margin: 0px;
 }
 
 /* Disabled */
@@ -770,6 +771,10 @@ button.go:before {
 
 button.add:before {
     content: "\f067";
+}
+
+button.exchange:before {
+    content: "\f0ec";
 }
 
 button.browse:before {

@@ -40,7 +40,7 @@ import { ActivatedRoute } from '@angular/router';
             <div class="col-md-1 visible-lg visible-md valign text-right support">
                 <span *ngIf="model.file_info && model.file_info.size">{{getSize()}}</span>
             </div>
-            <div class="actions">
+            <div class="actions action-selector">
                 <div class="selector-wrapper">
                     <button title="More" *ngIf="!model.isVirtual" (click)="openSelector($event)" (keyup.enter)="prevent($event)" (dblclick)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
