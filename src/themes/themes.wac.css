@@ -172,12 +172,12 @@ border-antiactive {
 }
 
 .background-editing {
-    background-color: #E7F5FE;
+    background-color: #e7f0f8;
 }
 
 .hover-editing:hover,
 button.hover-editing:hover::before {
-    background-color: #E7F5FE;
+    background-color: #e7f0f8;
 }
 
 .background-list {

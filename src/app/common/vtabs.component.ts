@@ -43,7 +43,6 @@ import { NotificationService } from 'notification/notification.service';
                 </li>
                 <li tabindex="0"
                     #tabLabels
-                    class="hover-edit"
                     *ngFor="let tab of getTabs(category)"
                     [ngClass]="{active: tab.active}"
                     (keyup.space)="selectItem(tab)"
