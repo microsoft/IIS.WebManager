@@ -409,7 +409,8 @@ tooltip {
 
 .grid-list-header {
     border-bottom-style: solid;
-    border-bottom-width: 3px;
+    border-bottom-width: 1px;
+    border-bottom-color: #e6e6e6;
 
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -419,7 +420,7 @@ tooltip {
 }
 
 .grid-list-header label {
-    padding-bottom: 22px;
+    padding-bottom: 5px;
     margin-bottom: 0;
     font-weight: 600;
     cursor: pointer;
@@ -878,12 +879,14 @@ button.less:before {
     opacity: .7;
 }
 
-.sidebar .items li.active:not(.separator) span,
-.sidebar .items li.active:not(.separator) a,
-.sidebar .items li:hover:not(.separator) span,
-.sidebar .items li:hover:not(.separator) a {
-    border-bottom-style: solid;
-    border-bottom-width: 2px;
+.sidebar .items li.active:not(.separator)
+{
+    background-color: #cee1f2;
+}
+
+.sidebar .items li:hover:not(.separator)
+{
+    background-color: #e7f0f8;
 }
 
 .sidebar .items li a {
@@ -965,7 +968,8 @@ button.less:before {
 
 .list-action-button {
     display: inline-flex;
-	font-weight: 500;
+    font-weight: 500;
+    border: 0px;
 }
 
 .row.grid-item.selected-for-edit {

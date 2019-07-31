@@ -43,7 +43,7 @@ a.link:not([disabled]):not(:hover):not(:active)::before {
 
 .dataGroup,
 .grid-list .grid-item {
-    border-color: #d9d9d9;
+    border-color: #e6e6e6;
 }
 
 .background-normal {
@@ -110,7 +110,8 @@ button:hover::before,
 .border-active,
 button,
 .bttn.bordered {
-    border-color: #0077ce;
+    border-color: #ccc;
+    border-collapse: collapse;
 }
 
 .border-bottom-normal {
@@ -172,12 +173,12 @@ border-antiactive {
 }
 
 .background-editing {
-    background-color: #E7F5FE;
+    background-color: #e7f0f8;
 }
 
 .hover-editing:hover,
 button.hover-editing:hover::before {
-    background-color: #E7F5FE;
+    background-color: #e7f0f8;
 }
 
 .background-list {
