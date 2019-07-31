@@ -116,7 +116,7 @@ export class CertificatesListComponent implements OnInit, OnDestroy {
     private _filter = "";
     private certs: Array<Certificate>;
     private _view: Array<Certificate> = [];
-    private _items: Array<Certificate>;
+    private _items: Array<Certificate> = [];
     private _range: Range = new Range(0, 0);
     private _subscriptions: Array<Subscription> = [];
     private loaded = false;
