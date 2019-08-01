@@ -205,7 +205,7 @@ export class FilesService implements IDisposable {
         }
     }
 
-    private generateDownloadLink(file: ApiFile, ttl: number = 0): Promise<string> {
+    public generateDownloadLink(file: ApiFile, ttl: number = 0): Promise<string> {
         let dlUrl = "/files/downloads";
 
         let dl = <any>{
