@@ -138,12 +138,7 @@ export class WACRuntime implements Runtime {
             {}
         ).subscribe(
             _ => {
-                // To open the file in a window use this:
-                //
-                // var downloaded = new File([blob] , fileName);
-                // var fileURL = URL.createObjectURL(downloaded);
-                // window.open(fileURL, "_blank");
-                // URL.revokeObjectURL(fileURL);
+                // file already saved, no action needed
             },
             e => {
                 this.notifications.warn(`Failed to download file ${file.physical_path}, error: ${e.message}`);
@@ -205,5 +200,26 @@ export class WACRuntime implements Runtime {
             return null;
         }
         return err;
+    }
+
+    public RenderFrebLogs(file: ApiFile) {
+        var filePath = file.physical_path;
+        this.powershellService.invoke(PowerShellScripts.Get_Freb.script, {
+            frebLocation: filePath,
+        }).subscribe(
+            (lines: string[]) => {
+                var fileName = filePath.split(/[\\\/]/).pop();
+                fileName = fileName.replace(/\.xml$/gi, ".html");
+                var file = new File(lines, fileName, {
+                    type: "text/html",
+                });
+                var fileURL = URL.createObjectURL(file);
+                window.open(fileURL, "_blank");
+                URL.revokeObjectURL(fileURL);
+            },
+            e => {
+                this.notifications.warn(`Failed to retrieve freb logs: ${filePath}, error: ${e}`);
+            },
+        );
     }
 }

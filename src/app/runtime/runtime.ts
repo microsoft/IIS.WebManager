@@ -19,6 +19,7 @@ export interface Runtime {
     StartIISAdministration(): Observable<any>;
     HandleConnectError(err: any): any;
     Download(file: ApiFile): void;
+    RenderFrebLogs(file: ApiFile): void;
 }
 
 @Injectable()
@@ -49,5 +50,16 @@ export class SiteRuntime implements Runtime {
 
     public Download(file: ApiFile) {
         this.fileService.downloadInNewWindow(file);
+    }
+
+    public RenderFrebLogs(file: ApiFile) {
+        let newWindow = window.open();
+        this.fileService.generateDownloadLink(file, 5 * 60 * 1000)
+            .then(location => {
+                newWindow.location.href = location + "?inline";
+            })
+            .catch(_ => {
+                newWindow.close();
+            });
     }
 }
