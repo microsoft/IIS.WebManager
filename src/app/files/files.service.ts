@@ -183,10 +183,6 @@ export class FilesService implements IDisposable {
             });
     }
 
-    public download(file: ApiFile): void {
-        this.downloadInternal(file);
-    }
-
     public move(sources: Array<ApiFile>, destination: ApiFile, name: string = null): void {
         this.copyMove(false, sources, destination, name);
     }
@@ -209,7 +205,7 @@ export class FilesService implements IDisposable {
         }
     }
 
-    public generateDownloadLink(file: ApiFile, ttl: number = 0): Promise<string> {
+    private generateDownloadLink(file: ApiFile, ttl: number = 0): Promise<string> {
         let dlUrl = "/files/downloads";
 
         let dl = <any>{
@@ -565,13 +561,17 @@ export class FilesService implements IDisposable {
         return Promise.all(promises);
     }
 
-    private downloadInternal(file: ApiFile): void {
+    public downloadInNewWindow(file: ApiFile): void {
         this.generateDownloadLink(file)
             .then(location => {
                 if (location) {
                     window.location.href = location;
                 }
-            });
+            }).catch(
+                e => {
+                    this._notificationService.warn(`Failed to download file ${file.physical_path} : ${e.message}`);
+                }
+            );
     }
 
     private uploadItemsInternal(items: Array<any>, to: ApiFile): Promise<any> {

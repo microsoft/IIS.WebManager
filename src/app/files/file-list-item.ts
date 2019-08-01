@@ -4,6 +4,7 @@ import { Humanizer } from 'common/primitives';
 import { FilesService } from 'files/files.service';
 import { FileNavService } from 'files/file-nav.service';
 import { ApiFile } from './file';
+import { Runtime } from 'runtime/runtime';
 
 @Component({
     selector: 'file',
@@ -101,6 +102,7 @@ export class FileComponent {
 
     constructor(
         @Inject("FilesService") private _svc: FilesService,
+        @Inject("Runtime") private runtime: Runtime,
         private _nav: FileNavService,
         private _notificationService: NotificationService,
     ) {
@@ -183,7 +185,7 @@ export class FileComponent {
     onDownload(e: Event) {
         e.preventDefault();
 
-        this._svc.download(this.model);
+        this.runtime.Download(this.model);
     }
 
     prevent(e: Event) {

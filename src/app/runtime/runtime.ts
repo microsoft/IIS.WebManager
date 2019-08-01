@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ConnectService } from '../connect/connect.service';
 import { ApiConnection } from '../connect/api-connection';
 import { Observable } from 'rxjs';
+import { FilesService } from 'files/files.service';
+import { ApiFile } from 'files/file';
 
 export function IsWebServerScope(route: ActivatedRoute): boolean {
     return route.snapshot.parent && route.snapshot.parent.url[0].path.toLocaleLowerCase() === 'webserver';
@@ -16,12 +18,14 @@ export interface Runtime {
     ConnectToIISHost(): Observable<ApiConnection>;
     StartIISAdministration(): Observable<any>;
     HandleConnectError(err: any): any;
+    Download(file: ApiFile): void;
 }
 
 @Injectable()
 export class SiteRuntime implements Runtime {
     constructor(
         private connectService: ConnectService,
+        private fileService: FilesService,
     ){}
     public OnModuleCreate(): void {}
     public OnAppInit(): void {}
@@ -41,5 +45,9 @@ export class SiteRuntime implements Runtime {
 
     public HandleConnectError(err: any): any {
         return err;
+    }
+
+    public Download(file: ApiFile) {
+        this.fileService.downloadInNewWindow(file);
     }
 }

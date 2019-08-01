@@ -3,7 +3,8 @@ import { Injectable, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {
     AppContextService,
-    NavigationService
+    NavigationService,
+    FileTransferService
 } from '@microsoft/windows-admin-center-sdk/angular';
 import { Runtime } from './runtime';
 import { ApiErrorType, UnexpectedServerStatusError } from 'error/api-error';
@@ -15,6 +16,9 @@ import { map, shareReplay, mergeMap, catchError, finalize } from 'rxjs/operators
 import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { SETTINGS } from 'main/settings';
 import { throwError, Observable } from 'rxjs';
+import { ApiFile } from 'files/file';
+import { NotificationService } from 'notification/notification.service';
+import { NotificationType } from 'notification/notification';
 
 class ApiKey {
     public id: string
@@ -48,11 +52,13 @@ export class WACRuntime implements Runtime {
     private _logger: Logger;
 
     constructor(
+        loggerFactory: LoggerFactory,
         private router: Router,
         private appContext: AppContextService,
         private connectService: ConnectService,
-        private loggerFactory: LoggerFactory,
         private navigationService: NavigationService,
+        private fileService: FileTransferService,
+        private notifications: NotificationService,
         @Inject("Powershell") private powershellService: PowershellService,
         @Inject("WACInfo") private wac: WACInfo,
     ){
@@ -118,6 +124,31 @@ export class WACRuntime implements Runtime {
 
     public StartIISAdministration(): Observable<any> {
         return this.powershellService.run(PowerShellScripts.Start_AdminAPI.script, {})
+    }
+
+    public Download(file: ApiFile) {
+        if (!file.physical_path) {
+            throw new Error(`file ${file.name} does not have a physical path`);
+        }
+        var fileName = file.physical_path.split(/[\\\/]/).pop();
+        this.fileService.transferFile(
+            this.appContext.activeConnection.nodeName,
+            file.physical_path,
+            fileName,
+            {}
+        ).subscribe(
+            _ => {
+                // To open the file in a window use this:
+                //
+                // var downloaded = new File([blob] , fileName);
+                // var fileURL = URL.createObjectURL(downloaded);
+                // window.open(fileURL, "_blank");
+                // URL.revokeObjectURL(fileURL);
+            },
+            e => {
+                this.notifications.warn(`Failed to download file ${file.physical_path}, error: ${e.message}`);
+            }
+        )
     }
 
     private GetApiKey(): Observable<ApiKey> {
