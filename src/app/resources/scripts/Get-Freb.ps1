@@ -1,4 +1,9 @@
-﻿#Requires -RunAsAdministrator
+﻿<#
+.Description
+Get-Freb reads a freb log in xml format, apply xslt transformation and return the html as string
+#>
+
+#Requires -RunAsAdministrator
 #Requires -Version 4.0
 
 param(
