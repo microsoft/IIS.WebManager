@@ -5,6 +5,7 @@ import { HttpClient } from 'common/http-client';
 import { ApiFile } from 'files/file';
 import { LoggingService } from './logging.service';
 import { FilesService } from 'files/files.service';
+import { Runtime } from 'runtime/runtime';
 
 @Component({
     selector: 'log-file',
@@ -80,9 +81,12 @@ export class LogFileComponent {
     @Input() model: ApiFile;
     @ViewChild(Selector) selector: Selector;
 
-    constructor(private _svc: LoggingService,
-              @Inject("FilesService") private _fileService: FilesService,
-              private _http: HttpClient) {
+    constructor(
+        private _svc: LoggingService,
+        private _http: HttpClient,
+        @Inject("FilesService") private _fileService: FilesService,
+        @Inject("Runtime") private runtime: Runtime,
+    ) {
     }
 
     private get url() {
@@ -97,7 +101,7 @@ export class LogFileComponent {
         e.preventDefault();
         this.selector.close();
 
-        this._fileService.download(this.model);
+        this.runtime.Download(this.model);
     }
 
     private onClickName(e: Event) {
