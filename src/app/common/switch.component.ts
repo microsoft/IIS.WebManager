@@ -112,7 +112,7 @@ import { FormsModule } from '@angular/forms';
         .switch-container {
             display: inline-block;
             height: 58px;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
         .switch-content, .switch-handle {
 	        transition:             All 0.3s ease;
