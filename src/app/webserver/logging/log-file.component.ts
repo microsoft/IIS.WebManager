@@ -23,9 +23,9 @@ import { Runtime } from 'runtime/runtime';
             <div class="col-md-1 visible-lg visible-md valign text-right support">
                 <span *ngIf="model.size">{{getSize()}}</span>
             </div>
-            <div class="actions action-selector">
-                <div class="selector-wrapper">
-                    <button title="More" (click)="selector.toggle()" (dblclick)="prevent($event)" [class.background-active]="selector && selector.opened">
+            <div class="actions">
+                <div class="action-selector">
+                    <button title="More" (click)="selector.toggle()" (dblclick)="prevent($event)" (keyup.enter)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
                     <selector #selector [right]="true" [isQuickMenu]="true">
@@ -57,21 +57,7 @@ import { Runtime } from 'runtime/runtime';
         .row {
             margin: 0px;
         }
-
-        .selector-wrapper {
-            position: relative;
-        }
-
-        selector {
-            position:absolute;
-            right:0;
-            top: 32px;
-        }
-
-        selector button {
-            min-width: 125px;
-            width: 100%;
-        }`
+`
     ],
     styleUrls: [
         '../../files/file-icons.css'
@@ -114,5 +100,9 @@ export class LogFileComponent {
 
     private getSize() {
         return this.model.size ? Humanizer.number(Math.ceil(this.model.size / 1024)) + ' KB' : null;
+    }
+    
+    prevent(e: Event) {
+        e.preventDefault();
     }
 }
