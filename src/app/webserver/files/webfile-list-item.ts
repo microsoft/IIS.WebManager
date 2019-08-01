@@ -6,6 +6,7 @@ import { FilesService } from 'files/files.service';
 import { WebFilesService } from './webfiles.service';
 import { WebFileType, WebFile } from './webfile';
 import { ActivatedRoute } from '@angular/router';
+import { Runtime } from 'runtime/runtime';
 
 @Component({
     selector: 'file',
@@ -122,6 +123,7 @@ export class WebFileComponent {
         private _service: WebFilesService,
         private _notificationService: NotificationService,
         @Inject("FilesService") private _fileService: FilesService,
+        @Inject("Runtime") private runtime: Runtime,
     ) {
     }
 
@@ -181,7 +183,7 @@ export class WebFileComponent {
         e.preventDefault();
         this.selector.close();
 
-        this._fileService.download(this.model.file_info);
+        this.runtime.Download(this.model.file_info);
     }
 
     prevent(e: Event) {
