@@ -86,10 +86,21 @@ export class RequestTracingComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this.reset();
-        this._subscriptions.push(this._service.requestTracing.subscribe(req => {
-            this.setFeature(req);
-        }));
+        this._subscriptions.push(this._service.requestTracing.subscribe(
+            req => {
+                this.setFeature(req);
+            },
+            e => {
+                this._notificationService.apiError(e);
+            },
+        ));
+        this.activate();
+    }
+
+    public activate() {
+        if (!this.requestTracing) {
+            this.reset();
+        }
     }
 
     public ngOnDestroy() {

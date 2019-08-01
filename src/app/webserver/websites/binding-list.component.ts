@@ -58,8 +58,8 @@ import { first } from 'rxjs/operators'
                         <switch label="HTTPS" class="block" (modelChange)="model.is_https=$event" [model]="model.is_https" (modelChanged)=onHttps()>{{model.is_https ? "On" : "Off"}}</switch>
                     </fieldset>
                     <fieldset class="inline-block cert bottom" *ngIf="model.is_https">
-                        <button (click)="selectCert()" class="background-normal select-cert" [class.background-active]="!!_certSelect.first && _certSelect.first.opened">
-                            <span>{{!model.certificate ? 'Select Certificate' : name()}}</span><i aria-hidden="true" class="fa fa-caret-down"></i>
+                        <button (click)="selectCert()" class="exchange background-normal select-cert" [class.background-active]="!!_certSelect.first && _certSelect.first.opened">
+                            {{!model.certificate ? 'Select Certificate' : name()}}
                         </button>
                     </fieldset>
                     <fieldset class="inline-block bottom" *ngIf="model.is_https && _supportsSni">
@@ -67,6 +67,7 @@ import { first } from 'rxjs/operators'
                     </fieldset>
                     <div class="selector" *ngIf="model.is_https">
                         <selector #certSelect [hidden]="!certSelect || !certSelect.isOpen()" (hide)="onCertSelected()" class="container-fluid">
+                            <button (click)="certSelect.close()" class="close-button" title="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
                             <certificates-list #list (itemSelected)="onCertSelected($event)"></certificates-list>
                         </selector>
                     </div>

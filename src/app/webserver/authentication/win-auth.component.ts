@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { DiffUtil } from '../../utils/diff';
 import { Status } from '../../common/status';
@@ -9,7 +9,7 @@ import { NotificationService } from '../../notification/notification.service';
 @Component({
     selector: 'win-auth',
     template: `
-        <error [error]="service.windowsError"></error>
+        <div *ngIf="!_model && !_error" class="processing-large"><i aria-hidden="true" class="fa fa-spinner fa-spin"></i><span>loading...</span></div>
         <switch label="Enable"
                 *ngIf="service.webserverScope && service.windowsStatus != 'unknown'"
                 class="install" #s
@@ -39,17 +39,26 @@ import { NotificationService } from '../../notification/notification.service';
         </div>
     `
 })
-export class WindowsAuthenticationComponent implements OnDestroy {
+export class WindowsAuthenticationComponent implements OnDestroy, OnInit {
     private _model: WindowsAuthentication;
+    private _error: any;
     private _locked: boolean;
     private _original: WindowsAuthentication;
     private _subscriptions: Array<Subscription> = [];
 
-    constructor(private _service: AuthenticationService,
-                private _notificationService: NotificationService) {
-        this._subscriptions.push(this._service.windowsAuth.subscribe(auth => {
-            this.setFeature(auth);
-        }));
+    constructor(
+        private _service: AuthenticationService,
+        private _notificationService: NotificationService) {
+    }
+
+    public ngOnInit() {
+        this._subscriptions.push(this._service.windowsAuth.subscribe(
+            auth => this.setFeature(auth),
+            e => {
+                this._error = e;
+                this._notificationService.apiError(e);
+            },
+        ));
     }
 
     public ngOnDestroy() {

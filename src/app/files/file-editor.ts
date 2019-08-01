@@ -7,8 +7,9 @@ import { FilesService } from './files.service';
 import { Module as Loading } from '../notification/loading.component';
 import { Module as Navigation } from './navigation.component';
 import { CodeEditorComponent } from "./code-editor.component";
+import { Runtime } from 'runtime/runtime';
 
-
+// TODO: fix compare feature https://github.com/microsoft/IIS.WebManager/issues/452
 @Component({
     selector: 'file-editor',
     template: `
@@ -16,8 +17,8 @@ import { CodeEditorComponent } from "./code-editor.component";
         <toolbar *ngIf="!_unsupported" 
             [save]="!!_dirty"
             [reload]="true"
-            [compare]="!comparer || null"
-            [uncompare]="comparer || null"
+            [compare]="null"
+            [uncompare]="null"
             [download]="true"
             (onsave)="save($event)"
             (onreload)="reload()"
@@ -66,7 +67,10 @@ export class FileEditor {
 
     @ViewChild(CodeEditorComponent) private _codeEditor: CodeEditorComponent;
 
-    constructor(@Inject("FilesService") private _svc: FilesService) {
+    constructor(
+        @Inject("FilesService") private _svc: FilesService,
+        @Inject("Runtime") private runtime: Runtime,
+    ) {
     }
 
     private get text(): Observable<string> {
@@ -104,7 +108,7 @@ export class FileEditor {
     }
 
     private download(e: Event) {
-        this._svc.download(this.file);
+        this.runtime.Download(this.file);
     }
 
     private onchange(e) {
@@ -170,7 +174,7 @@ export class FileEditor {
                 <i aria-hidden="true" class="fa fa-eye-slash"></i>
             </button>
             <button title="Download" (click)="ondownload.next($event)" *ngIf="download !== null" [attr.disabled]="download === false || null">
-                <i aria-hidden="true" class="fa fa-long-arrow-down"></i>
+                <i aria-hidden="true" class="fa fa-download"></i>
             </button>
         </div>
         <div class="clear"></div>

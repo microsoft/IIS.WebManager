@@ -67,8 +67,17 @@ $uri = $uriBuilder.ToString()
 
 try {
     $httpMsg = New-Object System.Net.Http.HttpRequestMessage -ArgumentList $httpMethod, $uri
-    if ($reqObj._body) {
-        $requestContent = New-Object System.Net.Http.StringContent ([string] $reqObj._body)
+    if ($reqObj._body -or $reqObj._bodyUint8Array) {
+        if ($reqObj._bodyUint8Array) {
+          ## Convert retreived JSON object like {0:byte1,1:byte2...} to a Byte array like {byte1, byte2...}.
+          $byteArray = New-Object Byte[] $reqObj._bodyUint8ArrayLength
+          for ($i = 0; $i -lt $reqObj._bodyUint8ArrayLength; $i++) { 
+            $byteArray[$i] = $reqObj._bodyUint8Array.$i;
+          }
+          $requestContent = New-Object System.Net.Http.ByteArrayContent($byteArray, 0, $reqObj._bodyUint8ArrayLength)
+        } else {
+          $requestContent = New-Object System.Net.Http.StringContent ([string] $reqObj._body)
+        }
         $httpMsg.Content = $requestContent
     }
     foreach ($prop in $reqObj.headers | Get-Member -MemberType NoteProperty | Microsoft.PowerShell.Utility\Select-Object -ExpandProperty Name) {
@@ -80,7 +89,7 @@ try {
                     $httpMsg.Content.Headers.ContentType = New-Object System.Net.Http.Headers.MediaTypeHeaderValue $headerValue
                     $headerFixed = $true
                 } elseif ($prop -like "content-range") {
-                    $tokens = $prop.Split("/-")
+                    $tokens = $headerValue.Split("/-")
                     $from = [int]::Parse(($tokens[0].Trim() -split " ")[-1])
                     $to = [int]::Parse($tokens[1].Trim())
                     $length = [int]::Parse($tokens[2].Trim())
@@ -102,7 +111,14 @@ try {
     $responseMsg = $client.SendAsync($httpMsg).GetAwaiter().GetResult()
 
     if ($responseMsg.Content) {
-        $resContent = stringify $responseMsg.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult()
+        $resContent = "";
+        if ($reqObj.headers.waciisflags -eq "GetFileSystemContent") {
+            ## for FileSystem content API call with GET method, we should use ReadAsStringAsync() and send the text data as it is.
+            $resContent = $responseMsg.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+        }
+        else {
+            $resContent = stringify $responseMsg.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
+        }
     }
 
     $result = ConvertTo-Json @{

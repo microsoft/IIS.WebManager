@@ -11,19 +11,20 @@ import { filter } from 'rxjs/operators';
     template: `
         <file-selector #fileSelector class="right" (selected)="upload($event)" [multiple]="true">
         </file-selector>
-        <toolbar
-            [refresh]="options.EnableRefresh || null"
-            [newFile]="(options.EnableNewFile || null) && !atRoot()"
-            [newLocation]="(options.EnableNewFolder || null) && showNewLocation()"
-            [newFolder]="(options.EnableNewFolder || null) && showNewFolder()"
-            [upload]="(options.EnableUpload || null) && !atRoot()"
-            [delete]="(options.EnableDelete || null) && selected && selected.length > 0"
-            (onNewLocation)="createLocation()"
+        <file-system-toolbar
+            [refresh]="showRefresh"
+            [newFile]="showNewFile"
+            [newLocation]="showNewLocation"
+            [newFolder]="showNewFolder"
+            [upload]="showUpload"
+            [delete]="showDelete"
+            (onNewLocation)="createMapping()"
             (onRefresh)="refresh()"
             (onNewFolder)="createDirectory()"
             (onNewFile)="createFile()"
             (onUpload)="fileSelector.open()"
-            (onDelete)="deleteFiles($event, selected)"></toolbar>
+            (onDelete)="deleteFiles($event, selected)"
+            [atRoot]="isRoot"></file-system-toolbar>
         <navigation></navigation>
         <file-list *ngIf="isDir(_current)" [types]="types"></file-list>
     `,
@@ -50,6 +51,79 @@ export class FileExplorer implements OnDestroy {
         ).subscribe(f => this._current = f));
     }
 
+    public get showRefresh() {
+        if (!this._list) {
+            return null;
+        }
+        if (!this.options.EnableRefresh) {
+            return null;
+        } else {
+            return !this._list.creating;
+        }
+    }
+
+    public get showNewFile() {
+        if (!this._list) {
+            return null;
+        }
+        if (!this.options.EnableNewFile) {
+            return null;
+        } else {
+            return !this._list.creating && !this.atRoot();
+        }
+    }
+
+    public get isRoot() {
+        if (!this._list) {
+            return false;
+        }
+        return this.atRoot();
+    }
+
+    public get showNewLocation() {
+        if (!this._list) {
+            return null;
+        }
+        if (!this.options.EnableNewFolder || !this.atRoot()) {
+            return null;
+        } else {
+            return !this._list.creating;
+        }
+    }
+
+    public get showNewFolder() {
+        if (!this._list) {
+            return null;
+        }
+        if (!this.options.EnableNewFolder || this.atRoot()) {
+            return null;
+        } else {
+            return !this._list.creating;
+        }
+    }
+
+    public get showUpload() {
+        if (!this._list) {
+            return null;
+        }
+        if (!this.options.EnableUpload) {
+            return null;
+        } else {
+            return !this._list.creating && !this.atRoot();
+        }
+    }
+
+    public get showDelete() {
+        if (!this._list) {
+            return null;
+        }
+        if (!this.options.EnableDelete) {
+            return null;
+        } else {
+            return !this._list.creating && this.selected && this.selected.length > 0;
+        }
+    }
+
     public get selected(): Array<ApiFile> {
         const empty = [];
         return !this._list ? empty : this._list.selected;
@@ -63,7 +137,7 @@ export class FileExplorer implements OnDestroy {
         this._list.refresh();
     }
 
-    private createLocation() {
+    private createMapping() {
         this._list.createLocation();
     }
 
@@ -89,29 +163,5 @@ export class FileExplorer implements OnDestroy {
 
     private atRoot(): boolean {
         return !!(this._current && !this._current.physical_path);
-    }
-
-    private showNewLocation() {
-
-        //
-        // If the list is being used to create a folder/dir hide the button
-
-        if (!(this._list && !this._list.creating)) {
-            return null;
-        }
-
-        return this.atRoot() || null;
-    }
-
-    private showNewFolder() {
-
-        //
-        // If the list is being used to create a folder/dir disable the button
-
-        if (!(this._list && !this._list.creating)) {
-            return false;
-        }
-
-        return !this.atRoot() || null;
     }
 }

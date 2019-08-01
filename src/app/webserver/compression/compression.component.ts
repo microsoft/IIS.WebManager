@@ -71,10 +71,21 @@ export class CompressionComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this._service.initialize(this.id);
-        this._subscriptions.push(this._service.compression.subscribe(compression => {
-            this.setFeature(compression);
-        }));
+        this._subscriptions.push(this._service.compression.subscribe(
+            compression => {
+                this.setFeature(compression);
+            },
+            e => {
+                this._notificationService.apiError(e);
+            },
+        ));
+        this.activate();
+    }
+
+    public activate() {
+        if (!this.model) {
+            this._service.initialize(this.id);
+        }
     }
 
     public ngOnDestroy() {

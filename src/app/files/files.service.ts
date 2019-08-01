@@ -139,6 +139,10 @@ export class FilesService implements IDisposable {
 
         let opts: RequestOptionsArgs = this._http.getOptions(RequestMethod.Get, url, null);
 
+        //
+        // Set a custom header called waciisflags to indicate that this request is for FileSystem's /api/files/content API call with GET method.
+        opts.headers.set("waciisflags", "GetFileSystemContent");
+
         return this._http.request(url, opts);
     }
 
@@ -179,10 +183,6 @@ export class FilesService implements IDisposable {
             });
     }
 
-    public download(file: ApiFile): void {
-        this.downloadInternal(file);
-    }
-
     public move(sources: Array<ApiFile>, destination: ApiFile, name: string = null): void {
         this.copyMove(false, sources, destination, name);
     }
@@ -205,7 +205,7 @@ export class FilesService implements IDisposable {
         }
     }
 
-    public generateDownloadLink(file: ApiFile, ttl: number = 0): Promise<string> {
+    private generateDownloadLink(file: ApiFile, ttl: number = 0): Promise<string> {
         let dlUrl = "/files/downloads";
 
         let dl = <any>{
@@ -330,7 +330,15 @@ export class FilesService implements IDisposable {
     public handleError(e, path: string=null) {
         if (e.status) {
             if (e.status === 403 && e.title && e.title.toLowerCase() == 'forbidden') {
-                e.message = "Access Denied\n\n" + e.name;
+                // This is called on webserver file system page
+                // TODO: unify 403 handling
+                if (!e.message) {
+                    if (path) {
+                        e.message = `Access denied on path: ${path}. Please go to [Web Server]/[File System] to verify IIS File System Mapping to ensure sufficient access for this operation.`;
+                    } else {
+                        e.message = `Access denied. Please go to [Web Server]/[File System] to verify IIS File System Mapping to ensure sufficient access for this operation.`;
+                    }
+                }
             }
             else if ((e.status === 404 || e.status == 400) && e.name && (e.name.toLowerCase() == 'path' || e.name.toLowerCase() == 'physical_path')) {
                 e.message = "Path not found\n\n" + (path || "");
@@ -553,13 +561,17 @@ export class FilesService implements IDisposable {
         return Promise.all(promises);
     }
 
-    private downloadInternal(file: ApiFile): void {
+    public downloadInNewWindow(file: ApiFile): void {
         this.generateDownloadLink(file)
             .then(location => {
                 if (location) {
                     window.location.href = location;
                 }
-            });
+            }).catch(
+                e => {
+                    this._notificationService.warn(`Failed to download file ${file.physical_path} : ${e.message}`);
+                }
+            );
     }
 
     private uploadItemsInternal(items: Array<any>, to: ApiFile): Promise<any> {
@@ -884,7 +896,7 @@ export class FilesService implements IDisposable {
     }
 
     private updateMetadata(file: ApiFile, metaData: File): Promise<ApiFile> {
-        return this.updateInternal(file, { last_modified: metaData.lastModified })
+        return this.updateInternal(file, { last_modified: new Date(metaData.lastModified).toISOString() })
             .then(fileInfo => {
                 return ApiFile.fromObj(fileInfo);
             });

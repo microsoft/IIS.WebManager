@@ -5,13 +5,14 @@ import { HttpClient } from 'common/http-client';
 import { TraceLog } from './request-tracing';
 import { RequestTracingService } from './request-tracing.service';
 import { FilesService } from 'files/files.service';
+import { Runtime } from 'runtime/runtime';
 
 @Component({
     selector: 'trace-file',
     template: `
         <div *ngIf="model" class="grid-item row" tabindex="-1">
             <div class="col-xs-8 col-sm-3 col-lg-2 valign" [ngClass]="[model.file_info.type, model.file_info.extension]">
-                <a class="color-normal hover-color-active" [href]="url" (click)="onClickName($event)"><i></i>{{model.file_info.name}}</a>
+                {{model.file_info.name}}
             </div>
             <div class="col-sm-4 col-lg-3 hidden-xs valign support">
                 <span *ngIf="model.url">{{model.url}}</span>
@@ -28,15 +29,15 @@ import { FilesService } from 'files/files.service';
             <div class="col-sm-3 col-md-2 hidden-xs valign support">
                 {{displayDate}}
             </div>
-            <div class="actions">
+            <div class="actions action-selector">
                 <div class="selector-wrapper">
-                    <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="selector && selector.opened">
+                    <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
-                    <selector [right]="true">
+                    <selector #selector [right]="true" [isQuickMenu]="true">
                         <ul>
                             <li><button title="Download" class="download" *ngIf="model.file_info.type=='file'" (click)="onDownload($event)">Download</button></li>
-                            <li><button class="delete" *ngIf="model && model.file_info.name.endsWith('.xml')" click="onDelete($event)">Delete</button></li>
+                            <li><button class="delete" *ngIf="model && model.file_info.name.endsWith('.xml')" (click)="onDelete($event)">Delete</button></li>
                         </ul>
                     </selector>
                 </div>
@@ -86,9 +87,12 @@ export class TraceFileComponent {
     @Input() model: TraceLog;
     @ViewChild(Selector) selector: Selector;
 
-    constructor(private _svc: RequestTracingService,
-                @Inject("FilesService") private _fileService: FilesService,
-                private _http: HttpClient) {
+    constructor(
+        private _svc: RequestTracingService,
+        private _http: HttpClient,
+        @Inject("FilesService") private _fileService: FilesService,
+        @Inject("Runtime") private runtime: Runtime,
+    ) {
     }
 
     private get url() {
@@ -102,25 +106,16 @@ export class TraceFileComponent {
     private onDownload(e: Event) {
         e.preventDefault();
         this.selector.close();
+        this.runtime.Download(this.model && this.model.file_info);
+    }
 
-        this._fileService.download(this.model && this.model.file_info);
+    onClickName(e: Event) {
+        e.preventDefault();
+        this.runtime.Download(this.model && this.model.file_info);
     }
 
     private openSelector(e: Event) {
         this.selector.toggle();
-    }
-
-    private onClickName(e: Event) {
-        e.preventDefault();
-        let newWindow = window.open();
-
-        this._fileService.generateDownloadLink(this.model.file_info, 5 * 60 * 1000)
-            .then(location => {
-                newWindow.location.href = location + "?inline";
-            })
-            .catch(_ => {
-                newWindow.close();
-            });
     }
 
     private onDelete() {

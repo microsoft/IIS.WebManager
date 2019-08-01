@@ -12,10 +12,10 @@ import { Status } from 'common/status';
             <label>Name</label>
             <span class="name">{{model.name}}</span>
             <span class="status" *ngIf="!started">({{model.status}})</span>
-            <div class="actions">
+            <div class="actions action-selector">
                 <div class="selector-wrapper">
                     <button title="Actions" (click)="openSelector()" [class.background-active]="(_selector && _selector.opened) || false"><i aria-hidden="true" class="fa fa-caret-down"></i></button>
-                    <selector [right]="true">
+                    <selector [right]="true" [isQuickMenu]="true">
                         <ul>
                             <li><a class="bttn edit" title="Edit" [routerLink]="['/webserver/app-pools', model.id]">Edit</a></li>
                             <li><button class="refresh" title="Recycle" [attr.disabled]="!started || null" (click)="onRecycle()">Recycle</button></li>

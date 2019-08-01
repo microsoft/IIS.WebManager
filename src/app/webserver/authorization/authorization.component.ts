@@ -32,9 +32,6 @@ import { Authorization } from './authorization'
         </div>
     `,
     styles: [`
-.install {
-    margin-bottom: 40px;
-}
     `]
 })
 export class AuthorizationComponent implements OnInit, OnDestroy {
@@ -46,11 +43,27 @@ export class AuthorizationComponent implements OnInit, OnDestroy {
 
     constructor(private _service: AuthorizationService,
                 private _notificationService: NotificationService) {
-        this._subscriptions.push(this._service.authorization.subscribe(settings => this.setFeature(settings)));
     }
 
     public ngOnInit() {
-        this._service.initialize(this.id);
+        this._subscriptions.push(
+            this._service.authorization.subscribe(
+                settings => {
+                    if (settings) {
+                        this.setFeature(settings);
+                    }
+                },
+                e => {
+                    this._notificationService.apiError(e);
+                },
+        ));
+        this.activate();
+    }
+
+    public activate() {
+        if (!this._authorization) {
+            this._service.initialize(this.id);
+        }
     }
 
     public ngOnDestroy(): void {

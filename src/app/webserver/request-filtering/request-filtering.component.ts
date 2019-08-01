@@ -94,8 +94,21 @@ export class RequestFilteringComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this._subscriptions.push(this._service.requestFiltering.subscribe(feature => this.setFeature(feature)));
-        this._service.initialize(this.id);
+        this._subscriptions.push(this._service.requestFiltering.subscribe(
+            feature => {
+                this.setFeature(feature);
+            },
+            e => {
+                this._notificationService.apiError(e);
+            },
+        ));
+        this.activate();
+    }
+
+    public activate() {
+        if (!this.settings) {
+            this._service.initialize(this.id);
+        }
     }
 
     public ngOnDestroy() {

@@ -83,9 +83,9 @@ export class FileSelectorComponent implements OnInit {
         return this._selector.isOpen();
     }
 
-    private canAccept(): boolean {
+    canAccept(): boolean {
         return this._fileList && 
-                        (this._fileList.selected.length == 1 ||
-                            this.multi && this._fileList.selected.length > 0)
+            (this._fileList.selected.length == 1
+                || this.multi && this._fileList.selected.length > 0);
     }
 }

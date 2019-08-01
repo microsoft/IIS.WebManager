@@ -4,7 +4,7 @@ import { OrderBy, SortPipe } from 'common/sort.pipe';
 import { Range } from 'common/virtual-list.component';
 import { WebFilesService } from './webfiles.service';
 import { WebFileType, WebFile } from './webfile';
-import { buffer, filter, take } from 'rxjs/operators'
+import { buffer, filter, take, skip } from 'rxjs/operators'
 import { interval } from 'rxjs';
 
 @Component({
@@ -54,6 +54,8 @@ import { interval } from 'rxjs';
             <virtual-list class="container-fluid grid-list"
                         *ngIf="_items"
                         [count]="_items.length"
+                        [loaded]="loaded"
+                        emptyText="No files in the directory"
                         (rangeChange)="onRangeChange($event)">
                 <li class="hover-editing" tabindex="-1" 
                     *ngFor="let child of _view"
@@ -112,6 +114,7 @@ export class WebFileListComponent implements OnInit, OnDestroy {
     private _items: Array<WebFile> = [];
     private _view: Array<WebFile> = [];
     private _active: WebFile;
+    private loaded = false;
 
     @ViewChild('dragInfo') _dragInfo: ElementRef;
 
@@ -132,6 +135,7 @@ export class WebFileListComponent implements OnInit, OnDestroy {
         // 
         // Current change
         this._subscriptions.push(this._svc.current.subscribe(f => {
+            this.loaded = false;
             this._current = f;
             this._filter = "";
 
@@ -141,7 +145,12 @@ export class WebFileListComponent implements OnInit, OnDestroy {
 
         // 
         // Files change
-        this._subscriptions.push(this._svc.files.subscribe(files => {
+        this._subscriptions.push(this._svc.files.pipe(
+            skip(1),    // files are implemented as BehaviorSubject which is not ideal. Skipping the initial value to workaround the dummy first value
+        ).subscribe(files => {
+            if (files) {
+                this.loaded = true;
+            }
             if (this._items.length == 0) {
                 this._items = files;
             }
@@ -164,6 +173,7 @@ export class WebFileListComponent implements OnInit, OnDestroy {
     }
 
     public refresh() {
+        this.loaded = false;
         this._svc.load(this._current.path);
     }
 
@@ -245,9 +255,7 @@ export class WebFileListComponent implements OnInit, OnDestroy {
         if (e && e.defaultPrevented) {
             return;
         }
-
         this.clearSelection();
-
         this._svc.load(file.path);
     }
 

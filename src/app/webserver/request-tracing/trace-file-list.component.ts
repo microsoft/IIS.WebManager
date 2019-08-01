@@ -4,15 +4,16 @@ import { OrderBy, SortPipe } from '../../common/sort.pipe';
 import { Range } from '../../common/virtual-list.component';
 import { TraceLog } from './request-tracing';
 import { RequestTracingService } from './request-tracing.service';
+import { skip } from 'rxjs/operators';
 
 @Component({
     selector: 'trace-files',
     template: `
-        <toolbar
+        <file-system-toolbar
             [refresh]="true"
             [delete]="_selected.length > 0"
             (onRefresh)="onRefresh()"
-            (onDelete)="onDelete()"></toolbar>
+            (onDelete)="onDelete()"></file-system-toolbar>
         <div tabindex="-1" class="wrapper"
                         [selectable]="_traces"
                         [selected]="_selected"
@@ -46,6 +47,8 @@ import { RequestTracingService } from './request-tracing.service';
             <virtual-list class="container-fluid grid-list"
                         *ngIf="!!_traces"
                         [count]="_traces.length"
+                        [loaded]="loaded"
+                        emptyText="No files found"
                         (rangeChange)="onRangeChange($event)">
                 <li class="hover-editing" 
                     tabindex="-1" 
@@ -56,31 +59,31 @@ import { RequestTracingService } from './request-tracing.service';
         </div>
     `,
     styles: [`
-        .container-fluid,
-        .row {
-            margin: 0;
-            padding: 0;
-        }
+.container-fluid,
+.row {
+    margin: 0;
+    padding: 0;
+}
 
-        navigation {
-            margin-bottom: 10px;
-        }
+navigation {
+    margin-bottom: 10px;
+}
 
-        .wrapper {
-            min-height: 50vh;
-        }
+.wrapper {
+    min-height: 50vh;
+}
 
-        .out {
-            position: absolute; 
-            left: -1000px;
-        }
+.out {
+    position: absolute;
+    left: -1000px;
+}
 
-        .drag-info {
-            position: absolute;
-            transform: translateX(-500px);
-            padding: 0 5px;
-            font-size: 120%;
-        }
+.drag-info {
+    position: absolute;
+    transform: translateX(-500px);
+    padding: 0 5px;
+    font-size: 120%;
+}
     `]
 })
 export class TraceFileListComponent implements OnInit, OnDestroy {
@@ -89,12 +92,18 @@ export class TraceFileListComponent implements OnInit, OnDestroy {
     private _sortPipe: SortPipe = new SortPipe();
     private _subscriptions: Array<Subscription> = [];
     private _range: Range = new Range(0, 0);
-    private _traces: Array<TraceLog>;
+    private _traces: Array<TraceLog> = [];
     private _view: Array<TraceLog> = [];
     private _selected: Array<TraceLog> = [];
+    private loaded = false;
 
     constructor(private _service: RequestTracingService) {
-        this._subscriptions.push(this._service.traces.subscribe(t => {
+        this._subscriptions.push(this._service.traces.pipe(
+            skip(1),    // files are implemented as BehaviorSubject which is not ideal. Skipping the initial value to workaround the dummy first value
+        ).subscribe(t => {
+            if (t) {
+                this.loaded = true;
+            }
             this._traces = t;
             this.doSort();
         }));
@@ -116,6 +125,7 @@ export class TraceFileListComponent implements OnInit, OnDestroy {
 
     private onRefresh() {
         this._traces = [];
+        this.loaded = false;
         this._service.loadTraces();
     }
 

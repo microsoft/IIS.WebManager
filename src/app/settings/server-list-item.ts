@@ -19,11 +19,11 @@ import { NotificationService } from '../notification/notification.service';
                 </div>
             </div>
             <div *ngIf="!_editing" class="actions">
-                <div class="selector-wrapper">
+                <div class="selector-wrapper action-selector">
                     <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="(_selector && _selector.opened) || false">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
-                    <selector [right]="true">
+                    <selector [right]="true" [isQuickMenu]="true">
                         <ul>
                             <li><button class="go" title="Connect" (click)="onConnect()">Connect</button></li>
                             <li><button class="edit" title="Edit" (click)="onEdit()">Edit</button></li>

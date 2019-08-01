@@ -41,8 +41,21 @@ export class StaticContentComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this._subscriptions.push(this._service.staticContent.subscribe(feature => this.setFeature(feature)));
-        this._service.initialize(this.id);
+        this._subscriptions.push(this._service.staticContent.subscribe(
+            feature => {
+                this.setFeature(feature);
+            },
+            e => {
+                this._notificationService.apiError(e);
+            },
+        ));
+        this.activate();
+    }
+
+    public activate() {
+        if (!this.staticContent) {
+            this._service.initialize(this.id);
+        }
     }
 
     public ngOnDestroy() {

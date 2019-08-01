@@ -7,7 +7,7 @@ import { ApiFile, ApiFileType } from './file';
 import { Location } from './location';
 import { FilesService } from './files.service';
 import { FileNavService } from './file-nav.service';
-import { buffer, map, filter, take } from 'rxjs/operators'
+import { buffer, map, filter, take, skip } from 'rxjs/operators'
 
 @Component({
     selector: 'file-list',
@@ -51,7 +51,11 @@ import { buffer, map, filter, take } from 'rxjs/operators'
                 </div>
             </div>
             <selector #editSelector [opened]="true" *ngIf="_newLocation" class="container-fluid" (hide)="_newLocation=null">
-                <edit-location [model]="_newLocation" (cancel)="_newLocation=null" (save)="onSaveNewLocation()"></edit-location>
+                <edit-location
+                    modalTitle="New File System Mapping"
+                    [model]="_newLocation"
+                    (cancel)="_newLocation=null"
+                    (save)="onSaveNewLocation()"></edit-location>
             </selector>
             <div class="grid-list container-fluid" *ngIf="_newDir">
                 <new-file [model]="_newDir" (cancel)="_newDir=null" (save)="onSaveNewDir()"></new-file>
@@ -59,6 +63,8 @@ import { buffer, map, filter, take } from 'rxjs/operators'
             <virtual-list class="container-fluid grid-list"
                         *ngIf="_items"
                         [count]="_items.length"
+                        [loaded]="loaded"
+                        emptyText="No files in the directory"
                         (rangeChange)="onRangeChange($event)">
                 <li class="hover-editing" tabindex="-1" 
                     *ngFor="let child of _view"
@@ -92,6 +98,10 @@ import { buffer, map, filter, take } from 'rxjs/operators'
             min-height: 40vh;
         }
 
+        .wrapper:focus {
+            outline: None;
+        }
+
         .out {
             position: absolute; 
             left: -1000px;
@@ -120,6 +130,7 @@ export class FileListComponent implements OnInit, OnDestroy {
     private _selected: Array<ApiFile> = [];
     private _items: Array<ApiFile> = [];
     private _view: Array<ApiFile> = [];
+    private loaded = false;
 
     private _active: ApiFile;
 
@@ -139,13 +150,17 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        let fileStream = this._navSvc.files.pipe(map(items => {
-            return this.types.length == 0 ? items : items.filter(f => this.types.findIndex(t => t === f.type) != -1);
-        }));
+        let fileStream = this._navSvc.files.pipe(
+            skip(1),    // files are implemented as BehaviorSubject which is not ideal. Skipping the initial value to workaround the dummy first value
+            map(items => {
+                return this.types.length == 0 ? items : items.filter(f => this.types.findIndex(t => t === f.type) != -1);
+            }),
+        );
 
         // 
         // Current dir change
         this._subscriptions.push(this._navSvc.current.subscribe(f => {
+            this.loaded = false;
             this._current = f;
             this._filter = "";
 
@@ -156,6 +171,9 @@ export class FileListComponent implements OnInit, OnDestroy {
         // 
         // Files change
         this._subscriptions.push(fileStream.subscribe(files => {
+            if (files) {
+                this.loaded = true;
+            }
             if (this._items.length == 0) {
                 this._items = files;
             }
@@ -176,13 +194,14 @@ export class FileListComponent implements OnInit, OnDestroy {
     }
 
     public refresh() {
+        this.loaded = false;
         this._navSvc.load(this._current.physical_path);
     }
 
     public createLocation() {
         this.clearSelection();
 
-        let alias = "sites"
+        let alias = ""
         let index = 0;
 
         //
@@ -312,9 +331,7 @@ export class FileListComponent implements OnInit, OnDestroy {
         if (e && e.defaultPrevented) {
             return;
         }
-
         this.clearSelection();
-
         this._navSvc.load(file.physical_path);
     }
 

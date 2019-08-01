@@ -41,7 +41,7 @@ enum WebSiteFields {
     (keydown.enter)="onEnter($event)">
     <div class='col-xs-7 col-sm-4 col-md-3 col-lg-3'>
         <div class='name'>
-            <div tabindex="0" class="color-normal hover-color-active">{{model.name}}</div>
+            <a tabindex="0" class="focusable color-normal hover-color-active" (click)="onEnter($event)">{{model.name}}</a>
             <small class='physical-path' *ngIf="field(${WebSiteFields.path})">{{model.physical_path}}</small>
         </div>
     </div>
@@ -88,7 +88,7 @@ a {
 .row {
     margin: 0;
 }
-    `]
+`]
 })
 export class WebSiteItem extends ListOperationContext<WebSiteOp> implements OnInit {
     @Input() model: WebSite;
@@ -233,6 +233,8 @@ const perspectives = [
     <virtual-list class="grid-list"
                 *ngIf="model"
                 [count]="model.length"
+                [loaded]="this.model"
+                emptyText="No website found"
                 (rangeChange)="onRangeChange($event)">
         <li class="hover-editing" tabindex="-1" *ngFor="let s of _view">
             <website-item [model]="s" [fields]="fields" (onSelected)="onItemSelected($event)"></website-item>

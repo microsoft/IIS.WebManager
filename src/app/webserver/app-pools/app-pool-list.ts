@@ -37,7 +37,7 @@ const actionRestrictions: Map<AppPoolOp, Status> = new Map<AppPoolOp, Status>([
     (dblclick)="onEnter($event)"
     (keydown.enter)="onEnter($event)">
     <div class='col-xs-7 col-sm-4 col-md-3 v-align big'>
-        <div tabindex="0" class="color-normal hover-color-active">{{model.name}}</div>
+        <a tabindex="0" class="focusable color-normal hover-color-active" (click)="onEnter($event)">{{model.name}}</a>
     </div>
     <div class='col-xs-3 col-md-2 v-align'>
         <span class='status' [ngClass]="model.status">{{model.status}}</span>
@@ -208,12 +208,15 @@ export class AppPoolItem extends ListOperationContext<AppPoolOp> {
         <label class="col-lg-2 visible-lg"
             role="columnheader">Identity</label>
     </div>
-    <ul class="grid-list">
+    <virtual-list class="grid-list"
+        [count]="model.length"
+        [loaded]="this.model"
+        emptyText="No application pool found">
         <li *ngFor="let p of model | orderby: _orderBy.Field: _orderBy.Asc"
             class="hover-editing">
             <app-pool-item [model]="p" (onSelected)="onItemSelected($event)"></app-pool-item>
         </li>
-    </ul>
+    </virtual-list>
 </div>
     `,
     styles: [`

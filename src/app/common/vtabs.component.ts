@@ -25,6 +25,7 @@ import { LoggerFactory, Logger, LogLevel } from 'diagnostics/logger';
 import { TitlesModule } from 'header/titles.module';
 import { Heading } from 'header/feature-header.component';
 import { TitlesService } from 'header/titles.service';
+import { NotificationService } from 'notification/notification.service';
 
 @Component({
     selector: 'vtabs',
@@ -42,7 +43,6 @@ import { TitlesService } from 'header/titles.service';
                 </li>
                 <li tabindex="0"
                     #tabLabels
-                    class="hover-edit"
                     *ngFor="let tab of getTabs(category)"
                     [ngClass]="{active: tab.active}"
                     (keyup.space)="selectItem(tab)"
@@ -124,6 +124,7 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
         private _location: Location,
         private _router: Router,
         private options: OptionsService,
+        private _notifications: NotificationService,
         factory: LoggerFactory,
     ) {
         this.tabs = [];
@@ -241,6 +242,9 @@ export class VTabsComponent implements OnDestroy, AfterViewInit {
     }
 
     private onSectionChange(section: string) {
+        // clear warnings on section change, for next step we need to move this line to SectionHelper so the warnings
+        // can be cleared on both vtabs and tabs. However, that require changes on every sub-tabs
+        this._notifications.clearWarnings();
         let index = this.tabs.findIndex(t => t.fullName === section);
 
         if (index == -1) {
@@ -274,6 +278,7 @@ span:focus {
 }
 
 .vtab-content {
+    padding-right: 20px;
     padding-left: 20px;
 }
 

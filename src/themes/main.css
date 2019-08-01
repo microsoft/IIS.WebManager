@@ -146,6 +146,10 @@ input:not(:required).ng-invalid {
     width: 80%;
 }
 
+.left-with-button + button {
+    margin-top: 0;
+}
+
 .bttn {
     display: inline-block;
     margin-bottom: 0;
@@ -409,7 +413,8 @@ tooltip {
 
 .grid-list-header {
     border-bottom-style: solid;
-    border-bottom-width: 3px;
+    border-bottom-width: 1px;
+    border-bottom-color: #e6e6e6;
 
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -419,7 +424,7 @@ tooltip {
 }
 
 .grid-list-header label {
-    padding-bottom: 22px;
+    padding-bottom: 5px;
     margin-bottom: 0;
     font-weight: 600;
     cursor: pointer;
@@ -527,6 +532,7 @@ tooltip {
 .action-selector selector button {
     min-width: 125px;
     width: 100%;
+    margin: 0px;
 }
 
 /* Disabled */
@@ -715,6 +721,22 @@ button.refresh:before {
     content: "\f021";
 }
 
+button.new-root:before {
+    content: "\f0a0";
+}
+
+button.new-file:before {
+    content: "\f15b";
+}
+
+button.new-folder:before {
+    content: "\f07c";
+}
+
+button.upload:before {
+    content: "\f093";
+}
+
 button.comment:before {
     content: "\f0e5";
 }
@@ -753,6 +775,10 @@ button.go:before {
 
 button.add:before {
     content: "\f067";
+}
+
+button.exchange:before {
+    content: "\f0ec";
 }
 
 button.browse:before {
@@ -862,12 +888,14 @@ button.less:before {
     opacity: .7;
 }
 
-.sidebar .items li.active:not(.separator) span,
-.sidebar .items li.active:not(.separator) a,
-.sidebar .items li:hover:not(.separator) span,
-.sidebar .items li:hover:not(.separator) a {
-    border-bottom-style: solid;
-    border-bottom-width: 2px;
+.sidebar .items li.active:not(.separator)
+{
+    background-color: #cee1f2;
+}
+
+.sidebar .items li:hover:not(.separator)
+{
+    background-color: #e7f0f8;
 }
 
 .sidebar .items li a {
@@ -949,7 +977,8 @@ button.less:before {
 
 .list-action-button {
     display: inline-flex;
-	font-weight: 500;
+    font-weight: 500;
+    border: 0px;
 }
 
 .row.grid-item.selected-for-edit {
@@ -996,4 +1025,19 @@ button.less:before {
 .model-header {
     line-height: 2em;
     vertical-align: middle;
+}
+
+.close-button {
+    float: right;
+    border: none;
+}
+
+.processing-large {
+    display: inline-block;
+    font-size: 25px;
+    padding: 10px;
+}
+
+.processing-large i {
+    padding: 5px;
 }

@@ -5,6 +5,7 @@ import { HttpClient } from 'common/http-client';
 import { ApiFile } from 'files/file';
 import { LoggingService } from './logging.service';
 import { FilesService } from 'files/files.service';
+import { Runtime } from 'runtime/runtime';
 
 @Component({
     selector: 'log-file',
@@ -22,12 +23,12 @@ import { FilesService } from 'files/files.service';
             <div class="col-md-1 visible-lg visible-md valign text-right support">
                 <span *ngIf="model.size">{{getSize()}}</span>
             </div>
-            <div class="actions">
+            <div class="actions action-selector">
                 <div class="selector-wrapper">
                     <button title="More" (click)="selector.toggle()" (dblclick)="prevent($event)" [class.background-active]="selector && selector.opened">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
-                    <selector #selector [right]="true">
+                    <selector #selector [right]="true" [isQuickMenu]="true">
                         <ul>
                             <li><button title="Download" class="download" *ngIf="model.type=='file'" (click)="onDownload($event)">Download</button></li>
                             <li><button title="Delete" class="delete" (click)="onDelete($event)">Delete</button></li>
@@ -80,9 +81,12 @@ export class LogFileComponent {
     @Input() model: ApiFile;
     @ViewChild(Selector) selector: Selector;
 
-    constructor(private _svc: LoggingService,
-              @Inject("FilesService") private _fileService: FilesService,
-              private _http: HttpClient) {
+    constructor(
+        private _svc: LoggingService,
+        private _http: HttpClient,
+        @Inject("FilesService") private _fileService: FilesService,
+        @Inject("Runtime") private runtime: Runtime,
+    ) {
     }
 
     private get url() {
@@ -97,7 +101,7 @@ export class LogFileComponent {
         e.preventDefault();
         this.selector.close();
 
-        this._fileService.download(this.model);
+        this.runtime.Download(this.model);
     }
 
     private onClickName(e: Event) {

@@ -10,19 +10,21 @@ import { Selector } from '../common/selector';
         <div tabindex="0" title="Options" class="s-container nav-button hover-primary2" [class.background-primary2]="settingsMenu && settingsMenu.isOpen()" (keyup.space)="onClickSettings()" (keyup.enter)="onClickSettings()" (click)="onClickSettings()">
             <i aria-hidden="true" class="fa fa-cog"></i>
         </div>
-        <selector #settingsMenu class="color-normal" [right]="true">
-            <ul>
-                <li class="hover-editing">
-                    <a class="color-normal server" [routerLink]="['/settings/servers']" (click)="_settingsMenu.close()">Add or Remove Servers</a>
-                </li>
-                <li class="hover-editing">
-                    <a class="color-normal download" [routerLink]="['/get']" (click)="_settingsMenu.close()">Download Microsoft IIS Administration API</a>
-                </li>
-                <li class="hover-editing">
-                    <a class="color-normal dev" href="https://github.com/microsoft/iis.administration" target="_blank">Developers</a>
-                </li>
-            </ul>
-        </selector>
+        <div class="action-selector">
+            <selector #settingsMenu class="color-normal" [right]="true"  [isQuickMenu]="true">
+                <ul>
+                    <li class="hover-editing">
+                        <a class="color-normal server" [routerLink]="['/settings/servers']" (click)="_settingsMenu.close()">Add or Remove Servers</a>
+                    </li>
+                    <li class="hover-editing">
+                        <a class="color-normal download" [routerLink]="['/get']" (click)="_settingsMenu.close()">Download Microsoft IIS Administration API</a>
+                    </li>
+                    <li class="hover-editing">
+                        <a class="color-normal dev" href="https://github.com/microsoft/iis.administration" target="_blank">Developers</a>
+                    </li>
+                </ul>
+            </selector>
+        </div>
     `,
     styles: [`
         .s-container {

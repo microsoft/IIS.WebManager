@@ -6,6 +6,7 @@ import { FilesService } from 'files/files.service';
 import { WebFilesService } from './webfiles.service';
 import { WebFileType, WebFile } from './webfile';
 import { ActivatedRoute } from '@angular/router';
+import { Runtime } from 'runtime/runtime';
 
 @Component({
     selector: 'file',
@@ -13,7 +14,10 @@ import { ActivatedRoute } from '@angular/router';
         <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing" (keyup.f2)="onRename($event)" tabindex="-1">
             <div class="col-xs-9 col-sm-5 col-lg-4 fi" [ngClass]="[model.type, !model.file_info ? '' : model.file_info.extension]">
                 <div *ngIf="!_editing">
-                    <a tabIndex="0" class="color-normal hover-color-active" nofocus><i></i>{{model.name}}</a>
+                    <a tabIndex="0"
+                        class="color-normal hover-color-active"
+                        (click)="browse($event)"
+                        nofocus><i></i>{{model.name}}</a>
                 </div>
                 <div *ngIf="_editing">
                     <i></i>
@@ -37,12 +41,12 @@ import { ActivatedRoute } from '@angular/router';
             <div class="col-md-1 visible-lg visible-md valign text-right support">
                 <span *ngIf="model.file_info && model.file_info.size">{{getSize()}}</span>
             </div>
-            <div class="actions">
+            <div class="actions action-selector">
                 <div class="selector-wrapper">
                     <button title="More" *ngIf="!model.isVirtual" (click)="openSelector($event)" (keyup.enter)="prevent($event)" (dblclick)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
-                    <selector [right]="true">
+                    <selector [right]="true" [isQuickMenu]="true">
                         <ul>
                             <li><button class="edit" title="Rename" *ngIf="model.type!='vdir' && model.file_info" (click)="onRename($event)">Rename</button></li>
                             <li><button class="download" title="Download" *ngIf="model.type=='file' && model.file_info" (click)="onDownload($event)">Download</button></li>
@@ -119,6 +123,7 @@ export class WebFileComponent {
         private _service: WebFilesService,
         private _notificationService: NotificationService,
         @Inject("FilesService") private _fileService: FilesService,
+        @Inject("Runtime") private runtime: Runtime,
     ) {
     }
 
@@ -178,7 +183,7 @@ export class WebFileComponent {
         e.preventDefault();
         this.selector.close();
 
-        this._fileService.download(this.model.file_info);
+        this.runtime.Download(this.model.file_info);
     }
 
     prevent(e: Event) {
@@ -196,5 +201,13 @@ export class WebFileComponent {
 
     getSize() {
         return this.model.file_info.size ? Humanizer.number(Math.ceil(this.model.file_info.size / 1024)) + ' KB': null;
-    }   
+    }
+
+    browse(e: Event) {
+        if (e && e.defaultPrevented) {
+            return;
+        }
+
+        this._service.load(this.model.path);
+    }
 }

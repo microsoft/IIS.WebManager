@@ -36,7 +36,7 @@ enum WebAppFields {
     <div>
         <div class='col-xs-8 col-sm-4'>
             <div class='name'>
-                <div tabindex="0" class="color-normal hover-color-active">{{model.path}}</div>
+                <a tabindex="0" class="focusable color-normal hover-color-active" (click)="onEnter($event)">{{model.path}}</a>
                 <div>
                     <small class='physical-path' [class.hidden-xs]="field(${WebAppFields.site})">{{model.physical_path}}</small>
                     <div *ngIf="field(${WebAppFields.site})">
@@ -206,11 +206,14 @@ export class WebAppItem extends ListOperationContext<WebAppOp> implements OnInit
             (click)="_orderBy.sort('website.name')" (keyup.enter)="_orderBy.sort('website.name')" (keyup.space)="_orderBy.sort('website.name')"
             tabindex="0" [attr.aria-sort]="_orderBy.ariaSort('website.name')" role="columnheader">Web Site</label>
     </div>
-    <ul class="grid-list">
+    <virtual-list class="grid-list"
+            [count]="model.length"
+            [loaded]="this.model"
+            emptyText="No application found">
         <li *ngFor="let app of model | orderby: _orderBy.Field: _orderBy.Asc" class="border-color hover-editing">
             <webapp-item [model]="app" [fields]="fields" (onSelected)="onItemSelected($event)"></webapp-item>
         </li>
-    </ul>
+    </virtual-list>
 </div>
     `,
     styles: [`

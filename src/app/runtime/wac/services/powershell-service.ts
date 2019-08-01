@@ -48,6 +48,13 @@ export class PowershellService {
   }
 
   public invokeHttp(req: Request): Observable<Response> {
+    req["_bodyUint8Array"] = null;
+    if (req["_body"] instanceof ArrayBuffer) {
+      // If _body is ArrayBuffer type value, we should use req._body_Unit8Array instead of req._body because only Uint8Array supports JSON.stringify.
+      req["_bodyUint8Array"] = new Uint8Array(req["_body"]);
+      req["_bodyUint8ArrayLength"] = req["_bodyUint8Array"]["length"];
+      req["_body"] = null;
+    }
     let requestEncoded = btoa(JSON.stringify(req));
     return this.invoke<ResponseOptions>(
       PowerShellScripts.Invoke_LocalHttp.script,
@@ -56,9 +63,12 @@ export class PowershellService {
         switch (k) {
           case 'body':
             try {
-              return atob(v)
+              if (req.headers.get('waciisflags') === 'GetFileSystemContent') {
+                return v;
+              }
+              return atob(v);
             } catch {
-              return v
+              return v;
             }
 
           case 'headers':
@@ -66,7 +76,7 @@ export class PowershellService {
             return new Headers(v);
 
           default:
-            return v
+            return v;
         }
       }).pipe(map(res => {
         let response = new Response(res);

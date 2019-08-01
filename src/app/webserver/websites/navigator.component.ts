@@ -20,13 +20,13 @@ import {WebSitesService} from './websites.service';
                     <span>{{getFriendlyUrl(0)}}</span>
                 </div>
             </div>
-            <div class="selector-wrapper" *ngIf="model.length > 0">
+            <div class="selector-wrapper action-selector" *ngIf="model.length > 0">
                 <button class="no-border" [class.visible-xs]="model.length == 1 && !small" [class.background-active]="navigator.opened" (click)="openNavigator($event)">
                     <span [class.visible-xs]="!small" class="browse">Browse </span>
                     <span class="hidden-xs" *ngIf="!small"></span>
                 </button>
                 <div class="selector" [class.right-align]="right" [class.left-align]="left">
-                    <selector #navigator>
+                    <selector #navigator [isQuickMenu]="true">
                         <ul class="grid-list">
                             <li *ngFor="let b of model; let i = index" class="grid-item hover-active">
                                 <div tabindex="0"

@@ -16,7 +16,7 @@ import { Module as VirtualList } from '../../common/virtual-list.component';
 import { Module as Selector } from '../../common/selector';
 import { Module as ErrorComponent } from '../../error/error.component';
 import { Module as Selectable } from '../../common/selectable';
-import { Module as Toolbar } from '../../files/toolbar.component';
+import { Module as Toolbar } from '../../files/file-system-toolbar.component';
 import { Module as Warning } from '../../notification/warning.component';
 import { Module as Tabs } from '../../common/tabs.component';
 import { Module as AutoFocus } from '../../common/focus';

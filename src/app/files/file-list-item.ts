@@ -4,7 +4,7 @@ import { Humanizer } from 'common/primitives';
 import { FilesService } from 'files/files.service';
 import { FileNavService } from 'files/file-nav.service';
 import { ApiFile } from './file';
-import { ActivatedRoute } from '@angular/router';
+import { Runtime } from 'runtime/runtime';
 
 @Component({
     selector: 'file',
@@ -12,7 +12,11 @@ import { ActivatedRoute } from '@angular/router';
         <div *ngIf="model" class="grid-item row" [class.background-editing]="_editing && !_location" [class.background-selected]="_editing && _location" (keyup.f2)="onRename($event)" tabindex="-1">
             <div class="col-xs-9 col-sm-5 col-lg-4 fi" [ngClass]="[model.type, model.extension, (isRoot ? 'location' : '')]">
                 <div *ngIf="!_editing || _location">
-                    <a tabIndex="0" class="color-normal hover-color-active" nofocus><i></i>{{model.alias || model.name}}</a>
+                    <a tabIndex="0"
+                        class="color-normal hover-color-active"
+                        (click)="browse($event)"
+                        nofocus><i></i>{{model.alias || model.name}}</a>
+                    <small *ngIf="isRoot" class='physical-path'>{{model.physical_path}}</small>
                 </div>
                 <div *ngIf="_editing && !_location">
                     <i></i>
@@ -41,7 +45,7 @@ import { ActivatedRoute } from '@angular/router';
                     <button title="More" (click)="selector.toggle()" (dblclick)="prevent($event)" (keyup.enter)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
-                    <selector #selector [right]="true">
+                    <selector #selector [right]="true" [isQuickMenu]="true">
                         <ul>
                             <li><button *ngIf="!isRoot" #menuButton class="edit" title="Rename" (click)="onRename($event)">Rename</button></li>
                             <li><button *ngIf="isRoot" #menuButton class="edit" title="Edit" (click)="onEdit($event)">Edit</button></li>
@@ -54,7 +58,11 @@ import { ActivatedRoute } from '@angular/router';
             </div>
         </div>
         <selector #editSelector [opened]="true" *ngIf="_location && _editing" class="container-fluid" (hide)="cancel()">
-            <edit-location *ngIf="_location && _editing" [model]="_location" (cancel)="cancel()" (dblclick)="prevent($event)" (keyup.delete)="prevent($event)"></edit-location>
+            <edit-location *ngIf="_location && _editing"
+                modalTitle="Edit File System Mapping"
+                [model]="_location" (cancel)="cancel()"
+                (dblclick)="prevent($event)"
+                (keyup.delete)="prevent($event)"></edit-location>
         </selector>
     `,
     styles: [`
@@ -94,9 +102,9 @@ export class FileComponent {
 
     constructor(
         @Inject("FilesService") private _svc: FilesService,
+        @Inject("Runtime") private runtime: Runtime,
         private _nav: FileNavService,
         private _notificationService: NotificationService,
-        private _route: ActivatedRoute,
     ) {
     }
 
@@ -177,7 +185,7 @@ export class FileComponent {
     onDownload(e: Event) {
         e.preventDefault();
 
-        this._svc.download(this.model);
+        this.runtime.Download(this.model);
     }
 
     prevent(e: Event) {
@@ -191,5 +199,12 @@ export class FileComponent {
 
     getSize() {
         return this.model.size ? Humanizer.number(Math.ceil(this.model.size / 1024)) + ' KB' : null;
+    }
+
+    browse(e: Event) {
+        if (e && e.defaultPrevented) {
+            return;
+        }
+        this._nav.load(this.model.physical_path);
     }
 }

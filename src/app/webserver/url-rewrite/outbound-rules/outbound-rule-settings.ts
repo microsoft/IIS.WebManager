@@ -64,7 +64,8 @@ import { OutboundRule, IIS_SERVER_VARIABLES } from '../url-rewrite';
                         </table>
                     </div>
                     <p class="pull-right">
-                        <button [attr.disabled]="_selected == -1 || null" (click)="addSelected()">Insert</button>
+                        <button [attr.disabled]="_selected == -1 || null" (click)="addSelected()" title="Insert">Insert</button>
+                        <button (click)="macros.close()" title="Cancel">Cancel</button>
                     </p>
                 </selector>
             </fieldset>
