@@ -32,9 +32,6 @@ import { Authorization } from './authorization'
         </div>
     `,
     styles: [`
-.install {
-    margin-bottom: 40px;
-}
     `]
 })
 export class AuthorizationComponent implements OnInit, OnDestroy {
