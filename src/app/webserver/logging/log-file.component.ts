@@ -25,7 +25,7 @@ import { Runtime } from 'runtime/runtime';
             </div>
             <div class="actions">
                 <div class="action-selector">
-                    <button title="More" (click)="selector.toggle()" (dblclick)="prevent($event)" (keyup.enter)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
+                    <button title="More" (click)="selector.toggle()" (dblclick)="prevent($event)" [class.background-active]="selector && selector.opened">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
                     <selector #selector [right]="true" [isQuickMenu]="true">

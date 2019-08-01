@@ -51,7 +51,9 @@ import { skip } from 'rxjs/operators';
                         emptyText="No files found"
                         (rangeChange)="onRangeChange($event)">
                 <li class="hover-editing" 
-                    tabindex="-1" 
+                    tabindex="-1"
+                    #marker="itemMarker"
+                    [class.background-selected]="marker.isSelected"
                     *ngFor="let child of _view">
                     <trace-file [model]="child"></trace-file>
                 </li>
