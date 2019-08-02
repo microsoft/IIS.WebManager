@@ -210,12 +210,16 @@ export class WACRuntime implements Runtime {
             (lines: string[]) => {
                 var fileName = filePath.split(/[\\\/]/).pop();
                 fileName = fileName.replace(/\.xml$/gi, ".html");
-                var file = new File(lines, fileName, {
-                    type: "text/html",
-                });
-                var fileURL = URL.createObjectURL(file);
-                window.open(fileURL, "_blank");
-                URL.revokeObjectURL(fileURL);
+                // IE and Edge uses this method to open blob
+                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                    var blob = new Blob(lines, { type: "text/html" });
+                    window.navigator.msSaveOrOpenBlob(blob, fileName);
+                } else {
+                    var file = new File(lines, fileName, { type: "text/html" });
+                    var fileURL = URL.createObjectURL(file);
+                    window.open(fileURL, "_blank");
+                    URL.revokeObjectURL(fileURL);
+                }
             },
             e => {
                 this.notifications.warn(`Failed to retrieve freb logs: ${filePath}, error: ${e}`);
