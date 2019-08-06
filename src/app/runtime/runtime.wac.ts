@@ -18,7 +18,6 @@ import { SETTINGS } from 'main/settings';
 import { throwError, Observable } from 'rxjs';
 import { ApiFile } from 'files/file';
 import { NotificationService } from 'notification/notification.service';
-import { NotificationType } from 'notification/notification';
 
 class ApiKey {
     public id: string
@@ -109,9 +108,9 @@ export class WACRuntime implements Runtime {
         return this._connecting
     }
 
-    public PrepareIISHost(p: any): Observable<any> {
+    public PrepareIISHost(p: any, requireCredSSP: boolean = false): Observable<any> {
         p.appMinVersion = SETTINGS.APISetupVersion;
-        return this.powershellService.run(PowerShellScripts.Initialize_AdminAPI.script, p).pipe(
+        return this.powershellService.run(PowerShellScripts.Initialize_AdminAPI.script, p, requireCredSSP).pipe(
             map((status: HostStatus) => {
                 this._apiHost = status.apiHost;
                 if (status.groupModified) {

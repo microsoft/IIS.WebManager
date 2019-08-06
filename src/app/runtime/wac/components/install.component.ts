@@ -129,6 +129,7 @@ export class InstallComponent implements OnInit {
     aspnetCoreLocation: string;
     userInputError: string;
     details: string;
+    private sharedDriveUsed = false;
 
     @ViewChild('apiPrompt') apiPrompt: ElementRef;
     @ViewChild('dotnetPrompt') dotnetPrompt: ElementRef;
@@ -167,11 +168,8 @@ export class InstallComponent implements OnInit {
                 return `${fieldName} cannot be empty`;
             }
         }
-
-        // NOTE: This code is injected here to prevent user using shared drive because it would be considered double hop with WinRM and wouldn't work
-        // This needs to be revisited when Windows Admin Center completed their work on CredSSP
         if (location && location.startsWith(`\\\\`)) {
-            return `Currently installation from shared drive is not supported, the issue is being tracked on https://github.com/Microsoft/IIS.WebManager/issues/239`;
+            this.sharedDriveUsed = true;
         }
     }
 
@@ -204,7 +202,9 @@ export class InstallComponent implements OnInit {
         }
         
         this.inProgress = true;
-        this.runtime.PrepareIISHost(args).subscribe(_ => {}, e => {
+        const requireCredSSP = this.sharedDriveUsed;
+        // NOTE: you don't technically need credSSP if current target is local
+        this.runtime.PrepareIISHost(args, requireCredSSP).subscribe(_ => {}, e => {
             let reason = 'unknown';
             if (e.response && e.response.exception) {
                 reason = e.response.exception;
