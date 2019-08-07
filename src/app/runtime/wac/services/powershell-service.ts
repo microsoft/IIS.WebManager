@@ -43,8 +43,25 @@ export class PowershellService {
     })
   }
 
-  public run<T>(pwCmdString: string, psParameters: any): Observable<T> {
-    return this.invokeAndParse(pwCmdString, psParameters, null)
+  public run<T>(pwCmdString: string, psParameters: any, requireCredSSP: boolean = false): Observable<T> {
+    return this.invokeAndParse(pwCmdString, psParameters, null, requireCredSSP)
+  }
+
+  public createCredSSPSession(): Observable<PowerShellSession> {
+    return this.appContext.credSSPManager.enableDelegation(
+      "Enable credSSP for this operation",
+      this.appContext.activeConnection.nodeName,
+    ).pipe(
+      map(status => {
+        if (!status) {
+          this.logger.log(LogLevel.WARN, `CredSSP manager did not return true`);
+        }
+        return this.appContext.powerShell.createAutomaticSession(
+          this.appContext.activeConnection.nodeName, {
+            authenticationMechanism: 'Credssp',
+          });
+      })
+    );
   }
 
   public invokeHttp(req: Request): Observable<Response> {
@@ -87,12 +104,13 @@ export class PowershellService {
     }))
   }
 
-  public invoke(pwCmdString: string, psParameters: any): Observable<any[]>{
+  public invoke(pwCmdString: string, psParameters: any, requireCredSSP: boolean = false): Observable<any[]>{
     psParameters.sessionId = this.sessionId;
     var flags: string[] = IsProduction ? [] : [ 'verbose' ];
     var compiled: string = PowerShell.createScript(pwCmdString, psParameters, flags);
     var scriptName: string = pwCmdString.split("\n")[0]
-    return this.session.pipe(
+    var session = requireCredSSP ? this.createCredSSPSession() : this.session;
+    return session.pipe(
       mergeMap(ps => ps.powerShell.run(compiled)),
       instrument(this.logger, `${scriptName} => ${JSON.stringify(psParameters)}`),
       logError(this.logger, LogLevel.WARN, `Script ${scriptName} failed`),
@@ -136,8 +154,8 @@ export class PowershellService {
     );
   }
 
-  private invokeAndParse<T>(pwCmdString: string, psParameters: any, reviver: (key: any, value: any) => any = null): Observable<T> {
-    return this.invoke(pwCmdString, psParameters).pipe(
+  private invokeAndParse<T>(pwCmdString: string, psParameters: any, reviver: (key: any, value: any) => any = null, requireCredSSP: boolean = false): Observable<T> {
+    return this.invoke(pwCmdString, psParameters, requireCredSSP).pipe(
       mergeMap(
         lines => lines.map(line => {
           let rtnObject = JSON.parse(line, reviver);

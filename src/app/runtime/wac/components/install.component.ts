@@ -25,25 +25,26 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
                     <li>
                         <ul>
                             <li #apiPrompt>
-                                <label id="label_1">API Installer location</label>
+                                <label id="label_1">IIS Administration API Installer location</label>
                                 <input aria-labeledby="label_1" class="form-control" type="text" [(ngModel)]="adminAPILocation"/>
                             </li>
                             <li #dotnetPrompt>
-                                <label id="label_2">.NET Core Runtime installer location, required version: ${SETTINGS.DotnetFrameworkVersion}</label>
+                                <label id="label_2">(Optional*) .NET Core Runtime installer location, required version: ${SETTINGS.DotnetFrameworkVersion}</label>
                                 <input aria-labeledby="label_2" class="form-control" type="text" [(ngModel)]="dotnetCoreLocation" />
                             </li>
                             <li #aspnetPrompt>
-                                <label id="label_3">ASP.NET Core installer location, required version: ${SETTINGS.AspnetSharedFrameworkVersion}</label>
+                                <label id="label_3">(Optional*) ASP.NET Core installer location, required version: ${SETTINGS.AspnetSharedFrameworkVersion}</label>
                                 <input aria-labeledby="label_3" class="form-control" type="text" [(ngModel)]="aspnetCoreLocation" />
                             </li>
+                            <p>*If prerequisites .NET Core Runtime ${SETTINGS.DotnetFrameworkVersion} and ASP.NET Core ${SETTINGS.AspnetSharedFrameworkVersion} are not already installed on the server and installer paths are not specified, we will attempt to acquire them from internet.</p>
                         </ul>
                     </li>
                 </ul>
             </li>
         </ul>
-        <div *ngIf='userInputError'>
+        <div *ngFor='let e of userInputError'>
             <p class="color-error">
-                {{userInputError}}
+                {{e}}
             </p>
         </div>
         <p>
@@ -112,7 +113,7 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
 
     li {
         padding-left: 10px;
-        padding-bottom: 10px;
+        padding-bottom: 20px;
     }
 
     .form-control {
@@ -127,8 +128,9 @@ export class InstallComponent implements OnInit {
     adminAPILocation: string;
     dotnetCoreLocation: string;
     aspnetCoreLocation: string;
-    userInputError: string;
+    userInputError: string[];
     details: string;
+    private sharedDriveUsed = false;
 
     @ViewChild('apiPrompt') apiPrompt: ElementRef;
     @ViewChild('dotnetPrompt') dotnetPrompt: ElementRef;
@@ -167,20 +169,18 @@ export class InstallComponent implements OnInit {
                 return `${fieldName} cannot be empty`;
             }
         }
-
-        // NOTE: This code is injected here to prevent user using shared drive because it would be considered double hop with WinRM and wouldn't work
-        // This needs to be revisited when Windows Admin Center completed their work on CredSSP
         if (location && location.startsWith(`\\\\`)) {
-            return `Currently installation from shared drive is not supported, the issue is being tracked on https://github.com/Microsoft/IIS.WebManager/issues/239`;
+            this.sharedDriveUsed = true;
         }
     }
 
-    private verifyLocationPrompt(prompt: ElementRef): boolean {
+    private verifyLocationPrompt(prompt: ElementRef, allowEmpty: boolean): boolean {
         let fieldName = prompt.nativeElement.querySelector('label').textContent;
         let textBox = prompt.nativeElement.querySelector('input');
         textBox.classList.remove('background-warning');
-        this.userInputError = this.verifyLocation(fieldName, textBox.value, false);
-        let valid = this.userInputError == null;
+        const errorMsg = this.verifyLocation(fieldName, textBox.value.trim(), allowEmpty);
+        const valid = errorMsg == null;
+        this.userInputError.push(errorMsg);
         if (!valid) {
             textBox.classList.add('background-warning');
             textBox.focus();
@@ -196,20 +196,28 @@ export class InstallComponent implements OnInit {
         if (this.useDefault) {
             args.adminAPILocation = SETTINGS.APIDownloadUrl
         } else {
-            if (this.verifyLocationPrompt(this.apiPrompt) && this.verifyLocationPrompt(this.dotnetPrompt) && this.verifyLocationPrompt(this.aspnetPrompt)) {
-                args.adminAPILocation = this.adminAPILocation;
-                args.dotnetCoreLocation = this.dotnetCoreLocation;
-                args.aspnetCoreLocation = this.aspnetCoreLocation;
+            this.userInputError = [];
+            var valid = this.verifyLocationPrompt(this.apiPrompt, false);
+            valid = this.verifyLocationPrompt(this.dotnetPrompt, true) && valid;
+            valid = this.verifyLocationPrompt(this.aspnetPrompt, true) && valid;
+            if (valid) {
+                args.adminAPILocation = this.adminAPILocation.trim();
+                if (this.dotnetCoreLocation) {
+                    args.dotnetCoreLocation = this.dotnetCoreLocation.trim();
+                }
+                if (this.aspnetCoreLocation) {
+                    args.aspnetCoreLocation = this.aspnetCoreLocation.trim();
+                }
+            } else {
+                return;
             }
         }
         
         this.inProgress = true;
-        this.runtime.PrepareIISHost(args).subscribe(_ => {}, e => {
-            let reason = 'unknown';
-            if (e.response && e.response.exception) {
-                reason = e.response.exception;
-            }
-            this.userInputError = `Installation failed. Error: ${reason}`;
+        const requireCredSSP = this.sharedDriveUsed;
+        // NOTE: you don't technically need credSSP if current target is local
+        this.runtime.PrepareIISHost(args, requireCredSSP).subscribe(_ => {}, e => {
+            this.userInputError = [ `Installation failed. Error: ${e}` ];
             this.inProgress = false;
         }, () => {
             this.router.navigate(['/']);
