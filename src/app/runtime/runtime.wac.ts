@@ -18,7 +18,6 @@ import { SETTINGS } from 'main/settings';
 import { throwError, Observable } from 'rxjs';
 import { ApiFile } from 'files/file';
 import { NotificationService } from 'notification/notification.service';
-import { NotificationType } from 'notification/notification';
 
 class ApiKey {
     public id: string
@@ -109,9 +108,9 @@ export class WACRuntime implements Runtime {
         return this._connecting
     }
 
-    public PrepareIISHost(p: any): Observable<any> {
+    public PrepareIISHost(p: any, requireCredSSP: boolean = false): Observable<any> {
         p.appMinVersion = SETTINGS.APISetupVersion;
-        return this.powershellService.run(PowerShellScripts.Initialize_AdminAPI.script, p).pipe(
+        return this.powershellService.run(PowerShellScripts.Initialize_AdminAPI.script, p, requireCredSSP).pipe(
             map((status: HostStatus) => {
                 this._apiHost = status.apiHost;
                 if (status.groupModified) {
@@ -138,12 +137,7 @@ export class WACRuntime implements Runtime {
             {}
         ).subscribe(
             _ => {
-                // To open the file in a window use this:
-                //
-                // var downloaded = new File([blob] , fileName);
-                // var fileURL = URL.createObjectURL(downloaded);
-                // window.open(fileURL, "_blank");
-                // URL.revokeObjectURL(fileURL);
+                // file already saved, no action needed
             },
             e => {
                 this.notifications.warn(`Failed to download file ${file.physical_path}, error: ${e.message}`);
@@ -205,5 +199,30 @@ export class WACRuntime implements Runtime {
             return null;
         }
         return err;
+    }
+
+    public RenderFrebLogs(file: ApiFile) {
+        var filePath = file.physical_path;
+        this.powershellService.invoke(PowerShellScripts.Get_Freb.script, {
+            frebLocation: filePath,
+        }).subscribe(
+            (lines: string[]) => {
+                var fileName = filePath.split(/[\\\/]/).pop();
+                fileName = fileName.replace(/\.xml$/gi, ".html");
+                // IE and Edge uses this method to open blob
+                if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                    var blob = new Blob(lines, { type: "text/html" });
+                    window.navigator.msSaveOrOpenBlob(blob, fileName);
+                } else {
+                    var file = new File(lines, fileName, { type: "text/html" });
+                    var fileURL = URL.createObjectURL(file);
+                    window.open(fileURL, "_blank");
+                    URL.revokeObjectURL(fileURL);
+                }
+            },
+            e => {
+                this.notifications.warn(`Failed to retrieve freb logs: ${filePath}, error: ${e}`);
+            },
+        );
     }
 }

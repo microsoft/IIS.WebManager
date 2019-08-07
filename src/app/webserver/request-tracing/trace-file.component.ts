@@ -12,7 +12,7 @@ import { Runtime } from 'runtime/runtime';
     template: `
         <div *ngIf="model" class="grid-item row" tabindex="-1">
             <div class="col-xs-8 col-sm-3 col-lg-2 valign" [ngClass]="[model.file_info.type, model.file_info.extension]">
-                {{model.file_info.name}}
+                <a class="color-normal hover-color-active" [href]="url" (click)="onClickName($event)"><i></i>{{model.file_info.name}}</a>
             </div>
             <div class="col-sm-4 col-lg-3 hidden-xs valign support">
                 <span *ngIf="model.url">{{model.url}}</span>
@@ -29,9 +29,9 @@ import { Runtime } from 'runtime/runtime';
             <div class="col-sm-3 col-md-2 hidden-xs valign support">
                 {{displayDate}}
             </div>
-            <div class="actions action-selector">
-                <div class="selector-wrapper">
-                    <button title="More" (click)="openSelector($event)" (dblclick)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
+            <div class="actions">
+                <div class="action-selector">
+                    <button title="More" (click)="selector.toggle()" (dblclick)="prevent($event)" (keyup.enter)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
                         <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
                     </button>
                     <selector #selector [right]="true" [isQuickMenu]="true">
@@ -63,21 +63,7 @@ import { Runtime } from 'runtime/runtime';
         .row {
             margin: 0px;
         }
-
-        .selector-wrapper {
-            position: relative;
-        }
-
-        selector {
-            position:absolute;
-            right:0;
-            top: 32px;
-        }
-
-        selector button {
-            min-width: 125px;
-            width: 100%;
-        }`
+`
     ],
     styleUrls: [
         '../../files/file-icons.css'
@@ -111,14 +97,14 @@ export class TraceFileComponent {
 
     onClickName(e: Event) {
         e.preventDefault();
-        this.runtime.Download(this.model && this.model.file_info);
-    }
-
-    private openSelector(e: Event) {
-        this.selector.toggle();
+        this.runtime.RenderFrebLogs(this.model.file_info);
     }
 
     private onDelete() {
         this._svc.delete([this.model]);
+    }
+    
+    prevent(e: Event) {
+        e.preventDefault();
     }
 }

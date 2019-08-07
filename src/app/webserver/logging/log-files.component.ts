@@ -44,7 +44,9 @@ import { load } from '@angular/core/src/render3';
                         emptyText="No files found"
                         (rangeChange)="onRangeChange($event)">
                 <li class="hover-editing" 
-                    tabindex="-1" 
+                    tabindex="-1"
+                    #marker="itemMarker"
+                    [class.background-selected]="marker.isSelected"
                     *ngFor="let child of _view">
                     <log-file [model]="child"></log-file>
                 </li>
