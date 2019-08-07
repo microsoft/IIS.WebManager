@@ -29,11 +29,13 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
                                 <input aria-labeledby="label_1" class="form-control" type="text" [(ngModel)]="adminAPILocation"/>
                             </li>
                             <li #dotnetPrompt>
-                                <label id="label_2">.NET Core Runtime installer location, required version: ${SETTINGS.DotnetFrameworkVersion}, optional if already present on target server</label>
+                                <label id="label_2">.NET Core Runtime installer location, required version: ${SETTINGS.DotnetFrameworkVersion}</label>
+                                <p>Optional if already installed or target server has internet connection</p>
                                 <input aria-labeledby="label_2" class="form-control" type="text" [(ngModel)]="dotnetCoreLocation" />
                             </li>
                             <li #aspnetPrompt>
-                                <label id="label_3">ASP.NET Core installer location, required version: ${SETTINGS.AspnetSharedFrameworkVersion}, optional if already present on target server</label>
+                                <label id="label_3">ASP.NET Core installer location, required version: ${SETTINGS.AspnetSharedFrameworkVersion}</label>
+                                <p>Optional if already installed or target server has internet connection</p>
                                 <input aria-labeledby="label_3" class="form-control" type="text" [(ngModel)]="aspnetCoreLocation" />
                             </li>
                         </ul>
@@ -112,7 +114,7 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
 
     li {
         padding-left: 10px;
-        padding-bottom: 10px;
+        padding-bottom: 20px;
     }
 
     .form-control {
