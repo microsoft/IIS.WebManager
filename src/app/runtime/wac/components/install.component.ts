@@ -41,9 +41,9 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
                 </ul>
             </li>
         </ul>
-        <div *ngIf='userInputError'>
+        <div *ngFor='let e of userInputError'>
             <p class="color-error">
-                {{userInputError}}
+                {{e}}
             </p>
         </div>
         <p>
@@ -127,7 +127,7 @@ export class InstallComponent implements OnInit {
     adminAPILocation: string;
     dotnetCoreLocation: string;
     aspnetCoreLocation: string;
-    userInputError: string;
+    userInputError: string[];
     details: string;
     private sharedDriveUsed = false;
 
@@ -177,8 +177,9 @@ export class InstallComponent implements OnInit {
         let fieldName = prompt.nativeElement.querySelector('label').textContent;
         let textBox = prompt.nativeElement.querySelector('input');
         textBox.classList.remove('background-warning');
-        this.userInputError = this.verifyLocation(fieldName, textBox.value, allowEmpty);
-        let valid = this.userInputError == null;
+        const errorMsg = this.verifyLocation(fieldName, textBox.value, allowEmpty);
+        const valid = errorMsg == null;
+        this.userInputError.push(errorMsg);
         if (!valid) {
             textBox.classList.add('background-warning');
             textBox.focus();
@@ -194,25 +195,24 @@ export class InstallComponent implements OnInit {
         if (this.useDefault) {
             args.adminAPILocation = SETTINGS.APIDownloadUrl
         } else {
-            if (!this.verifyLocationPrompt(this.apiPrompt, false)) {
+            this.userInputError = [];
+            var valid = this.verifyLocationPrompt(this.apiPrompt, false);
+            valid = this.verifyLocationPrompt(this.dotnetPrompt, true) && valid;
+            valid = this.verifyLocationPrompt(this.aspnetPrompt, true) && valid;
+            if (valid) {
+                args.adminAPILocation = this.adminAPILocation;
+                args.dotnetCoreLocation = this.dotnetCoreLocation;
+                args.aspnetCoreLocation = this.aspnetCoreLocation;
+            } else {
                 return;
             }
-            if (!this.verifyLocationPrompt(this.dotnetPrompt, true)) {
-                return;
-            }
-            if (!this.verifyLocationPrompt(this.aspnetPrompt, true)) {
-                return;
-            }
-            args.adminAPILocation = this.adminAPILocation;
-            args.dotnetCoreLocation = this.dotnetCoreLocation;
-            args.aspnetCoreLocation = this.aspnetCoreLocation;
         }
         
         this.inProgress = true;
         const requireCredSSP = this.sharedDriveUsed;
         // NOTE: you don't technically need credSSP if current target is local
         this.runtime.PrepareIISHost(args, requireCredSSP).subscribe(_ => {}, e => {
-            this.userInputError = `Installation failed. Error: ${e}`;
+            this.userInputError = [ `Installation failed. Error: ${e}` ];
             this.inProgress = false;
         }, () => {
             this.router.navigate(['/']);
