@@ -178,7 +178,7 @@ export class InstallComponent implements OnInit {
         let fieldName = prompt.nativeElement.querySelector('label').textContent;
         let textBox = prompt.nativeElement.querySelector('input');
         textBox.classList.remove('background-warning');
-        const errorMsg = this.verifyLocation(fieldName, textBox.value, allowEmpty);
+        const errorMsg = this.verifyLocation(fieldName, textBox.value.trim(), allowEmpty);
         const valid = errorMsg == null;
         this.userInputError.push(errorMsg);
         if (!valid) {
@@ -201,9 +201,13 @@ export class InstallComponent implements OnInit {
             valid = this.verifyLocationPrompt(this.dotnetPrompt, true) && valid;
             valid = this.verifyLocationPrompt(this.aspnetPrompt, true) && valid;
             if (valid) {
-                args.adminAPILocation = this.adminAPILocation;
-                args.dotnetCoreLocation = this.dotnetCoreLocation;
-                args.aspnetCoreLocation = this.aspnetCoreLocation;
+                args.adminAPILocation = this.adminAPILocation.trim();
+                if (this.dotnetCoreLocation) {
+                    args.dotnetCoreLocation = this.dotnetCoreLocation.trim();
+                }
+                if (this.aspnetCoreLocation) {
+                    args.aspnetCoreLocation = this.aspnetCoreLocation.trim();
+                }
             } else {
                 return;
             }
