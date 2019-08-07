@@ -29,15 +29,14 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
                                 <input aria-labeledby="label_1" class="form-control" type="text" [(ngModel)]="adminAPILocation"/>
                             </li>
                             <li #dotnetPrompt>
-                                <label id="label_2">.NET Core Runtime installer location, required version: ${SETTINGS.DotnetFrameworkVersion}</label>
-                                <p>Optional if already installed or target server has internet connection</p>
+                                <label id="label_2">(Optional*) .NET Core Runtime installer location, required version: ${SETTINGS.DotnetFrameworkVersion}</label>
                                 <input aria-labeledby="label_2" class="form-control" type="text" [(ngModel)]="dotnetCoreLocation" />
                             </li>
                             <li #aspnetPrompt>
-                                <label id="label_3">ASP.NET Core installer location, required version: ${SETTINGS.AspnetSharedFrameworkVersion}</label>
-                                <p>Optional if already installed or target server has internet connection</p>
+                                <label id="label_3">(Optional*) ASP.NET Core installer location, required version: ${SETTINGS.AspnetSharedFrameworkVersion}</label>
                                 <input aria-labeledby="label_3" class="form-control" type="text" [(ngModel)]="aspnetCoreLocation" />
                             </li>
+                            <p>*If prerequisites .NET Core Runtime ${SETTINGS.DotnetFrameworkVersion} and ASP.NET Core ${SETTINGS.AspnetSharedFrameworkVersion} are not already installed on the server and installer paths are not specified, we will attempt to acquire them from internet.</p>
                         </ul>
                     </li>
                 </ul>
