@@ -46,6 +46,9 @@ import { NotificationService } from 'notification/notification.service';
                     <label>Confirm Password</label>
                     <input type="password" class="form-control name" [(ngModel)]="_identityPasswordConfirm" (ngModelChange)="onConfirmIdentityPassword($event)" [validateEqual]="_identityPassword" throttle [attr.disabled]="isPending || null" />
                 </fieldset>
+                <fieldset *ngIf="!!(_identityPasswordConfirm) && _identityPasswordConfirm !== _identityPassword" class="inline-block">
+                    <p>Passwords do not match.</p>
+                </fieldset>
             </div>
             <div>
                 <label class="block" title="Specify the password that is used to encrypt the private key for each certificate file.">Use Private Key Password</label>
@@ -60,6 +63,9 @@ import { NotificationService } from 'notification/notification.service';
                 <fieldset *ngIf="pvkPass.value">
                     <label>Confirm Password</label>
                     <input type="password" class="form-control name" [(ngModel)]="_privateKeyPasswordConfirm" (ngModelChange)="onConfirmPkPassword($event)" [validateEqual]="_privateKeyPassword" throttle [attr.disabled]="isPending || null" />
+                </fieldset>
+                <fieldset *ngIf="!!(_privateKeyPasswordConfirm) && _privateKeyPasswordConfirm !== _privateKeyPassword">
+                    <p>Passwords do not match.</p>
                 </fieldset>
             </div>
         </div>

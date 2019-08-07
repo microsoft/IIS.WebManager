@@ -27,7 +27,10 @@ import { ApplicationPoolIdentity } from './app-pool';
                 </fieldset>
                 <fieldset *ngIf="!!(_password)" class='inline-block'>
                     <label>Confirm Password</label>
-                    <input class="form-control" type="password" ngModel (ngModelChange)="onConfirmPassword($event)" [validateEqual]="_password" />
+                    <input class="form-control" type="password" [(ngModel)]="_confirm" (ngModelChange)="onConfirmPassword($event)" [validateEqual]="_password" />
+                </fieldset>
+                <fieldset *ngIf="!!(_confirm) && _confirm !== _password" class='inline-block error-message'>
+                    <p>Passwords do not match.</p>
                 </fieldset>
             </div>
         </div>
@@ -36,7 +39,12 @@ import { ApplicationPoolIdentity } from './app-pool';
                 {{model.load_user_profile ? "On" : "Off"}}
             </switch>
         </fieldset>
-    `
+    `,
+    styles: [`
+.error-message {
+    margin-top: 40px;
+}
+        `],
 })
 export class IdentityComponent {
     @Input()
