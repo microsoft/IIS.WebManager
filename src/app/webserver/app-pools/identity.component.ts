@@ -28,7 +28,7 @@ import { ApplicationPoolIdentity } from './app-pool';
                 <fieldset *ngIf="!!(_password)" class='inline-block'>
                     <label>Confirm Password</label>
                     <input class="form-control" type="password" [(ngModel)]="_confirm" (ngModelChange)="onConfirmPassword($event)" [validateEqual]="_password" />
-                    <div *ngIf="!!(_confirm) && _confirm !== _password" role="alert" class='error-message'>
+                    <div *ngIf="!!(_confirm) && _confirm !== _password" role="alert" class="error-message color-error">
                         Passwords do not match.
                     </div>
                 </fieldset>
