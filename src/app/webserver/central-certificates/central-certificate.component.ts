@@ -45,7 +45,7 @@ import { NotificationService } from 'notification/notification.service';
                 <fieldset *ngIf="identityPassword.value">
                     <label>Confirm Password</label>
                     <input type="password" class="form-control name" [(ngModel)]="_identityPasswordConfirm" (ngModelChange)="onConfirmIdentityPassword($event)" [validateEqual]="_identityPassword" throttle [attr.disabled]="isPending || null" />
-                    <div *ngIf="!!(_identityPasswordConfirm) && _identityPasswordConfirm !== _identityPassword" role="alert" class='inline-block error-message'>
+                    <div *ngIf="!!(_identityPasswordConfirm) && _identityPasswordConfirm !== _identityPassword" role="alert" class='error-message'>
                         Passwords do not match.
                     </div>
                 </fieldset>
@@ -63,7 +63,7 @@ import { NotificationService } from 'notification/notification.service';
                 <fieldset *ngIf="pvkPass.value">
                     <label>Confirm Password</label>
                     <input type="password" class="form-control name" [(ngModel)]="_privateKeyPasswordConfirm" (ngModelChange)="onConfirmPkPassword($event)" [validateEqual]="_privateKeyPassword" throttle [attr.disabled]="isPending || null" />
-                    <div *ngIf="!!(_privateKeyPasswordConfirm) && _privateKeyPasswordConfirm !== _privateKeyPassword" role="alert" class='inline-block error-message'>
+                    <div *ngIf="!!(_privateKeyPasswordConfirm) && _privateKeyPasswordConfirm !== _privateKeyPassword" role="alert" class='error-message'>
                         Passwords do not match.
                     </div>
                 </fieldset>
