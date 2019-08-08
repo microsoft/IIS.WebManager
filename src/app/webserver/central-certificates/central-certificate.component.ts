@@ -45,9 +45,9 @@ import { NotificationService } from 'notification/notification.service';
                 <fieldset *ngIf="identityPassword.value">
                     <label>Confirm Password</label>
                     <input type="password" class="form-control name" [(ngModel)]="_identityPasswordConfirm" (ngModelChange)="onConfirmIdentityPassword($event)" [validateEqual]="_identityPassword" throttle [attr.disabled]="isPending || null" />
-                </fieldset>
-                <fieldset *ngIf="!!(_identityPasswordConfirm) && _identityPasswordConfirm !== _identityPassword" class="inline-block">
-                    <p>Passwords do not match.</p>
+                    <div *ngIf="!!(_identityPasswordConfirm) && _identityPasswordConfirm !== _identityPassword" role="alert" class='inline-block error-message'>
+                        Passwords do not match.
+                    </div>
                 </fieldset>
             </div>
             <div>
@@ -63,9 +63,9 @@ import { NotificationService } from 'notification/notification.service';
                 <fieldset *ngIf="pvkPass.value">
                     <label>Confirm Password</label>
                     <input type="password" class="form-control name" [(ngModel)]="_privateKeyPasswordConfirm" (ngModelChange)="onConfirmPkPassword($event)" [validateEqual]="_privateKeyPassword" throttle [attr.disabled]="isPending || null" />
-                </fieldset>
-                <fieldset *ngIf="!!(_privateKeyPasswordConfirm) && _privateKeyPasswordConfirm !== _privateKeyPassword">
-                    <p>Passwords do not match.</p>
+                    <div *ngIf="!!(_privateKeyPasswordConfirm) && _privateKeyPasswordConfirm !== _privateKeyPassword" role="alert" class='inline-block error-message'>
+                        Passwords do not match.
+                    </div>
                 </fieldset>
             </div>
         </div>
@@ -75,6 +75,10 @@ import { NotificationService } from 'notification/notification.service';
             padding-left: 30px;
             padding-top: 15px;
             padding-bottom: 15px;
+        }
+
+        .error-message {
+            margin-top: 0px;
         }
     `]
 })

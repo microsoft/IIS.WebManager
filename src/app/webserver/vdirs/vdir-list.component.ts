@@ -64,9 +64,9 @@ import { skip } from 'rxjs/operators';
                                 <fieldset *ngIf="!!_password" class="col-sm-4 col-xs-12">
                                     <label>Confirm Password</label>
                                     <input class="form-control" type="password" [(ngModel)]="_confirm" (modelChanged)="onConfirmPassword" [validateEqual]="_password" />
-                                </fieldset>
-                                <fieldset *ngIf="!!(_confirm) && _confirm !== _password" class="col-sm-4 col-xs-12 error-message">
-                                    <p>Passwords do not match.</p>
+                                    <div *ngIf="!!(_confirm) && _confirm !== _password" role="alert" class='inline-block error-message'>
+                                        Passwords do not match.
+                                    </div>
                                 </fieldset>
                             </div>
                             <fieldset>
@@ -139,7 +139,7 @@ div.h-align {
 }
 
 .error-message {
-    margin-top: 40px;
+    margin-top: 0px;
 }
     `]
 })
