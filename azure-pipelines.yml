@@ -90,6 +90,13 @@ jobs:
       publishFeedCredentials: 'IIS-WAC-MyGet'
       allowPackageConflicts: false
 
+  - task: NuGetCommand@2
+    displayName: 'Restore signing project'
+    condition: or(startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'), endsWith(variables['Build.SourceBranch'], 'signing'))
+    inputs:
+      command: 'restore'
+      restoreDirectory: signing
+
   - task: VSBuild@1
     displayName: 'Build Signing project'
     condition: or(startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'), endsWith(variables['Build.SourceBranch'], 'signing'))
