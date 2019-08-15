@@ -64,7 +64,7 @@ jobs:
 
   - task: NuGetCommand@2
     displayName: 'NuGet pack (development)'
-    condition: not(startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'))
+    condition: not(or(startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'), endsWith(variables['Build.SourceBranch'], 'signing')))
     inputs:
       command: pack
       packagesToPack: '$(Build.SourcesDirectory)/**/*.nuspec'
@@ -73,12 +73,13 @@ jobs:
 
   - task: NuGetCommand@2
     displayName: 'NuGet pack (release)'
-    condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/releases')
+    condition: or(startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'), endsWith(variables['Build.SourceBranch'], 'signing'))
     inputs:
       command: pack
       packagesToPack: '$(Build.SourcesDirectory)/**/*.nuspec'
       versioningScheme: byEnvVar
       versionEnvVar: NuGetVersionSimple
+      packDestination: $(Build.SourcesDirectory)/signing/dist
 
   - task: NuGetCommand@2
     displayName: 'NuGet push'
@@ -104,4 +105,4 @@ jobs:
       solution: signing\signing.csproj
       msbuildArchitecture: x64
       configuration: 'release'
-      msbuildArgs: /p:SignType=$(SignType) /p:SigningIdentity=$(SigningIdentity) /p:ManifestDir=$(Build.ArtifactStagingDirectory)
+      msbuildArgs: /p:SignType=$(SignType) /p:SigningIdentity=$(SigningIdentity) /p:ManifestDir=$(Build.SourcesDirectory)/signing/dist
