@@ -104,4 +104,4 @@ jobs:
       solution: signing\signing.csproj
       msbuildArchitecture: x64
       configuration: 'release'
-      msbuildArgs: /p:SignType=$(SignType) /p:SigningIdentity=$(SigningIdentity)
+      msbuildArgs: /p:SignType=$(SignType) /p:SigningIdentity=$(SigningIdentity) /p:ManifestDir=$(Build.ArtifactStagingDirectory)

@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(SignType)' != '' ">
-    <FilesToSign Include="..\dist\*.nupkg">
+    <FilesToSign Include="$(ManifestDir)\**\*.nupkg">
       <Authenticode>$(SigningIdentity)</Authenticode>
     </FilesToSign>
   </ItemGroup>
