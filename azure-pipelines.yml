@@ -4,6 +4,8 @@ variables:
   MinorVersion: 1
   NuGetVersionSimple: $(MajorVersion).$(MinorVersion).$(Build.BuildID)
   NuGetVersionFull: $(MajorVersion).$(MinorVersion).$(Build.BuildID)-$(Build.SourceBranchName)
+  SignType: 'test'
+  SigningIdentity: 400
 
 trigger:
   branches:
@@ -28,10 +30,16 @@ jobs:
       - msbuild
       - visualstudio
       - vstest
+
   steps:
   - checkout: self  
     clean: false
     submodules: true  # set to 'true' for a single level of submodules or 'recursive' to get submodules of submodules
+
+  - task: MicroBuildSigningPlugin@2
+    inputs:
+      signType: $(SignType)
+      feedSource: 'https://devdiv.pkgs.visualstudio.com/DefaultCollection/_packaging/MicroBuildToolset/nuget/v3/index.json'
 
   - task: NodeTool@0
     inputs:
@@ -80,3 +88,12 @@ jobs:
       nuGetFeedType: external
       publishFeedCredentials: 'IIS-WAC-MyGet'
       allowPackageConflicts: false
+
+  - task: VSBuild@1
+    displayName: 'Build Signing project'
+    condition: or(startsWith(variables['Build.SourceBranch'], 'refs/heads/releases'), endsWith(variables['Build.SourceBranch'], 'signing'))
+    inputs:
+      solution: signing\signing.csproj
+      msbuildArchitecture: x64
+      configuration: 'release'
+      msbuildArgs: /p:SignType=$(SignType) /p:SigningIdentity=$(SigningIdentity)
