@@ -1,5 +1,6 @@
 name: $(Build.SourceBranch)-$(Build.BuildID)
 variables:
+  TeamName: IISAdmin
   MajorVersion: 0
   MinorVersion: 1
   NuGetVersionSimple: $(MajorVersion).$(MinorVersion).$(Build.BuildID)
