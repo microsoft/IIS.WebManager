@@ -211,6 +211,23 @@
         "tslib": "^1.9.0"
       }
     },
+    "@angular/cdk": {
+      "version": "7.1.1",
+      "resolved": "https://registry.npmjs.org/@angular/cdk/-/cdk-7.1.1.tgz",
+      "integrity": "sha512-woW9lWDBKRuxZipMzWofrAY7YpuZd4vf/J1YPjmAqV7U94MaDFyizRLyFolbTZVYo8ggh9U3SQAWRrEBvJNsjg==",
+      "requires": {
+        "parse5": "^5.0.0",
+        "tslib": "^1.7.1"
+      },
+      "dependencies": {
+        "parse5": {
+          "version": "5.1.0",
+          "resolved": "https://registry.npmjs.org/parse5/-/parse5-5.1.0.tgz",
+          "integrity": "sha512-fxNG2sQjHvlVAYmzBZS9YlDp6PTSSDwa98vkD4QgVDDCAo84z5X1t5XyJQ62ImdLXx5NdIIfihey6xpum9/gRQ==",
+          "optional": true
+        }
+      }
+    },
     "@angular/cli": {
       "version": "7.1.2",
       "resolved": "https://registry.npmjs.org/@angular/cli/-/cli-7.1.2.tgz",
@@ -564,6 +581,14 @@
       "resolved": "https://registry.npmjs.org/@angular/language-service/-/language-service-7.1.1.tgz",
       "integrity": "sha512-X+5g20PMtNRGZIa3svMv4PLJdJehn4wqrS8nwOtzH5XkSn5vA3IxjsJVdSzAy2AN0/sKKJK5jmQorPtKO4saJg==",
       "dev": true
+    },
+    "@angular/material": {
+      "version": "7.1.1",
+      "resolved": "https://registry.npmjs.org/@angular/material/-/material-7.1.1.tgz",
+      "integrity": "sha512-wjYAWsdWpb8/BgoIfoUomnycoljU00avJ3hRIgPNnEpZhB7zqiBA8tCitzDS4NK8dKBJjM9WRAOj6yl6x3+9wA==",
+      "requires": {
+        "tslib": "^1.7.1"
+      }
     },
     "@angular/platform-browser": {
       "version": "7.1.1",
@@ -6455,6 +6480,11 @@
       "requires": {
         "glogg": "^1.0.0"
       }
+    },
+    "hammerjs": {
+      "version": "2.0.8",
+      "resolved": "https://registry.npmjs.org/hammerjs/-/hammerjs-2.0.8.tgz",
+      "integrity": "sha1-BO93hiz/K7edMPdpIJWTAiK/YPE="
     },
     "handle-thing": {
       "version": "2.0.0",
