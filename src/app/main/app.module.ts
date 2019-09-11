@@ -46,6 +46,8 @@ import { Runtime } from "runtime/runtime";
 import { AppRoutingModule } from "./app-routing.module";
 import { ProvidersAddon, ModulesAddon } from "./app.addon";
 import { TitlesModule } from "header/titles.module";
+import { MatIconModule } from "@angular/material/icon";
+import { HttpClientModule } from "@angular/common/http";
 
 @NgModule({
     imports: [
@@ -69,6 +71,8 @@ import { TitlesModule } from "header/titles.module";
         AngularFontAwesomeModule,
         TitlesModule,
         ModulesAddon,
+        HttpClientModule,
+        MatIconModule,
     ],
     declarations: [
         AppComponent,

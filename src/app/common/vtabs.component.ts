@@ -1,3 +1,4 @@
+import { CommonModule, Location } from '@angular/common';
 import {
     AfterViewInit,
     Component,
@@ -12,10 +13,10 @@ import {
     QueryList,
     ViewChildren,
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { CommonModule, Location } from '@angular/common';
-import { OptionsService } from "main/options.service";
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { BadgeModule } from '@microsoft/windows-admin-center-sdk/angular';
+import { OptionsService } from "main/options.service";
 import { Subscription, Subject, ReplaySubject } from 'rxjs';
 import { DynamicComponent } from './dynamic.component';
 import { SectionHelper } from './section.helper';
@@ -26,6 +27,7 @@ import { TitlesModule } from 'header/titles.module';
 import { Heading } from 'header/feature-header.component';
 import { TitlesService } from 'header/titles.service';
 import { NotificationService } from 'notification/notification.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     selector: 'vtabs',
@@ -35,7 +37,15 @@ import { NotificationService } from 'notification/notification.service';
     template: `
 <div class="vtabs">
     <ul class="items sme-focus-zone">
-        <div *ngIf="header" class="vtab-header items">{{header}}</div>
+        <div *ngIf="header">
+            <div class="vtab-header">{{header}}</div>
+            <div class="wac-badge-wrapper">
+                <p tabindex="0" aria-label="PREVIEW" class="wac-badge">
+                    <span aria-hidden="true">PREVIEW</span>
+                    <mat-icon class="info-icon" svgIcon="wac-info"></mat-icon>
+                </p>
+            </div>
+        </div>
         <ng-container *ngFor="let category of getCategories()">
             <ng-container *ngIf="!IsHidden(category)">
                 <li *ngIf="category" class="separator">
@@ -76,14 +86,77 @@ li:focus {
     text-decoration: underline;
 }
 
+.info-icon {
+    height: 12px;
+    width: 12px;
+    margin-left: 3px;
+}
+
 .vtab-header {
-    display: block;
+    display: inline-block;
     font-size: 18px;
     font-weight: bold;
     margin-left: 1em;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
     padding-bottom: 0;
+    padding-right: 1em;
+}
+
+.wac-badge-wrapper {
+    background-color:rgb(230, 230, 230);
+    box-sizing:border-box;
+    color:rgb(0, 0, 0);
+    display:inline-block;
+    font-size:15px;
+    font-style:normal;
+    font-variant-caps:normal;
+    font-variant-east-asian:normal;
+    font-variant-ligatures:normal;
+    font-variant-numeric:normal;
+    font-weight:400;
+    height:30px;
+    letter-spacing:normal;
+    line-height:20px;
+    text-rendering:auto;
+    text-size-adjust:100%;
+    user-select:none;
+    vertical-align:middle;
+    width:100px;
+    box-sizing:border-box;
+}
+
+.wac-badge {
+    margin-block-end:16px;
+    margin-block-start:0px;
+    margin-bottom:16px;
+    margin-inline-end:0px;
+    margin-inline-start:0px;
+    margin-left:0px;
+    margin-right:0px;
+    margin-top:0px;
+    padding-bottom:4px;
+    padding-left:8px;
+    padding-right:8px;
+    padding-top:4px;
+    box-sizing:border-box;
+    color:rgb(0, 0, 0);
+    display:inline;
+    font-size:12px;
+    font-style:normal;
+    font-variant-caps:normal;
+    font-variant-east-asian:normal;
+    font-variant-ligatures:normal;
+    font-variant-numeric:normal;
+    font-weight:400;
+    height:auto;
+    letter-spacing:normal;
+    line-height:16px;
+    text-rendering:auto;
+    text-size-adjust:100%;
+    user-select:none;
+    vertical-align:baseline;
+    width:auto;
 }
 
 .vtabs {
@@ -364,6 +437,8 @@ export const TABS: any[] = [
         CommonModule,
         DynamicModule,
         TitlesModule,
+        BadgeModule,
+        MatIconModule,
     ],
     exports: [
         TABS,

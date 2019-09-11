@@ -1,4 +1,6 @@
 import { Inject, Component, ViewEncapsulation, OnInit, ViewChild, ElementRef, Renderer, HostListener } from '@angular/core';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { Angulartics2 } from 'angulartics2';
 import { LoadingService } from '../notification/loading.service';
@@ -55,6 +57,8 @@ export class AppComponent implements OnInit {
         private _windowService: WindowService,
         private _renderer: Renderer,
         @Inject("Runtime") private runtime: Runtime,
+        private matIconRegistry: MatIconRegistry,
+        private domSanitizer: DomSanitizer,
         angulartics2: Angulartics2,
         angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics
     ){
@@ -63,8 +67,11 @@ export class AppComponent implements OnInit {
     @ViewChild('mainContainer') mainContainer: ElementRef;
 
     ngOnInit() {
-        this.runtime.OnAppInit()
-        this._windowService.initialize(this.mainContainer, this._renderer)
+        this.runtime.OnAppInit();
+        this._windowService.initialize(this.mainContainer, this._renderer);
+        this.matIconRegistry.addSvgIcon('wac-info',
+            this.domSanitizer.bypassSecurityTrustResourceUrl("assets/icons/info.svg"),
+        );
     }
 
     showHeader() {
