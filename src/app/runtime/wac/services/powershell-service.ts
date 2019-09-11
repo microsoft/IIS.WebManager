@@ -79,14 +79,7 @@ export class PowershellService {
       (k, v) => {
         switch (k) {
           case 'body':
-            try {
-              if (req.headers.get('waciisflags') === 'GetFileSystemContent') {
-                return v;
-              }
-              return atob(v);
-            } catch {
-              return v;
-            }
+            return v;
 
           case 'headers':
             // we need to explicitly wrap it otherwise when we pass it to new Response(res), the header would remain a plain object

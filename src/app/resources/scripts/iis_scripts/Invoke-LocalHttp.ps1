@@ -34,13 +34,6 @@ function LogVerbose([string] $msg) {
     }
 }
 
-function stringify([System.Byte[]]$content) {
-    if (!$content) {
-        return $content
-    }
-    return [System.Convert]::ToBase64String($content).ToString()
-}
-
 ## same order as @angular/http/enums/RequestMethod
 ## Note that index 0 maps to GET, so if $reqObj.method is null we would default to GET
 $patchMethod = New-Object System.Net.Http.HttpMethod "PATCH"
@@ -111,14 +104,7 @@ try {
     $responseMsg = $client.SendAsync($httpMsg).GetAwaiter().GetResult()
 
     if ($responseMsg.Content) {
-        $resContent = "";
-        if ($reqObj.headers.waciisflags -eq "GetFileSystemContent") {
-            ## for FileSystem content API call with GET method, we should use ReadAsStringAsync() and send the text data as it is.
-            $resContent = $responseMsg.Content.ReadAsStringAsync().GetAwaiter().GetResult();
-        }
-        else {
-            $resContent = stringify $responseMsg.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
-        }
+        $resContent = $responseMsg.Content.ReadAsStringAsync().GetAwaiter().GetResult();
     }
 
     $result = ConvertTo-Json @{
