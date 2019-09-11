@@ -15,7 +15,6 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { BadgeModule } from '@microsoft/windows-admin-center-sdk/angular';
 import { OptionsService } from "main/options.service";
 import { Subscription, Subject, ReplaySubject } from 'rxjs';
 import { DynamicComponent } from './dynamic.component';
@@ -437,7 +436,6 @@ export const TABS: any[] = [
         CommonModule,
         DynamicModule,
         TitlesModule,
-        BadgeModule,
         MatIconModule,
     ],
     exports: [
