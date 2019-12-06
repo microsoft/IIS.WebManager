@@ -50,7 +50,7 @@ import { ServerAnalyticService } from '../webserver/server-analytic.service';
     `],
     encapsulation: ViewEncapsulation.None,  // Use to disable CSS Encapsulation for this component
     template: `
-        <div class="deprecation_banner">IIS Web Manager is deprecatd. For next generateion of IIS server management install <a href="https://msft-sme.myget.org/feed/windows-admin-center-feed/package/nuget/msft.iis.iis-management">IIS extension for Windows Admin Center</a></div>
+        <div class="deprecation_banner">IIS Web Manager is deprecated. For next generateion of IIS server management install <a href="https://msft-sme.myget.org/feed/windows-admin-center-feed/package/nuget/msft.iis.iis-management">IIS extension for Windows Admin Center</a></div>
         <div (dragover)="dragOver($event)">
             <header *ngIf="!isRouteActive('Get')"></header>
             <div id="flexWrapper">
