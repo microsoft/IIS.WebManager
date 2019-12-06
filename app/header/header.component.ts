@@ -28,8 +28,7 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
     `,
     styles: [`
         .nav {
-            height:35px; 
-            position:absolute; 
+            height:35px;
             top:0px;
             left:0px;
             right:0px;
