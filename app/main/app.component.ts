@@ -21,7 +21,7 @@ import { ServerAnalyticService } from '../webserver/server-analytic.service';
         }
 
         #flexWrapper {
-             padding-top:35px;
+             padding-top:70px;
              overflow-x:hidden;
              width:100%;
              display: flex;

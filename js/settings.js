@@ -1,7 +1,7 @@
 ﻿var SETTINGS = {
-    "version": "2.2.4",
-    "api_version": "2.2.0",
-    "api_setup_version": "2.2.0",
+    "version": "2.2.6",
+    "api_version": "2.3.0",
+    "api_setup_version": "2.3.0",
     "api_download_url": "http://go.microsoft.com/fwlink/?LinkId=829373",
     "ga_track": "UA-XXXXXXXX-X",
 }
