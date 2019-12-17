@@ -8,6 +8,7 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
     selector: 'header',
     template: `
         <div class="nav background-active">
+        <div class="deprecation_banner">IIS Web Manager is deprecated. For next generateion of IIS server management install <a href="https://msft-sme.myget.org/feed/windows-admin-center-feed/package/nuget/msft.iis.iis-management">IIS extension for Windows Admin Center</a></div>
             <button class="fa fa-bars nav-item nav-options hover-primary2" [attr.title]="this._options.active ? 'Hide Sidebar' : 'Show Sidebar'" (click)="this._options.toggle()" [class.background-primary2]="this._options.active"></button>
             <a [routerLink]="['/']" title="Home" class="nav-brand nav-item background-active hover-primary2 nav-height">
                 <span class="v-center hidden-xs">Microsoft IIS</span>
@@ -27,8 +28,16 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
         <div class="progress background-normal" [class.animation]='_inProgress'></div>
     `,
     styles: [`
+        .deprecation_banner {
+            color: black;
+            height: 35px;
+            width: 100%;
+            padding: 0.5em;
+            background-color: #ffff7f;
+        }
+
         .nav {
-            height:35px; 
+            height:70px;
             position:absolute; 
             top:0px;
             left:0px;
@@ -39,7 +48,7 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
         }
 
         >>> .nav-height {
-            height:35px; 
+            height:35px;
         }
 
         .nav-item {
@@ -78,6 +87,7 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
         .abs-right {
             display:inline-block;
             position: absolute;
+            top: 35px;
             right: 0;
         }
 
