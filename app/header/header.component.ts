@@ -8,7 +8,7 @@ import { Angulartics2GoogleAnalytics } from 'angulartics2/src/providers/angulart
     selector: 'header',
     template: `
         <div class="nav background-active">
-        <div class="deprecation_banner">IIS Web Manager is deprecated. For next generateion of IIS server management install <a href="https://msft-sme.myget.org/feed/windows-admin-center-feed/package/nuget/msft.iis.iis-management">IIS extension for Windows Admin Center</a></div>
+        <div class="deprecation_banner">IIS Web Manager is deprecated. For next generation of IIS server management install <a href="https://msft-sme.myget.org/feed/windows-admin-center-feed/package/nuget/msft.iis.iis-management">IIS extension for Windows Admin Center</a></div>
             <button class="fa fa-bars nav-item nav-options hover-primary2" [attr.title]="this._options.active ? 'Hide Sidebar' : 'Show Sidebar'" (click)="this._options.toggle()" [class.background-primary2]="this._options.active"></button>
             <a [routerLink]="['/']" title="Home" class="nav-brand nav-item background-active hover-primary2 nav-height">
                 <span class="v-center hidden-xs">Microsoft IIS</span>
