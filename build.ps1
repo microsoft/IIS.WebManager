@@ -101,6 +101,7 @@ try {
     Write-Host "Building project..."
     gulp build $buildArgs
 
+    md -Force "..\dist"
     Write-Host ("OutputDirectory: " + (Resolve-Path "..\dist").Path)
     if ($pack) {
         nuget pack . -Version $version -OutputDirectory (Resolve-Path "..\dist").Path
