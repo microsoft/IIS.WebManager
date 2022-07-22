@@ -54,7 +54,7 @@
     "@types/selenium-webdriver": "3.0.8",
     "@types/semver": "5.5.0",
     "@types/signalr": "2.2.35",
-    "ajv": "6.9.1",
+    "ajv": "6.12.3",
     "ansi-colors": "1.0.1",
     "codelyzer": "4.5.0",
     "grunt": "1.0.4",
