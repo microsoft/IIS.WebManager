@@ -13,7 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "@angular/common": "7.1.1",
-    "@angular/core": "11.0.5",
+    "@angular/core": "7.1.1",
     "@angular/forms": "7.1.1",
     "@angular/http": "7.1.1",
     "@angular/platform-browser": "7.1.1",
@@ -61,7 +61,7 @@
     "gulp": "4.0.0",
     "gulp-autoprefixer": "6.0.0",
     "gulp-batch": "1.0.5",
-    "gulp-clean": "0.3.2",
+    "gulp-clean": "0.4.0",
     "gulp-cli": "2.1.0",
     "gulp-inline-ng2-template": "5.0.1",
     "gulp-jasmine": "4.0.0",
@@ -75,7 +75,7 @@
     "jasmine-reporters": "2.2.1",
     "jasmine-terminal-reporter": "1.0.3",
     "jsdom": "16.5.0",
-    "karma": "6.3.16",
+    "karma": "4.1.0",
     "karma-chrome-launcher": "2.1.1",
     "karma-cli": "1.0.1",
     "karma-coverage-istanbul-reporter": "1.2.1",
@@ -84,10 +84,10 @@
     "karma-remap-istanbul": "0.6.0",
     "ping": "0.2.2",
     "primeng": "4.1.0",
-    "protractor": "5.4.2",
+    "protractor": "5.4.4",
     "readline-sync": "1.4.9",
     "run-sequence": "2.2.0",
-    "rxjs-tslint": "0.1.5",
+    "rxjs-tslint": "0.1.8",
     "rxjs-tslint-rules": "4.10.0",
     "selenium-webdriver": "3.6.0",
     "signalr": "2.3.0",
@@ -103,6 +103,7 @@
     "tsutils": "3.10.0",
     "typescript": "3.1.6",
     "vinyl": "2.2.0",
-    "winstrap": "0.5.12"
+    "winstrap": "0.5.12",
+    "xmlhttprequest-ssl": "1.6.3"
   }
 }

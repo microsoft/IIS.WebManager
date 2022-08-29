@@ -112,6 +112,7 @@ try {
     if (ShouldNPMInstall) {
         Write-Host "Installing dependencies..."
         npm install 
+        npm audit fix --legacy-peer-deps
     }
 
     Write-Host "Building project..."
