@@ -32,7 +32,7 @@ function ToPassThroughArgs($inputArgs) {
 }
 
 $purge = $args | Where-Object { $_ -like "--purge" }
-$env = $args | Where-Object { $_ -like "--env" -or $_ -like "--configuration"-or $_  -like "-c"}
+$buildEnv = $args | Where-Object { $_.ToLower().startsWith("--env=")}
 $pack = $args | Where-Object { $_ -like "--pack" }
 $serve = $args | Where-Object { $_ -like "--serve" }
 $version = $args | Where-Object { $_.ToLower().startsWith("--version=") }
@@ -46,9 +46,12 @@ elseif ($pack)
    throw "--version=xxx.xxx is required if --pack is provided"
 }
 
-if(!$env)
+if($buildEnv)
 {
-    $env = "-c=wac"
+      $buildEnv = "-c=" + $buildEnv.split("=")[1]
+}
+else {
+    $buildEnv = "-c=wac"
 }
 
 if (!(Get-Command "npm" -ErrorAction SilentlyContinue)) {
@@ -112,7 +115,7 @@ try {
     }
 
     Write-Host "Building project..."
-    gulp build $buildArgs $env
+    gulp build $buildArgs $buildEnv
 
     Write-Host ("OutputDirectory: " + (Resolve-Path "..\dist").Path)
     if ($pack) {
