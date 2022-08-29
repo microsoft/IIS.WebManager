@@ -25,10 +25,14 @@ function ShouldNPMInstall {
 }
 
 function ToPassThroughArgs($inputArgs) {
-    return $inputArgs | Where-Object { $_ -notlike "--purge" -and $_ -notlike "--pack" -and $_ -notlike "--serve" -and -not ($_.startsWith("--version="))}
+    return $inputArgs | Where-Object { $_ -notlike "--purge" -and $_ -notlike "--pack" `
+    -and $_ -notlike "--serve" -and -not ($_.startsWith("--version=")) `
+    -and -not ($_.startsWith("--env=")) -and -not ($_.startsWith("--configuration=")) `
+    -and -not ($_.startsWith("-c="))}
 }
 
 $purge = $args | Where-Object { $_ -like "--purge" }
+$env = $args | Where-Object { $_ -like "--env" -or $_ -like "--configuration"-or $_  -like "-c"}
 $pack = $args | Where-Object { $_ -like "--pack" }
 $serve = $args | Where-Object { $_ -like "--serve" }
 $version = $args | Where-Object { $_.ToLower().startsWith("--version=") }
@@ -36,6 +40,15 @@ if ($version) {
     # Example: --version=0.1.$(Build.BuildNumber)
     Write-Host ($version)
     $version = $version.split("=")[1]
+}
+elseif ($pack)
+{    
+   throw "--version=xxx.xxx is required if --pack is provided"
+}
+
+if(!$env)
+{
+    $env = "-c=wac"
 }
 
 if (!(Get-Command "npm" -ErrorAction SilentlyContinue)) {
@@ -48,7 +61,7 @@ if ($purge -and !(Get-Command "git" -ErrorAction SilentlyContinue)) {
 
 if ($pack) {
     if (!(Get-Command "nuget" -ErrorAction SilentlyContinue)) {
-        throw """--pack"" operation requires nugetin PATH"
+        throw """--pack"" operation requires nuget.exe in PATH"
     }
 
     $outputHashingTag = "--output-hashing"
@@ -85,8 +98,8 @@ try {
     $allDependencies = Get-Content "package.json" | ConvertFrom-Json
 
     foreach($pkg in $buildTools) {
-        $version = $allDependencies.devDependencies."$pkg"
-        $pkgVersion = "${pkg}@${version}"
+        $versionFile = $allDependencies.devDependencies."$pkg"
+        $pkgVersion = "${pkg}@${versionFile}"
         Write-Verbose "Dev dependency found: ${pkgVersion}"
         if (!((npm list -g $pkgVersion) | Where-Object { $_ -match "$pkgVersion\s*$" })) {
             npm install -g $pkgVersion
@@ -95,11 +108,11 @@ try {
 
     if (ShouldNPMInstall) {
         Write-Host "Installing dependencies..."
-        npm install
+        npm install 
     }
 
     Write-Host "Building project..."
-    gulp build $buildArgs
+    gulp build $buildArgs $env
 
     Write-Host ("OutputDirectory: " + (Resolve-Path "..\dist").Path)
     if ($pack) {
