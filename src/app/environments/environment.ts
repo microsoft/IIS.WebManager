@@ -1,2 +1,2 @@
-export const IsProduction = false;
-export const IsWAC = false;
+export const IsProduction = true;
+export const IsWAC = true;

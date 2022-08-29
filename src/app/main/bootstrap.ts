@@ -1,3 +1,20 @@
+import { CoreEnvironment } from "@microsoft/windows-admin-center-sdk/core";
+import { PowerShellScripts } from "generated/powershell-scripts";
+import { IsProduction } from "environments/environment";
+
 export function preload(): Promise<void> {
-    return Promise.resolve();
+    // initialize SME module environment with localization settings.
+    return CoreEnvironment.initialize(
+    {
+        name: "msft.iis.iis-management",
+        powerShellModuleName: PowerShellScripts.module,
+        isProduction: IsProduction,
+        shellOrigin: '*',
+    },
+    {
+        resourcesPath: 'assets/strings',
+    },
+    {
+        disableStyleInjection: true,
+    });
 }

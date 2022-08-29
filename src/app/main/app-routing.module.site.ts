@@ -3,24 +3,17 @@ import { RouterModule } from "@angular/router";
 import { GetComponent } from "./get.component";
 import { ConnectComponent } from "connect/connect.component";
 import { NotFound } from "common/notfound.component";
-import { WACIdleComponent } from "runtime/wac/components/wac-idle.component";
-import { InstallComponent } from "runtime/wac/components/install.component";
 import { WebServerRoute } from "./settings";
 
 @NgModule({
   imports: [
     RouterModule.forRoot([
-        // routes for WAC only
-        { path: "idle", component: WACIdleComponent },
-        { path: "install", component: InstallComponent },
-        { path: "wac", loadChildren: "../runtime/wac/components/wac.module#WACModule" },
-
         // common routes
         { path: "", redirectTo: WebServerRoute, pathMatch: "full" },
         { path: "get", component: GetComponent },
         { path: "connect", component: ConnectComponent },
         { path: "settings", loadChildren: "../settings/settings.module#SettingsModule" },
-        { path: "webserver", loadChildren: "../webserver/webserver.module#WebServerModule" },
+        { path: WebServerRoute, loadChildren: "../webserver/webserver.module#WebServerModule" },
         { path: "**", component: NotFound },
     ],
         {
