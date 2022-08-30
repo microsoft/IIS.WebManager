@@ -10,18 +10,21 @@ Information about WAC and the IIS Extension can be found here,
 
 ## Prerequisites
 * Install Node.js from https://nodejs.org/en/download/
+* Install Gulp, `npm install --global gulp-cli`
 * Install dependencies by running `nmp install` in the 'src` sub folder
 * Run `npm audit fix --legacy-peer-deps` to get rid of some security warnings
 * Path to `NuGet.exe` must be in PATH environment variable. NuGet.exe can be found [here](https://www.nuget.org/downloads)
 
 ```
+npm install --global gulp-cli
 cd src
-nmp install
+npm install
 npm audit fix --legacy-peer-deps
 ```
 
 ## Build
 
+* [Optional] Start PowerShell as Administrator, run `Set-ExecutionPolicy -ExecutionPolicy Unrestricted` to grant persmissions for PowerShell scripts
 * Open a PowerShell window, go to the project root folder, run `.\build.ps1` to build the project
 * Run `.\build.ps1 --pack --output-hashing all --version=xx.xxx` to create the NuGet package
 
