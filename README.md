@@ -35,9 +35,10 @@ Output will be generated in `dist` directory.
 ## Test with Windows Admin Center (WAC)
 
 * Install WAC on a Window client to manage other Windows client or Windows server machines. To avoid permission issues with IIS Administration, you should use WAC to manage IIS on a different machine. 
-* You don't need to install WAC in Dev mode as instructed by the WAC documentation.
-* To install the newly built NuGet package on WAC, first add a new Feeds location as described [here](https://docs.microsoft.com/en-us/windows-server/manage/windows-admin-center/configure/using-extensions#installing-extensions-from-a-different-feed), pointing to your msft.iis.iis-management.x.x.x.nupkg in the `dist` folder.
-* Once you see **msft.iis.iis-management** from the available IIS extensions section, install it.
+* You don't need to install WAC in Dev mode as instructed by the WAC documentation
+* To install the newly built NuGet package on WAC, first add a new Feeds location as described [here](https://docs.microsoft.com/en-us/windows-server/manage/windows-admin-center/configure/using-extensions#installing-extensions-from-a-different-feed), pointing to your msft.iis.iis-management.x.x.x.nupkg in the `dist` folder
+* Once you see **msft.iis.iis-management** from the available IIS extensions section, install it
+* When you update the IIS Extension in WAC, the browser may hold cache for the updated pages. To make sure you are not accessing the cached pages, open the browser as guest, and close/re-open WAC after you have updated the IIS Extension
 
 ## Test it standalone
 You can run the project locally with `gulp`.
