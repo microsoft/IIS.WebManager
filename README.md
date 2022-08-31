@@ -29,7 +29,9 @@ npm audit fix --legacy-peer-deps
 * Run `.\build.ps1 --pack --output-hashing all --version=xx.xxx` to create the NuGet package
 
 ```
-.\build.ps1
+.\build.ps1                       # for wac
+.\build.ps1 --env=wac             # for wac
+.\build.ps1 --env=site            # for non-wac build
 .\build.ps1 --pack --output-hashing all --version=0.2.1
 ```
 
