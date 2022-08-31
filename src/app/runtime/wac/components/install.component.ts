@@ -16,7 +16,7 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
         <ul class="form">
             <li>
                 <input name="installfrom" role="radio" aria-labeledby="radio_1" type="radio" [(ngModel)]="useDefault" [value]="true" [checked]="useDefault">
-                    <span id="radio_1">Install from Microsoft (internet connection required)</span>
+                    <span id="radio_1">Install from Microsoft (Internet connection required)</span>
             </li>
             <li>
                 <input name="installfrom" role="radio" aria-labeledby="radio_2" type="radio" [(ngModel)]="useDefault" [value]="false" [checked]="!useDefault">
@@ -25,18 +25,19 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
                     <li>
                         <ul>
                             <li #apiPrompt>
-                                <label id="label_1">IIS Administration API Installer location</label>
+                                <label id="label_1">IIS Administration API Installer location (IISAdministrationSetup.exe can be found 
+                                <a target='_blank' href='https://github.com/microsoft/IIS.Administration/releases'>here</a>)</label>
                                 <input aria-labeledby="label_1" class="form-control" type="text" [(ngModel)]="adminAPILocation"/>
                             </li>
-                            <li #dotnetPrompt>
+                            <li #dotnetPrompt style='display:none'>
                                 <label id="label_2">(Optional*) .NET Core Runtime installer location, required version: ${SETTINGS.DotnetFrameworkVersion}</label>
                                 <input aria-labeledby="label_2" class="form-control" type="text" [(ngModel)]="dotnetCoreLocation" />
                             </li>
-                            <li #aspnetPrompt>
+                            <li #aspnetPrompt style='display:none'>
                                 <label id="label_3">(Optional*) ASP.NET Core installer location, required version: ${SETTINGS.AspnetSharedFrameworkVersion}</label>
                                 <input aria-labeledby="label_3" class="form-control" type="text" [(ngModel)]="aspnetCoreLocation" />
                             </li>
-                            <p>*If prerequisites .NET Core Runtime ${SETTINGS.DotnetFrameworkVersion} and ASP.NET Core ${SETTINGS.AspnetSharedFrameworkVersion} are not already installed on the server and installer paths are not specified, we will attempt to acquire them from internet.</p>
+                            <p>*If prerequisites .NET Core Runtime and ASP.NET Core are not already installed on the server, we will attempt to acquire them from the Internet.</p>
                         </ul>
                     </li>
                 </ul>
