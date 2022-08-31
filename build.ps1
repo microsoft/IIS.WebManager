@@ -48,7 +48,11 @@ elseif ($pack)
 
 if($buildEnv)
 {
-      $buildEnv = "-c=" + $buildEnv.split("=")[1]
+    $buildEnv = "-c=" + $buildEnv.split("=")[1]
+    if ($buildEnv -ne "-c=wac")
+    {
+        $buildEnv = "" # se blank for non-wac build for now
+    }
 }
 else {
     $buildEnv = "-c=wac"
