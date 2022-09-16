@@ -48,7 +48,7 @@ export class FilesService implements IDisposable {
     }
 
     public get(id: string): Promise<ApiFile> {
-        return this._http.get("/files?id=" + id)
+        return this._http.get("/files/" + id)
             .then(file => {
                 return ApiFile.fromObj(file);
             });
@@ -135,7 +135,7 @@ export class FilesService implements IDisposable {
     }
 
     public getFileContent(file: ApiFile): Promise<Response> {
-        let url = "/files/content?id=" + file.id;
+        let url = "/files/content/" + file.id;
         let opts: RequestOptionsArgs = this._http.getOptions(RequestMethod.Get, url, null);
         return this._http.request(url, opts);
     }
@@ -145,7 +145,7 @@ export class FilesService implements IDisposable {
             content = FilesService.str2utf8(<string>content);
         }
 
-        let url = "/files/content?id=" + file.id;
+        let url = "/files/content/" + file.id;
         let opts: RequestOptionsArgs = this._http.getOptions(RequestMethod.Put, url, null);
 
         //
@@ -423,7 +423,7 @@ export class FilesService implements IDisposable {
 
                 existingDir.isLocation = true;
 
-                return this._http.patch("/files/locations?id=" + location.id, JSON.stringify(data))
+                return this._http.patch("/files/locations/" + location.id, JSON.stringify(data))
                     .then(l => {
 
                         Object.assign(location, l);
@@ -476,7 +476,7 @@ export class FilesService implements IDisposable {
     }
 
     private updateInternal(file: ApiFile, data: any): Promise<any> {
-        return this._http.patch("/files?id=" + file.id, JSON.stringify(data))
+        return this._http.patch("/files/" + file.id, JSON.stringify(data))
             .then(f => {
                 Object.assign(file, ApiFile.fromObj(f));
                 this._change.next(FileChangeEvent.updated(file));
@@ -503,7 +503,7 @@ export class FilesService implements IDisposable {
         let promises = [];
 
         for (let file of files) {
-            promises.push(this._http.delete("/files?id=" + file.id)
+            promises.push(this._http.delete("/files/" + file.id)
                 .then(_ => {
                     this._change.next(FileChangeEvent.deleted(file));
                 }));
@@ -747,7 +747,7 @@ export class FilesService implements IDisposable {
             .then(progress => {
                 return this.monitorProgress(progress)
                     .then(_ => {
-                        return this._http.get("/files?id=" + progress.file.id, null, false)
+                        return this._http.get("/files/" + progress.file.id, null, false)
                             .then(f => {
                                 this._change.next(FileChangeEvent.deleted(source));
                                 this._change.next(FileChangeEvent.created(ApiFile.fromObj(f)));
@@ -783,7 +783,7 @@ export class FilesService implements IDisposable {
             .then(progress => {
                 return this.monitorProgress(progress)
                     .then(_ => {
-                        return this._http.get("/files?id=" + progress.file.id, null, false)
+                        return this._http.get("/files/" + progress.file.id, null, false)
                             .then(f => {
                                 this._change.next(FileChangeEvent.created(ApiFile.fromObj(f)));
                                 return f;
@@ -861,7 +861,7 @@ export class FilesService implements IDisposable {
         const chunkSize = 1024 * 1024 * 2; // In bytes;
 
         let initialLength = fileInfo.size < chunkSize ? fileInfo.size : chunkSize;
-        let url = "/files/content?id=" + file.id;
+        let url = "/files/content/" + file.id;
 
         return this.read(fileInfo, 0, initialLength)
             .then(content => {
