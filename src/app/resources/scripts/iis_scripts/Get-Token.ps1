@@ -107,13 +107,12 @@ if ($command -eq 'ensure') {
     if ($existingToken) {
         ## always renew token when this script is called because there was no way to query for existing token's value
         $expires_on_date = (Get-Date).AddDays($tokenExpiryDays)
-        $existingToken.expires_on = ConvertTo-SystemLocaleDateString $expires_on_date
+        $existingToken.expires_on = $expires_on_date
         ## This is an odd behavior: we need to wrap the existing token in a new object
         $output = TokenRequest -targetEndpoint $RenewEndpoint -method "POST" -requestBody @{ "api_key" = $existingToken }
     } else {
         $expires_on_date = (Get-Date).AddDays(14)
-        $expires_on = ConvertTo-SystemLocaleDateString $expires_on_date
-        $output = TokenRequest -targetEndpoint $CreateEndpoint -method "POST" -requestBody @{ "expires_on" = $expires_on; "purpose" = $tokenName }
+        $output = TokenRequest -targetEndpoint $CreateEndpoint -method "POST" -requestBody @{ "expires_on" = $expires_on_date; "purpose" = $tokenName }
     }
 } elseif ($command -eq 'delete') {
     $output = TokenRequest -targetEndpoint $DeleteEndpoint -method "DELETE" -subpath $existingToken.id
