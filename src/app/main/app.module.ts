@@ -40,7 +40,6 @@ import { WindowService } from "./window.service";
 import { FilesModule } from "../files/files.module";
 import { MonitoringModule } from "../webserver/monitoring/monitoring.module";
 import { WebSitesModule } from "../webserver/websites/websites.module";
-import { AngularFontAwesomeModule } from "angular-font-awesome";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { Runtime } from "runtime/runtime";
 import { AppRoutingModule } from "./app-routing.module";
@@ -68,7 +67,6 @@ import { HttpClientModule } from "@angular/common/http";
         WebSitesModule,
         FilesModule,
         MonitoringModule,
-        AngularFontAwesomeModule,
         TitlesModule,
         ModulesAddon,
         HttpClientModule,
