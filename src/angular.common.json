@@ -42,6 +42,7 @@
               "./node_modules/primeng/resources/primeng.min.css",
               "./node_modules/primeng/resources/themes/bootstrap/theme.css",
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "./node_modules/@microsoft/windows-admin-center-sdk/styles/css/main.css",
               "./themes/main.css",
               "./themes/themes.common.css"
             ],

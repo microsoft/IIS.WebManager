@@ -60,7 +60,7 @@ import {WebSitesService} from './websites.service';
         }
 
         button > span:after {
-            font-family: FontAwesome;
+            font-family: "Server-MDL2";
             font-size: 16px;
             content: "\\f0d7";
         }
@@ -110,7 +110,7 @@ import {WebSitesService} from './websites.service';
         }
 
         .cert span:before {
-            font-family: FontAwesome;
+            font-family: "Server-MDL2";
             content: "\\f023";
             padding-right: 5px;
         }

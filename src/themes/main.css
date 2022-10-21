@@ -1,4 +1,4 @@
-﻿@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
 html,body {
     height: 100%;
@@ -184,8 +184,8 @@ button {
     margin: 0.3em;
 }
 
-.bttn i.fa,
-button i.fa {
+.bttn i.sme-icon,
+button i.sme-icon {
     font-size: 120%;
     padding: 3px;
 }
@@ -207,7 +207,7 @@ button span {
 button::before,
 button::after,
 .bttn:before {
-    font-family: FontAwesome;
+    font-family: "Server-MDL2";
     font-size: 120%;
     line-height: 22px;
     vertical-align: middle;
@@ -228,7 +228,7 @@ button:not(:empty)::after {
 
 .ico::before,
 .ico::after {
-    font-family: FontAwesome;
+    font-family: "Server-MDL2";
 }
 
 .ico::before {
@@ -433,7 +433,7 @@ tooltip {
 }
 
 .grid-list-header .orderby:after {
-    font-family: FontAwesome;   
+    font-family: "Server-MDL2";   
     padding-left: 10px;
     content: "\f0de"
 }
@@ -603,7 +603,7 @@ select[enabled]:not(.inactive) {
 
 .collapse-heading h2:before,
 .collapse-heading .head:before {
-    font-family: FontAwesome;
+    font-family: "Server-MDL2";
     content: "\f078";
     width: 20px;
     text-align: left;
@@ -613,7 +613,7 @@ select[enabled]:not(.inactive) {
 
 .collapse-heading.collapsed h2:before,
 .collapse-heading.collapsed .head:before {
-    font-family: FontAwesome;
+    font-family: "Server-MDL2";
     content: "\f054";
     width: 20px;
     text-align: left;
@@ -690,7 +690,7 @@ select[enabled]:not(.inactive) {
 }
 
 .filter::before {
-    font-family: FontAwesome;
+    font-family: "Server-MDL2";
     content: "\f0b0";
     position: absolute;
     line-height: 32px;
@@ -699,107 +699,107 @@ select[enabled]:not(.inactive) {
 }
 
 button.delete:before {
-    content: "\f014";
+    content: "\e74d";
 }
 
 button.cancel:before {
-    content: "\f00d";
+    content: "\e711";
 }
 
 button.ok:before {
-    content: "\f00c";
+    content: "\e8fb";
 }
 
 button.edit:before,
 .bttn.edit:before {
-    content: "\f040";
+    content: "\e70f";
 }
 
 button.copy:before {
-    content: "\f0c5";
+    content: "\e8c8";
 }
 
 button.refresh:before {
-    content: "\f021";
+    content: "\e895";
 }
 
 button.new-root:before {
-    content: "\f0a0";
+    content: "\f38a";
 }
 
 button.new-file:before {
-    content: "\f15b";
+    content: "\e8e5";
 }
 
 button.new-folder:before {
-    content: "\f07c";
+    content: "\ed25";
 }
 
 button.upload:before {
-    content: "\f093";
+    content: "\e898";
 }
 
 button.comment:before {
-    content: "\f0e5";
+    content: "\e901";
 }
 
 button.up:before {
-    content: "\f176";
+    content: "\e74a";
 }
 
 button.down:before {
-    content: "\f175";
+    content: "\e74b";
 }
 
 button.download:before {
-    content: "\f019";
+    content: "\e896";
 }
 
 button.select:after {
-    content: "\f141";
+    content: "\e712";
 }
 
 button.save:before {
-    content: "\f0c7";
+    content: "\e74e";
 }
 
 button.start:before {
-    content: "\f04b";
+    content: "\e768";
 }
 
 button.stop:before {
-    content: "\f04d";
+    content: "\e71a";
 }
 
 button.go:before {
-    content: "\f061";
+    content: "\e72a";
 }
 
 button.add:before {
-    content: "\f067";
+    content: "\e710";
 }
 
 button.exchange:before {
-    content: "\f0ec";
+    content: "\e8ab";
 }
 
 button.browse:before {
-    content: "\f0ac";
+    content: "\e774";
 }
 
 a.link:before {
     content: "\f08e";
-    font-family: FontAwesome;
+    font-family: "Server-MDL2";
     line-height: 22px;
     vertical-align: middle;
 }
 
 button.more:before {
-    content: "\f067";
+    content: "\e710";
 }
 
 button.less:before {
-    content: "\f068";
+    content: "\e738";
 }
 
 
@@ -883,7 +883,7 @@ button.less:before {
 
 .sidebar .items li > i,
 .sidebar .items li::before {
-    font-family: FontAwesome;
+    font-family: "Server-MDL2";
     width: 20px;
     display: inline-block;
     font-weight: normal;

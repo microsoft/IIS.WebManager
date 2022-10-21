@@ -130,7 +130,7 @@ import { first } from 'rxjs/operators'
         }
 
         .cert .name:before {
-            font-family: FontAwesome;
+            font-family: "Server-MDL2";
             content: "\\f023";
             padding-right: 5px;
         }

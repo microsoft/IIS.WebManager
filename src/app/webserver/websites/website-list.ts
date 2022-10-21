@@ -71,7 +71,7 @@ enum WebSiteFields {
 }
 
 .https:after {
-    font-family: FontAwesome;
+    font-family: "Server-MDL2";
     content: "\\f023";
     padding-left: 5px;
 }

@@ -79,7 +79,7 @@ import { NotificationService } from './notification.service';
         }
 
         h2:before {
-            font-family: FontAwesome;
+            font-family: "Server-MDL2";
             content: "\\f29c";
             margin-right: 10px;
         }

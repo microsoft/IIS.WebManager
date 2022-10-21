@@ -47,6 +47,11 @@ import { ProvidersAddon, ModulesAddon } from "./app.addon";
 import { TitlesModule } from "header/titles.module";
 import { MatIconModule } from "@angular/material/icon";
 import { HttpClientModule } from "@angular/common/http";
+import {
+    IconModule,
+    SmeUxModule,
+    SvgModule
+} from '@microsoft/windows-admin-center-sdk/angular';
 
 @NgModule({
     imports: [
@@ -71,6 +76,9 @@ import { HttpClientModule } from "@angular/common/http";
         ModulesAddon,
         HttpClientModule,
         MatIconModule,
+        IconModule,
+        SmeUxModule,
+        SvgModule
     ],
     declarations: [
         AppComponent,

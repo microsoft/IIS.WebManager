@@ -1,4 +1,4 @@
-﻿.red {
+.red {
     color: #a94442;
 }
 
@@ -155,10 +155,10 @@ button.background-warning.active {
 }
 
 .color-antiactive,
-.bttn:hover i.fa,
-button:hover i.fa,
-button:active i.fa,
-button.active i.fa {
+.bttn:hover i.sme-icon,
+button:hover i.sme-icon,
+button:active i.sme-icon,
+button.active i.sme-icon {
     color: white;
 }
 
@@ -195,7 +195,7 @@ input:not(:required).ng-invalid:focus {
 }
 
 .inactive,
-button.inactive i.fa {
+button.inactive i.sme-icon {
     color: #777;
 }
 
@@ -220,10 +220,10 @@ a[disabled] {
     background: none;
 }
 
-[disabled] button:not([enabled]) i.fa,
-[disabled] .bttn:not([enabled])  i.fa,
-button[disabled] i.fa,
-.bttn[disabled]  i.fa {
+[disabled] button:not([enabled]) i.sme-icon,
+[disabled] .bttn:not([enabled])  i.sme-icon,
+button[disabled] i.sme-icon,
+.bttn[disabled]  i.sme-icon {
     color: #ccc;
 }
 

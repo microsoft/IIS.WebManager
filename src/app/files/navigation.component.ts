@@ -54,7 +54,7 @@ export class Drop {
         }
 
         .crumb:empty:before {
-            font-family: FontAwesome;
+            font-family: "Server-MDL2";
             content: "\\f115";
             padding: 0 2px;
         }

@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnDestroy, Optional } from '@angular/core';
+import { Component, ViewChild, OnDestroy, Optional } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
 import { Subscription } from 'rxjs';
@@ -52,7 +52,7 @@ import { Selector } from '../common/selector';
 
         a:before,
         button:before {
-            font-family: FontAwesome;
+            font-family: "Server-MDL2";
             font-size: 120%;
             line-height: 22px;
             width: 25px;
