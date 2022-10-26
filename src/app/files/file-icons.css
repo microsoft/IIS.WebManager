@@ -1,5 +1,5 @@
-﻿.fi i {
-    font-family: FontAwesome;
+.fi i {
+    font-family: "Server-MDL2";
     width: 25px;
     display: inline-block;
     font-style: normal;
@@ -8,7 +8,7 @@
 }
 
 .fi i::before {
-    content: "\f016";
+    content: url("assets/icons/page.svg");
 }
 
 .fi i::after {
@@ -36,23 +36,25 @@
 }
 
 .fi.directory i::before {
-    content: "\f07b";
+    content: "\e8b7";
 }
 
 .fi.directory:not([disabled]) i::before {
     color: #FFE68E;
+    fill: #FFE68E;
 }
 
 .fi.location i::after {
-    content: "\f061";
+    content: "\e72a";
     font-size: 8px;
+    font-weight: 900;
     left: 3px;
-    top: 66%;
+    top: 80%;
 }
 
 .fi.location.text-center i::after {
     left: 6px;
-    top: 66%;
+    top: 80%;
 }
 
 
@@ -64,7 +66,6 @@
 .fi.inf i::before,
 .fi.md i::before,
 .fi.reg i::before {
-    content: "\f0f6";
 }
 
 /* Image */
@@ -76,7 +77,6 @@
 .fi.jpg i::before,
 .fi.jpeg i::before,
 .fi.png i::before {
-    content: "\f1c5";
 }
 
 /* Video */
@@ -93,7 +93,6 @@
 .fi.webm i::before,
 .fi.vob i::before,
 .fi.wmv i::before {
-    content: "\f1c8";
 }
 
 /* Audio */
@@ -107,7 +106,6 @@
 .fi.mmf i::before,
 .fi.wav i::before,
 .fi.wma i::before {
-    content: "\f1c7";
 }
 
 
@@ -125,7 +123,6 @@
 .fi.map i::before,
 .fi.less i::before,
 .fi.sass i::before,
-
 .fi.asm i::before,
 .fi.asp i::before,
 .fi.aspx i::before,
@@ -150,7 +147,6 @@
 .fi.fs i::before,
 .fi.m i::before,
 .fi.swift i::before,
-
 .fi.perl i::before,
 .fi.pl i::before,
 .fi.ps1 i::before,
@@ -158,7 +154,6 @@
 .fi.cmd i::before,
 .fi.sh i::before,
 .fi.yml i::before,
-
 .fi.py i::before,
 .fi.rb i::before,
 .fi.php i::before,
@@ -167,18 +162,15 @@
 .fi.jsx i::before,
 .fi.ts i::before,
 .fi.targets i::before {
-    content: "\f1c9";
 }
 
 .fi.cs i::after {
     font-family: 'Segoe UI';
-    content: "c#";
     left: 8px;
 }
 
 .fi.vb i::after {
     font-family: 'Segoe UI';
-    content: "vb";
     left: 8px;
 }
 
@@ -195,7 +187,6 @@
 .fi.fdb i::before,
 .fi.ttt i::before,
 .fi.csv i::before {
-    content: "\f1c0";
 }
 
 /* Archive */
@@ -208,20 +199,17 @@
 .fi.z i::before,
 .fi.zz i::before,
 .fi.zip i::before {
-    content: "\f1c6";
 }
 
 /* Executable */
 .fi.exe i::before,
 .fi.msi i::before {
-    content: "\f2d0";
 }
 
 .fi.dll i::after,
 .fi.pyd i::after,
 .fi.jar i::after,
 .fi.winmd i::after {
-    content: "\f085";
     left: 7px;
 }
 
@@ -238,36 +226,29 @@
 .fi.pem i::after,
 .fi.cat i::after {
     left: 7px;
-    content: "\f023";
 }
 
 /* MS Office */
 .fi.pdf i::before {
-    content: "\f1c1";
 }
 
 .fi.doc i::before,
 .fi.docx i::before,
 .fi.rtf i::before {
-    content: "\f1c2";
 }
 
 .fi.xls i::before,
 .fi.xlsx i::before {
-    content: "\f1c3";
 }
 
 .fi.ppt i::before,
 .fi.pptx i::before {
-    content: "\f1c4";
 }
 
 /* Misc */
 .fi.vhd i::before {
-    content: "\f0a0";
 }
 .fi.lnk i::after {
     font-size: 50%;
     margin-top: 3px;
-    content: "\f064";
 }

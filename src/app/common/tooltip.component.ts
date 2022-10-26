@@ -1,4 +1,4 @@
-﻿import { NgModule, Component, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { NgModule, Component, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -10,7 +10,7 @@ import { WindowService } from '../main/window.service';
         <div role="tooltip" tabindex="0" class="help-container"
             (mouseover)="onMouseOver()"
             (mouseleave)="onMouseLeave()">
-            <i class="fa fa-question-circle-o" [attr.aria-hidden]="_visible ? 'false' : 'true'"></i>
+            <i class="sme-icon sme-icon-unknown" [attr.aria-hidden]="_visible ? 'false' : 'true'"></i>
             <div #helpContent class="help-content border-color shadow" 
                 [style.visibility]="_visible ? 'visible' : 'hidden'"
                 [style.height]="_heightStyle"

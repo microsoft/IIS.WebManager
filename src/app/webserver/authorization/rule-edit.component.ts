@@ -1,4 +1,4 @@
-﻿import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 
 import { AuthRule, AccessType } from './authorization'
 import { AuthorizationService } from './authorization.service';
@@ -51,8 +51,7 @@ import { AuthorizationService } from './authorization.service';
             margin: 6px 0 0 0;
         }
 
-        .fa-circle,
-        .fa-ban {
+        .sme-icon-blocked {
             font-size: 20px;
             margin-right: 10px;
         }

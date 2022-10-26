@@ -29,7 +29,7 @@ import { FormsModule } from '@angular/forms';
     template: `
         <div class="warning" *ngIf="warning">
             <div class="symbol">
-                <i aria-hidden="true" class="fa fa-exclamation-circle fa-lg"></i>
+                <i aria-hidden="true" class="sme-icon sme-icon-criticalErrorSolid fa-lg"></i>
             </div>
             <span class="warning-text">
                 <div *ngFor="let line of getLines(_warning)">

@@ -1,4 +1,4 @@
-﻿import { Component, Input, Optional, Inject, ViewChild, OnInit } from '@angular/core';
+import { Component, Input, Optional, Inject, ViewChild, OnInit } from '@angular/core';
 import { Selector } from 'common/selector';
 import { AppPoolsService } from '../app-pools/app-pools.service';
 import { ApplicationPool } from '../app-pools/app-pool';
@@ -14,7 +14,7 @@ import { Status } from 'common/status';
             <span class="status" *ngIf="!started">({{model.status}})</span>
             <div class="actions action-selector">
                 <div class="selector-wrapper">
-                    <button title="Actions" (click)="openSelector()" [class.background-active]="(_selector && _selector.opened) || false"><i aria-hidden="true" class="fa fa-caret-down"></i></button>
+                    <button title="Actions" (click)="openSelector()" [class.background-active]="(_selector && _selector.opened) || false"><i aria-hidden="true" class="sme-icon sme-icon-chevronDownSmall"></i></button>
                     <selector [right]="true" [isQuickMenu]="true">
                         <ul>
                             <li><a class="bttn edit" title="Edit" [routerLink]="['/webserver/app-pools', model.id]">Edit</a></li>

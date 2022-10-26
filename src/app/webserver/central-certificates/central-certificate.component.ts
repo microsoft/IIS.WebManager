@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, OnDestroy, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChildren, QueryList } from '@angular/core';
 import { NgModel } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ApiFile } from '../../files/file';
@@ -25,7 +25,7 @@ import { NotificationService } from 'notification/notification.service';
                 <label>Physical Path</label>
                 <input type="text" class="form-control left-with-button" [(ngModel)]="_configuration.path" (modelChanged)="onModelChanged()" throttle required [attr.disabled]="isPending || null" />
                 <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" (click)="fileSelector.toggle()" [attr.disabled]="isPending || null" >
-                    <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-more"></i>
                 </button>
                 <server-file-selector #fileSelector (selected)="onSelectPath($event)" [defaultPath]="_configuration.path" [types]="['directory']"></server-file-selector>
             </fieldset>
@@ -79,6 +79,10 @@ import { NotificationService } from 'notification/notification.service';
 
         .error-message {
             margin-top: 0px;
+        }
+
+        .sme-icon {
+            line-height: 26px;
         }
     `]
 })

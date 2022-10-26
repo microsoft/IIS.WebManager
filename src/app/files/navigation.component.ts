@@ -19,7 +19,7 @@ export class Drop {
                     class="no-border pull-left color-active"
                     title="Go to the parent directory"
                     (click)="onClickUp()">
-                        <i aria-hidden="true" class="fa fa-level-up"></i>
+                        <i aria-hidden="true" class="sme-icon sme-icon-up"></i>
             </button>
             <div class="fill">
                 <ul aria-label="Hit the spacebar key to select." tabindex="0" *ngIf="_crumbs.length > 0" [hidden]="_typing" class="nav border-color" (keyup.space)="onClickAddress($event)" (keyup.enter)="onClickAddress($event)" (click)="onClickAddress($event)">
@@ -36,7 +36,7 @@ export class Drop {
     `,
     styles: [`
         button {
-            padding: 6px 8px;
+            padding: 10px 8px;
         }
 
         .crumb {
@@ -54,8 +54,8 @@ export class Drop {
         }
 
         .crumb:empty:before {
-            font-family: FontAwesome;
-            content: "\\f115";
+            font-family: "Server-MDL2";
+            content: "\\ed25";
             padding: 0 2px;
         }
 
@@ -63,7 +63,7 @@ export class Drop {
             border-style: solid;
             border-width: 1px;
             padding: 8px 4px;
-            height: 36px;
+            height: 40px;
         }
 
         .nav li {
@@ -71,8 +71,9 @@ export class Drop {
         }
 
         input {
-            height: 36px;
+            height: 40px;
             padding: 8px;
+            max-width: none;
         }
 
         .fill {
@@ -81,7 +82,7 @@ export class Drop {
         }
 
         .crumb-list-wrapper {
-            height: 36px;
+            height: 40px;
             overflow: hidden;
         }
 

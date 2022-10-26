@@ -24,8 +24,8 @@ export class RouteReference {
 
 export const CONTEXT_MODULES = [
     new RouteReference(WebServerModuleName, WebServerModuleIcon, WebServerGeneralRoute ),
-    new RouteReference(WebSitesModuleName, "fa fa-globe", WebSiteListRoute ),
-    new RouteReference(AppPoolsModuleName, "fa fa-cogs", AppPoolListRoute ),
+    new RouteReference(WebSitesModuleName, "sme-icon sme-icon-globe", WebSiteListRoute ),
+    new RouteReference(AppPoolsModuleName, "sme-icon sme-icon-processing", AppPoolListRoute ),
 ];
 
 export class Feature extends ComponentReference {
@@ -71,7 +71,7 @@ export class GlobalModuleReference {
 }) export class FeatureVTabsComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() default: string;
     @Input() generalTabName: string = "General";
-    @Input() generalTabIcon: string = "fa fa-wrench";
+    @Input() generalTabIcon: string = "sme-icon sme-icon-developerTools";
     @Input() generalTabCategory: string;
     @Input() model: FeatureContext;
     @Input() resource: string;

@@ -40,7 +40,7 @@ import { skip } from 'rxjs/operators';
                         <label class="block">Physical Path</label>
                         <input type="text" class="form-control block left-with-button" [(ngModel)]="model.physical_path" throttle required />
                         <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" (click)="fileSelector.toggle()">
-                            <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
+                            <i aria-hidden="true" class="sme-icon sme-icon-more"></i>
                         </button>
                         <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="model.physical_path" (selected)="onSelectPath($event)"></server-file-selector>
                     </fieldset>
@@ -84,16 +84,16 @@ import { skip } from 'rxjs/operators';
             </div>
             <div class="actions">
                 <button class="no-border no-editing" title="Edit" [class.inactive]="readonly" (click)="onEdit()">
-                    <i aria-hidden="true" class="fa fa-pencil color-active"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-edit color-active"></i>
                 </button>
                 <button [disabled]="!isValid()" class="no-border editing" title="Ok" (click)="onSave()">
-                    <i aria-hidden="true" class="fa fa-check color-active"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-accept color-active"></i>
                 </button>
                 <button class="no-border editing" title="Cancel" (click)="onCancel()">
-                    <i aria-hidden="true" class="fa fa-times red"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-clear red"></i>
                 </button>
                 <button class="no-border" *ngIf="model.id" title="Delete" [class.inactive]="readonly" (click)="onDelete()">
-                    <i aria-hidden="true" class="fa fa-trash-o red"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-delete red"></i>
                 </button>
             </div>
         </div>

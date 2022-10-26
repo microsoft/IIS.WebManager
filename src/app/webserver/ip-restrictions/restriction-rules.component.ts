@@ -11,23 +11,23 @@ import { RestrictionRule, IpRestrictions } from './ip-restrictions'
         <div class="row grid-item" [class.background-editing]="_editing">
             <div class="actions">
                 <button class="no-border" title="Ok" *ngIf="_editing" [disabled]="!isValid() || null" (click)="onSave()">
-                    <i aria-hidden="true" class="fa fa-check blue"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-accept blue"></i>
                 </button>
                 <button enabled class="no-border" title="Cancel" *ngIf="_editing" (click)="onDiscard()">
-                    <i aria-hidden="true" class="fa fa-times red"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-clear red"></i>
                 </button>
                 <button enabled class="no-border" title="Edit" [class.inactive]="!_editable" *ngIf="!_editing" (click)="onEdit()">
-                    <i aria-hidden="true" class="fa fa-pencil blue"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-edit blue"></i>
                 </button>
                 <button class="no-border" *ngIf="model.id" title="Delete" [class.inactive]="!_editable || _editing" (click)="onDelete()">
-                    <i aria-hidden="true" class="fa fa-trash-o red"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-delete red"></i>
                 </button>
             </div>
             <div *ngIf="!_editing">
                 <fieldset class="col-xs-8 col-md-2">
                     <label class="visible-xs visible-sm">Status</label>
-                    <i aria-hidden="true" class="fa fa-circle green hidden-xs hidden-sm" *ngIf="model.allowed"></i>
-                    <i aria-hidden="true" class="fa fa-ban red hidden-xs hidden-sm" *ngIf="!model.allowed"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-completedSolid green hidden-xs hidden-sm" *ngIf="model.allowed"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-blocked red hidden-xs hidden-sm" *ngIf="!model.allowed"></i>
                     <span>{{model.allowed ? "Allow" : "Deny"}}</span>
                 </fieldset>
                 <fieldset class="col-xs-12 col-md-3">
@@ -71,8 +71,8 @@ import { RestrictionRule, IpRestrictions } from './ip-restrictions'
         </div>
     `,
     styles: [`
-        .fa-circle,
-        .fa-ban {
+        .sme-icon-completedSolid,
+        .sme-icon-blocked {
             font-size: 20px;
             margin-right: 10px;
             padding-left: 1px
@@ -197,7 +197,7 @@ export class RestrictionRuleComponent implements OnChanges, OnInit {
             <switch label="Allow Unlisted" class="block" [(model)]="ipRestrictions.allow_unlisted" (modelChanged)="onModelChanged()">{{ipRestrictions.allow_unlisted ? "Yes" : "No"}}</switch>
         </fieldset>
         <fieldset>
-            <button class="create" (click)="createRule()" [class.inactive]="_editing || _newRule"><i aria-hidden="true" class="fa fa-plus blue"></i><span>Add</span></button>
+            <button class="create" (click)="createRule()" [class.inactive]="_editing || _newRule"><i aria-hidden="true" class="sme-icon sme-icon-add blue"></i><span>Add</span></button>
             <div class="container-fluid">
                 <div class="row hidden-xs hidden-sm border-active grid-list-header" [hidden]="rules.length == 0">
                     <label class="col-md-2">Status</label>

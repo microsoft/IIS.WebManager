@@ -21,7 +21,7 @@ import { AppPoolListComponent } from '../app-pools/app-pool-list.component';
                     <label>Physical Path</label>
                     <input type="text" class="form-control left-with-button" [(ngModel)]="model.physical_path" (modelChanged)="onModelChanged()" required />
                     <button [class.background-active]="fileSelector.isOpen()" title="Select Folder" (click)="fileSelector.toggle()">
-                        <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
+                        <i aria-hidden="true" class="sme-icon sme-icon-more"></i>
                     </button>
                     <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="model.physical_path" (selected)="onSelectPath($event)"></server-file-selector>
                 </fieldset>
@@ -37,7 +37,7 @@ import { AppPoolListComponent } from '../app-pools/app-pool-list.component';
             <tab [name]="'Application Pool'">
                 <button class="exchange" [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Change Application Pool</button>
                 <selector #poolSelect class="container-fluid create">
-                    <button (click)="poolSelect.close()" class="close-button" title="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
+                    <button (click)="poolSelect.close()" class="close-button" title="Close"><i class="sme-icon sme-icon-clear" aria-hidden="true"></i></button>
                     <app-pools #appPools [listingOnly]="true" [lazy]="true" (itemSelected)="onAppPoolSelected($event)" (close)="poolSelect.close()"></app-pools>
                 </selector>
                 <app-pool-details [model]="model.application_pool"></app-pool-details>

@@ -37,7 +37,7 @@ import { NotificationService } from '../../notification/notification.service';
                     <label>Directory</label>
                     <input type="text" class="form-control left-with-button" [(ngModel)]="model.directory" (modelChanged)="onModelChanged()" throttle required />
                     <button title="Select Directory" [class.background-active]="fileSelector.isOpen()" (click)="fileSelector.toggle()">
-                        <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
+                        <i aria-hidden="true" class="sme-icon sme-icon-more"></i>
                     </button>
                     <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="model.directory" (selected)="onSelectPath($event)"></server-file-selector>
                 </fieldset>

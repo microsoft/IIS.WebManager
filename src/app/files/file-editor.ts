@@ -162,19 +162,19 @@ export class FileEditor {
     template: `
         <div>
             <button title="Save (Ctrl+S)" (click)="onsave.next($event)" *ngIf="save !== null" [attr.disabled]="save === false || null">
-                <i aria-hidden="true" class="fa fa-floppy-o"></i>
+                <i aria-hidden="true" class="sme-icon sme-icon-save"></i>
             </button>
             <button title="Replace with Unmodified" class="undo color-active" (click)="onreload.next($event)" *ngIf="reload !== null" [attr.disabled]="reload === false || null">
-                <i aria-hidden="true" class="fa fa-arrow-down"></i>
+                <i aria-hidden="true" class="sme-icon sme-icon-down"></i>
             </button>
             <button title="Compare with Unmodified" class="compare" (click)="oncompare.next($event)" *ngIf="compare !== null" [attr.disabled]="compare === false || null">
-                <i aria-hidden="true" class="fa fa-eye-slash"></i>
+                <i aria-hidden="true" class="sme-icon sme-icon-storageMigration"></i>
             </button>
             <button title="Exit Compare Mode" class="uncompare active" (click)="onuncompare.next($event)" *ngIf="uncompare !== null" [attr.disabled]="uncompare === false || null">
-                <i aria-hidden="true" class="fa fa-eye-slash"></i>
+                <i aria-hidden="true" class="sme-icon sme-icon-storageMigration"></i>
             </button>
             <button title="Download" (click)="ondownload.next($event)" *ngIf="download !== null" [attr.disabled]="download === false || null">
-                <i aria-hidden="true" class="fa fa-download"></i>
+                <i aria-hidden="true" class="sme-icon sme-icon-download"></i>
             </button>
         </div>
         <div class="clear"></div>

@@ -12,7 +12,7 @@ import { skip } from 'rxjs/operators';
         <div class="toolbar">
             <div class="toolbar-right">
                 <button title="Refresh" (click)="refresh()">
-                    <i aria-hidden="true" class="fa fa-refresh"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-sync"></i>
                 </button>
                 <div *ngIf="_items" class="col-xs-8 col-sm-5 col-md-4 col-lg-3 actions filter hidden-xs">
                     <input placeholder="Search" type="search" aria-label="Filter" class="form-control" [class.border-active]="_filter" [(ngModel)]="_filter" (ngModelChange)="filter($event)" [throttle]="300" />
@@ -20,6 +20,7 @@ import { skip } from 'rxjs/operators';
             </div>
             <div class="clear"></div>
         </div>
+       
         <div *ngIf="_items" class="container-fluid">
             <div class="border-active grid-list-header row hidden-xs" [hidden]="_items.length == 0">
                 <label class="col-xs-12 col-sm-6 col-md-4 col-lg-3">Name</label>
@@ -66,18 +67,115 @@ import { skip } from 'rxjs/operators';
             font-size: 16px;
         }
 
-        .name:before {
-            font-family: FontAwesome;
-            content: "\\f023";
-            padding-left: 5px;
-            padding-right: 5px;
-            font-size: 16px;
-        }
-
         .container-fluid,
         .row {
             margin: 0;
             padding: 0;
+        }
+
+        .dritest0 {
+            font-size: 16px;
+            font-family: "Server-MDL2";
+            content: "\\e72e";
+            font-style: normal;
+            line-height: 20px;
+            letter-spacing: 0px;
+            font-variant: normal;
+            font-weight: normal;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .dritest02 {
+            font-family: "Server-MDL2";
+            vertical-align: middle;
+            font-size: 12px;
+            line-height: 16px;
+            padding: 3px;
+            content: "\e768";
+        }
+
+        .dritest03:before {
+            font-size: 16px;
+            font-family: "Server-MDL2";
+            content: "\\e72e";
+            font-style: normal;
+            line-height: 20px;
+            letter-spacing: 0px;
+            font-variant: normal;
+            font-weight: normal;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .dritest04:before {
+            font-size: 16px;
+            font-family: "Server-MDL2";
+            content: "\\e72e";
+            font-style: normal;
+            line-height: 20px;
+            letter-spacing: 0px;
+            font-variant: normal;
+            font-weight: normal;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+             -webkit-animation-name: sme-spin;
+            animation-name: sme-spin;
+            -webkit-animation-duration: 2s;
+            animation-duration: 2s;
+            -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+            -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite
+        }
+
+        .dritest1:before {
+            font-size: 16px;
+            font-family: "Server-MDL2";
+            content: "\\e774";
+            -webkit-animation-name: sme-spin;
+            animation-name: sme-spin;
+            -webkit-animation-duration: 2s;
+            animation-duration: 2s;
+            -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+            -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite
+        }
+
+        .dritest2:before {
+            font-family: "Server-MDL2";
+            font-size: 16px;
+            -webkit-animation-name: sme-spin;
+            animation-name: sme-spin;
+            -webkit-animation-duration: 2s;
+            animation-duration: 2s;
+            -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+            -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite
+        }
+
+        .dritest3:before {
+            -webkit-animation-name: sme-spin;
+            animation-name: sme-spin;
+            -webkit-animation-duration: 2s;
+            animation-duration: 2s;
+            -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+            -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite
         }
 
         .toolbar {
