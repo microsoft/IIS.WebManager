@@ -22,7 +22,8 @@ import {LocalModule, GlobalModule} from './modules';
             padding-bottom: 0;
         }
 
-        .fa-circle {
+        .sme-icon-completedSolid,
+        .sme-icon-blocked{
             margin-right: 2px;
         }
 
@@ -40,8 +41,8 @@ import {LocalModule, GlobalModule} from './modules';
             <fieldset class="col-xs-8 col-sm-3">
                 <label class="hidden-xs editing">Name</label>
                 <div [class.stopped]="!enabled" class="nowrap">
-                    <i aria-hidden="true" class="fa fa-circle green" *ngIf="enabled"></i>
-                    <i aria-hidden="true" class="fa fa-circle-o stopped" *ngIf="!enabled"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-completedSolid green" *ngIf="enabled"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-blocked stopped" *ngIf="!enabled"></i>
                     {{module.name}}
                 </div>
             </fieldset>
@@ -69,16 +70,16 @@ import {LocalModule, GlobalModule} from './modules';
 
             <div class="actions" [ngClass]="actionClasses()">
                 <button class="no-border" title="Ok" *ngIf="_isEditing" (click)="onFinishEditing()">
-                    <i aria-hidden="true" class="fa fa-check blue"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-accept blue"></i>
                 </button>
                 <button class="no-border" title="Cancel" *ngIf="_isEditing" (click)="onDiscardChanges()">
-                    <i aria-hidden="true" class="fa fa-times red"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-clear red"></i>
                 </button>
                 <button class="no-border" title="Edit" [disabled]="!_editable" *ngIf="!_isEditing && allow('edit')" (click)="onEdit()">
-                    <i aria-hidden="true" class="fa fa-pencil blue"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-edit blue"></i>
                 </button>
                 <button class="no-border" title="Delete" [disabled]="!_editable" *ngIf="allow('delete')" (click)="onDelete()">
-                    <i aria-hidden="true" class="fa fa-trash-o red"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-delete red"></i>
                 </button>
             </div>
 

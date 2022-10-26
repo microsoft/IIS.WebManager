@@ -1,4 +1,4 @@
-﻿import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { OrderBy, SortPipe } from '../common/sort.pipe';
 import { Constants } from '../connect/constants';
@@ -10,7 +10,7 @@ import { ApiConnection } from '../connect/api-connection';
     selector: 'server-list',
     template: `
         <div>
-            <button title="New Server" class="create" [attr.disabled]="!!_newServer || null" (click)="onNewServer()"><i aria-hidden="true" class="fa fa-plus color-active"></i><span>Add Server</span></button>
+            <button title="New Server" class="create" [attr.disabled]="!!_newServer || null" (click)="onNewServer()"><i aria-hidden="true" class="sme-icon sme-icon-add color-active"></i><span>Add Server</span></button>
         </div>
         <br/>
         <div class="container-fluid hidden-xs">

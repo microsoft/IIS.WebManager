@@ -16,16 +16,16 @@ import { DefaultDocumentsService } from './default-documents.service';
             </fieldset>
             <div class="actions">
                 <button class="no-border no-editing" [class.inactive]="readonly" title="Edit" (click)="onEdit()">
-                    <i aria-hidden="true" class="fa fa-pencil color-active"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-edit color-active"></i>
                 </button>
                 <button class="no-border editing" [disabled]="!isValid(file)" title="Ok" (click)="onOk()">
-                    <i aria-hidden="true" class="fa fa-check color-active"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-accept color-active"></i>
                 </button>
                 <button class="no-border editing" title="Cancel" (click)="onCancel()">
-                    <i aria-hidden="true" class="fa fa-times red"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-clear red"></i>
                 </button>
                 <button class="no-border" title="Delete" [class.inactive]="readonly" (click)="onDelete()">
-                    <i aria-hidden="true" class="fa fa-trash-o red"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-delete red"></i>
                 </button>
             </div>
         </div>
@@ -137,7 +137,7 @@ export class FileListItem {
     selector: 'files',
     template: `
         <div>
-            <button class="create" (click)="add()" [class.inactive]="_editing"><i aria-hidden="true" class="fa fa-plus color-active"></i><span>Add</span></button>
+            <button class="create" (click)="add()" [class.inactive]="_editing"><i aria-hidden="true" class="sme-icon sme-icon-add color-active"></i><span>Add</span></button>
             <div *ngIf="_files">
                 <div class="col-sm-6 col-lg-4">
                     <div class="row hidden-xs border-active grid-list-header" [hidden]="_files.length < 1">

@@ -67,7 +67,7 @@ import { first } from 'rxjs/operators'
                     </fieldset>
                     <div class="selector" *ngIf="model.is_https">
                         <selector #certSelect [hidden]="!certSelect || !certSelect.isOpen()" (hide)="onCertSelected()" class="container-fluid">
-                            <button (click)="certSelect.close()" class="close-button" title="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
+                            <button (click)="certSelect.close()" class="close-button" title="Close"><i class="sme-icon sme-icon-clear" aria-hidden="true"></i></button>
                             <certificates-list #list (itemSelected)="onCertSelected($event)"></certificates-list>
                         </selector>
                     </div>
@@ -93,16 +93,16 @@ import { first } from 'rxjs/operators'
             <div>
                 <div class="actions">
                     <button title="Edit" [disabled]="!allowed('edit')" class='no-editing' (click)="onEdit()">
-                        <i aria-hidden="true" class="fa fa-pencil color-active"></i>
+                        <i aria-hidden="true" class="sme-icon sme-icon-edit color-active"></i>
                     </button>
                     <button title="Save" [disabled]="!isValid()" class="editing" (click)="onSave()">
-                        <i aria-hidden="true" class="fa fa-check color-active"></i>
+                        <i aria-hidden="true" class="sme-icon sme-icon-accept color-active"></i>
                     </button>
                     <button title="Cancel" class="editing" (click)="onCancel()">
-                        <i aria-hidden="true" class="fa fa-times red"></i>
+                        <i aria-hidden="true" class="sme-icon sme-icon-clear red"></i>
                     </button>
                     <button title="Delete" *ngIf="!model.isNew" [disabled]="!allowed('delete')" (click)="onDelete()">
-                        <i aria-hidden="true" class="fa fa-trash-o red"></i>
+                        <i aria-hidden="true" class="sme-icon sme-icon-delete red"></i>
                     </button>
                 </div>
             </div>
@@ -115,7 +115,7 @@ import { first } from 'rxjs/operators'
             padding-left: 0px;
         }
 
-        .fa-lock {
+        .sme-icon-lock {
             padding-right: 5px;
             font-size: 16px;
         }
@@ -427,7 +427,7 @@ export class BindingItem implements OnInit, OnChanges {
     `],
     template: `
         <button class="create" [disabled]="_editing >= 0 && _editing < model.length" (click)="add()">
-            <i aria-hidden="true" class="fa fa-plus color-active"></i> Add
+            <i aria-hidden="true" class="sme-icon sme-icon-add color-active"></i> Add
         </button>
         <div class="container-fluid" [hidden]="!model || model.length < 1">
             <div class="row hidden-xs hidden-sm border-active grid-list-header">

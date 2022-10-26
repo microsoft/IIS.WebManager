@@ -19,7 +19,7 @@ export class Drop {
                     class="no-border pull-left color-active"
                     title="Go to the parent directory"
                     (click)="onClickUp()">
-                        <i aria-hidden="true" class="fa fa-level-up"></i>
+                        <i aria-hidden="true" class="sme-icon sme-icon-up"></i>
             </button>
             <div class="fill">
                 <ul aria-label="Hit the spacebar key to select." tabindex="0" *ngIf="_crumbs.length > 0" [hidden]="_typing" class="nav border-color" (keyup.space)="onClickAddress($event)" (keyup.enter)="onClickAddress($event)" (click)="onClickAddress($event)">

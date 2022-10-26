@@ -20,6 +20,57 @@ import { skip } from 'rxjs/operators';
             </div>
             <div class="clear"></div>
         </div>
+        <div class="sme-icon sme-icon-folder">div</div>
+        <i class="sme-icon sme-icon-folder">i</i>
+
+        <div>
+            <i class="dritest0"></i>
+            <i class="dritest0">Dritest0</i>
+            <i class="dritest02">Dritest02</i>
+            <i class="dritest03">Dritest03</i>
+            <i class="dritest04">Dritest04</i>
+
+            <i class="dritest1">dritest1-i</i>
+
+            <div>
+                <i class="dritest1"><span>dritest1-i</span></i>
+            </div>
+            <div>
+                <i class="sme-icon sme-icon-folder dritest2"><span>dritest2-i</span></i>
+            </div>
+            <div>
+                <i class="sme-icon sme-icon-folder dritest3"><span>dritest3-i</span></i>
+            </div>
+
+            <i aria-hidden="true" class="sme-icon sme-icon-folder dritest3">On The i dritest3</i>
+
+            <button title="Dri Test Button">
+                <i aria-hidden="true" class="sme-icon sme-icon-folder dritest3"><span>On The Button dritest3</span></i>
+            </button>
+            <button title="Dri Test Button 2">
+                <i aria-hidden="true" class="sme-icon sme-icon-folder sme-animation-spin-xxxl"></i>
+            </button>
+
+            <i aria-hidden="true" class="sme-icon sme-icon-globe sme-animation-spin-xs"></i>
+            <i aria-hidden="true" class="sme-icon sme-icon-globe sme-spin-3s">Test 3s</i>
+        </div>
+        <div>
+            <button title="Save (Ctrl+S)">
+                <i aria-hidden="true" class="sme-icon sme-icon-save"></i>
+            </button>
+            <button title="Replace with Unmodified" class="undo color-active">
+                <i aria-hidden="true" class="sme-icon sme-icon-down"></i>
+            </button>
+            <button title="Compare with Unmodified" class="compare" >
+                <i aria-hidden="true" class="sme-icon sme-icon-storageMigration"></i>
+            </button>
+            <button title="Exit Compare Mode" class="uncompare active">
+                <i aria-hidden="true" class="sme-icon sme-icon-storageMigration"></i>
+            </button>
+            <button title="Download">
+                <i aria-hidden="true" class="sme-icon sme-icon-download"></i>
+            </button>
+        </div>
         <div *ngIf="_items" class="container-fluid">
             <div class="border-active grid-list-header row hidden-xs" [hidden]="_items.length == 0">
                 <label class="col-xs-12 col-sm-6 col-md-4 col-lg-3">Name</label>
@@ -66,7 +117,13 @@ import { skip } from 'rxjs/operators';
             font-size: 16px;
         }
 
-        .name:before {
+        .container-fluid,
+        .row {
+            margin: 0;
+            padding: 0;
+        }
+
+        .dritest0 {
             font-size: 16px;
             font-family: "Server-MDL2";
             content: "\\e72e";
@@ -80,10 +137,95 @@ import { skip } from 'rxjs/operators';
             -moz-osx-font-smoothing: grayscale;
         }
 
-        .container-fluid,
-        .row {
-            margin: 0;
-            padding: 0;
+        .dritest02 {
+            font-family: "Server-MDL2";
+            vertical-align: middle;
+            font-size: 12px;
+            line-height: 16px;
+            padding: 3px;
+            content: "\e768";
+        }
+
+        .dritest03:before {
+            font-size: 16px;
+            font-family: "Server-MDL2";
+            content: "\\e72e";
+            font-style: normal;
+            line-height: 20px;
+            letter-spacing: 0px;
+            font-variant: normal;
+            font-weight: normal;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .dritest04:before {
+            font-size: 16px;
+            font-family: "Server-MDL2";
+            content: "\\e72e";
+            font-style: normal;
+            line-height: 20px;
+            letter-spacing: 0px;
+            font-variant: normal;
+            font-weight: normal;
+            text-rendering: auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+             -webkit-animation-name: sme-spin;
+            animation-name: sme-spin;
+            -webkit-animation-duration: 2s;
+            animation-duration: 2s;
+            -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+            -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite
+        }
+
+        .dritest1:before {
+            font-size: 16px;
+            font-family: "Server-MDL2";
+            content: "\\e774";
+            -webkit-animation-name: sme-spin;
+            animation-name: sme-spin;
+            -webkit-animation-duration: 2s;
+            animation-duration: 2s;
+            -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+            -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite
+        }
+
+        .dritest2:before {
+            font-family: "Server-MDL2";
+            font-size: 16px;
+            -webkit-animation-name: sme-spin;
+            animation-name: sme-spin;
+            -webkit-animation-duration: 2s;
+            animation-duration: 2s;
+            -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+            -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite
+        }
+
+        .dritest3:before {
+            -webkit-animation-name: sme-spin;
+            animation-name: sme-spin;
+            -webkit-animation-duration: 2s;
+            animation-duration: 2s;
+            -webkit-animation-timing-function: linear;
+            animation-timing-function: linear;
+            -webkit-animation-fill-mode: both;
+            animation-fill-mode: both;
+            -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite
         }
 
         .toolbar {

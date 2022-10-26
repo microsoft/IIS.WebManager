@@ -9,7 +9,7 @@ import { NotificationService } from '../../notification/notification.service';
 @Component({
     selector: 'win-auth',
     template: `
-        <div *ngIf="!_model && !_error" class="processing-large"><i aria-hidden="true" class="fa fa-spinner fa-spin"></i><span>loading...</span></div>
+        <div *ngIf="!_model && !_error" class="processing-large"><i aria-hidden="true" class="sme-icon sme-icon-refresh sme-spin"></i><span>loading...</span></div>
         <switch label="Enable"
                 *ngIf="service.webserverScope && service.windowsStatus != 'unknown'"
                 class="install" #s

@@ -8,9 +8,10 @@ import { NotificationService } from 'notification/notification.service';
 @Component({
     selector: 'anon-auth',
     template: `
-        <div *ngIf="!_model && !_error" class="processing-large"><i aria-hidden="true" class="fa fa-spinner fa-spin"></i><span>loading...</span></div>
+        <div *ngIf="!_model && !_error" class="processing-large"><i aria-hidden="true" class="sme-icon sme-icon-refresh sme-spin"></i><span>loading...</span></div>
         <div *ngIf="_model">
             <override-mode class="pull-right" [metadata]="_model.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
+            <i aria-hidden="true" class="sme-icon sme-icon-refresh sme-spin">Loading...</i>
             <fieldset>
                 <switch [label]="_model.scope ? 'Enable': 'Web Site Default'" class="block" [disabled]="_locked" [(model)]="_model.enabled" (modelChanged)="onModelChanged()">{{_model.enabled ? "On" : "Off"}}</switch>
             </fieldset>

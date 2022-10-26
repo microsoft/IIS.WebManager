@@ -25,7 +25,7 @@ import { ApplicationPool } from '../app-pools/app-pool';
                     <label>Physical Path</label>
                     <input type="text" class="form-control left-with-button" [(ngModel)]="model.physical_path" required />
                     <button [class.background-active]="fileSelector.isOpen()" title="Select Folder" (click)="fileSelector.toggle()">
-                        <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
+                        <i aria-hidden="true" class="sme-icon sme-icon-more"></i>
                     </button>
                     <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="model.physical_path" (selected)="onSelectPath($event)"></server-file-selector>
                 </fieldset>
@@ -37,7 +37,7 @@ import { ApplicationPool } from '../app-pools/app-pool';
                 <div class="app-pool" *ngIf="_customPool">
                     <button class="exchange" [class.background-active]="poolSelect.opened" (click)="selectAppPool()">{{!model.application_pool ? "Choose Application Pool" : "Change Application Pool" }}</button>
                     <selector #poolSelect class="container-fluid create">
-                        <button (click)="poolSelect.close()" class="close-button" title="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
+                        <button (click)="poolSelect.close()" class="close-button" title="Close"><i class="sme-icon sme-icon-clear" aria-hidden="true"></i></button>
                         <app-pools #appPools [listingOnly]="true" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
                     </selector>
                     <fieldset>
@@ -48,10 +48,10 @@ import { ApplicationPool } from '../app-pools/app-pool';
         </tabs>
         <p class="pull-right">
             <button (click)="onSave()" [disabled]="!IsValid()">
-                <i title="Create" aria-hidden="true" class="fa fa-check color-active"></i> Create
+                <i title="Create" aria-hidden="true" class="sme-icon sme-icon-accept color-active"></i> Create
             </button>
             <button (click)="onCancel()">
-                <i aria-hidden="true" class="fa fa-times red"></i> Cancel
+                <i aria-hidden="true" class="sme-icon sme-icon-clear red"></i> Cancel
             </button>
         </p>
     `,

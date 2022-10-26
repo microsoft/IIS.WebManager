@@ -44,7 +44,7 @@ export class VirtualListItem {
 </ul>
 <div *ngIf="emptyText">
     <div *ngIf="!loaded" class="processing">
-        <i aria-hidden="true" class="fa fa-spinner fa-spin"></i><span>loading...</span>
+        <i aria-hidden="true" class="sme-icon sme-icon-refresh sme-spin"></i><span>loading...</span>
     </div>
     <div *ngIf="loaded && count == 0">{{emptyText}}</div>
 </div>

@@ -11,7 +11,7 @@ import { RequestTracingService } from './request-tracing.service';
     selector: 'rule-list',
     template: `
         <div *ngIf="_rules">
-            <button class="create" (click)="create()" [class.inactive]="_editing"><i aria-hidden="true" class="fa fa-plus color-active"></i><span>Create Rule</span></button>
+            <button class="create" (click)="create()" [class.inactive]="_editing"><i aria-hidden="true" class="sme-icon sme-icon-add color-active"></i><span>Create Rule</span></button>
             <div class="container-fluid">
                 <div class="hidden-xs border-active grid-list-header row" *ngIf="_rules.length > 0">
                     <label class="col-xs-12 col-sm-4 col-md-3" [ngClass]="css('path')" (click)="sort('path')">Path</label>

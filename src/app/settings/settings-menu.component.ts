@@ -8,7 +8,7 @@ import { Selector } from '../common/selector';
     selector: 'settings',
     template: `
         <div tabindex="0" title="Options" class="s-container nav-button hover-primary2" [class.background-primary2]="settingsMenu && settingsMenu.isOpen()" (keyup.space)="onClickSettings()" (keyup.enter)="onClickSettings()" (click)="onClickSettings()">
-            <i aria-hidden="true" class="fa fa-cog"></i>
+            <i aria-hidden="true" class="sme-icon sme-icon-processing"></i>
         </div>
         <div class="action-selector">
             <selector #settingsMenu class="color-normal" [right]="true"  [isQuickMenu]="true">

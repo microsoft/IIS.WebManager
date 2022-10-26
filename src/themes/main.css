@@ -186,8 +186,10 @@ button {
 
 .bttn i.sme-icon,
 button i.sme-icon {
-    font-size: 120%;
-    padding: 3px;
+    font-size: 12px;
+    font-style: normal;
+    line-height: 16px;
+    padding: 0px;
 }
 
 .bttn i,
@@ -211,6 +213,45 @@ button::after,
     font-size: 120%;
     line-height: 22px;
     vertical-align: middle;
+}
+
+i.sme-icon::before,
+i.sme-icon:before,
+.sme-icon:before,
+.sme-icon::before
+i::before
+{
+    font-family: "Server-MDL2";
+    font-size: 12px;
+    line-height: 16px;
+    padding: 3px;
+}
+
+i.sme-icon {
+    font-size: 12px;
+    font-style: normal;
+    line-height: 16px;
+    padding: 0px;
+}
+
+.sme-spin:before {
+    -webkit-animation-name: sme-spin;
+    animation-name: sme-spin;
+    -webkit-animation-duration: 1.2s;
+    animation-duration: 1.2s;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite
+}
+
+.sme-lg:before,
+.sme-lg {
+    font-size: 1.33333333em;
+    line-height: .75em;
+    vertical-align: -15%
 }
 
 button:not(:empty)::before,
@@ -435,11 +476,11 @@ tooltip {
 .grid-list-header .orderby:after {
     font-family: "Server-MDL2";   
     padding-left: 10px;
-    content: "\f0de"
+    content: "\e96d"
 }
 
 .grid-list-header .orderby.desc:after {
-    content: "\f0dd"
+    content: "\e96e"
 }
 
 .actions {
@@ -604,7 +645,7 @@ select[enabled]:not(.inactive) {
 .collapse-heading h2:before,
 .collapse-heading .head:before {
     font-family: "Server-MDL2";
-    content: "\f078";
+    content: "\e70d";
     width: 20px;
     text-align: left;
     display:inline-block;
@@ -614,7 +655,7 @@ select[enabled]:not(.inactive) {
 .collapse-heading.collapsed h2:before,
 .collapse-heading.collapsed .head:before {
     font-family: "Server-MDL2";
-    content: "\f054";
+    content: "\e76c";
     width: 20px;
     text-align: left;
     display:inline-block;
@@ -691,7 +732,7 @@ select[enabled]:not(.inactive) {
 
 .filter::before {
     font-family: "Server-MDL2";
-    content: "\f0b0";
+    content: "\e71c";
     position: absolute;
     line-height: 32px;
     padding-right: 5px;
@@ -724,7 +765,7 @@ button.refresh:before {
 }
 
 button.new-root:before {
-    content: "\f38a";
+    content: "\eda2";
 }
 
 button.new-file:before {

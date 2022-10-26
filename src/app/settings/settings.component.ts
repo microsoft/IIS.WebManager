@@ -1,11 +1,11 @@
-﻿import { Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { OptionsService } from '../main/options.service';
 
 @Component({
     template: `
         <div class="sidebar crumb" [class.nav]="options.active">
             <vtabs [markLocation]="true">
-                <item [name]="'Servers'" [ico]="'fa fa-server'">
+                <item [name]="'Servers'" [ico]="'sme-icon sme-icon-server'">
                     <server-list></server-list>
                 </item>
             </vtabs>
