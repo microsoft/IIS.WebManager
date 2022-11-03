@@ -45,7 +45,7 @@ import { RequestTracing, RequestTracingRule, Trace, EventSeverity, Verbosity } f
                         <label>Directory</label>
                         <input type="text" class="form-control left-with-button" [(ngModel)]="requestTracing.directory" (modelChanged)="onModelChanged()" throttle />
                         <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" (click)="fileSelector.toggle()">
-                            <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
+                            <i aria-hidden="true" class="sme-icon sme-icon-more"></i>
                         </button>
                         <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="requestTracing.directory" (selected)="onSelectPath($event)"></server-file-selector>
                     </fieldset>

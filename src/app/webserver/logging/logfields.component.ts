@@ -57,7 +57,7 @@ export class LogFieldsComponent {
 @Component({
     selector: 'customfields',
     template: `
-    <button class="create" [class.inactive]="_editing != -1" (click)="add()"><i aria-hidden="true" class="fa fa-plus color-active"></i>Add Custom Field</button>
+    <button class="create" [class.inactive]="_editing != -1" (click)="add()"><i aria-hidden="true" class="sme-icon sme-icon-add color-active"></i>Add Custom Field</button>
     
 
     <div class="row hidden-xs border-active grid-list-header" [hidden]="fields.length == 0">
@@ -106,16 +106,16 @@ export class LogFieldsComponent {
             </div>
             <div class="actions">
                 <button class="no-border no-editing" title="Edit" [class.inactive]="_editing != -1" (click)="edit(i)" >
-                    <i aria-hidden="true" class="fa fa-pencil color-active"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-edit color-active"></i>
                 </button>
                 <button [disabled]="!isValidCustomField(field)" class="no-border editing" title="Ok" (click)="save(i)">
-                    <i aria-hidden="true" class="fa fa-check color-active"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-accept color-active"></i>
                 </button>
                 <button class="no-border editing" title="Cancel" (click)="discardChanges(i)">
-                    <i aria-hidden="true" class="fa fa-times red"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-clear red"></i>
                 </button>
                 <button class="no-border" title="Delete" *ngIf="!field.isNew" [class.inactive]="_editing !== -1 && _editing !== i" (click)="delete(i)">
-                    <i aria-hidden="true" class="fa fa-trash-o red"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-delete red"></i>
                 </button>
             </div>
         </li>

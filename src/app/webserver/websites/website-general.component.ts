@@ -38,7 +38,7 @@ class WebSiteStatusController extends StatusController {
             <label>Physical Path</label>
             <input type="text" class="form-control left-with-button" [(ngModel)]="site.physical_path" (modelChanged)="onModelChanged()" throttle required />
             <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" (click)="fileSelector.toggle()">
-                <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
+                <i aria-hidden="true" class="sme-icon sme-icon-more"></i>
             </button>
             <server-file-selector #fileSelector [types]="['directory']" [defaultPath]="site.physical_path" (selected)="onSelectPath($event)"></server-file-selector>
         </fieldset>
@@ -62,7 +62,7 @@ class WebSiteStatusController extends StatusController {
     <tab [name]="'Application Pool'">
         <button class="exchange" [class.background-active]="poolSelect.opened" (click)="selectAppPool()">Change Application Pool</button>
         <selector #poolSelect class="container-fluid create">
-            <button (click)="poolSelect.close()" class="close-button" title="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
+            <button (click)="poolSelect.close()" class="close-button" title="Close"><i class="sme-icon sme-icon-clear" aria-hidden="true"></i></button>
             <app-pools #appPools [listingOnly]="true" [lazy]="true" (itemSelected)="onAppPoolSelected($event)"></app-pools>
         </selector>
         <app-pool-details *ngIf="site.application_pool" [model]="site.application_pool"></app-pool-details>

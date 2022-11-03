@@ -168,6 +168,22 @@ li:focus {
 .category {
     color: #000;
 }
+
+i + span,
+i.sme-icon:before,
+i:before{
+    font-size: 14px;
+    line-height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    font-weight: normal;
+    padding: 0px;
+    margin: 0px;
+}
+
+i.sme-icon:before {
+    padding-right: 0.3em;
+}
 `],
     host: {
         '(window:resize)': 'refresh()'

@@ -18,7 +18,7 @@ import { Provider } from '../url-rewrite';
             <div class="actions">
                 <div class="action-selector">
                     <button title="More" (click)="selector.toggle()" (dblclick)="$event.preventDefault()" [class.background-active]="(selector && selector.opened) || _editing || false">
-                        <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
+                        <i aria-hidden="true" class="sme-icon sme-icon-more"></i>
                     </button>
                     <selector #selector [right]="true" [isQuickMenu]="true">
                         <ul>

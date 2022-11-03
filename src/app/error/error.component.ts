@@ -26,7 +26,7 @@ import {ApiError} from '../error/api-error';
     template: `
         <div id="container">
             <div id="lockSymbol" class="background-warning">
-                <i aria-hidden="true" class="fa fa-lock large left-icon"></i> Locked
+                <i aria-hidden="true" class="sme-icon sme-icon-lock large left-icon"></i> Locked
             </div>
             <p>
                 The feature has been locked at the parent level and is not available for editing.

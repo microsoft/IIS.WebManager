@@ -29,16 +29,16 @@ import { StaticContentService } from '../static-content/static-content.service';
 
             <div class="actions">
                 <button *ngIf="!_editing" class="no-border" [class.inactive]="!_editable" title="Edit" (click)="onEdit()">
-                    <i aria-hidden="true" class="fa fa-pencil color-active"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-edit color-active"></i>
                 </button>
                 <button *ngIf="_editing" class="no-border" [disabled]="!isValid(model)" title="Ok" (click)="onSave()">
-                    <i aria-hidden="true" class="fa fa-check color-active"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-accept color-active"></i>
                 </button>
                 <button *ngIf="_editing" class="no-border" title="Cancel" (click)="onDiscard()">
-                    <i aria-hidden="true" class="fa fa-times red"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-clear red"></i>
                 </button>
                 <button class="no-border" *ngIf="model.id" title="Delete" [class.inactive]="!_editable" (click)="onDelete()">
-                    <i aria-hidden="true" class="fa fa-trash-o red"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-delete red"></i>
                 </button>
             </div>
 

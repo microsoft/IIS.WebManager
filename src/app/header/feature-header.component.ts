@@ -11,14 +11,11 @@ export interface Heading {
     template: `
 <div class="feature-title sme-focus-zone">
     <h1>
-        <i [class]="heading.ico"></i><span class="border-active">{{heading.name}}</span>
+        <i [class]="heading.ico"><span class="border-active">{{heading.name}}</span></i>
     </h1>
 </div>
     `,
     styles: [`
-i {
-    padding-right: 0.3em;
-}
 
 .feature-title {
     overflow: hidden;
@@ -28,13 +25,18 @@ i {
     padding-bottom: 5px;
 }
 
-.feature-title h1 {
+.feature-title h1 i span,
+.feature-title h1 i.sme-icon:before{
     font-size: 20px;
-    display: inline;
+    line-height: 20px;
+    display: inline-block;
+    font-weight: 600;
+    vertical-align: middle;
+    margin: 0px;
 }
 
-.feature-title h1:before {
-    display:inline-block;
+i.sme-icon:before {
+    padding-right: 0.3em;
 }
     `]
 })
