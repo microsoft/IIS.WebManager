@@ -70,7 +70,7 @@ import { RequestFilteringService } from './request-filtering.service';
                         <button class="background-normal pull-right" *ngIf="denyStringsVisible()" (click)="addDenyString()"><i aria-hidden="true" class="sme-icon sme-icon-add color-active"></i><span>Add</span></button>
                         <fieldset>
                             <string-list #ds="stringList" [(model)]="model.deny_strings"></string-list>
-                            <button class="add background-normal" *ngIf="ds.list.length == 0" (click)="addDenyString()"><i aria-hidden="true" class="sme-icon sme-icon-add color-active"></i><span>Add</span></button>
+                            <button class="background-normal" *ngIf="ds.list.length == 0" (click)="addDenyString()"><i aria-hidden="true" class="sme-icon sme-icon-add color-active"></i><span>Add</span></button>
                         </fieldset>
                     </div>
                 </div>
@@ -98,7 +98,14 @@ import { RequestFilteringService } from './request-filtering.service';
         fieldset.has-list {
             padding-bottom: 0;
         }
-        
+
+        .sme-icon-add {
+            margin: 0;
+            padding: 0 3px;
+            vertical-align: middle;
+            display: inline-block;
+        }
+
         div.inline-block {
             float: right;
         }

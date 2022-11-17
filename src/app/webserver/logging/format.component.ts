@@ -31,7 +31,16 @@ import {Logging} from './logging'
                 <field name="ANSI" value="ansi"></field>
             </enum>
         </fieldset>
-    `
+    `,
+    styles: [`
+        fieldset {
+            padding-bottom: 15px;
+        }
+
+        fieldset checkbox2 {
+            margin-left: 10px;
+        }
+    `]
 })
 export class FormatComponent {
     @Input() model: Logging;

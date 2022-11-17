@@ -15,22 +15,20 @@ import {HttpResponseHeaders, CustomHeader} from './http-response-headers';
         <ul class="grid-list container-fluid">
             <li *ngFor="let header of headers; let i = index;">
                 <div class="row grid-item" [class.background-editing]="_editing == i">
-                    <fieldset class="col-lg-10 col-md-10 col-sm-8 col-xs-6 overflow-visible">
-                        <fieldset class="col-xs-8 col-sm-4 col-lg-5">
-                            <label class="visible-xs">Name</label>
-                            <label *ngIf="_editing == i" class="hidden-xs">Name</label>
-                            <span *ngIf="_editing != i">{{header.name}}</span>
-                            <input autofocus *ngIf="_editing == i" class="form-control" type="text" [disabled]="locked" [(ngModel)]="header.name" throttle required />
-                            <div *ngIf="_editing !== i">
-                                <br class="visible-xs" />
-                            </div>
-                        </fieldset>
-                        <fieldset class="col-xs-12 col-sm-5 col-lg-5">
-                            <label class="visible-xs">Value</label>
-                            <label *ngIf="_editing == i" class="hidden-xs">Value</label>
-                            <span *ngIf="_editing != i">{{header.value}}</span>
-                            <input *ngIf="_editing == i" class="form-control" type="text" [disabled]="locked" [(ngModel)]="header.value" throttle required />
-                        </fieldset>
+                    <fieldset class="col-xs-8 col-sm-4 col-lg-5">
+                        <label class="visible-xs">Name</label>
+                        <label *ngIf="_editing == i" class="hidden-xs">Name</label>
+                        <span *ngIf="_editing != i">{{header.name}}</span>
+                        <input autofocus *ngIf="_editing == i" class="form-control" type="text" [disabled]="locked" [(ngModel)]="header.name" throttle required />
+                        <div *ngIf="_editing !== i">
+                            <br class="visible-xs" />
+                        </div>
+                    </fieldset>
+                    <fieldset class="col-xs-12 col-sm-5 col-lg-5">
+                        <label class="visible-xs">Value</label>
+                        <label *ngIf="_editing == i" class="hidden-xs">Value</label>
+                        <span *ngIf="_editing != i">{{header.value}}</span>
+                        <input *ngIf="_editing == i" class="form-control" type="text" [disabled]="locked" [(ngModel)]="header.value" throttle required />
                     </fieldset>
                     <div class="actions">
                         <button class="no-border" title="Ok" [disabled]="locked || !isValid(header) || null" *ngIf="_editing == i" (click)="onFinishEditing(i)">

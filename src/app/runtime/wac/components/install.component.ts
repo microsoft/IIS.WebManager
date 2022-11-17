@@ -53,13 +53,23 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
         </p>
     </div>
     <div *ngIf='inProgress'>
+        <h1><i aria-hidden="true" class="sme-icon sme-icon-refresh sme-spin"></i></h1>
         <h1>Installing...</h1>
-        <p><i aria-hidden="true" class="sme-icon sme-icon-refresh sme-spin"></i></p>
-        <p><small class='block color-active'>{{status}}</small></p>
+        <p class='block color-active'>{{status}}</p>
     </div>
 </div>
 `,
     styles: [`
+
+    input[type='radio'] {
+        all: revert;
+    }
+
+    a, a:link, a:focus, a:hover, a:active, a:visited {
+        text-decoration: revert;
+        color: revert;
+    }
+   
     .padded {
         text-align: left;
         padding-left: 100px;
@@ -71,8 +81,24 @@ const windowsPathValidationRegex = new RegExp('^(?:[a-z]:|\\\\\\\\[a-z0-9_.$●-
     }
 
     h1 {
-        margin-bottom: 50px;
         font-size: 300%;
+        padding: 0 10px 0 0;
+        margin: 0;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .sme-spin:before, .sme-spin{
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .block {
+        display: block;
+        padding-top: 40px;
+        font-size: 130%;
     }
 
     .form {

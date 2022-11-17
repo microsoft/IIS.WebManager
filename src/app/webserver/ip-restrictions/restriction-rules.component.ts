@@ -81,6 +81,7 @@ import { RestrictionRule, IpRestrictions } from './ip-restrictions'
         .grid-item:not(.background-editing) fieldset {
             padding-top: 5px;
             padding-bottom: 0;
+            margin-bottom: 0;
         }
         
         .col-left {
@@ -97,6 +98,11 @@ import { RestrictionRule, IpRestrictions } from './ip-restrictions'
 
         div.inline-block {
             margin-right:40px;
+        }
+
+        fieldset {
+            padding-left: 15px;
+            vertical-align: middle;
         }
     `]
 })
@@ -236,6 +242,10 @@ export class RestrictionRuleComponent implements OnChanges, OnInit {
         }
         .grid-list > li.background-editing .actions {
             top: 32px;
+        }
+
+        .grid-list-header {
+            margin-top: 23px;
         }
 
         fieldset:first-of-type {

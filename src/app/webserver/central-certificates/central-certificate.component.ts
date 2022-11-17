@@ -54,7 +54,7 @@ import { NotificationService } from 'notification/notification.service';
                 <label class="block" title="Specify the password that is used to encrypt the private key for each certificate file.">Use Private Key Password</label>
                 <switch style="display:inline-block;margin-bottom:5px;" [(model)]="_usePvkPass" (modelChange)="onPvkPassRequired($event)" [attr.disabled]="isPending || null" ></switch>
             </div>
-            <div class="in" *ngIf="_usePvkPass">
+            <div class="in p-top" *ngIf="_usePvkPass">
                 <fieldset>
                     <label>Password</label>
                     <input type="password" class="form-control name" #pvkPass [(ngModel)]="_privateKeyPassword" (modelChanged)="clearPkPassword()" [attr.required]="!_configuration.id ? true : null" throttle 
@@ -73,8 +73,11 @@ import { NotificationService } from 'notification/notification.service';
     styles: [`
         .in {
             padding-left: 30px;
-            padding-top: 15px;
             padding-bottom: 15px;
+        }
+
+        .p-top {
+            margin-top: -10px;
         }
 
         .error-message {
@@ -84,6 +87,13 @@ import { NotificationService } from 'notification/notification.service';
         .sme-icon {
             line-height: 26px;
         }
+
+        fieldset label{
+            margin-bottom: 10px;
+            font-weight: bold;
+            display: block;
+        }
+
     `]
 })
 export class CentralCertificateComponent implements OnInit, OnDestroy {

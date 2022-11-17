@@ -58,6 +58,14 @@ fieldset {
     padding-bottom: 15px;
 }
 
+fieldset fieldset {
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    margin: 0 0 16px 0;
+    padding: 0;
+}
+
 fieldset label,
 fieldset > label{
     margin-bottom: 10px;
@@ -114,6 +122,10 @@ span.form-control {
     vertical-align: top;
 }
 
+.grid-list-header {
+    margin-top: 23px;
+}
+
 .capitalize {
     text-transform:capitalize;
 }
@@ -140,6 +152,7 @@ input[type='number'] {
 
 input[type='radio'] {
     margin-right: 0.3em;
+    margin-top: -4px;
 }
 
 input:required:invalid:not(.unfocused),

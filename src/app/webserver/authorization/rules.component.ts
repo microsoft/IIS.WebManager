@@ -1,4 +1,4 @@
-﻿import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Selector } from '../../common/selector';
 import { NotificationService } from '../../notification/notification.service';

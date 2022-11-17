@@ -37,10 +37,10 @@ import { RequestTracing, RequestTracingRule, Trace, EventSeverity, Verbosity } f
             </section>
 
             <tabs *ngIf="requestTracing.enabled">
-                <tab [name]="'trace logs'" *ngIf="scopeType() != 'webserver' && hasFeature('traces')">
+                <tab [name]="'Trace logs'" *ngIf="scopeType() != 'webserver' && hasFeature('traces')">
                     <trace-files></trace-files>
                 </tab>
-                <tab [name]="'settings'" *ngIf="scopeType() == 'website'">
+                <tab [name]="'Settings'" *ngIf="scopeType() == 'website'">
                     <fieldset class="path">
                         <label>Directory</label>
                         <input type="text" class="form-control left-with-button" [(ngModel)]="requestTracing.directory" (modelChanged)="onModelChanged()" throttle />
@@ -54,10 +54,10 @@ import { RequestTracing, RequestTracingRule, Trace, EventSeverity, Verbosity } f
                         <input class="form-control" type="number" [(ngModel)]="requestTracing.maximum_number_trace_files" (modelChanged)="onModelChanged()" throttle />
                     </fieldset>
                 </tab>
-                <tab [name]="'rules'" *ngIf="true">
+                <tab [name]="'Rules'" *ngIf="true">
                     <rule-list></rule-list>
                 </tab>
-                <tab [name]="'providers'" *ngIf="scopeType() == 'webserver'">
+                <tab [name]="'Providers'" *ngIf="scopeType() == 'webserver'">
                     <provider-list></provider-list>
                 </tab>
             </tabs>
