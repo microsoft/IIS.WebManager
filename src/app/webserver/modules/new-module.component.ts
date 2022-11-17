@@ -37,10 +37,10 @@ import {LocalModule, GlobalModule, ModuleType} from './modules';
             </div>
             <div class="actions">
                 <button class="no-border" title="Save" [disabled]="!isValid()" (click)="onSave()">
-                    <i aria-hidden="true" class="fa fa-check color-active"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-accept color-active"></i>
                 </button>
                 <button class="no-border" title="Cancel" (click)="onCancel()">
-                    <i aria-hidden="true" class="fa fa-times red"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-clear red"></i>
                 </button>
             </div>
         </div>

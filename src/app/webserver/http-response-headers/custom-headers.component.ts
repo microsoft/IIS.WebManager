@@ -5,7 +5,7 @@ import {HttpResponseHeaders, CustomHeader} from './http-response-headers';
 @Component({
     selector: 'custom-headers',
     template: `
-        <button class="create" (click)="create()" [disabled]="locked" [class.inactive]="_editing != -1"><i aria-hidden="true" class="fa fa-plus color-active"></i><span>Add</span></button>
+        <button class="create" (click)="create()" [disabled]="locked" [class.inactive]="_editing != -1"><i aria-hidden="true" class="sme-icon sme-icon-add color-active"></i><span>Add</span></button>
         <div class="container-fluid">
             <div class="row hidden-xs border-active grid-list-header" [hidden]="headers.length == 0">
                 <label class="col-sm-4 col-lg-5">Name</label>
@@ -15,35 +15,33 @@ import {HttpResponseHeaders, CustomHeader} from './http-response-headers';
         <ul class="grid-list container-fluid">
             <li *ngFor="let header of headers; let i = index;">
                 <div class="row grid-item" [class.background-editing]="_editing == i">
-                    <fieldset class="col-lg-10 col-md-10 col-sm-8 col-xs-6 overflow-visible">
-                        <fieldset class="col-xs-8 col-sm-4 col-lg-5">
-                            <label class="visible-xs">Name</label>
-                            <label *ngIf="_editing == i" class="hidden-xs">Name</label>
-                            <span *ngIf="_editing != i">{{header.name}}</span>
-                            <input autofocus *ngIf="_editing == i" class="form-control" type="text" [disabled]="locked" [(ngModel)]="header.name" throttle required />
-                            <div *ngIf="_editing !== i">
-                                <br class="visible-xs" />
-                            </div>
-                        </fieldset>
-                        <fieldset class="col-xs-12 col-sm-5 col-lg-5">
-                            <label class="visible-xs">Value</label>
-                            <label *ngIf="_editing == i" class="hidden-xs">Value</label>
-                            <span *ngIf="_editing != i">{{header.value}}</span>
-                            <input *ngIf="_editing == i" class="form-control" type="text" [disabled]="locked" [(ngModel)]="header.value" throttle required />
-                        </fieldset>
+                    <fieldset class="col-xs-8 col-sm-4 col-lg-5">
+                        <label class="visible-xs">Name</label>
+                        <label *ngIf="_editing == i" class="hidden-xs">Name</label>
+                        <span *ngIf="_editing != i">{{header.name}}</span>
+                        <input autofocus *ngIf="_editing == i" class="form-control" type="text" [disabled]="locked" [(ngModel)]="header.name" throttle required />
+                        <div *ngIf="_editing !== i">
+                            <br class="visible-xs" />
+                        </div>
+                    </fieldset>
+                    <fieldset class="col-xs-12 col-sm-5 col-lg-5">
+                        <label class="visible-xs">Value</label>
+                        <label *ngIf="_editing == i" class="hidden-xs">Value</label>
+                        <span *ngIf="_editing != i">{{header.value}}</span>
+                        <input *ngIf="_editing == i" class="form-control" type="text" [disabled]="locked" [(ngModel)]="header.value" throttle required />
                     </fieldset>
                     <div class="actions">
                         <button class="no-border" title="Ok" [disabled]="locked || !isValid(header) || null" *ngIf="_editing == i" (click)="onFinishEditing(i)">
-                            <i aria-hidden="true" class="fa fa-check color-active"></i>
+                            <i aria-hidden="true" class="sme-icon sme-icon-accept color-active"></i>
                         </button>
                         <button class="no-border" title="Cancel" *ngIf="_editing == i" (click)="discard()">
-                            <i aria-hidden="true" class="fa fa-times red"></i>
+                            <i aria-hidden="true" class="sme-icon sme-icon-clear red"></i>
                         </button>
                         <button class="no-border" title="Edit" [class.inactive]="_editing != -1" *ngIf="_editing != i" (click)="edit(i)">
-                            <i aria-hidden="true" class="fa fa-pencil color-active"></i>
+                            <i aria-hidden="true" class="sme-icon sme-icon-edit color-active"></i>
                         </button>
                         <button class="no-border" *ngIf="header.id" title="Delete" [disabled]="locked || _editing == i" [class.inactive]="_editing !== -1 && _editing !== i" (click)="onDelete(i)">
-                            <i aria-hidden="true" class="fa fa-trash-o red"></i>
+                            <i aria-hidden="true" class="sme-icon sme-icon-delete red"></i>
                         </button>
                     </div>
                 </div>

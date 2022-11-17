@@ -8,7 +8,7 @@ import { NotificationService } from 'notification/notification.service';
 @Component({
     selector: 'anon-auth',
     template: `
-        <div *ngIf="!_model && !_error" class="processing-large"><i aria-hidden="true" class="fa fa-spinner fa-spin"></i><span>loading...</span></div>
+        <div *ngIf="!_model && !_error"><i aria-hidden="true" class="sme-icon sme-icon-refresh sme-spin"></i><span> loading...</span></div>
         <div *ngIf="_model">
             <override-mode class="pull-right" [metadata]="_model.metadata" (revert)="onRevert()" (modelChanged)="onModelChanged()"></override-mode>
             <fieldset>
@@ -25,7 +25,16 @@ import { NotificationService } from 'notification/notification.service';
                 </fieldset>
             </div>
         </div>
-    `
+    `,
+    styles: [`
+        .sme-spin{
+            padding: 0px;   
+            margin: 0px;
+        }
+        .label{
+            font-weight: bold;
+        }
+    `]
 })
 export class AnonymousAuthenticationComponent implements OnInit, OnDestroy {
     private _model: AnonymousAuthentication;

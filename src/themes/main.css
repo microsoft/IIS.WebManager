@@ -1,4 +1,4 @@
-﻿@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
 html,body {
     height: 100%;
@@ -58,8 +58,18 @@ fieldset {
     padding-bottom: 15px;
 }
 
-fieldset > label {
+fieldset fieldset {
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    margin: 0 0 16px 0;
+    padding: 0;
+}
+
+fieldset label,
+fieldset > label{
     margin-bottom: 10px;
+    font-weight: bold;
     display: block;
 }
 
@@ -69,6 +79,9 @@ label.field {
     margin-bottom: 10px;
 }
 
+label {
+    font-weight: bold;
+}
 fieldset .checkbox {
     margin: 0;
 }
@@ -109,6 +122,10 @@ span.form-control {
     vertical-align: top;
 }
 
+.grid-list-header {
+    margin-top: 23px;
+}
+
 .capitalize {
     text-transform:capitalize;
 }
@@ -135,6 +152,7 @@ input[type='number'] {
 
 input[type='radio'] {
     margin-right: 0.3em;
+    margin-top: -4px;
 }
 
 input:required:invalid:not(.unfocused),
@@ -180,14 +198,17 @@ button {
     border-width: 1px;
     padding: 4px 6px;
     cursor: pointer;
-    font-size: 110%;
+    font-size: 100%;
     margin: 0.3em;
 }
 
-.bttn i.fa,
-button i.fa {
-    font-size: 120%;
-    padding: 3px;
+.bttn i.sme-icon,
+button i.sme-icon,
+i.sme-icon {
+    font-size: 12px;
+    line-height: 16px;
+    font-style: normal;
+    font-family: 'Segoe UI', sans-serif;
 }
 
 .bttn i,
@@ -197,38 +218,90 @@ button i {
 
 button i + span {
     margin-left: 5px;
-    margin-top: -8px;
+    margin-top: 0px;
 }
 
 button span {
-    margin-top: -8px;
+    margin-right: 5px;
+    margin-top: 0px;
 }
 
 button::before,
 button::after,
 .bttn:before {
-    font-family: FontAwesome;
-    font-size: 120%;
-    line-height: 22px;
+    font-family: "Server-MDL2";
+    font-size: 14px;
     vertical-align: middle;
 }
 
+button:not(:empty) {
+    min-width: 8px;
+    vertical-align: middle;
+}
+
+li button:not(:empty) {
+    vertical-align: middle;
+    text-align: left;
+    display: inline-block;
+    justify-content: left;
+}
+
 button:not(:empty)::before,
-.bttn:not(:empty)::before {
-    width: 22px;
-    text-align:left;
+.bttn:not(:empty)::before{
+    min-width: 22px;
+    padding-right: 0.3em;
+    display: inline-block;
+}
+
+.sme-icon:not(:empty):before {
+    min-width: 22px;
+    padding-right: 0.3em;
     display: inline-block;
 }
 
 button:not(:empty)::after {
-    width: 22px;
-    text-align:right;
+    min-width: 22px;
+    padding-left: 0.3em;
     display: inline-block;
+}
+
+.sme-icon:not(:empty) {
+    vertical-align: middle;
+    display: inline-block;
+    font-size: 12px;
+    font-style: normal;
+    line-height: 16px;
+    padding: 0px;
+}
+
+.sme-spin:before {
+    -webkit-animation-name: sme-spin;
+    animation-name: sme-spin;
+    -webkit-animation-duration: 1.2s;
+    animation-duration: 1.2s;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+}
+
+.sme-spin {
+    padding: 0px;
+    margin: 0px;
+}
+
+.sme-lg:before,
+.sme-lg {
+    font-size: 1.33333333em;
+    line-height: .75em;
+    vertical-align: -15%
 }
 
 .ico::before,
 .ico::after {
-    font-family: FontAwesome;
+    font-family: "Server-MDL2";
 }
 
 .ico::before {
@@ -408,9 +481,12 @@ tooltip {
     Data Grid
 */
 
-.create {
-    margin-bottom: 20px;
-    display: block;
+button.create i.sme-icon + span,
+button.create i.sme-icon {
+    margin: 0;
+    padding: 0 3px;
+    vertical-align: middle;
+    display: inline-block;
 }
 
 .grid-list-header {
@@ -433,13 +509,13 @@ tooltip {
 }
 
 .grid-list-header .orderby:after {
-    font-family: FontAwesome;   
+    font-family: "Server-MDL2";   
     padding-left: 10px;
-    content: "\f0de"
+    content: "\e96d"
 }
 
 .grid-list-header .orderby.desc:after {
-    content: "\f0dd"
+    content: "\e96e"
 }
 
 .actions {
@@ -603,8 +679,8 @@ select[enabled]:not(.inactive) {
 
 .collapse-heading h2:before,
 .collapse-heading .head:before {
-    font-family: FontAwesome;
-    content: "\f078";
+    font-family: "Server-MDL2";
+    content: "\e70d";
     width: 20px;
     text-align: left;
     display:inline-block;
@@ -613,8 +689,8 @@ select[enabled]:not(.inactive) {
 
 .collapse-heading.collapsed h2:before,
 .collapse-heading.collapsed .head:before {
-    font-family: FontAwesome;
-    content: "\f054";
+    font-family: "Server-MDL2";
+    content: "\e76c";
     width: 20px;
     text-align: left;
     display:inline-block;
@@ -690,8 +766,8 @@ select[enabled]:not(.inactive) {
 }
 
 .filter::before {
-    font-family: FontAwesome;
-    content: "\f0b0";
+    font-family: "Server-MDL2";
+    content: "\e71c";
     position: absolute;
     line-height: 32px;
     padding-right: 5px;
@@ -699,107 +775,107 @@ select[enabled]:not(.inactive) {
 }
 
 button.delete:before {
-    content: "\f014";
+    content: "\e74d";
 }
 
 button.cancel:before {
-    content: "\f00d";
+    content: "\e711";
 }
 
 button.ok:before {
-    content: "\f00c";
+    content: "\e8fb";
 }
 
 button.edit:before,
 .bttn.edit:before {
-    content: "\f040";
+    content: "\e70f";
 }
 
 button.copy:before {
-    content: "\f0c5";
+    content: "\e8c8";
 }
 
 button.refresh:before {
-    content: "\f021";
+    content: "\e895";
 }
 
 button.new-root:before {
-    content: "\f0a0";
+    content: "\eda2";
 }
 
 button.new-file:before {
-    content: "\f15b";
+    content: "\e8e5";
 }
 
 button.new-folder:before {
-    content: "\f07c";
+    content: "\e8f4";
 }
 
 button.upload:before {
-    content: "\f093";
+    content: "\e898";
 }
 
 button.comment:before {
-    content: "\f0e5";
+    content: "\e901";
 }
 
 button.up:before {
-    content: "\f176";
+    content: "\e74a";
 }
 
 button.down:before {
-    content: "\f175";
+    content: "\e74b";
 }
 
 button.download:before {
-    content: "\f019";
+    content: "\e896";
 }
 
 button.select:after {
-    content: "\f141";
+    content: "\e712";
 }
 
 button.save:before {
-    content: "\f0c7";
+    content: "\e74e";
 }
 
 button.start:before {
-    content: "\f04b";
+    content: "\e768";
 }
 
 button.stop:before {
-    content: "\f04d";
+    content: "\e71a";
 }
 
 button.go:before {
-    content: "\f061";
+    content: "\e72a";
 }
 
 button.add:before {
-    content: "\f067";
+    content: "\e710";
 }
 
 button.exchange:before {
-    content: "\f0ec";
+    content: "\e8ab";
 }
 
 button.browse:before {
-    content: "\f0ac";
+    content: "\e774";
 }
 
 a.link:before {
-    content: "\f08e";
-    font-family: FontAwesome;
+    content: "\e8a7";
+    font-family: "Server-MDL2";
     line-height: 22px;
     vertical-align: middle;
 }
 
 button.more:before {
-    content: "\f067";
+    content: "\e710";
 }
 
 button.less:before {
-    content: "\f068";
+    content: "\e738";
 }
 
 
@@ -883,7 +959,7 @@ button.less:before {
 
 .sidebar .items li > i,
 .sidebar .items li::before {
-    font-family: FontAwesome;
+    font-family: "Server-MDL2";
     width: 20px;
     display: inline-block;
     font-weight: normal;

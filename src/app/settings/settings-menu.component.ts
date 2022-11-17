@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnDestroy, Optional } from '@angular/core';
+import { Component, ViewChild, OnDestroy, Optional } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
 import { Subscription } from 'rxjs';
@@ -8,7 +8,7 @@ import { Selector } from '../common/selector';
     selector: 'settings',
     template: `
         <div tabindex="0" title="Options" class="s-container nav-button hover-primary2" [class.background-primary2]="settingsMenu && settingsMenu.isOpen()" (keyup.space)="onClickSettings()" (keyup.enter)="onClickSettings()" (click)="onClickSettings()">
-            <i aria-hidden="true" class="fa fa-cog"></i>
+            <i aria-hidden="true" class="sme-icon sme-icon-processing"></i>
         </div>
         <div class="action-selector">
             <selector #settingsMenu class="color-normal" [right]="true"  [isQuickMenu]="true">
@@ -52,7 +52,7 @@ import { Selector } from '../common/selector';
 
         a:before,
         button:before {
-            font-family: FontAwesome;
+            font-family: "Server-MDL2";
             font-size: 120%;
             line-height: 22px;
             width: 25px;
@@ -65,15 +65,15 @@ import { Selector } from '../common/selector';
         }
 
         .server:before {
-            content: "\\f233";
+            content: "\\f201";
         }
 
         .dev:before {
-            content: "\\f121";
+            content: "\\ecce";
         }
 
         .download:before {
-            content: "\\f019";
+            content: "\\e896";
         }
 
         div:focus { 

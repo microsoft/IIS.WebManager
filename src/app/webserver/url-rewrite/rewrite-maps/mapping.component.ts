@@ -1,4 +1,4 @@
-﻿import { Component, Input, Output, EventEmitter, OnChanges, SimpleChange } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChange } from '@angular/core';
 
 import { UrlRewriteService } from '../service/url-rewrite.service';
 import { RewriteMap, RewriteMapping } from '../url-rewrite';
@@ -16,7 +16,7 @@ import { RewriteMap, RewriteMapping } from '../url-rewrite';
             <div class="actions">
                 <div class="action-selector">
                     <button title="More" (click)="selector.toggle()" (dblclick)="$event.preventDefault()" [class.background-active]="(selector && selector.opened) || false">
-                        <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
+                        <i aria-hidden="true" class="sme-icon sme-icon-more"></i>
                     </button>
                     <selector #selector [right]="true" [isQuickMenu]="true">
                         <ul>

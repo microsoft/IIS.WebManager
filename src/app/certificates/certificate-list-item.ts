@@ -1,4 +1,4 @@
-﻿import { Component, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Certificate } from './certificate';
 
 enum ViewState {
@@ -21,7 +21,7 @@ const viewStates = [
                     <label>Valid To</label>
                     <span>{{validTo}}</span>
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden-xs cer">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 hidden-xs cer support">
                     <span class='name'>{{displayName}}</span>
                 </div>
                 <div class="col-xs-4 col-md-4 col-lg-3 hidden-xs support">
@@ -76,6 +76,10 @@ const viewStates = [
 
         .support {
             font-size: 85%;
+        }
+
+        button {
+           min-width: 8px;
         }
     `]
 })

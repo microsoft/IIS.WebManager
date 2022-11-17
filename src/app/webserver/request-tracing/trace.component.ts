@@ -43,7 +43,7 @@ import {Provider, Trace} from './request-tracing';
         }
     
         fieldset {
-            
+            margin-right: 100px;
         }
 
         fieldset div {

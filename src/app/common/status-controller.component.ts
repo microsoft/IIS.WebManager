@@ -64,7 +64,7 @@ export abstract class StatusController {
     <button class="refresh list-action-button" title="{{restartLabel}}" [attr.disabled]="!controller.canStop() || null" (click)="controller.restart()">{{restartLabel}}</button>
     <button class="start list-action-button" title="Start" [attr.disabled]="!controller.canStart() || null" (click)="controller.start()">Start</button>
     <button class="stop list-action-button" title="Stop" [attr.disabled]="!controller.canStop() || null" (click)="controller.stop()">Stop</button>
-    <div *ngIf="inProgress" class="processing"><i aria-hidden="true" class="fa fa-spinner fa-spin"></i><span>{{status}}...</span></div>
+    <div *ngIf="inProgress" class="processing"><i aria-hidden="true" class="sme-icon sme-icon-refresh sme-spin"></i><span>{{status}}...</span></div>
 </div>
 `,
     styles: [`

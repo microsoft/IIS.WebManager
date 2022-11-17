@@ -44,7 +44,7 @@ import { RequestFilteringService } from './request-filtering.service';
                             <label class="block">Scan Headers</label>
                             <div>
                                 <switch [disabled]="locked" [(model)]="_displayHeaders">{{_displayHeaders ? "Yes" : "No"}}</switch>
-                                <button class="background-normal pull-right" *ngIf="_displayHeaders" (click)="addHeader()"><i aria-hidden="true" class="fa fa-plus color-active"></i><span>Add</span></button>
+                                <button class="background-normal pull-right" *ngIf="_displayHeaders" (click)="addHeader()"><i aria-hidden="true" class="sme-icon sme-icon-add color-active"></i><span>Add</span></button>
                             </div>
                         </fieldset>
                         <fieldset *ngIf="_displayHeaders">
@@ -55,7 +55,7 @@ import { RequestFilteringService } from './request-filtering.service';
                             <label class="block">Filter by File Extension</label>
                             <div>
                                 <switch [disabled]="locked" [(model)]="_displayFileExtensions">{{_displayFileExtensions ? "Yes" : "No"}}</switch>
-                                <button class="background-normal pull-right" *ngIf="_displayFileExtensions" (click)="addFileExtension()"><i aria-hidden="true" class="fa fa-plus color-active"></i><span>Add</span></button>
+                                <button class="background-normal pull-right" *ngIf="_displayFileExtensions" (click)="addFileExtension()"><i aria-hidden="true" class="sme-icon sme-icon-add color-active"></i><span>Add</span></button>
                             </div>
                         </fieldset>
                         <fieldset *ngIf="_displayFileExtensions">
@@ -67,10 +67,10 @@ import { RequestFilteringService } from './request-filtering.service';
                         <fieldset class="inline-block has-list">
                             <label class="block">Denied Values</label>
                         </fieldset>
-                        <button class="background-normal pull-right" *ngIf="denyStringsVisible()" (click)="addDenyString()"><i aria-hidden="true" class="fa fa-plus color-active"></i><span>Add</span></button>
+                        <button class="background-normal pull-right" *ngIf="denyStringsVisible()" (click)="addDenyString()"><i aria-hidden="true" class="sme-icon sme-icon-add color-active"></i><span>Add</span></button>
                         <fieldset>
                             <string-list #ds="stringList" [(model)]="model.deny_strings"></string-list>
-                            <button class="add background-normal" *ngIf="ds.list.length == 0" (click)="addDenyString()"><i aria-hidden="true" class="fa fa-plus color-active"></i><span>Add</span></button>
+                            <button class="background-normal" *ngIf="ds.list.length == 0" (click)="addDenyString()"><i aria-hidden="true" class="sme-icon sme-icon-add color-active"></i><span>Add</span></button>
                         </fieldset>
                     </div>
                 </div>
@@ -79,16 +79,16 @@ import { RequestFilteringService } from './request-filtering.service';
 
             <div class="actions">
                 <button class="no-border no-editing" [class.inactive]="!_editable" title="Edit" (click)="onEdit()">
-                    <i aria-hidden="true" class="fa fa-pencil color-active"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-edit color-active"></i>
                 </button>
                 <button class="no-border editing" [disabled]="!isValid() || locked" title="Ok" (click)="onSave()">
-                    <i aria-hidden="true" class="fa fa-check color-active"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-accept color-active"></i>
                 </button>
                 <button class="no-border editing" title="Cancel" (click)="onDiscard()">
-                    <i aria-hidden="true" class="fa fa-times red"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-clear red"></i>
                 </button>
                 <button class="no-border" *ngIf="model.id" [disabled]="locked" title="Delete" [class.inactive]="!_editable" (click)="onDelete()">
-                    <i aria-hidden="true" class="fa fa-trash-o red"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-delete red"></i>
                 </button>
             </div>
 
@@ -98,7 +98,14 @@ import { RequestFilteringService } from './request-filtering.service';
         fieldset.has-list {
             padding-bottom: 0;
         }
-        
+
+        .sme-icon-add {
+            margin: 0;
+            padding: 0 3px;
+            vertical-align: middle;
+            display: inline-block;
+        }
+
         div.inline-block {
             float: right;
         }
@@ -258,7 +265,7 @@ export class RuleComponent implements OnInit, OnChanges {
     selector: 'rules',
     template: `
         <div *ngIf="rules">
-            <button class="create" (click)="onAdd()" [disabled]="locked" [class.inactive]="_editing"><i aria-hidden="true" class="fa fa-plus color-active"></i><span>Add</span></button>
+            <button class="create" (click)="onAdd()" [disabled]="locked" [class.inactive]="_editing"><i aria-hidden="true" class="sme-icon sme-icon-add color-active"></i><span>Add</span></button>
 
             <div class="container-fluid" [hidden]="!rules || rules.length < 1">
                 <div class="row hidden-xs border-active grid-list-header">

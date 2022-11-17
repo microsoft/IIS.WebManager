@@ -192,7 +192,7 @@ import { SectionHelper } from './section.helper';
                     title="{{ (_menuOn) ? 'Shrink' : 'Expand' }}"
                     class="border-active hover-active color-normal focusable"
                     [class.background-active]="_menuOn">
-                    <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-more"></i>
                 </span>
             </div>
             <div class='menu border-active background-normal' [hidden]="!_menuOn">

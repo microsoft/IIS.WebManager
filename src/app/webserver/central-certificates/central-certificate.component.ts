@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, OnDestroy, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChildren, QueryList } from '@angular/core';
 import { NgModel } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ApiFile } from '../../files/file';
@@ -25,7 +25,7 @@ import { NotificationService } from 'notification/notification.service';
                 <label>Physical Path</label>
                 <input type="text" class="form-control left-with-button" [(ngModel)]="_configuration.path" (modelChanged)="onModelChanged()" throttle required [attr.disabled]="isPending || null" />
                 <button title="Select Folder" [class.background-active]="fileSelector.isOpen()" (click)="fileSelector.toggle()" [attr.disabled]="isPending || null" >
-                    <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-more"></i>
                 </button>
                 <server-file-selector #fileSelector (selected)="onSelectPath($event)" [defaultPath]="_configuration.path" [types]="['directory']"></server-file-selector>
             </fieldset>
@@ -54,7 +54,7 @@ import { NotificationService } from 'notification/notification.service';
                 <label class="block" title="Specify the password that is used to encrypt the private key for each certificate file.">Use Private Key Password</label>
                 <switch style="display:inline-block;margin-bottom:5px;" [(model)]="_usePvkPass" (modelChange)="onPvkPassRequired($event)" [attr.disabled]="isPending || null" ></switch>
             </div>
-            <div class="in" *ngIf="_usePvkPass">
+            <div class="in p-top" *ngIf="_usePvkPass">
                 <fieldset>
                     <label>Password</label>
                     <input type="password" class="form-control name" #pvkPass [(ngModel)]="_privateKeyPassword" (modelChanged)="clearPkPassword()" [attr.required]="!_configuration.id ? true : null" throttle 
@@ -73,13 +73,27 @@ import { NotificationService } from 'notification/notification.service';
     styles: [`
         .in {
             padding-left: 30px;
-            padding-top: 15px;
             padding-bottom: 15px;
+        }
+
+        .p-top {
+            margin-top: -10px;
         }
 
         .error-message {
             margin-top: 0px;
         }
+
+        .sme-icon {
+            line-height: 26px;
+        }
+
+        fieldset label{
+            margin-bottom: 10px;
+            font-weight: bold;
+            display: block;
+        }
+
     `]
 })
 export class CentralCertificateComponent implements OnInit, OnDestroy {

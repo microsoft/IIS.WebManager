@@ -60,9 +60,9 @@ import {WebSitesService} from './websites.service';
         }
 
         button > span:after {
-            font-family: FontAwesome;
+            font-family: "Server-MDL2";
             font-size: 16px;
-            content: "\\f0d7";
+            content: "\\e70d";
         }
 
         .selector {
@@ -110,8 +110,8 @@ import {WebSitesService} from './websites.service';
         }
 
         .cert span:before {
-            font-family: FontAwesome;
-            content: "\\f023";
+            font-family: "Server-MDL2";
+            content: "\\e72e";
             padding-right: 5px;
         }
 
@@ -125,7 +125,7 @@ import {WebSitesService} from './websites.service';
         }
 
         .browse.cert:after {
-            content: "\\f0d7";
+            content: "\\e70d";
         }
 
         .browse:after {

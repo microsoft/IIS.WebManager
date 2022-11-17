@@ -41,8 +41,8 @@ export class NewWebFileComponent {
 
     private getIcon() {
         return {
-            "fa-file-o": this.type == WebFileType.File,
-            "fa-folder-o": this.type == WebFileType.Directory ||
+            "sme-icon-customList": this.type == WebFileType.File,
+            "sme-icon-folder": this.type == WebFileType.Directory ||
             this.type == WebFileType.Vdir
         };
     }

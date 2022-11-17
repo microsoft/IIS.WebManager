@@ -12,7 +12,7 @@ import { skip } from 'rxjs/operators';
         <div class="toolbar">
             <div class="toolbar-right">
                 <button title="Refresh" (click)="refresh()">
-                    <i aria-hidden="true" class="fa fa-refresh"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-sync"></i>
                 </button>
                 <div *ngIf="_items" class="col-xs-8 col-sm-5 col-md-4 col-lg-3 actions filter hidden-xs">
                     <input placeholder="Search" type="search" aria-label="Filter" class="form-control" [class.border-active]="_filter" [(ngModel)]="_filter" (ngModelChange)="filter($event)" [throttle]="300" />
@@ -63,14 +63,6 @@ import { skip } from 'rxjs/operators';
         }
 
         .name {
-            font-size: 16px;
-        }
-
-        .name:before {
-            font-family: FontAwesome;
-            content: "\\f023";
-            padding-left: 5px;
-            padding-right: 5px;
             font-size: 16px;
         }
 

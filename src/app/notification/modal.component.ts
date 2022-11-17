@@ -79,8 +79,8 @@ import { NotificationService } from './notification.service';
         }
 
         h2:before {
-            font-family: FontAwesome;
-            content: "\\f29c";
+            font-family: "Server-MDL2";
+            content: "\\e9ce";
             margin-right: 10px;
         }
     `]

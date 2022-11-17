@@ -44,7 +44,7 @@ import { Runtime } from 'runtime/runtime';
             <div class="actions action-selector">
                 <div class="selector-wrapper">
                     <button title="More" *ngIf="!model.isVirtual" (click)="openSelector($event)" (keyup.enter)="prevent($event)" (dblclick)="prevent($event)" [class.background-active]="(selector && selector.opened) || false">
-                        <i aria-hidden="true" class="fa fa-ellipsis-h"></i>
+                        <i aria-hidden="true" class="sme-icon sme-icon-more"></i>
                     </button>
                     <selector [right]="true" [isQuickMenu]="true">
                         <ul>
@@ -94,16 +94,16 @@ import { Runtime } from 'runtime/runtime';
         `
         .fi.vdir i::before,
         .fi.application i::before {
-            content: "\\f07b";
+            content: "\\ed25";
             color: #FFE68E;
         }
 
         .fi.vdir i::after {
-            content: "\\f0da";
+            content: "\\e76c";
         }
 
         .fi.application i::after {
-            content: "\\f121";
+            content: "\\ecce";
         }
 	`
     ],

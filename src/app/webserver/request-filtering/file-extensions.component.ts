@@ -13,8 +13,8 @@ import { RequestFilteringService } from './request-filtering.service';
             <fieldset class="col-xs-8 col-sm-4">
                 <label class="visible-xs">Extension</label>
                 <label class="hidden-xs" [hidden]="!_editing">Extension</label>
-                <i aria-hidden="true" class="fa fa-circle green hidden-xs" *ngIf="model.allow && !_editing"></i>
-                <i aria-hidden="true" class="fa fa-ban red hidden-xs" *ngIf="!model.allow && !_editing"></i>
+                <i aria-hidden="true" class="sme-icon sme-icon-completedSolid green hidden-xs" *ngIf="model.allow && !_editing"></i>
+                <i aria-hidden="true" class="sme-icon sme-icon-blocked red hidden-xs" *ngIf="!model.allow && !_editing"></i>
                 <input autofocus class="form-control" *ngIf="_editing" type="text" [disabled]="locked" [(ngModel)]="model.extension" throttle required />
                 <span *ngIf="!_editing">{{model.extension}}</span>
                 <div *ngIf="!_editing">
@@ -31,16 +31,16 @@ import { RequestFilteringService } from './request-filtering.service';
 
             <div class="actions">
                 <button class="no-border" *ngIf="!_editing" [class.inactive]="!_editable" title="Edit" (click)="onEdit()">
-                    <i aria-hidden="true" class="fa fa-pencil color-active"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-edit color-active"></i>
                 </button>
                 <button class="no-border" *ngIf="_editing" [disabled]="!isValid() || locked" title="Ok" (click)="onSave()">
-                    <i aria-hidden="true" class="fa fa-check color-active"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-accept color-active"></i>
                 </button>
                 <button class="no-border" title="Cancel" *ngIf="_editing" (click)="onDiscard()">
-                    <i aria-hidden="true" class="fa fa-times red"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-clear red"></i>
                 </button>
                 <button class="no-border" *ngIf="model.id" [disabled]="locked" title="Delete" [class.inactive]="!_editable" (click)="onDelete()">
-                    <i aria-hidden="true" class="fa fa-trash-o red"></i>
+                    <i aria-hidden="true" class="sme-icon sme-icon-delete red"></i>
                 </button>
             </div>
 
@@ -52,8 +52,8 @@ import { RequestFilteringService } from './request-filtering.service';
             padding-bottom: 0;
         }
 
-        .fa-circle,
-        .fa-ban {
+        .sme-icon-completedSolid,
+        .sme-icon-blocked {
             font-size: 20px;
             margin-right: 10px;
         }
@@ -158,7 +158,7 @@ export class FileExtensionComponent implements OnInit, OnChanges {
     selector: 'file-extensions',
     template: `
         <div *ngIf="extensions">
-            <button class="create" (click)="onAdd()" [disabled]="locked" [class.inactive]="_editing"><i aria-hidden="true" class="fa fa-plus color-active"></i><span>Add</span></button>
+            <button class="create" (click)="onAdd()" [disabled]="locked" [class.inactive]="_editing"><i aria-hidden="true" class="sme-icon sme-icon-add color-active"></i><span>Add</span></button>
 
             <div class="container-fluid" [hidden]="!extensions || extensions.length < 1">
                 <div class="row hidden-xs border-active grid-list-header">

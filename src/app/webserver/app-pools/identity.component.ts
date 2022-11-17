@@ -41,10 +41,14 @@ import { ApplicationPoolIdentity } from './app-pool';
         </fieldset>
     `,
     styles: [`
-.error-message {
-    margin-top: 0px;
-}
-        `],
+        .error-message {
+            margin-top: 0px;
+        }
+
+        fieldset {
+            margin-left: 0;
+        }
+    `],
 })
 export class IdentityComponent {
     @Input()
