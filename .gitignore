@@ -53,3 +53,4 @@ Thumbs.db
 
 .vscode/launch.json
 src/angular.json
+src/packages/
