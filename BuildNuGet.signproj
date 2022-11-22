@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="SignFiles" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <NoWindowsSDKTargets>true</NoWindowsSDKTargets>
+    <Root>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)))</Root>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- OutDir is required for the signing task to pick up the files for signing. -->
+    <OutDir>$(Root)\dist</OutDir>
+    <!-- We need $(IntermediateOutputPath) which is used by the 'SignFiles' task -->
+    <IntermediateOutputPath>$(OutDir)\intermediate</IntermediateOutputPath>
+  </PropertyGroup>
+
+  <!-- Add target SignFiles for testing -->
+  <Target Name="SignFiles" AfterTargets="AfterBuild" />
+
+  <ImportGroup>
+    <Import Project="$(Root)\src\packages\Microsoft.VisualStudioEng.MicroBuild.Core.1.0.0\build\Microsoft.VisualStudioEng.MicroBuild.Core.props" />
+  </ImportGroup>
+
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(Root)\src\packages\Microsoft.VisualStudioEng.MicroBuild.Core.1.0.0\build\Microsoft.VisualStudioEng.MicroBuild.Core.targets" />
+  </ImportGroup>
+
+  <ItemGroup>
+    <FilesToSign Include="$(Root)\dist\*.nupkg">
+      <Authenticode>NuGet</Authenticode>
+    </FilesToSign>
+  </ItemGroup>
+
+  <!-- Define an empty build target as we don't really build anything -->
+  <Target Name="Build" />
+
+  <!-- Target AfterBuild is required to trigger signing -->
+  <Target Name="AfterBuild" AfterTargets="Build" />
+</Project>
