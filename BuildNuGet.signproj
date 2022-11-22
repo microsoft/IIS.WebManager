@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <!-- Add target SignFiles for testing -->
-  <Target Name="SignFiles" AfterTargets="AfterBuild" />
+  <!-- <Target Name="SignFiles" AfterTargets="AfterBuild" /> -->
 
   <ImportGroup>
     <Import Project="$(Root)\src\packages\Microsoft.VisualStudioEng.MicroBuild.Core.1.0.0\build\Microsoft.VisualStudioEng.MicroBuild.Core.props" />
