@@ -15,7 +15,7 @@ declare var unescape: any;
 
 const UploadComponentReference: ComponentReference = { name: UploadComponentName, ico: null, component_name: UploadComponentName, api_name: null, api_path: null };
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class FilesService implements IDisposable {
     private _uploadSignal: NodeJS.Timer = null;
     private _fields = "name,id,alias,type,physical_path,size,created,last_modified,mime_type,e_tag,parent";
@@ -281,7 +281,7 @@ export class FilesService implements IDisposable {
             apiFilesData = e.dataTransfer.getData(MimeTypes.ApiFiles);
         }
         catch (e) {
-            // IE does not support custom mime types       
+            // IE does not support custom mime types
             apiFilesData = e.dataTransfer.getData("Text");
         }
 
@@ -735,7 +735,7 @@ export class FilesService implements IDisposable {
     }
 
 
-    
+
     private performMove(source: ApiFile, destination: ApiFile, name?: string): Promise<ApiFile> {
         let move = {
             file: source,
@@ -910,7 +910,7 @@ export class FilesService implements IDisposable {
         opts.headers.append('Content-Range', 'bytes ' + start + '-' + (start + length - 1) + '/' + totalSize);
 
         opts.body = content;
-        
+
         return this._http.request(url, opts, false)
             .then(suc => {
                 this._progress.getValue().find(p => p === progress).completed = start + length;
@@ -970,7 +970,7 @@ export class FilesService implements IDisposable {
             let uploadNotification = this._notificationService.getNotifications().find(n => n.componentName == UploadComponentName);
             if (uploadNotification) {
                 this._notificationService.remove(uploadNotification);
-            }            
+            }
         }
     }
 
@@ -1015,7 +1015,7 @@ export class FilesService implements IDisposable {
         s = unescape(encodeURIComponent(s));
 
         // Buffer
-        let buff = new Uint8Array(s.length + 3 /*3 bytes for UTF-8 BOM*/); 
+        let buff = new Uint8Array(s.length + 3 /*3 bytes for UTF-8 BOM*/);
 
         // Write UTF-8 BOM
         buff[0] = 0xEF;
