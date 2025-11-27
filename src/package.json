@@ -12,7 +12,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@angular/common": "7.1.1",
+    "@angular/common": "19.2.16",
     "@angular/core": "7.1.1",
     "@angular/forms": "7.1.1",
     "@angular/http": "7.1.1",
